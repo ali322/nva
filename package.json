@@ -1,8 +1,10 @@
 {
   "name": "nva",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.2",
+  "description": "scaffold for frontend and isomorphic project",
+  "bin":{
+    "nva":"bin/nva.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
