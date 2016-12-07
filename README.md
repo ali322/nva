@@ -17,7 +17,7 @@ Useage
 
 ```bash
 nva init <project name>
-
+nva init <project name> -r [github repo]
 ```
 
 ## Todo

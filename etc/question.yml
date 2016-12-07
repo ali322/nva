@@ -1,0 +1,22 @@
+questions:
+  template:
+    type: list
+    message: which template to apply?
+    choices: ['static', 'isomorphic']
+  version:
+    type: input
+    message: 'project version'
+    default: '0.0.1'
+  desc:
+    type: input
+    message: 'project description'
+  author:
+    type: input
+    message: 'project author'
+  respository:
+    type: input
+    message: 'project respository url'
+  license:
+    type: input
+    message: 'project license'
+    default: 'MIT'
