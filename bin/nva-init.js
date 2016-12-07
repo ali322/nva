@@ -79,10 +79,6 @@ function generateProject(){
     ask(function(answers){
         var _template = config.repoForTemplate(answers.template)
         var _repo = repo?repo:_template
-        if(!_repo){
-            console.log(chalk.red("invalid template"))
-            process.exit(1)
-        }
 
         var _dest =  repo?'repo '+repo:'template '+answers.template
         var spinner = ora(`Downloading ${_dest} for project`)
