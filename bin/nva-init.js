@@ -8,6 +8,7 @@ var inquirer = require("inquirer")
 var download = require("download-git-repo")
 var ora = require("ora")
 var rm = require("rimraf").sync
+var execSync = require("child_process").execSync
 
 var config = require("../lib/config")
 
@@ -75,8 +76,17 @@ function ask(cb){
 }
 
 function generateProject(){
-    fs.mkdirSync(projectPath)
     ask(function(answers){
+        if(answers.template === 'react-native'){
+            try{
+                execSync(`react-native init ${projectName}`,{stdio:'inherit'})
+            }catch(err){
+                console.log(err)
+                process.exit(1)
+            }
+        }else{
+            fs.mkdirSync(projectPath)
+        }
         var _template = config.repoForTemplate(answers.template)
         var _repo = repo?repo:_template
 
@@ -85,13 +95,23 @@ function generateProject(){
         spinner.start()
         download(_repo,projectPath,function(err){
             if(err){
-                console.log(chalk.red(`can not download ${_dest}`)
+                console.log(chalk.red(`can not download ${_dest}`))
                 process.exit(1)
             }
             spinner.stop()
 
             updatePkgJSON(answers)
-            var completeMsg = `Successfully generated project '${projectName}',please run 'npm install' before get started`
+
+            if(answers.template === "react-native"){
+                updateRNIndex()
+            }
+            try{
+                execSync(`cd ${projectName} && npm install`,{stdio: 'inherit'})
+            }catch(err){
+                console.log(err)
+                process.exit(1)
+            }
+            var completeMsg = `Successfully generated project '${projectName}'`
             console.log(chalk.yellow(completeMsg))
         }) 
     })
@@ -113,4 +133,16 @@ function updatePkgJSON(answers){
     pkgJSON["bugs"] = {"url":""}
     pkgJSON["homepage"] = ""
     fs.writeFileSync(pkgJSONPath,JSON.stringify(pkgJSON,null,2))
+}
+
+function updateRNIndex(){
+    var indexIOSFile = path.resolve(projectName,'index.ios.js')
+    var indexIOS = fs.readFileSync(indexIOSFile,'utf8')
+    indexIOS = indexIOS.replace('RNProject',projectName)
+    fs.writeFileSync(indexIOSFile,indexIOS)
+
+    var indexAndroidFile = path.resolve(projectName,'index.android.js')
+    var indexAndroid = fs.readFileSync(indexAndroidFile,'utf8')
+    indexAndroid = indexAndroid.replace('RNProject',projectName)
+    fs.writeFileSync(indexAndroidFile,indexAndroid)
 }

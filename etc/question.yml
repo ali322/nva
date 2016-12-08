@@ -2,7 +2,7 @@ questions:
   template:
     type: list
     message: which template to apply?
-    choices: ['static', 'isomorphic']
+    choices: ['frontend', 'isomorphic', 'react-native']
   version:
     type: input
     message: 'project version'
