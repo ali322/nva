@@ -1,4 +1,4 @@
 templates:
-  frontend: ali322/frontend-scaffold
+  frontend: ali322/frontend-boilerplate
   isomorphic: ali322/isomorphic-boilerplate
   react-native: ali322/rn-scaffold
