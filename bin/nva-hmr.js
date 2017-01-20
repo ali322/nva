@@ -11,5 +11,5 @@ const options = program.rawArgs.slice(3)
 lib.interceptOptions(options,['-p'])
 
 var port = program.port
-var tasks = require('../nva-task')
+var tasks = require('nva-task')
 tasks.hmrServer({port})

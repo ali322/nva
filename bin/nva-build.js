@@ -13,5 +13,5 @@ lib.interceptOptions(options,['-s','-d'])
 
 var source = program.source
 var dest = program.dest
-var tasks = require('../nva-task')
+var tasks = require('nva-task')
 tasks.build({source,dest})
