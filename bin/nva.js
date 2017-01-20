@@ -7,9 +7,17 @@ program.version(version)
     .usage('<command> [options]')
     .command('init [project]','generate project by template')
     .command('list','list all available templates')
+    .command('mod','add new module')
     .command('dev','start dev server')
     .command('hmr','start hmr server')
-    .command('release','release static')
-    .command('vendor','release vendor libraries')
+    .command('build','build source')
+    .command('vendor','build vendor libraries')
+    .command('*')
+    .action(function(cmd){
+        if(['init','list','mod','dev','hmr','build','vendor'].indexOf(cmd) === -1){
+            console.log('unsupported nva command')
+            process.exit(1)
+        }
+    })
 
 program.parse(process.argv)

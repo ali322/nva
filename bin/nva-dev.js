@@ -2,27 +2,14 @@
 
 var program = require("commander")
 var chalk = require("chalk")
+var lib = require("../lib")
 
-// program.option("-p, --port [value]","dev server listen port")
+program.option("-p, --port [value]","dev server listen port")
+program.parse(process.argv)
 
-// program.on('--help',function(){
-//     console.log(`
-//   Examples:
-
-//     ${chalk.cyan(' # start dev server at specified port')}
-//     nva dev -p 5000
-
-//     `)
-// })
-
-// program.parse(process.argv)
-
-// if(!program.args.length){
-//     program.help()
-// }
+const options = program.rawArgs.slice(3)
+lib.interceptOptions(options,['-p'])
 
 var port = program.port
-
-var tasks = require('../task')
-
-tasks.developServer()
+var tasks = require('../nva-task')
+tasks.developServer({port})
