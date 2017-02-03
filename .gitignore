@@ -1,3 +1,4 @@
 node_modules/
 npm-debug.log
 nva-task/
+.vscode/
