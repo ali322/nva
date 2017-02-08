@@ -5,7 +5,7 @@ var program = require("commander"),
     fs = require('fs-extra'),
     path = require('path')
 var lib = require('../lib')
-var tasks = require('nva-task')
+var tasks = require('../../nva-task')
 
 program.usage('[name]')
 program.option("-d, --delete","delete action flag")
@@ -36,6 +36,11 @@ if (!program.args.length) {
 }
 
 var moduleName = program.args[0]
+if(moduleName === '[object Object]'){
+    console.log(chalk.red('name required!'))
+    program.help()
+    return
+}
 if(program.delete){
     tasks.removeModule(moduleName)
     return

@@ -39,6 +39,11 @@ var repo = program.repo
 var projectName = program.args[0]
 var projectPath = path.resolve(projectName)
 
+if(projectName === '[object Object]'){
+    console.log(chalk.red('name required!'))
+    program.help()
+    return 
+}
 if(fs.existsSync(projectPath)){
     inquirer.prompt([{
         type:"confirm",
