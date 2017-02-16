@@ -1,6 +1,6 @@
 {
   "name": "nva",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "scaffold for frontend and isomorphic project",
   "bin": {
     "nva": "bin/nva.js"
