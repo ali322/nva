@@ -100,32 +100,32 @@ all config files alive in `.nva` directory of project
 
     ```json
     {
-        "type":"isomorphic",    // project type of `frontend`,`isomorphic`,`react-native`
-	    "integrated":true,    // isomorphic project only,wether or not need start individual HMR server
-        "entryJSExt":".jsx",    // entry js file extension
-        "entryCSSExt":".styl",   // entry css file extension
-        "distFolder": "dist",   // dist folder of build
-        "bundleFolder": "bundle",   // all project module's parent folder
-        "vendorFolder": "vendor",   // vendor folder of build
-        "assetFolder": 'asset',    // asset files folder
-        "spriteFolder": 'sprites',    // sprites background image folder
-        "fontFolder": 'font',   // icon font folder
-        "imageFolder": 'image',    // compressed image folder
-        "sourcePath": "src",    // frontend project only, source code folder
-        "pagePath": "page",    // html files folder
-        "serverFolder": 'server',   // isomorphic project only, server side source code folder
-        "serverEntryJS": 'bootstrap.js',    // isomorphic project only,server entry file
-        "clientPath": "client"    // isomorphic project only,client side source code folder
+        "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
+	    "integrated":true,    /* isomorphic project only,wether or not need start individual HMR server */
+        "entryJSExt":".jsx",    /* entry js file extension */
+        "entryCSSExt":".styl",   /* entry css file extension */
+        "distFolder": "dist",   /* dist folder of build */
+        "bundleFolder": "bundle",   /* all project module's parent folder */
+        "vendorFolder": "vendor",   /* vendor folder of build */
+        "assetFolder": "asset",    /* asset files folder */
+        "spriteFolder": "sprites",    /* sprites background image folder */
+        "fontFolder": "font",   /* icon font folder */
+        "imageFolder": "image",    /* compressed image folder */
+        "sourcePath": "src",    /* frontend project only, source code folder */
+        "pagePath": "page",    /* html files folder */
+        "serverFolder": "server",   /* isomorphic project only, server side source code folder */
+        "serverEntryJS": "bootstrap.js",    /* isomorphic project only,server entry file */
+        "clientPath": "client"    /* isomorphic project only,client side source code folder */
     }
     ```
 - `module.json` project module settings
 
     ```json
     {
-        "index": {  // module name
-            "html": ["index.html"],     // entry html file(s),nva will inject asset in these files
-            "path": "index",            // relative path to `bundleFolder`
-            "vendor": {"js": "react","css": "common"}   // module vendors,`react` and `common` reference to `vendor.json`
+        "index": {  /* module name */
+            "html": ["index.html"],     /* entry html file(s),nva will inject asset in these files */
+            "path": "index",            /* relative path to `bundleFolder` */
+            "vendor": {"js": "react","css": "common"}   /* module vendors,`react` and `common` reference to `vendor.json` */
         }
     }
     ```
@@ -135,10 +135,10 @@ all config files alive in `.nva` directory of project
     ```json
     {
         "js":{
-            "react":["react","react-dom"]     // define js vendor
+            "react":["react","react-dom"]     /* define js vendor */
         },
         "css":{
-            "common":["font-awesome/css/font-awesome.css"]     // define css vendor
+            "common":["font-awesome/css/font-awesome.css"]     /* define css vendor */
         }
     }
     ```
@@ -149,9 +149,9 @@ all config files alive in `.nva` directory of project
 
     ```json
     [{
-        "url": "/mock/user",    // mock api request url
-        "method": "get",        // mock api request method
-        "response": {           // mock api response
+        "url": "/mock/user",    /* mock api request url */
+        "method": "get",        /* mock api request method */
+        "response": {           /* mock api response */
             "code": 200,
             "data": {
                 "id": 6,
