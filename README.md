@@ -98,7 +98,7 @@ all config files alive in `.nva` directory of project
 
 - `nva.json` project global settings
 
-    ```json
+    ```js
     {
         "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
 	    "integrated":true,    /* isomorphic project only,wether or not need start individual HMR server */
@@ -120,7 +120,7 @@ all config files alive in `.nva` directory of project
     ```
 - `module.json` project module settings
 
-    ```json
+    ```js
     {
         "index": {  /* module name */
             "html": ["index.html"],     /* entry html file(s),nva will inject asset in these files */
@@ -132,7 +132,7 @@ all config files alive in `.nva` directory of project
 
 - `vendor.json` project vendors settings
 
-    ```json
+    ```js
     {
         "js":{
             "react":["react","react-dom"]     /* define js vendor */
@@ -147,7 +147,7 @@ all config files alive in `.nva` directory of project
 
     simple mock api setting
 
-    ```json
+    ```js
     [{
         "url": "/mock/user",    /* mock api request url */
         "method": "get",        /* mock api request method */
