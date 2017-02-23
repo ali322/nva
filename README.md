@@ -102,6 +102,7 @@ all config files alive in `.nva` directory of project
     {
         "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
 	    "integrated":true,    /* isomorphic project only,wether or not need start individual HMR server */
+        "spa":true            /* is an single page application(SPA)? */
         "entryJSExt":".jsx",    /* entry js file extension */
         "entryCSSExt":".styl",   /* entry css file extension */
         "distFolder": "dist",   /* dist folder of build */
