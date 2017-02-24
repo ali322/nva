@@ -13,7 +13,7 @@ program.version(version)
     .command('vendor','build vendor libraries')
     .command('*')
     .action(function(cmd){
-        if(['init','list','mod','dev','hmr','build','vendor'].indexOf(cmd) === -1){
+        if(['init','list','mod','dev','build','vendor'].indexOf(cmd) === -1){
             console.log('unsupported nva command')
             process.exit(1)
         }
