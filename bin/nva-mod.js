@@ -39,11 +39,11 @@ var moduleName = program.args[0]
 if(moduleName === '[object Object]'){
     console.log(chalk.red('name required!'))
     program.help()
-    return
+    process.exit(1)
 }
 if(program.delete){
     tasks.removeModule(moduleName)
-    return
+    process.exit(1)
 }
 
 var MODULE_CONFIG_FILE = path.join(process.cwd(), '.nva','module.json')
@@ -56,7 +56,7 @@ if (fs.existsSync(MODULE_CONFIG_FILE)) {
 
 if (Object.keys(moduleConfig).indexOf(moduleName) > -1) {
     console.log(chalk.red('name existed!'))
-    return
+    process.exit(1)
 }
 
 var questions = [{
