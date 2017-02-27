@@ -5,6 +5,7 @@ var version = require("../package.json").version
 
 program.version(version)
     .usage('<command> [options]')
+    .option('-v, --version')
     .command('init [project]','generate project by template')
     .command('list','list all available templates')
     .command('mod','add new module')
