@@ -3,6 +3,13 @@ questions:
     type: list
     message: which template to apply?
     choices: ['frontend', 'isomorphic', 'react-native']
+  framework:
+    type: list
+    message: which framework to use?
+    choices: ['react', 'vue']
+  spa:
+    type: confirm
+    message: is an spa application?
   version:
     type: input
     message: 'project version'
