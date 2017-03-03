@@ -101,16 +101,16 @@ function generateProject() {
             answers.framework === 'vue' && _suffix.push('vue')
             answers.spa && _suffix.push('spa')
             _template += _suffix.length > 0 ? '#' + _suffix.join('-') : ''
-            // console.log(answers.framework, answers.spa, _suffix, _template)
         }
         var _repo = repo ? repo : _template
-        var _dest = repo ? 'repo ' + repo : 'template ' + answers.template
+        var _dest = repo ? 'repo: ' + repo : 'template: ' + answers.template
+
         var spinner = ora(`Downloading ${_dest} for project`)
         spinner.start()
 
         download(_repo,projectPath,function(err){
             if(err){
-                console.log(chalk.red(`can not download ${_dest}`))
+                console.log(chalk.red(`\n can not download ${_dest}`))
                 process.exit(1)
             }
             spinner.stop()
