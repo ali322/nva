@@ -1,6 +1,6 @@
 {
   "name": "nva",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "scaffold for frontend and isomorphic project",
   "bin": {
     "nva": "bin/nva.js"
@@ -26,5 +26,8 @@
     "object-assign": "^4.1.0",
     "ora": "^0.3.0",
     "rimraf": "^2.5.4"
+  },
+  "devDependencies": {
+    "lerna": "2.0.0-beta.38"
   }
 }

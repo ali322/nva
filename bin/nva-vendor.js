@@ -2,5 +2,5 @@
 
 var program = require("commander")
 
-var tasks = require('nva-task')
+var tasks = require('../packages/nva-task/src').default
 tasks.vendor()

@@ -1,4 +1,4 @@
 node_modules/
 npm-debug.log
-nva-task/
 .vscode/
+packages/**/node_modules/
