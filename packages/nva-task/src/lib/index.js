@@ -1,7 +1,8 @@
 import HappyPack from 'happypack'
 import path from 'path'
 import os from 'os'
-import { merge, find } from 'lodash'
+import { find } from 'lodash'
+import merge from 'webpack-merge'
 
 import env from './environment'
 

@@ -21,6 +21,10 @@ var _os2 = _interopRequireDefault(_os);
 
 var _lodash = require('lodash');
 
+var _webpackMerge = require('webpack-merge');
+
+var _webpackMerge2 = _interopRequireDefault(_webpackMerge);
+
 var _environment = require('./environment');
 
 var _environment2 = _interopRequireDefault(_environment);
@@ -50,13 +54,13 @@ function mergeConfig(config) {
     if (Array.isArray(config)) {
         return config.map(function (v) {
             if (v.name) {
-                return (0, _lodash.merge)(v, (0, _lodash.find)(webpackConfig, { name: v.name }));
+                return (0, _webpackMerge2.default)(v, (0, _lodash.find)(webpackConfig, { name: v.name }));
             }
-            return _lodash.merge.apply(undefined, [v].concat(_toConsumableArray(webpackConfig)));
+            return _webpackMerge2.default.apply(undefined, [v].concat(_toConsumableArray(webpackConfig)));
         });
     }
     if (config.name) {
-        return (0, _lodash.merge)(config, (0, _lodash.find)(webpackConfig, { name: config.name }));
+        return (0, _webpackMerge2.default)(config, (0, _lodash.find)(webpackConfig, { name: config.name }));
     }
-    return _lodash.merge.apply(undefined, [config].concat(_toConsumableArray(webpackConfig)));
+    return _webpackMerge2.default.apply(undefined, [config].concat(_toConsumableArray(webpackConfig)));
 }

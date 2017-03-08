@@ -2,3 +2,5 @@ node_modules/
 npm-debug.log
 .vscode/
 packages/**/node_modules/
+packages/**/dist/
+packages/**/es/
