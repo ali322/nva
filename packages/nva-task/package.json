@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.1.20",
+  "version": "0.1.25",
   "description": "tasks for nva",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
