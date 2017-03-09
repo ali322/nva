@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "tasks for nva",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -60,10 +60,8 @@
     "lodash": "^4.17.4",
     "node-sass": "^4.5.0",
     "nodemon": "^1.11.0",
-    "postcss-import": "^9.1.0",
     "postcss-loader": "^1.2.2",
     "postcss-sprites": "^4.2.0",
-    "postcss-url": "^5.1.2",
     "progress-bar-webpack-plugin": "^1.9.3",
     "react-hot-loader": "^3.0.0-beta.6",
     "resolve-url-loader": "^2.0.2",
