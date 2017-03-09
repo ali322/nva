@@ -1,24 +1,16 @@
 import path from 'path'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import autoPrefixer from 'autoprefixer'
-import postcssImport from 'postcss-import'
-import cssURL from 'postcss-url'
 import sprites from 'postcss-sprites'
-import { urlResolver } from '../lib/helper'
 
 const nodeModulesDir = path.join(__dirname, '..', 'node_modules')
 
 export default function(constants) {
-    const { ASSET_FONT_OUTPUT, ASSET_IMAGE_OUTPUT, SPRITE_OUTPUT, ASSET_INPUT, IMAGE_PREFIX, FONT_PREFIX } = constants
+    const { ASSET_FONT_OUTPUT, ASSET_IMAGE_OUTPUT, SPRITE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX } = constants
     const postcssOptions = {
         plugins: function() {
-            let plugins = [postcssImport({ addDependencyTo: true }),
-                autoPrefixer(),
-                cssURL({
-                    url: function(originURL, decl, from, dirname, to) {
-                        return urlResolver(originURL, from, to, ASSET_INPUT)
-                    }
-                })
+            let plugins = [
+                autoPrefixer()
             ]
             if (!constants.HOT) {
                 plugins.push(sprites({
@@ -44,30 +36,43 @@ export default function(constants) {
         { loader: 'style-loader' },
         { loader: 'css-loader', options: { minimize: !constants.HOT } },
         { loader: 'postcss-loader', options: postcssOptions },
+        { loader: 'resolve-url-loader' }
     ]
     const lessLoaders = [...cssLoaders, { loader: 'happypack/loader', options: { id: "less" } }]
     const sassLoaders = [...cssLoaders, { loader: 'happypack/loader', options: { id: "sass" } }]
     const stylusLoaders = [...cssLoaders, { loader: 'happypack/loader', options: { id: "stylus" } }]
 
-
     const vueLoaderOptions = constants.HOT ? {
         loaders: {
-            css: cssLoaders.slice(0,-1),
-            less: [...cssLoaders.slice(0,-1),'less-loader'],
-            stylus: [...cssLoaders.slice(0,-1),'stylus-loader']
+            css: cssLoaders.slice(0, -1),
+            less: [...cssLoaders.slice(0, -1), 'less-loader'],
+            stylus: [...cssLoaders.slice(0, -1), 'stylus-loader']
         }
     } : {
-        loaders:{
+        loaders: {
             css: ExtractTextPlugin.extract({
-                use: [cssLoaders[1]],
+                use: [{ loader: 'css-loader' }, { loader: "resolve-url-loader" }],
                 fallback: 'vue-style-loader'
             }),
             less: ExtractTextPlugin.extract({
-                use: [cssLoaders[1],'less-loader'],
+                use: [
+                    { loader: 'css-loader' }, { loader: "resolve-url-loader" },
+                    { loader: 'less-loader', options: { sourceMap: true } }
+                ],
                 fallback: 'vue-style-loader'
             }),
             stylus: ExtractTextPlugin.extract({
-                use: [cssLoaders[1],'stylus-loader'],
+                use: [
+                    { loader: 'css-loader' }, { loader: "resolve-url-loader" },
+                    { loader: 'stylus-loader', options: { sourceMap: true } }
+                ],
+                fallback: 'vue-style-loader'
+            }),
+            scss: ExtractTextPlugin.extract({
+                use: [
+                    { loader: 'css-loader' }, { loader: "resolve-url-loader" },
+                    { loader: 'sass-loader', options: { sourceMap: true } }
+                ],
                 fallback: 'vue-style-loader'
             })
         }

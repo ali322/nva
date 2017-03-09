@@ -23,9 +23,9 @@ export function happypackPlugin(id, loaders) {
 
 export const happypackPlugins = [
     happypackPlugin('js', [{ loader: 'babel-loader', options: { cacheDirectory: true } }]),
-    happypackPlugin('less', ['less-loader']),
-    happypackPlugin('sass', ['sass-loader']),
-    happypackPlugin('stylus', ['stylus-loader'])
+    happypackPlugin('less', [{ loader: 'less-loader', options: { sourceMap: true } }]),
+    happypackPlugin('sass', [{ loader: 'sass-loader', options: { sourceMap: true } }]),
+    happypackPlugin('stylus', [{ loader: 'stylus-loader', options: { sourceMap: true } }])
 ]
 
 export function mergeConfig(config) {

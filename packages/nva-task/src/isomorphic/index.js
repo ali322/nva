@@ -28,7 +28,6 @@ const constants = {
     ASSET_IMAGE_OUTPUT: path.join(env.distFolder, env.assetFolder, env.imageFolder, path.sep),
     ASSET_FONT_OUTPUT: path.join(env.distFolder, env.assetFolder, env.fontFolder, path.sep),
     SPRITE_OUTPUT: path.join(env.clientPath, env.assetFolder, env.spriteFolder),
-    ASSET_INPUT: path.join(env.clientPath, env.assetFolder),
     IMAGE_PREFIX: path.join('..', '..', '..', env.distFolder, env.assetFolder, env.imageFolder),
     FONT_PREFIX: path.join('..', '..', env.distFolder, env.assetFolder, env.fontFolder),
     VENDOR_OUTPUT: path.join(env.clientPath, env.distFolder, env.vendorFolder),
