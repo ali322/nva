@@ -1,12 +1,11 @@
 import webpack from 'webpack'
 import path from 'path'
 import glob from 'glob'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import { bundleTime,checkManifest } from '../lib/helper'
-import configFactory from '../base/config'
+import { bundleTime, checkManifest } from '../lib/helper'
+import { config as configFactory } from 'nva-core'
 
 export default function(env, constants) {
     /** build variables*/
@@ -88,7 +87,6 @@ export default function(env, constants) {
                 clear: false,
                 summary: false
             }),
-            new ExtractTextPlugin({ filename: path.join(env.distFolder, "[name]", "[name]-[contenthash:8].css"), allChunks: true }),
             ...dllRefs,
             ...htmls
         ]

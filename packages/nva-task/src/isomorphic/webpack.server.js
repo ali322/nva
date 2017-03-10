@@ -3,11 +3,15 @@ import path from 'path'
 import fs from 'fs'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import { happypackPlugins } from '../lib'
+import { happypackPlugin } from 'nva-core'
 
 const nodeModulesDir = path.join(__dirname, '..', 'node_modules')
 
-export default function(env) {
+export default function(env,constants) {
+    const happypackPlugins = [
+        happypackPlugin('js', [{ loader: 'babel-loader', options: { cacheDirectory: true } }],constants.HAPPYPACK_TEMP_DIR),
+    ]
+
     var nodeModules = {};
     fs.readdirSync('node_modules')
         .filter(function(x) {

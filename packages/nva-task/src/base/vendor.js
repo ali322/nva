@@ -1,6 +1,6 @@
 import path from 'path'
 import webpack from 'webpack'
-import configFactory from './config'
+import {config as configFactory} from 'nva-core'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'

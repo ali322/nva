@@ -24,6 +24,8 @@ function callback(info, err, stats) {
 }
 
 const constants = {
+    CSS_OUTPUT: path.join(env.distFolder, "[name]", "[name]-[contenthash:8].css"),
+    HAPPYPACK_TEMP_DIR: path.join('.nva','temp','happypack'),
     OUTPUT_PATH: path.resolve(path.join(process.cwd(), env.clientPath)),
     ASSET_IMAGE_OUTPUT: path.join(env.distFolder, env.assetFolder, env.imageFolder, path.sep),
     ASSET_FONT_OUTPUT: path.join(env.distFolder, env.assetFolder, env.fontFolder, path.sep),
@@ -91,7 +93,7 @@ export function addModule(name, config, templateModule) {
 }
 
 export function build() {
-    let serverConfig = serverConfigFactory(env)
+    let serverConfig = serverConfigFactory(env,constants)
     let clientConfig = mergeConfig(clientConfigFactory(env, constants))
     del.sync(path.join('server', env.distFolder))
     /** clean dist */
@@ -107,7 +109,6 @@ export function build() {
 
 export function vendor() {
     let vendorConfig = mergeConfig(vendorFactory(env, constants))
-    console.log('vendorConfig',vendorConfig)
     del.sync([path.join(env.clientPath, env.distFolder, env.vendorFolder, '*.*')])
     let compiler = webpack(vendorConfig)
     compiler.run(function(err, stats) {

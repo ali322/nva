@@ -2,7 +2,7 @@ import webpack from 'webpack'
 import path from 'path'
 import glob from 'glob'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
-import configFactory from '../base/config'
+import {config as configFactory} from 'nva-core'
 import {checkManifest} from '../lib/helper'
 
 export default function(env, constants) {

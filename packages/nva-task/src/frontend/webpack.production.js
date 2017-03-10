@@ -1,10 +1,9 @@
 import webpack from 'webpack'
 import path from 'path'
 import glob from 'glob'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
-import configFactory from '../base/config'
+import {config as configFactory} from 'nva-core'
 import { bundleTime,checkManifest } from '../lib/helper'
 
 export default function(env, constants) {
@@ -89,7 +88,6 @@ export default function(env, constants) {
         resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
         plugins: [
             ...baseConfig.plugins,
-            new ExtractTextPlugin(path.join(env.distFolder, "[name]", "[name]-[hash:8].css")),
             ...dllRefs,
             ...htmls,
             new CopyPlugin(copys, { copyUnmodified: true })

@@ -1,5 +1,6 @@
 nva-core
 ===
+[![NPM](https://nodei.co/npm/nva-core.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nva-core/)
 
 core task for nva-cli based on webpack
 

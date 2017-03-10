@@ -2,8 +2,9 @@ import webpack from 'webpack'
 import chalk from 'chalk'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import loadersFactory from './loaders'
-import { happypackPlugin } from './lib'
+import { happypackPlugin } from '../lib'
 
 export default function(constants) {
     let config = {
@@ -62,6 +63,7 @@ export default function(constants) {
                     comments: false
                 }
             }),
+            new ExtractTextPlugin({filename:constants.CSS_OUTPUT})
         ]
     }
     return { ...config, ...restConfig }

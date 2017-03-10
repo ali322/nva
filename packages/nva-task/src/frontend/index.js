@@ -23,6 +23,8 @@ function callback(info, err, stats) {
 }
 
 const constants = {
+    CSS_OUTPUT: path.join(env.distFolder, "[name]", "[name]-[hash:8].css"),
+    HAPPYPACK_TEMP_DIR: path.join('.nva','temp','happypack'),
     OUTPUT_PATH: path.resolve(process.cwd()),
     ASSET_IMAGE_OUTPUT: path.join(env.distFolder, env.assetFolder, env.imageFolder, path.sep),
     ASSET_FONT_OUTPUT: path.join(env.distFolder, env.assetFolder, env.fontFolder, path.sep),
