@@ -1,0 +1,55 @@
+lerna(verbose) GitUtilities.isInitialized    ()
+lerna(verbose) GitUtilities.isInitialized    () => true
+lerna(verbose) GitUtilities.getTopLevelDirectory()
+lerna(verbose) GitUtilities.getTopLevelDirectory() => "."
+lerna(verbose) FileSystemUtilities.existsSync("./lerna.json")
+lerna(verbose) FileSystemUtilities.existsSync("./lerna.json") => true
+lerna(verbose) FileSystemUtilities.readFileSync("./lerna.json")
+lerna(verbose) FileSystemUtilities.readFileSync("./lerna.json") => "{\n  \"lerna\": \"2.0.0-beta.38\",\n  \"packages\": [\n    \"packages/*\"\n  ],\n  \"version\": \"0.1.29\"\n}"
+lerna(verbose) FileSystemUtilities.existsSync("./package.json")
+lerna(verbose) FileSystemUtilities.existsSync("./package.json") => true
+lerna(verbose) FileSystemUtilities.readFileSync("./package.json")
+lerna(verbose) FileSystemUtilities.readFileSync("./package.json") => "{\n  \"name\": \"nva\",\n  \"version\": \"0.1.19\",\n  \"description\": \"scaffold for frontend and isomorphic project\",\n  \"bin\": {\n    \"nva\": \"bin/nva.js\"\n  },\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/ali322/nva.git\"\n  },\n  \"author\": \"alichen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"chalk\": \"^1.1.3\",\n    \"commander\": \"^2.9.0\",\n    \"download-git-repo\": \"^0.2.1\",\n    \"fs-extra\": \"^1.0.0\",\n    \"inquirer\": \"^2.0.0\",\n    \"js-yaml\": \"^3.7.0\",\n    \"nva-task\": \"^0.1.27\",\n    \"object-assign\": \"^4.1.0\",\n    \"ora\": \"^0.3.0\",\n    \"rimraf\": \"^2.5.4\"\n  },\n  \"devDependencies\": {\n    \"lerna\": \"2.0.0-beta.38\"\n  }\n}"
+lerna(info)    Lerna v2.0.0-beta.38
+lerna(verbose) FileSystemUtilities.existsSync("./package.json")
+lerna(verbose) FileSystemUtilities.existsSync("./package.json") => true
+lerna(verbose) FileSystemUtilities.existsSync("./lerna.json")
+lerna(verbose) FileSystemUtilities.existsSync("./lerna.json") => true
+lerna(verbose) FileSystemUtilities.existsSync("./VERSION")
+lerna(verbose) FileSystemUtilities.existsSync("./VERSION") => false
+lerna(verbose) FileSystemUtilities.existsSync("./packages/nva-core/package.json")
+lerna(verbose) FileSystemUtilities.existsSync("./packages/nva-core/package.json") => true
+lerna(verbose) FileSystemUtilities.existsSync("./packages/nva-task/package.json")
+lerna(verbose) FileSystemUtilities.existsSync("./packages/nva-task/package.json") => true
+lerna(verbose) Attempting running PublishCommand.initialize
+lerna(verbose) GitUtilities.getCurrentBranchDescription()
+lerna(verbose) GitUtilities.getCurrentBranchDescription() => "bugfix"
+lerna(info)    Current version: 0.1.29
+lerna(info)    Checking for updated packages...
+lerna(verbose) GitUtilities.hasTags          ()
+lerna(verbose) GitUtilities.hasTags          () => true
+lerna(verbose) GitUtilities.getLastTag       ()
+lerna(verbose) GitUtilities.getLastTag       () => "v0.1.29"
+lerna(info)    Comparing with: v0.1.29
+lerna(verbose) GitUtilities.getLastTaggedCommitInBranch()
+lerna(verbose) GitUtilities.getLastTag       ()
+lerna(verbose) GitUtilities.getLastTag       () => "v0.1.29"
+lerna(verbose) GitUtilities.getLastTaggedCommitInBranch() => "218e964fbb5378cfc5abb8e14da4d7167c9c3bbd"
+lerna(verbose) GitUtilities.describeTag      ("218e964fbb5378cfc5abb8e14da4d7167c9c3bbd")
+lerna(verbose) GitUtilities.describeTag      ("218e964fbb5378cfc5abb8e14da4d7167c9c3bbd") => "v0.1.29"
+lerna(verbose) GitUtilities.diffSinceIn      ("v0.1.29", "./packages/nva-core")
+lerna(verbose) GitUtilities.diffSinceIn      ("v0.1.29", "./packages/nva-core") => ""
+lerna(verbose) GitUtilities.diffSinceIn      ("v0.1.29", "./packages/nva-task")
+lerna(verbose) GitUtilities.diffSinceIn      ("v0.1.29", "./packages/nva-task") => ""
+lerna(error)   Errored while running PublishCommand.initialize
+    Error: No updated packages to publish.
+        at PublishCommand.initialize (/Users/alichen/.nvm/versions/node/v6.9.4/lib/node_modules/lerna/lib/commands/PublishCommand.js:115:18)
+        at PublishCommand._attempt (/Users/alichen/.nvm/versions/node/v6.9.4/lib/node_modules/lerna/lib/Command.js:215:21)
+        at PublishCommand.runCommand (/Users/alichen/.nvm/versions/node/v6.9.4/lib/node_modules/lerna/lib/Command.js:199:12)
+        at PublishCommand.run (/Users/alichen/.nvm/versions/node/v6.9.4/lib/node_modules/lerna/lib/Command.js:110:12)
+        at Object.<anonymous> (/Users/alichen/.nvm/versions/node/v6.9.4/lib/node_modules/lerna/bin/lerna.js:72:11)
+        at Module._compile (module.js:570:32)
+        at Object.Module._extensions..js (module.js:579:10)
+        at Module.load (module.js:487:32)
+        at tryModuleLoad (module.js:446:12)
+        at Function.Module._load (module.js:438:3)
