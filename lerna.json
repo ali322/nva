@@ -3,13 +3,5 @@
   "packages": [
     "packages/*"
   ],
-  "changelog": {
-    "repo": "ali322/nva",
-    "labels": {
-      "bugfix": "Bug fix",
-      "enhancement": "Enhancement"
-    },
-    "cacheDir": ".changelog"
-  },
-  "version": "0.1.28"
+  "version": "0.1.29"
 }
