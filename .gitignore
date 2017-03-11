@@ -4,3 +4,4 @@ npm-debug.log
 packages/**/node_modules/
 packages/**/dist/
 packages/**/es/
+run.js
