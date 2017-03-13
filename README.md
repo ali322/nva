@@ -1,4 +1,4 @@
-nva [![npm version](https://badge.fury.io/js/nva.svg)](https://badge.fury.io/js/nva)
+nva [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nva.svg)](https://gemnasium.com/github.com/ali322/nva)
 ===
 [![NPM](https://nodei.co/npm/nva.png)](https://nodei.co/npm/nva/)
 

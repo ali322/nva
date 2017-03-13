@@ -1,4 +1,4 @@
-nva-task [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nva-task.svg)](https://gemnasium.com/github.com/ali322/nva-task)
+nva-task 
 ===
 [![NPM](https://nodei.co/npm/nva-task.png)](https://nodei.co/npm/nva-task/)
 
