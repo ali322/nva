@@ -1,6 +1,6 @@
 {
   "name": "nva-core",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "description": "nva core module",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
