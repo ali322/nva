@@ -5,7 +5,6 @@ nva-core
 core task for nva-cli based on webpack
 
 ### Install
----
 
 
 ```javascript
@@ -13,7 +12,6 @@ npm install nva-core --save
 ```
 
 ### Usage
----
 
 
 ```javascript
@@ -33,7 +31,6 @@ build constants should contain followings
 - `HOT`                 is in development mode?
 
 ### License
----
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
 

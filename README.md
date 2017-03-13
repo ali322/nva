@@ -1,4 +1,4 @@
-NVA [![npm version](https://badge.fury.io/js/nva.svg)](https://badge.fury.io/js/nva)
+nva [![npm version](https://badge.fury.io/js/nva.svg)](https://badge.fury.io/js/nva)
 ===
 [![NPM](https://nodei.co/npm/nva.png)](https://nodei.co/npm/nva/)
 
@@ -6,7 +6,6 @@ yet another efficient and painless scaffold for frontend and isomorphic project
 
 
 ### Install
----
 
 Prerequisites: [Node.js](https://nodejs.org/en/) (>=4.x, 6.x preferred), npm version 3+ and [Git](https://git-scm.com)
 ```javascript
@@ -14,7 +13,6 @@ npm install nva -g
 ```
 
 ### Usage
----
 
 - list all available commands
 
@@ -70,7 +68,6 @@ npm install nva -g
     ```
 
 ### Supported Template
----
 
 - frontend  
 
@@ -83,7 +80,6 @@ npm install nva -g
   just simple [react-native boilerplate](https://github.com/ali322/react-native-boilerplate)
 
 ### Config
----
 
 The purpose of nva is provide easy and painless way so that users can get started with actual app code as fast as possible,Howerver,nva need some configure to work in order
 all config files alive in `.nva` directory of project
@@ -204,7 +200,6 @@ all config files alive in `.nva` directory of project
 
 
 ### Test and Lint
----
 
 lint your project source code
 
@@ -219,17 +214,14 @@ npm run test
 ```
 
 ### Todo
----
 
 - fix some unknow bugs
 - add more template
 
 ### Contrib
----
 
 welcome to pull request and issues,help to improve `nva` more powerful and better 
 
 ### License
----
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)

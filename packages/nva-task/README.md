@@ -5,14 +5,12 @@ nva-task [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nv
 tasks for nva cli,make frontend develop more efficiency
 
 ### Install
----
 
 ```javascript
 npm install nva-task --save
 ```
 
 ### Usage
----
 
 ```javascript
 var tasks = require('nva-tasks')
@@ -21,7 +19,6 @@ task.isomorphic.release()
 ```
 
 ### API
----
 
 ### frontend
 
@@ -35,12 +32,10 @@ task.isomorphic.release()
     - release: compile source code,inject to nodeJS app's templates
 
 ### Todo
----
 
 - fix some unknow bugs
 
 
 ### License
----
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
