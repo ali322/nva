@@ -3,7 +3,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import autoPrefixer from 'autoprefixer'
 import sprites from 'postcss-sprites'
 
-const nodeModulesDir = path.join(process.cwd(), '..', 'node_modules')
+const nodeModulesDir = path.join(process.cwd(), 'node_modules')
 
 export default function(constants) {
     const { ASSET_FONT_OUTPUT, ASSET_IMAGE_OUTPUT, SPRITE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX } = constants
