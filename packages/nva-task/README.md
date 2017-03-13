@@ -4,15 +4,15 @@ nva-task [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nv
 
 tasks for nva cli,make frontend develop more efficiency
 
-Install
-===
+### Install
+---
 
 ```javascript
 npm install nva-task --save
 ```
 
-Useage
-===
+### Usage
+---
 
 ```javascript
 var tasks = require('nva-tasks')
@@ -20,8 +20,8 @@ tasks.frontend.release()
 task.isomorphic.release()
 ```
 
-API
-===
+### API
+---
 
 ### frontend
 
@@ -34,11 +34,13 @@ API
     - hmrServer: start frontend develop server with hot module replacement(HMR) if using react stuff
     - release: compile source code,inject to nodeJS app's templates
 
-## Todo
+### Todo
+---
 
 - fix some unknow bugs
 
 
-## License
+### License
+---
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)

@@ -4,15 +4,17 @@ nva-core
 
 core task for nva-cli based on webpack
 
-Install
-===
+### Install
+---
+
 
 ```javascript
 npm install nva-core --save
 ```
 
-Useage
-===
+### Usage
+---
+
 
 ```javascript
 import config from 'nva-core'
@@ -30,7 +32,8 @@ build constants should contain followings
 - `FONT_PREFIX`         prefix of font public path 
 - `HOT`                 is in development mode?
 
-## License
+### License
+---
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
 
