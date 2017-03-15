@@ -3,11 +3,12 @@ import chalk from 'chalk'
 import del from 'del'
 import fs from 'fs-extra'
 import path from 'path'
-import { DEBUG, env,mergeConfig } from '../lib'
+import { DEBUG, env, mergeConfig } from '../lib'
 import { writeToModuleConfig } from '../lib/helper'
 import vendorFactory from '../base/vendor'
 import serverConfigFactory from './webpack.server'
 import clientConfigFactory from './webpack.client'
+import bundleConfigFactory from './webpack.bundle'
 import developServerFactory from './develop-server'
 
 function callback(info, err, stats) {
@@ -23,9 +24,32 @@ function callback(info, err, stats) {
     }))
 }
 
+function createBundle(constants) {
+    let bundleConfig = bundleConfigFactory(env, constants)
+    del.sync(path.join(env.serverFolder, env.bundleFolder))
+    bundleConfig = mergeConfig(bundleConfig)
+    if (Object.keys(bundleConfig.entry).length === 0) {
+        return
+    }
+    let bundleCompiler = webpack(bundleConfig)
+
+    function cb(err, stats) {
+        if (err) throw err
+        stats = stats.toJson()
+        stats.errors.forEach(err => console.error(err))
+        stats.warnings.forEach(err => console.warn(err))
+        console.log(chalk.magenta('server side bundle is now VALID.'))
+    }
+    if (constants.HOT) {
+        bundleCompiler.watch({}, cb)
+    } else {
+        bundleCompiler.run(cb)
+    }
+}
+
 const constants = {
     CSS_OUTPUT: path.join(env.distFolder, "[name]", "[name]-[contenthash:8].css"),
-    HAPPYPACK_TEMP_DIR: path.join('.nva','temp','happypack'),
+    HAPPYPACK_TEMP_DIR: path.join('.nva', 'temp', 'happypack'),
     OUTPUT_PATH: path.resolve(path.join(process.cwd(), env.clientPath)),
     ASSET_IMAGE_OUTPUT: path.join(env.distFolder, env.assetFolder, env.imageFolder, path.sep),
     ASSET_FONT_OUTPUT: path.join(env.distFolder, env.assetFolder, env.fontFolder, path.sep),
@@ -93,14 +117,15 @@ export function addModule(name, config, templateModule) {
 }
 
 export function build() {
-    let serverConfig = mergeConfig(serverConfigFactory(env,constants))
+    let serverConfig = mergeConfig(serverConfigFactory(env, constants))
     let clientConfig = mergeConfig(clientConfigFactory(env, constants))
     del.sync(path.join(env.serverFolder, env.distFolder))
     /** clean dist */
     env.modules.forEach(function(moduleObj) {
         del.sync(path.join(env.clientPath, env.distFolder, moduleObj.path, '/*.*'));
     })
-    let compiler = webpack([clientConfig,serverConfig])
+    createBundle({ ...constants, HOT: false })
+    let compiler = webpack([clientConfig, serverConfig])
     compiler.run(function(err, stats) {
         callback('build success!', err, stats)
     })
@@ -115,4 +140,7 @@ export function vendor() {
     })
 }
 
-export const developServer = developServerFactory(env, constants)
+export function developServer(options) {
+    createBundle({ ...constants, HOT: true })
+    developServerFactory(env, constants)(options)
+}

@@ -7,7 +7,7 @@ import { config as configFactory } from 'nva-core'
 
 export default function(env, constants) {
     let entry = {}
-    let baseConfig = configFactory({ ...constants, HOT: false })
+    let baseConfig = configFactory(constants)
     let externals = Object.keys(require(path.join(process.cwd(),'package.json')).dependencies)
 
     /** build modules */
@@ -30,17 +30,13 @@ export default function(env, constants) {
         resolve: { modules: [env.serverFolder, path.join(process.cwd(), "node_modules")] },
         externals,
         plugins: [
-            ...baseConfig.plugins.slice(1),
+            ...baseConfig.plugins.slice(1,-1),
             new ProgressBarPlugin({
                 format: 'Building bundle [:bar] ' + chalk.green.bold(':percent'),
                 clear: false,
                 summary: false
             }),
-            new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/),
-            new webpack.DefinePlugin({
-                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-                'process.env.VUE_ENV': JSON.stringify('server')
-            })
+            new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/)
         ]
     }
 }

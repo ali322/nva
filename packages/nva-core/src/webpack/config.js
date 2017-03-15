@@ -45,9 +45,9 @@ export default function(constants) {
         performance: { hints: false },
         plugins: [
             ...plugins,
-            new webpack.HotModuleReplacementPlugin(),
             new FriendlyErrorsPlugin({ clearConsole: false }),
-            new webpack.NoEmitOnErrorsPlugin()
+            new webpack.NoEmitOnErrorsPlugin(),
+            new webpack.HotModuleReplacementPlugin()
         ]
     } : {
         devtool: false,

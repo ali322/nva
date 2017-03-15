@@ -1,38 +1,13 @@
 import browserSync from 'browser-sync'
-import webpack from 'webpack'
-import chalk from 'chalk'
-import del from 'del'
-import path from 'path'
 import nodemon from './nodemon'
 import mock from '../base/mock'
 import { env, mergeConfig } from '../lib'
 import middlewareFactory from '../base/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'
-import bundleConfigFactory from './webpack.bundle'
 
 const RUNNING_REGXP = new RegExp(env.nvaConfig.runningMessage || 'server is running')
-const integrated = env.nvaConfig.integrated || false
 
 export default function(env, constants) {
-    let hotUpdateConfig = hotUpdateConfigFactory(env, constants)
-    let bundleConfig = bundleConfigFactory(env, constants)
-
-    function createBundle() {
-        del.sync(path.join(env.serverFolder, env.bundleFolder))
-        bundleConfig = mergeConfig(bundleConfig)
-        if(Object.keys(bundleConfig.entry).length === 0){
-            return
-        }
-        let bundleCompiler = webpack(bundleConfig)
-        bundleCompiler.watch({}, (err, stats) => {
-            if (err) throw err
-            stats = stats.toJson()
-            stats.errors.forEach(err => console.error(err))
-            stats.warnings.forEach(err => console.warn(err))
-            console.log(chalk.magenta('server side bundle is now VALID.'))
-        })
-    }
-
     return function(options) {
         nodemon({
             // delay: "200ms",
@@ -65,10 +40,8 @@ export default function(env, constants) {
         _devPort = port || _devPort
         let listenPort = process.env.LISTEN_PORT || 3000
         let middleware = [mock()]
-        if (integrated) {
-            middleware = middleware.concat(middlewareFactory(mergeConfig(hotUpdateConfig)))
-        }
-        createBundle()
+        let hotUpdateConfig = hotUpdateConfigFactory(env, constants)
+        middleware = middleware.concat(middlewareFactory(mergeConfig(hotUpdateConfig)))
 
         browserSync({
             proxy: {
