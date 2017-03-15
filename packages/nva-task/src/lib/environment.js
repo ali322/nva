@@ -12,6 +12,8 @@ const vendorConfig = vendorConfigFactory()
 const webpackConfig = webpackConfigFactory()
 const nvaConfig = nvaConfigFactory()
 const nvaType = nvaConfig['type']
+delete nvaConfig['type']
+const isIsomorphic = nvaType === 'isomorphic'
 
 let env = {
     entryJSExt: '.js',
@@ -41,21 +43,19 @@ env.hmrPort = process.env.HMR_PORT || 5000;
 env.reloaderHost = "http://" + env.lanIP + ":" + env.reloaderPort
 
 let _sourcePath = env.sourcePath
-if (nvaType === 'isomorphic') {
+if (isIsomorphic) {
     env = {
         ...env,
         pagePath: 'view',
         cssFolder: 'stylesheet',
         moduleFolder: 'module',
         serverFolder: 'server',
-        serverEntryJS: 'bootstrap.js',
+        serverEntry: 'bootstrap.js',
         clientPath: "client",
         entryJSExt: '.jsx'
     }
     _sourcePath = env.clientPath
 }
-
-delete nvaConfig['type']
 
 env = {
     ...env,
@@ -68,10 +68,14 @@ if (moduleConfig) {
         let moduleObj = moduleConfig[moduleName]
         let entryJS = moduleObj.entryJS || (moduleName + env.entryJSExt)
         let entryCSS = moduleObj.entryCSS || (moduleName + env.entryCSSExt)
+        let bundleEntry = moduleObj.bundleEntry || (moduleName + '-server' + env.entryJSExt)
         let entryHtml = []
 
         entryJS = path.resolve(path.join(_sourcePath, env.bundleFolder, moduleObj.path, entryJS))
         entryCSS = path.resolve(path.join(_sourcePath, env.bundleFolder, moduleObj.path, entryCSS))
+        if (isIsomorphic) {
+            bundleEntry = path.resolve(path.join(_sourcePath, env.bundleFolder, moduleObj.path, bundleEntry))
+        }
         if (typeof moduleObj.html === 'string') {
             entryHtml = [path.join(env.pagePath, moduleObj.html)]
         } else if (Array.isArray(moduleObj.html)) {
@@ -82,6 +86,7 @@ if (moduleConfig) {
         modules.push({
             ...moduleObj,
             name: moduleName,
+            ...(isIsomorphic ? { bundleEntry } : null),
             entryCSS,
             entryJS,
             html: entryHtml

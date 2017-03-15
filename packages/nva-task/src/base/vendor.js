@@ -20,6 +20,7 @@ export default function(env, constants) {
         vendorCSSChunks.push(key)
         entryCSS[key] = env.vendors['css'][key]
     }
+    console.log(entryCSS)
 
     const vendorJSConfig = {
         ...baseConfig,

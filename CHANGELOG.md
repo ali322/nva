@@ -1,3 +1,7 @@
+## 0.1.43
+
+- add bundle task for isomorphic project
+
 ## 0.1.39
 
 - nva-task server build inherit from base

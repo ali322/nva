@@ -94,7 +94,6 @@ export function removeModule(name) {
 export function build() {
     let releaseConfig = mergeConfig(releaseConfigFactory(env, constants))
     /** clean build assets*/
-    // del.sync([path.join(env.distFolder, env.assetFolder), path.join(env.distFolder, env.vendorFolder, '*.css')])
     env.modules.forEach(function(moduleObj) {
         del.sync(path.join(env.distFolder, moduleObj.name))
     })

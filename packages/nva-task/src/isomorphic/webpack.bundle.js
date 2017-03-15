@@ -1,26 +1,30 @@
 import webpack from 'webpack'
-import path from 'path'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
+import path from 'path'
+import fs from 'fs'
 import { config as configFactory } from 'nva-core'
 
 export default function(env, constants) {
+    let entry = {}
     let baseConfig = configFactory({ ...constants, HOT: false })
     let externals = Object.keys(require(path.join(process.cwd(),'package.json')).dependencies)
 
+    /** build modules */
+    env.modules.forEach(moduleObj => {
+        if(fs.existsSync(moduleObj.bundleEntry)){
+            entry[moduleObj.name] = moduleObj.bundleEntry
+        }
+    })
     return {
         ...baseConfig,
-        name: 'server',
-        entry: ['babel-polyfill', path.join(process.cwd(), env.serverFolder, env.serverEntry)],
+        entry,
+        name: 'bundle',
         target: 'node',
-        node: {
-            __dirname: true,
-            __filename: true
-        },
         output: {
-            path: path.join(process.cwd(), env.serverFolder, env.distFolder),
-            filename: env.serverEntry,
-            libraryTarget: 'commonjs2'
+            path: path.join(process.cwd(), env.serverFolder, env.bundleFolder),
+            libraryTarget: 'commonjs2',
+            filename: '[name].js'
         },
         context: __dirname,
         resolve: { modules: [env.serverFolder, path.join(process.cwd(), "node_modules")] },
@@ -28,13 +32,15 @@ export default function(env, constants) {
         plugins: [
             ...baseConfig.plugins.slice(1),
             new ProgressBarPlugin({
-                format: 'Building server [:bar] ' + chalk.green.bold(':percent'),
+                format: 'Building bundle [:bar] ' + chalk.green.bold(':percent'),
                 clear: false,
                 summary: false
             }),
             new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/),
-            new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
-        ],
-        devtool: 'sourcemap'
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+                'process.env.VUE_ENV': JSON.stringify('server')
+            })
+        ]
     }
 }

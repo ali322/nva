@@ -93,15 +93,14 @@ export function addModule(name, config, templateModule) {
 }
 
 export function build() {
-    let serverConfig = serverConfigFactory(env,constants)
+    let serverConfig = mergeConfig(serverConfigFactory(env,constants))
     let clientConfig = mergeConfig(clientConfigFactory(env, constants))
-    del.sync(path.join('server', env.distFolder))
+    del.sync(path.join(env.serverFolder, env.distFolder))
     /** clean dist */
-    // del.sync([path.join(env.clientPath, env.distFolder, env.assetFolder)])
     env.modules.forEach(function(moduleObj) {
         del.sync(path.join(env.clientPath, env.distFolder, moduleObj.path, '/*.*'));
     })
-    let compiler = webpack([clientConfig, serverConfig])
+    let compiler = webpack([clientConfig,serverConfig])
     compiler.run(function(err, stats) {
         callback('build success!', err, stats)
     })
