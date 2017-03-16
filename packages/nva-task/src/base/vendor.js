@@ -1,10 +1,10 @@
 import path from 'path'
 import webpack from 'webpack'
-import {config as configFactory} from 'nva-core'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
+import {config as configFactory} from 'nva-core'
 
 export default function(env, constants) {
     const { VENDOR_OUTPUT, MANIFEST_PATH } = constants
