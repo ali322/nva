@@ -57,7 +57,7 @@ export default function(env, constants) {
             path: constants.OUTPUT_PATH
         },
         plugins: [
-            ...baseConfig.plugins.slice(1),
+            ...baseConfig.plugins.slice(1,-1),
             new ProgressBarPlugin({
                 format: 'Building vendor:css [:bar] ' + chalk.green.bold(':percent'),
                 clear: false,
