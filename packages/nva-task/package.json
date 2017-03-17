@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "description": "tasks for nva",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -37,7 +37,7 @@
     "babel-loader": "^6.2.10",
     "browser-sync": "^2.18.6",
     "chalk": "^1.1.3",
-    "chunk-transform-webpack-plugin": "^0.0.8",
+    "chunk-transform-webpack-plugin": "^0.0.9",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.2",
     "del": "^2.2.2",
