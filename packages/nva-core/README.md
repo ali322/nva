@@ -23,6 +23,7 @@ const buildConfig = config(constants)
 build constants should contain followings
 
 - `HAPPYPACK_TEMP_DIR`  happypack compiler cache directory,by default `./.happpack`
+- `CSS_OUTPUT`          where to output css
 - `ASSET_FONT_OUTPUT`   where to output font
 - `ASSET_IMAGE_OUTPUT`  where to output image
 - `SPRITE_OUTPUT`       where to output background sprite image

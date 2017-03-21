@@ -38,7 +38,7 @@ let server = app.listen(port, function(err) {
 })
 
 server.on('close',function(){
-    console.log('🌎  nva-server closed')
+    console.log('bye! nva-server closed')
 })
 
 function stopServer() {
