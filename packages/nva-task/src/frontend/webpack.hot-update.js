@@ -43,13 +43,13 @@ export default function(env, constants) {
                     let _regexpJS = new RegExp(moduleObj.vendor.js + "-\\w+\\.js$")
                     return _regexpJS.test(v)
                 }).map(function(v) {
-                    return path.join(path.sep, env.distFolder, env.vendorFolder, v)
+                    return path.join(env.vendorFolder, v)
                 })
                 _more.css = vendors.filter(function(v) {
                     let _regexpCSS = new RegExp(moduleObj.vendor.css + "-\\w+\\.css$")
                     return _regexpCSS.test(v)
                 }).map(function(v) {
-                    return path.join(path.sep, env.distFolder, env.vendorFolder, v)
+                    return path.join(env.vendorFolder, v)
                 })
             }
         }

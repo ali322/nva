@@ -1,10 +1,9 @@
-import fs from 'fs-extra'
 import path from 'path'
-import mock from '../base/mock'
 import { mergeConfig } from '../lib'
 import middlewareFactory from '../base/middleware'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
+import createApp from 'nva-server'
 
 export default function(env, constants) {
     return function(options) {
@@ -15,28 +14,11 @@ export default function(env, constants) {
         let _devPort = env.reloaderPort;
         _devPort = port || _devPort
 
-        const app = mock()
-        app.get('/', (req, res) => {
-            const htmlPath = path.join('.', env.sourcePath, env.pageFolder, 'index.html')
-            if (fs.existsSync(htmlPath)) {
-                const html = fs.readFileSync(htmlPath, 'utf8')
-                res.send(html)
-            } else {
-                res.send('page not found')
-            }
+        const app = createApp({
+            paths: path.join(env.sourcePath, env.pageFolder),
+            asset: env.distFolder,
+            mockPath: path.join('.nva', 'api')
         })
-        for (let i in env.modules) {
-            const mod = env.modules[i]
-            app.get(`/${mod.name}\*`, (req, res) => {
-                const htmlPath = path.join('.', env.sourcePath, env.pageFolder, `${mod.name}.html`)
-                if (fs.existsSync(htmlPath)) {
-                    const html = fs.readFileSync(htmlPath, 'utf8')
-                    res.send(html)
-                } else {
-                    res.send('page not found')
-                }
-            })
-        }
 
         process.once('SIGINT', () => {
             browserSync.exit()

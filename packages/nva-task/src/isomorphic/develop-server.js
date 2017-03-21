@@ -1,6 +1,7 @@
 import browserSync from 'browser-sync'
 import nodemon from './nodemon'
-import mock from '../base/mock'
+import path from 'path'
+import createApp from 'nva-server'
 import { env, mergeConfig } from '../lib'
 import middlewareFactory from '../base/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'
@@ -39,7 +40,11 @@ export default function(env, constants) {
         let _devPort = env.reloaderPort;
         _devPort = port || _devPort
         let listenPort = process.env.LISTEN_PORT || 3000
-        let middleware = [mock()]
+
+        let app = createApp({
+            mockPath: path.join('.nva', 'api')
+        })
+        let middleware = [app]
         let hotUpdateConfig = hotUpdateConfigFactory(env, constants)
         middleware = middleware.concat(middlewareFactory(mergeConfig(hotUpdateConfig)))
 

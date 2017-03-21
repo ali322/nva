@@ -1,6 +1,5 @@
 import path from 'path'
 import webpack from 'webpack'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
@@ -57,13 +56,12 @@ export default function(env, constants) {
             path: constants.OUTPUT_PATH
         },
         plugins: [
-            ...baseConfig.plugins.slice(1,-1),
+            ...baseConfig.plugins.slice(1),
             new ProgressBarPlugin({
                 format: 'Building vendor:css [:bar] ' + chalk.green.bold(':percent'),
                 clear: false,
                 summary: false
             }),
-            new ExtractTextPlugin(path.join(env.distFolder, "[name]", "[name]-[hash:8].css")),
             new ChunkTransformPlugin({
                 chunks: vendorCSSChunks,
                 test: /\.css/,
@@ -72,5 +70,5 @@ export default function(env, constants) {
         ]
     }
 
-    return [vendorJSConfig, vendorCSSConfig]
+    return [ vendorJSConfig ,vendorCSSConfig]
 }
