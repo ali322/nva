@@ -1,4 +1,4 @@
-nva [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nva.svg)](https://gemnasium.com/github.com/ali322/nva)
+nva [![Build Status](https://travis-ci.org/ali322/nva.svg?branch=master)](https://travis-ci.org/ali322/nva) [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nva.svg)](https://gemnasium.com/github.com/ali322/nva)
 ===
 [![NPM](https://nodei.co/npm/nva.png)](https://nodei.co/npm/nva/)
 
