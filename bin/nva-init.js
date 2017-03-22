@@ -1,17 +1,16 @@
 #! /usr/bin/env node
 
-var program = require("commander")
-var chalk = require("chalk")
-var path = require("path")
-var fs = require("fs")
-var objectAssign = require("object-assign")
-var inquirer = require("inquirer")
-var download = require("download-git-repo")
-var ora = require("ora")
-var rm = require("rimraf").sync
-var execSync = require("child_process").execSync
+let program = require("commander")
+let chalk = require("chalk")
+let path = require("path")
+let fs = require("fs")
+let objectAssign = require("object-assign")
+let inquirer = require("inquirer")
+let rm = require("rimraf").sync
 
-var config = require("../lib/config")
+let config = require("../lib/config")
+let generator = require('../lib/generator')
+let isWebProject = require('../lib').isWebProject
 
 program.usage('[project]')
 program.option("-r, --repo [value]", "choose specified repo")
@@ -35,10 +34,10 @@ if (!program.args.length) {
     program.help()
 }
 
-var repo = program.repo
+let repo = program.repo
 
-var projectName = program.args[0]
-var projectPath = path.resolve(projectName)
+let projectName = program.args[0]
+let projectPath = path.resolve(projectName)
 
 if (projectName === '[object Object]') {
     console.log(chalk.red('name required!'))
@@ -53,11 +52,11 @@ if (fs.existsSync(projectPath)) {
     }]).then(function(answer) {
         if (answer.yes) {
             rm(projectPath)
-            generateProject()
+            ask(generator)
         }
     })
 } else {
-    generateProject()
+    ask(generator)
 }
 
 function ask(cb) {
@@ -76,92 +75,9 @@ function ask(cb) {
     }
     inquirer.prompt(_questions).then(function(answers) {
         if (answers.yes) {
-            cb(answers)
+            cb(projectName, projectPath, answers, repo)
         } else {
-            ask()
+            ask(cb)
         }
     })
-}
-
-function generateProject() {
-    ask(function(answers) {
-        if (answers.template === 'react-native') {
-            try {
-                execSync(`react-native init ${projectName}`, { stdio: 'inherit' })
-            } catch (err) {
-                console.log(err)
-                process.exit(1)
-            }
-        } else {
-            fs.mkdirSync(projectPath)
-        }
-        var _template = config.repoForTemplate(answers.template)
-        if (isWebProject(answers)) {
-            var _suffix = []
-            answers.framework === 'vue' && _suffix.push('vue')
-            answers.spa && _suffix.push('spa')
-            _template += _suffix.length > 0 ? '#' + _suffix.join('-') : ''
-        }
-        var _repo = repo ? repo : _template
-        var _dest = repo ? 'repo: ' + repo : 'template: ' + answers.template
-
-        var spinner = ora(`Downloading ${_dest} for project`)
-        spinner.start()
-
-        download(_repo,projectPath,function(err){
-            if(err){
-                console.log(chalk.red(`\n can not download ${_dest}`))
-                process.exit(1)
-            }
-            spinner.stop()
-
-            updatePkgJSON(answers)
-
-            if(answers.template === "react-native"){
-                updateRNIndex()
-            }
-            try{
-                execSync(`cd ${projectName} && npm install`,{stdio: 'inherit'})
-            }catch(err){
-                console.log(err)
-                process.exit(1)
-            }
-            var completeMsg = `Successfully generated project '${projectName}'`
-            console.log(chalk.yellow(completeMsg))
-        }) 
-    })
-}
-
-function updatePkgJSON(answers) {
-    var pkgJSONPath = path.resolve(projectName, "package.json")
-    var pkgJSON = fs.readFileSync(pkgJSONPath)
-    pkgJSON = JSON.parse(pkgJSON)
-    pkgJSON['name'] = projectName
-    pkgJSON['description'] = answers.description
-    pkgJSON['version'] = answers.version
-    pkgJSON['author'] = answers.author
-    pkgJSON['license'] = answers.license
-    pkgJSON['repository'] = {
-        "type": "git",
-        "url": `git+${answers.respository}`
-    }
-    pkgJSON["bugs"] = { "url": "" }
-    pkgJSON["homepage"] = ""
-    fs.writeFileSync(pkgJSONPath, JSON.stringify(pkgJSON, null, 2))
-}
-
-function updateRNIndex() {
-    var indexIOSFile = path.resolve(projectName, 'index.ios.js')
-    var indexIOS = fs.readFileSync(indexIOSFile, 'utf8')
-    indexIOS = indexIOS.replace('RNProject', projectName)
-    fs.writeFileSync(indexIOSFile, indexIOS)
-
-    var indexAndroidFile = path.resolve(projectName, 'index.android.js')
-    var indexAndroid = fs.readFileSync(indexAndroidFile, 'utf8')
-    indexAndroid = indexAndroid.replace('RNProject', projectName)
-    fs.writeFileSync(indexAndroidFile, indexAndroid)
-}
-
-function isWebProject(answers) {
-    return answers.template === 'frontend' || answers.template === 'isomorphic'
 }
