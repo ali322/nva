@@ -31,7 +31,7 @@ const constants = {
     SPRITE_OUTPUT: path.join(env.distFolder, env.assetFolder, 'new'),
     IMAGE_PREFIX: path.join('..', env.assetFolder, env.imageFolder),
     FONT_PREFIX: path.join('..', env.assetFolder, env.fontFolder),
-    VENDOR_OUTPUT: path.join(env.distFolder, env.vendorFolder),
+    VENDOR_OUTPUT: path.resolve(path.join(process.cwd(),env.distFolder, env.vendorFolder)),
     MANIFEST_PATH: path.join(env.distFolder, env.vendorFolder),
     DEBUG
 }

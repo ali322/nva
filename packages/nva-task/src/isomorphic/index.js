@@ -56,7 +56,7 @@ const constants = {
     SPRITE_OUTPUT: path.join(env.clientPath, env.assetFolder, env.spriteFolder),
     IMAGE_PREFIX: path.join('..', '..', '..', env.distFolder, env.assetFolder, env.imageFolder),
     FONT_PREFIX: path.join('..', '..', env.distFolder, env.assetFolder, env.fontFolder),
-    VENDOR_OUTPUT: path.join(env.clientPath, env.distFolder, env.vendorFolder),
+    VENDOR_OUTPUT: path.resolve(path.join(process.cwd(),env.clientPath, env.distFolder, env.vendorFolder)),
     MANIFEST_PATH: path.join(env.clientPath, env.distFolder, env.vendorFolder),
     DEBUG
 }

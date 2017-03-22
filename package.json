@@ -1,13 +1,13 @@
 {
   "name": "nva",
-  "version": "0.1.64",
+  "version": "0.1.65",
   "description": "scaffold for frontend and isomorphic project",
   "bin": {
     "nva": "bin/nva.js"
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*-spec.js -t 50000"
+    "test": "mocha test/*-spec.js -t 100000"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "fs-extra": "^1.0.0",
     "inquirer": "^2.0.0",
     "js-yaml": "^3.7.0",
-    "nva-task": "^0.1.62",
+    "nva-task": "^0.1.65",
     "object-assign": "^4.1.0",
     "ora": "^0.3.0",
     "rimraf": "^2.5.4"
