@@ -6,6 +6,7 @@ let teardown = require("./fixture").teardown
 let constants = require('./fixture').constants
 
 describe('init', function() {
+    this.timeout(50000)
     before(function() {
         return setup()
     })

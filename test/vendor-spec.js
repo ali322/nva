@@ -6,12 +6,12 @@ let expect = require('chai').expect
 describe("build project test's", function() {
     let cli = path.join(__dirname, '..', 'bin', 'nva.js')
     let cwd = process.cwd()
+    this.timeout(50000)
     before(function() {
         return setup()
     })
 
     describe('vendor', function() {
-        this.timeout(50000)
         let result
         before(function(done) {
             process.chdir(path.join(__dirname, '..', 'temp', 'mock-project', 'test'))
