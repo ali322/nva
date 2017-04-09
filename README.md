@@ -72,9 +72,11 @@ npm install nva -g
 - frontend  
 
   just simple [frontend boilerplate](https://github.com/ali322/frontend-boilerplate)
+
 - isomorphic
 
-  [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react,server side render(SSR) enabled and single page application(SPA) also enabled
+  [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react or koa@2+vue,server side render(SSR) enabled and single page application(SPA) also enabled
+
 - react-native
 
   just simple [react-native boilerplate](https://github.com/ali322/react-native-boilerplate)
