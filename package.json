@@ -7,7 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*-spec.js"
+    "test": "mocha test/*-spec.js --timeout 100000"
   },
   "repository": {
     "type": "git",
