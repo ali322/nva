@@ -1,6 +1,6 @@
 nva [![Build Status](https://travis-ci.org/ali322/nva.svg?branch=master)](https://travis-ci.org/ali322/nva) [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nva.svg)](https://gemnasium.com/github.com/ali322/nva)
 ===
-[![NPM](https://nodei.co/npm/nva.png)](https://nodei.co/npm/nva/)
+[![NPM](https://nodei.co/npm/nva.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nva/)
 
 yet another efficient and painless scaffold for frontend and isomorphic project
 
