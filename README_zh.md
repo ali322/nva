@@ -88,17 +88,17 @@ nva build
 
 - [纯前端模板](https://github.com/ali322/frontend-boilerplate)
 
-  1. react + redux 的多页面项目
-  2. react + redux + react-router 的单页面项目
-  3. vue + vuex 的多页面项目
-  4. vue + vuex + vue-router 的单页面项目
+  - react + redux 的多页面项目
+  - react + redux + react-router 的单页面项目
+  - vue + vuex 的多页面项目
+  - vue + vuex + vue-router 的单页面项目
   
 - [同构JS模板](https://github.com/ali322/isomorphic-boilerplate)
 
-  1. react + redux + koa@2 的多页面项目
-  2. react + redux + react-router + koa@2 的单页面项目
-  3. vue + vuex + koa@2 的多页面项目
-  4. vue + vuex + vue-router + koa@2 的单页面项目
+  - react + redux + koa@2 的多页面项目
+  - react + redux + react-router + koa@2 的单页面项目
+  - vue + vuex + koa@2 的多页面项目
+  - vue + vuex + vue-router + koa@2 的单页面项目
 
 
 ## 配置参数

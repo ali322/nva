@@ -83,17 +83,17 @@ npm install nva -g
 
 - [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
 
-  1. multiple pages project with react + redux 
-  2. single page project with react + redux + react-router
-  3. multiple pages project with vue + vuex
-  4. single page project with vue + vuex + vue-router 
+  - multiple pages project with react + redux 
+  - single page project with react + redux + react-router
+  - multiple pages project with vue + vuex
+  - single page project with vue + vuex + vue-router 
 
 - [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react or koa@2+vue,server side render
 
-  1. multiple pages project with react + redux + koa@2
-  2. single page project with react + redux + react-router + koa@2
-  3. multiple pages project with vue + vuex + koa@2
-  4. single page project with vue + vuex + vue-router + koa@2
+  - multiple pages project with react + redux + koa@2
+  - single page project with react + redux + react-router + koa@2
+  - multiple pages project with vue + vuex + koa@2
+  - single page project with vue + vuex + vue-router + koa@2
 
 - react-native
 
