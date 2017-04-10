@@ -2,7 +2,7 @@ nva [![Build Status](https://travis-ci.org/ali322/nva.svg?branch=master)](https:
 ===
 [![NPM](https://nodei.co/npm/nva.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nva/)
 
-yet another efficient and painless scaffold for frontend and isomorphic project
+yet another efficient and painless scaffold for frontend and isomorphic project [中文文档](./README_zh.md)
 
 
 ### Install
@@ -12,13 +12,7 @@ Prerequisites: [Node.js](https://nodejs.org/en/) (>=4.x, 6.x preferred), npm ver
 npm install nva -g
 ```
 
-### Usage
-
-- list all available commands
-
-    ```bash
-    nva list
-    ```
+### Quick Start
 
 - generate project 
 
@@ -31,6 +25,14 @@ npm install nva -g
     nva init <project name> -r [github repo]
     ```
     The shorthand repo notation is passed to download-git-repo so you can also use things like bitbucket:username/repo for a Bitbucket repo and username/repo#branch for tags or branches
+
+
+- build project vendors
+
+    ```bash
+    nva vendor
+    ```
+    build project's third-party libraries
 
 - start to develop
 
@@ -45,14 +47,10 @@ npm install nva -g
     ```bash
     nva build
     ```
-    build project with webpack
+    build project to dist
 
-- build project vendors
 
-    ```bash
-    nva vendor
-    ```
-    build project's third-party libraries
+### Manage Modules
 
 - add module in project
 
@@ -66,16 +64,36 @@ npm install nva -g
     ```bash
     nva mod <module name, ...> -d
     ```
+ 
+### Other CLI
+
+- list all available commands
+
+    ```bash
+    nva list
+    ```
+
+- show current version
+
+    ```bash
+    nva -v
+    ```
 
 ### Supported Template
 
-- frontend  
+- [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
 
-  just simple [frontend boilerplate](https://github.com/ali322/frontend-boilerplate)
+  1. multiple pages project with react + redux 
+  2. single page project with react + redux + react-router
+  3. multiple pages project with vue + vuex
+  4. single page project with vue + vuex + vue-router 
 
-- isomorphic
+- [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react or koa@2+vue,server side render
 
-  [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react or koa@2+vue,server side render(SSR) enabled and single page application(SPA) also enabled
+  1. multiple pages project with react + redux + koa@2
+  2. single page project with react + redux + react-router + koa@2
+  3. multiple pages project with vue + vuex + koa@2
+  4. single page project with vue + vuex + vue-router + koa@2
 
 - react-native
 
@@ -102,7 +120,6 @@ all config files alive in `.nva` directory of project
     ```js
     {
         "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
-	    "integrated":true,    /* isomorphic project only,wether or not need start individual HMR server */
         "spa":true            /* is an single page application(SPA)? */
         "entryJSExt":".jsx",    /* entry js file extension */
         "entryCSSExt":".styl",   /* entry css file extension */
