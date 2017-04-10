@@ -14,8 +14,8 @@ npm install nva-task --save
 
 ```javascript
 var tasks = require('nva-tasks')
-tasks.frontend.release()
-task.isomorphic.release()
+tasks.frontend.build()
+task.isomorphic.build()
 ```
 
 ### API
@@ -23,13 +23,18 @@ task.isomorphic.release()
 ### frontend
 
     - developServer: start develop server with browser-sync and hot module replacement(HMR) if using react stuff
-    - release: compile source code,inject to htmls
+    - build: compile source code,inject to htmls
+    - vendor: compile third-party libraries
+    - addModule: create project module(s)
+    - removeModule: delete project module(s)
 
 ### isomorphic
 
     - developServer: start develop server for nodeJS app with browser-sync
-    - hmrServer: start frontend develop server with hot module replacement(HMR) if using react stuff
-    - release: compile source code,inject to nodeJS app's templates
+    - build: compile source code,inject to nodeJS app's templates
+    - vendor: compile third-party libraries
+    - addModule: create project module(s)
+    - removeModule: delete project module(s)
 
 ### Todo
 

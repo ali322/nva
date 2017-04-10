@@ -232,6 +232,49 @@ project test with `ava` + `tap-spec`
 npm run test
 ```
 
+### Packages
+
+`nva-core` `nva-task` `nva-server` in the packages directory can be install through npm independently
+
+- nva-core: basic webpack config,you can extend like
+
+  ```javascript
+  import config from 'nva-core'
+  const buildConfig = config(constants)
+  webpack({
+    ...buildConfig,
+    entry:'index.js',
+    output:{
+      ...
+    }
+  }).run((err,stats)=>{ ... })
+  ``
+  
+- nva-task: nva task collections,customize for your need
+
+  ```javascript
+  var tasks = require('nva-tasks')
+  tasks.frontend.build() //frontend project build
+  task.isomorphic.build()  //isomorphic project build
+  ```
+  
+- nva-server: development server base on connect
+
+  ```javascript
+  import App from 'nva-server'
+  let app = App()
+  app.listen(3000,()=>{
+    console.log('==> server stared at %d',3000)
+  })
+  ```
+
+  alsoo can run it in cli,more options refer to [nva-task](https://github.com/ali322/nva/blob/master/packages/nva-server/README.md)
+  
+  ```bash
+  nva-server -p 5000 -P src
+  ```
+
+
 ### Todo
 
 - fix some unknow bugs
