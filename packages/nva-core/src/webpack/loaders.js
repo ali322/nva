@@ -44,9 +44,9 @@ export default function(constants) {
 
     const vueLoaderOptions = constants.HOT ? {
         loaders: {
-            css: cssLoaders.slice(0, -1),
-            less: [...cssLoaders.slice(0, -1), 'less-loader'],
-            stylus: [...cssLoaders.slice(0, -1), 'stylus-loader']
+            css: [...cssLoaders.slice(0, -2),'resolve-url-loader'],
+            less: [...cssLoaders.slice(0, -2), 'less-loader'],
+            stylus: [...cssLoaders.slice(0, -2), 'stylus-loader']
         }
     } : {
         loaders: {
