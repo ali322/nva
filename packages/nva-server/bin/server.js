@@ -7,6 +7,7 @@ let app = require("../dist")
 let version = require("../package.json").version
 
 program.version(version)
+    .option('-v, --version')
     .option("-p, --port [port]", 'listening port',3000)
     .option("-m, --mock-path <mock path></mock>", 'mock config path')
     .option("-P, --paths <paths></paths>", 'serve page paths')
