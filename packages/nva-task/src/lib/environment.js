@@ -66,8 +66,8 @@ let modules = []
 if (moduleConfig) {
     for (let moduleName in moduleConfig) {
         let moduleObj = moduleConfig[moduleName]
-        let entryJS = moduleObj.entryJS || (moduleName + env.entryJSExt)
-        let entryCSS = moduleObj.entryCSS || (moduleName + env.entryCSSExt)
+        let entryJS = moduleObj.entryJS === undefined ? (moduleName + env.entryJSExt) : moduleObj.entryJS
+        let entryCSS = moduleObj.entryCSS === undefined ? (moduleName + env.entryCSSExt) : moduleObj.entryCSS
         let bundleEntry = moduleObj.bundleEntry || (moduleName + '-server' + env.entryJSExt)
         let entryHtml = []
 
