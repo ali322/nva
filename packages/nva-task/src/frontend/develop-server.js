@@ -15,7 +15,7 @@ export default function(env, constants) {
         _devPort = port || _devPort
 
         const app = createApp({
-            paths: path.join(env.sourcePath, env.pageFolder),
+            paths: env.pagePath,
             asset: env.distFolder,
             mockPath: path.join('.nva', 'api')
         })
