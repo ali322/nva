@@ -2,15 +2,13 @@ import webpack from 'webpack'
 import path from 'path'
 import glob from 'glob'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
-import CopyPlugin from 'copy-webpack-plugin'
 import {config as configFactory} from 'nva-core'
 import { bundleTime,checkManifest } from '../lib/helper'
 
 export default function(env, constants) {
     /** build variables*/
     let entry = {}
-    let htmls = [],
-        copys = []
+    let htmls = []
     let baseConfig = configFactory({ ...constants, HOT: false })
 
     /** build vendors*/
@@ -50,14 +48,16 @@ export default function(env, constants) {
             }
         }
         moduleObj.html.forEach(function(html) {
+            const output = path.join(env.distFolder, moduleObj.name, path.basename(html))
             htmls.push(new InjectHtmlPlugin({
                 processor: function(_url) {
-                    var _urls = _url.split(path.sep)
-                    return _urls.indexOf(env.vendorFolder) > -1 ? _url : _urls.slice(-1)[0]
+                    const relativePath = path.relative(path.dirname(output),path.dirname(_url)) || '.'
+                    return relativePath + path.sep + path.basename(_url)
                 },
                 more: _more,
                 chunks: _chunks,
                 filename: html,
+                output,
                 customInject: [{
                     start: '<!-- start:bundle-time -->',
                     end: '<!-- end:bundle-time -->',
@@ -68,11 +68,6 @@ export default function(env, constants) {
                     content: ''
                 }]
             }))
-            copys.push({
-                from: html,
-                to: path.join(env.distFolder, moduleObj.name, path.basename(html)),
-                context: process.cwd()
-            })
         })
     })
 
@@ -89,8 +84,7 @@ export default function(env, constants) {
         plugins: [
             ...baseConfig.plugins,
             ...dllRefs,
-            ...htmls,
-            new CopyPlugin(copys, { copyUnmodified: true })
+            ...htmls
         ]
     }
 }
