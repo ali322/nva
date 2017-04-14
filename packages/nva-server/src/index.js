@@ -12,29 +12,30 @@ export default (options = {
     let { paths, asset, mockPath } = options
     let app = connect()
 
-    if(paths){
-        paths = paths.split(',')
-        paths.forEach(v => {
-            app.use(serveStatic(v, {
-                extensions: ['html', 'htm'],
-                setHeaders: customHeader
-            }))
-        })
-    }
+    app.use(favicon(path.join(__dirname, '..', 'asset', 'favicon.ico')))
+
+    const serveAsset = serveStatic(asset, {
+        fallthrough: false
+    })
+
+    const servePage = serveStatic(paths, {
+        extensions: ['html', 'htm'],
+        setHeaders: customHeader
+    })
+
+    app.use(function(req, res, next) {
+        if (/(\.[^html]+$)/.test(req.url)) {
+            serveAsset(req, res, next)
+        } else {
+            servePage(req, res, next)
+        }
+    })
 
     function customHeader(res, path) {
         if (serveStatic.mime.lookup(path) === 'text/html') {
             res.setHeader('Cache-Control', 'public,maxAge=0')
         }
     }
-
-    if(asset){
-        app.use(serveStatic(asset,{
-            fallthrough: false
-        }))
-    }
-
-    app.use(favicon(path.join(__dirname,'..','asset','favicon.ico')))
 
     if (fs.existsSync(options.mockPath)) {
         app = mock(app, mockPath)

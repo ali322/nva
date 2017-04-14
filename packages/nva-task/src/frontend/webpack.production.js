@@ -2,8 +2,9 @@ import webpack from 'webpack'
 import path from 'path'
 import glob from 'glob'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
-import {config as configFactory} from 'nva-core'
-import { bundleTime,checkManifest } from '../lib/helper'
+import { config as configFactory } from 'nva-core'
+import { bundleTime, checkManifest } from '../lib/helper'
+import { relativeURL } from '../lib/'
 
 export default function(env, constants) {
     /** build variables*/
@@ -31,28 +32,30 @@ export default function(env, constants) {
         entry[moduleObj.name] = [moduleObj.entryJS, moduleObj.entryCSS]
         let _chunks = [moduleObj.name]
         let _more = { js: [], css: [] }
+        const htmlOutput = moduleObj.htmlOutput || path.join(env.distFolder, moduleObj.name)
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
                 _more.js = vendors.filter(function(v) {
                     let _regexpJS = new RegExp(moduleObj.vendor.js + "-\\w+\\.js$")
                     return _regexpJS.test(v)
                 }).map(function(v) {
-                    return path.join('..', env.vendorFolder, v)
+                    let originalURL = path.join(env.distFolder, env.vendorFolder, v)
+                    return relativeURL(htmlOutput, originalURL)
                 })
                 _more.css = vendors.filter(function(v) {
                     let _regexpCSS = new RegExp(moduleObj.vendor.css + "-\\w+\\.css$")
                     return _regexpCSS.test(v)
                 }).map(function(v) {
-                    return path.join('..', env.vendorFolder, v)
+                    let originalURL = path.join(env.distFolder, env.vendorFolder, v)
+                    return relativeURL(htmlOutput, originalURL)
                 })
             }
         }
         moduleObj.html.forEach(function(html) {
-            const output = path.join(env.distFolder, moduleObj.name, path.basename(html))
+            const output = path.join(htmlOutput, path.basename(html))
             htmls.push(new InjectHtmlPlugin({
                 processor: function(_url) {
-                    const relativePath = path.relative(path.dirname(output),path.dirname(_url)) || '.'
-                    return relativePath + path.sep + path.basename(_url)
+                    return relativeURL(htmlOutput, _url)
                 },
                 more: _more,
                 chunks: _chunks,

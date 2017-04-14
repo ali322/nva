@@ -1,5 +1,6 @@
 import { find } from 'lodash'
 import merge from 'webpack-merge'
+import path from 'path'
 
 import env from './environment'
 
@@ -21,4 +22,9 @@ export function mergeConfig(config) {
         return merge(config, find(webpackConfig, { name: config.name }))
     }
     return merge(config, ...webpackConfig)
+}
+
+export function relativeURL(from, to) {
+    const _url = path.relative(from, path.dirname(to)) || '.'
+    return _url + path.sep + path.basename(to)
 }

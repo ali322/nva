@@ -155,12 +155,13 @@ export default function(constants) {
                     use: cssLoaders.slice(1)
                 })
             }, {
-                test: /\.(png|jpg)$/,
+                test: /\.(png|jpg|gif|bmp)$/,
                 exclude: [nodeModulesDir],
                 use: [{
                         loader: 'url-loader',
                         options: {
                             limit: 2500,
+                            ...fileLoaderOptions,
                             outputPath: ASSET_IMAGE_OUTPUT,
                             hash: 'sha512',
                             digest: 'hex',
