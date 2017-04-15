@@ -24,6 +24,9 @@ cli options
 - `-P` or `--paths` serve htmls path
 - `-m` or `--mock-path` mock api configs path
 - `-A` or `--asset` serve assets path
+- `-L` or `--log`   enable log of request
+- `--rewrites`  enable rewrites request to index.html
+- `-C` or `--cors` allows cross origin access serving
 
 ### License
 

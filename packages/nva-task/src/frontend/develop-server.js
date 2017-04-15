@@ -17,6 +17,8 @@ export default function(env, constants) {
         const app = createApp({
             paths: env.pagePath,
             asset: env.distFolder,
+            log: false,
+            rewrites: env.spa || false,
             mockPath: path.join('.nva', 'api')
         })
 
