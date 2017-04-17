@@ -30,7 +30,7 @@ export default function(env, constants) {
                         stream: false
                     })
                 }
-                process.stdout.write(chunk);
+                // process.stdout.write(chunk);
             });
             // this.stdout.pipe(process.stdout);
             this.stderr.pipe(process.stderr);
@@ -42,13 +42,14 @@ export default function(env, constants) {
         let listenPort = process.env.LISTEN_PORT || 3000
 
         let app = createApp({
-            mockPath: path.join('.nva', 'api')
+            log: false,
+            mockConf: path.join('.nva', 'api')
         })
         let middleware = [app]
         let hotUpdateConfig = hotUpdateConfigFactory(env, constants)
         middleware = middleware.concat(middlewareFactory(mergeConfig(hotUpdateConfig)))
 
-        browserSync({
+        let bs = browserSync({
             proxy: {
                 target: "http://localhost:" + listenPort,
                 middleware
@@ -69,7 +70,11 @@ export default function(env, constants) {
                 return "http://localhost:" + _devPort + path
             }
         }, function() {
-            console.log('🚀  browser-sync is started at %d', _devPort);
+            console.log('🚀  develop server is started at %d', listenPort);
+        })
+
+        bs.emitter.on("reload", function() {
+            console.log("🌎  develop server reload");
         })
     }
 }

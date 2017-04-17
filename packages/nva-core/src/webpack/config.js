@@ -1,6 +1,5 @@
 import webpack from 'webpack'
 import chalk from 'chalk'
-import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import loadersFactory from './loaders'
@@ -45,7 +44,6 @@ export default function(constants) {
         performance: { hints: false },
         plugins: [
             ...plugins,
-            new FriendlyErrorsPlugin({ clearConsole: false }),
             new webpack.NoEmitOnErrorsPlugin(),
             new webpack.HotModuleReplacementPlugin()
         ]

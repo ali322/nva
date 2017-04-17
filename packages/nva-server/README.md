@@ -21,8 +21,8 @@ nva-server -p 5000 -P src
 cli options
 
 - `-p` or `--port`  server listen port
-- `-P` or `--paths` serve htmls path
-- `-m` or `--mock-path` mock api configs path
+- `-P` or `--path` serve htmls path
+- `-m` or `--mock-conf` mock api configs path
 - `-A` or `--asset` serve assets path
 - `-L` or `--log`   enable log of request
 - `--rewrites`  enable rewrites request to index.html

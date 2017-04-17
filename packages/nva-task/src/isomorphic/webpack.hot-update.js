@@ -2,8 +2,11 @@ import webpack from 'webpack'
 import path from 'path'
 import glob from 'glob'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
-import {config as configFactory} from 'nva-core'
-import {checkManifest} from '../lib/helper'
+import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
+import chalk from 'chalk'
+import { config as configFactory } from 'nva-core'
+import { checkManifest } from '../lib/helper'
 
 export default function(env, constants) {
     /** build variables*/
@@ -83,7 +86,13 @@ export default function(env, constants) {
         context: __dirname,
         resolve: { modules: [env.clientPath, path.join(process.cwd(), "node_modules"), "node_modules"] },
         plugins: [
-            ...baseConfig.plugins,
+            ...baseConfig.plugins.slice(1),
+            new ProgressBarPlugin({
+                format: 'Building client [:bar] ' + chalk.green.bold(':percent'),
+                clear: false,
+                summary: false
+            }),
+            new FriendlyErrorsPlugin({ clearConsole: false }),
             ...dllRefs,
             ...htmls
         ]

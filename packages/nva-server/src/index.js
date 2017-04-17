@@ -1,22 +1,32 @@
 import connect from 'connect'
 import serveStatic from 'serve-static'
+import favicon from 'serve-favicon'
 import morgan from 'morgan'
 import compression from 'compression'
-import path from 'path'
+import { join } from 'path'
 import fs from 'fs'
 import url from 'url'
 import mock from './mock'
 import historyAPIFallback from 'connect-history-api-fallback'
 
-export default (options = {
-    paths: 'html',
-    cors: false,
-    log: true,
-    rewrites: false,
-    asset: 'asset'
-}) => {
-    let { paths, rewrites, asset, mockPath, cors, log } = options
+export default (options) => {
+    let { path = '', asset = '', mockConf = '', rewrites = false, cors = false, log = true } = options
     let app = connect()
+
+    if (log) {
+        app.use(morgan('dev'))
+    }
+    app.use(compression())
+
+    if (options.favicon) {
+        app.use(favicon(options.favicon))
+    } else {
+        app.use(favicon(join(__dirname, '..', 'asset', 'nva-server.ico')))
+    }
+
+    if (mockConf && fs.existsSync(mockConf)) {
+        app = mock(app, mockConf)
+    }
 
     if (rewrites) {
         if (typeof rewrites === 'object') {
@@ -28,11 +38,6 @@ export default (options = {
         }
     }
 
-    if (log) {
-        app.use(morgan('dev'))
-    }
-    app.use(compression())
-
     if (cors) {
         app.use(function(req, res, next) {
             res.setHeader('Access-Control-Allow-Origin', '*');
@@ -43,27 +48,23 @@ export default (options = {
         })
     }
 
-    const serveAsset = serveStatic(asset, {
-        fallthrough: false
-    })
-
     app.use(function(req, res, next) {
-        if (/(\.[^html]+$)/.test(req.url)) {
-            serveAsset(req, res, next)
-        } else {
-            let file = path.join(paths, url.parse(req.url).pathname)
+        if (/(\.[^html]+$)/.test(req.url) && asset) {
+            serveStatic(asset, {
+                fallthrough: false
+            })(req, res, next)
+        } else if (path) {
+            let file = join(path, url.parse(req.url).pathname)
             fs.readFile(file, 'utf8', function(err, str) {
                 if (err) return next(err)
                 res.setHeader('Content-Type', 'text/html');
                 res.setHeader('Content-Length', Buffer.byteLength(str));
                 res.end(str)
             })
+        } else {
+            next()
         }
     })
-
-    if (fs.existsSync(options.mockPath)) {
-        app = mock(app, mockPath)
-    }
 
     app.use(function(err, req, res, next) {
         res.statusCode = 500

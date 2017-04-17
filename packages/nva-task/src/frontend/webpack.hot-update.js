@@ -2,6 +2,7 @@ import webpack from 'webpack'
 import path from 'path'
 import glob from 'glob'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
+import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 import { checkManifest } from '../lib/helper'
 
@@ -83,7 +84,8 @@ export default function(env, constants) {
         plugins: [
             ...baseConfig.plugins,
             ...dllRefs,
-            ...htmls
+            ...htmls,
+            new FriendlyErrorsPlugin({ clearConsole: false })
         ]
     }
 }

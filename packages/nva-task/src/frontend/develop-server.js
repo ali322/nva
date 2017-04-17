@@ -15,11 +15,11 @@ export default function(env, constants) {
         _devPort = port || _devPort
 
         const app = createApp({
-            paths: env.pagePath,
+            path: env.pagePath,
             asset: env.distFolder,
             log: false,
             rewrites: env.spa || false,
-            mockPath: path.join('.nva', 'api')
+            mockConf: path.join('.nva', 'api')
         })
 
         process.once('SIGINT', () => {
