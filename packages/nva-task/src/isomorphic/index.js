@@ -4,7 +4,7 @@ import del from 'del'
 import fs from 'fs-extra'
 import path from 'path'
 import { DEBUG, env, mergeConfig } from '../lib'
-import { writeToModuleConfig } from '../lib/helper'
+import { writeToModuleConfig,vendorManifest } from '../lib/helper'
 import vendorFactory from '../base/vendor'
 import serverConfigFactory from './webpack.server'
 import clientConfigFactory from './webpack.client'
@@ -136,6 +136,7 @@ export function vendor() {
     del.sync([path.join(env.clientPath, env.distFolder, env.vendorFolder, '*.*')])
     let compiler = webpack(vendorConfig)
     compiler.run(function(err, stats) {
+        vendorManifest(stats,constants.VENDOR_OUTPUT)
         callback('build vendor success!', err, stats)
     })
 }

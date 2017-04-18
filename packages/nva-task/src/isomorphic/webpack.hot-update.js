@@ -18,12 +18,11 @@ export default function(env, constants) {
 
     /** add vendors reference*/
     let dllRefs = []
-    let vendors = []
-    vendors = glob.sync('*.{js,css}', {
-        cwd: path.join(process.cwd(), env.clientPath, env.distFolder, env.vendorFolder)
-    })
+    let vendorManifestPath = path.join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
+    checkManifest(vendorManifestPath)
+    let vendorManifest = require(vendorManifestPath)
     for (let key in env.vendors['js']) {
-        let manifestPath = path.join(process.cwd(), env.clientPath, env.distFolder, env.vendorFolder, key + '-manifest.json')
+        let manifestPath = path.join(constants.VENDOR_OUTPUT, key + '-manifest.json')
         checkManifest(manifestPath)
         let _manifest = require(manifestPath)
         dllRefs.push(new webpack.DllReferencePlugin({
@@ -43,18 +42,10 @@ export default function(env, constants) {
         let _more = { js: [], css: [] }
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
-                _more.js = vendors.filter(function(v) {
-                    var _regexp = new RegExp(moduleObj.vendor.js + "-\\w+\\.js$")
-                    return _regexp.test(v)
-                }).map(function(v) {
-                    return path.join(path.sep, env.distFolder, env.vendorFolder, v)
-                })
-                _more.css = vendors.filter(function(v) {
-                    var _regexp = new RegExp(moduleObj.vendor.css + "-\\w+\\.css$")
-                    return _regexp.test(v)
-                }).map(function(v) {
-                    return path.join(path.sep, env.distFolder, env.vendorFolder, v)
-                })
+                _more.js = [path.join(path.sep, env.distFolder, env.vendorFolder, vendorManifest[moduleObj.vendor.js])]
+            }
+            if (moduleObj.vendor.css) {
+                _more.css = [path.join(path.sep, env.distFolder, env.vendorFolder, vendorManifest[moduleObj.vendor.css])]
             }
         }
         moduleObj.html.forEach(function(html) {

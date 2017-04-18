@@ -1,6 +1,5 @@
 import webpack from 'webpack'
 import path from 'path'
-import glob from 'glob'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 import { bundleTime, checkManifest } from '../lib/helper'
@@ -14,12 +13,11 @@ export default function(env, constants) {
 
     /** build vendors*/
     let dllRefs = []
-    let vendors = []
-    vendors = glob.sync('*.{js,css}', {
-        cwd: path.join(process.cwd(), env.distFolder, env.vendorFolder)
-    })
+    let vendorManifestPath = path.join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
+    checkManifest(vendorManifestPath)
+    let vendorManifest = require(vendorManifestPath)
     for (let key in env.vendors['js']) {
-        let manifestPath = path.join(process.cwd(), env.distFolder, env.vendorFolder, key + '-manifest.json')
+        let manifestPath = path.join(constants.VENDOR_OUTPUT, key + '-manifest.json')
         checkManifest(manifestPath)
         let _manifest = require(manifestPath)
         dllRefs.push(new webpack.DllReferencePlugin({
@@ -35,20 +33,12 @@ export default function(env, constants) {
         const htmlOutput = moduleObj.htmlOutput || path.join(env.distFolder, moduleObj.name)
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
-                _more.js = vendors.filter(function(v) {
-                    let _regexpJS = new RegExp(moduleObj.vendor.js + "-\\w+\\.js$")
-                    return _regexpJS.test(v)
-                }).map(function(v) {
-                    let originalURL = path.join(env.distFolder, env.vendorFolder, v)
-                    return relativeURL(htmlOutput, originalURL)
-                })
-                _more.css = vendors.filter(function(v) {
-                    let _regexpCSS = new RegExp(moduleObj.vendor.css + "-\\w+\\.css$")
-                    return _regexpCSS.test(v)
-                }).map(function(v) {
-                    let originalURL = path.join(env.distFolder, env.vendorFolder, v)
-                    return relativeURL(htmlOutput, originalURL)
-                })
+                let originalURL = path.join(env.distFolder, env.vendorFolder, vendorManifest[moduleObj.vendor.js])
+                _more.js = [relativeURL(htmlOutput, originalURL)]
+            }
+            if (moduleObj.vendor.css) {
+                let originalURL = path.join(env.distFolder, env.vendorFolder, vendorManifest[moduleObj.vendor.css])
+                _more.css = [relativeURL(htmlOutput, originalURL)]
             }
         }
         moduleObj.html.forEach(function(html) {

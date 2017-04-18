@@ -9,7 +9,7 @@ program.version(version)
     .option('-v, --version')
     .option("-p, --port [port]", 'listening port',3000)
     .option("-m, --mock-conf <mockConf>", 'mock config path')
-    .option("-P, --path <path>", 'serve page paths')
+    .option("-P, --path <path>", 'serve page path')
     .option("-A, --asset <asset>", 'serve static asset')
     .option("    --rewrites",'enable rewrites request to index.html')
     .option("-C, --cors",'allows cross origin access serving')
@@ -26,8 +26,8 @@ let mockConf = program.mockConf
 let path = program.path
 let asset = program.asset
 
-if (!paths) {
-    console.log(chalk.red('no paths specified'))
+if (!path) {
+    console.log(chalk.red('no path specified'))
     process.exit(1)
 }
 

@@ -55,6 +55,9 @@ export default (options) => {
             })(req, res, next)
         } else if (path) {
             let file = join(path, url.parse(req.url).pathname)
+            if(req.url === '/' && rewrites === false){
+                file = join(path, 'index.html')
+            }
             fs.readFile(file, 'utf8', function(err, str) {
                 if (err) return next(err)
                 res.setHeader('Content-Type', 'text/html');

@@ -1,13 +1,13 @@
 import os from 'os'
 import path from 'path'
-import fs from 'fs'
+import fs from 'fs-extra'
 import chalk from 'chalk'
 
 const NVA_PATH = '.nva'
-const MODULE_CONFIG_FILE = path.join(process.cwd(), NVA_PATH,'module.json')
-const NVA_CONFIG_FILE = path.join(process.cwd(), NVA_PATH ,'nva.json')
-const VENDOR_CONFIG_FILE = path.join(process.cwd(), NVA_PATH,'vendor.json')
-const WEBPACK_CONFIG_FILE = path.join(process.cwd(),NVA_PATH,'webpack.config.js')
+const MODULE_CONFIG_FILE = path.join(process.cwd(), NVA_PATH, 'module.json')
+const NVA_CONFIG_FILE = path.join(process.cwd(), NVA_PATH, 'nva.json')
+const VENDOR_CONFIG_FILE = path.join(process.cwd(), NVA_PATH, 'vendor.json')
+const WEBPACK_CONFIG_FILE = path.join(process.cwd(), NVA_PATH, 'webpack.config.js')
 
 export function getLanIP() {
     let interfaces = os.networkInterfaces();
@@ -69,15 +69,29 @@ export function vendorConfig() {
     return vendorConfig
 }
 
-export function webpackConfig(){
+export function webpackConfig() {
     let webpackConfig = {}
     fs.existsSync(WEBPACK_CONFIG_FILE) && (webpackConfig = require(WEBPACK_CONFIG_FILE))
     return webpackConfig
 }
 
-export function checkManifest(path){
-    if(!fs.existsSync(path)){
+export function checkManifest(destPath) {
+    if (!fs.existsSync(destPath)) {
         console.log(chalk.red('vendor manifest not found,did you forget run `nva vendor`?'))
         process.exit(1)
     }
+}
+
+export function vendorManifest(stats, destPath) {
+    let assetByChunk = {}
+    stats.toJson().children.map(function(child) {
+        return child.assets
+    }).reduce(function(prev, current) {
+        return prev.concat(current)
+    }, []).forEach(function(v) {
+        if (v.chunkNames.length > 0) {
+            assetByChunk[v.chunkNames[0]] = path.basename(v.name)
+        }
+    })
+    fs.outputJsonSync(path.join(destPath, 'vendor-manifest.json'), assetByChunk)
 }

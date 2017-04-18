@@ -4,7 +4,7 @@ import del from 'del'
 import path from 'path'
 import { DEBUG, env, mergeConfig } from '../lib'
 import fs from 'fs-extra'
-import { writeToModuleConfig } from '../lib/helper'
+import { writeToModuleConfig, vendorManifest } from '../lib/helper'
 import vendorFactory from '../base/vendor'
 import releaseConfigFactory from './webpack.production'
 import developServerFactory from './develop-server'
@@ -24,14 +24,14 @@ function callback(info, err, stats) {
 
 const constants = {
     CSS_OUTPUT: path.join(env.distFolder, "[name]", "[name]-[hash:8].css"),
-    HAPPYPACK_TEMP_DIR: path.join('.nva','temp','happypack'),
+    HAPPYPACK_TEMP_DIR: path.join('.nva', 'temp', 'happypack'),
     OUTPUT_PATH: path.resolve(process.cwd()),
     ASSET_IMAGE_OUTPUT: path.join(env.distFolder, env.assetFolder, env.imageFolder, path.sep),
     ASSET_FONT_OUTPUT: path.join(env.distFolder, env.assetFolder, env.fontFolder, path.sep),
-    SPRITE_OUTPUT: path.join(env.distFolder, env.assetFolder, 'new'),
+    SPRITE_OUTPUT: path.join(env.distFolder, env.assetFolder, env.spriteFolder),
     IMAGE_PREFIX: path.join('..', env.assetFolder, env.imageFolder),
     FONT_PREFIX: path.join('..', env.assetFolder, env.fontFolder),
-    VENDOR_OUTPUT: path.resolve(path.join(process.cwd(),env.distFolder, env.vendorFolder)),
+    VENDOR_OUTPUT: path.resolve(path.join(process.cwd(), env.distFolder, env.vendorFolder)),
     MANIFEST_PATH: path.join(env.distFolder, env.vendorFolder),
     DEBUG
 }
@@ -108,6 +108,7 @@ export function vendor() {
     del.sync([path.join(env.distFolder, env.vendorFolder, '*.*')])
     var compiler = webpack(vendorConfig)
     compiler.run(function(err, stats) {
+        vendorManifest(stats, constants.VENDOR_OUTPUT)
         callback('build vendor success!', err, stats)
     })
 }
