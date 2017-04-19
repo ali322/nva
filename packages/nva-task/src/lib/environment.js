@@ -31,12 +31,10 @@ let env = {
 
     sourcePath: "src",
     clientPath: "",
-    pageFolder: "page",
     hmrPath: "/hmr/",
     moduleConfig,
     nvaConfig
 }
-env.pagePath = path.join(env.sourcePath, env.pageFolder)
 env.lanIP = getLanIP()
 env.reloaderPort = process.env.RELOADER_PORT || 7000;
 env.hmrPort = process.env.HMR_PORT || 5000;
@@ -77,10 +75,13 @@ if (moduleConfig) {
             bundleEntry = path.resolve(path.join(_sourcePath, env.bundleFolder, moduleObj.path, bundleEntry))
         }
         if (typeof moduleObj.html === 'string') {
-            entryHtml = [path.join(env.pagePath, moduleObj.html)]
+            entryHtml = [
+                env.pagePath ? path.join(env.pagePath, moduleObj.html) :
+                path.join(_sourcePath,env.bundleFolder, moduleObj.path, moduleObj.html)
+            ]
         } else if (Array.isArray(moduleObj.html)) {
             entryHtml = moduleObj.html.map(function(v) {
-                return path.join(env.pagePath, v)
+                return env.pagePath ? path.join(env.pagePath, v) : path.join(_sourcePath,env.bundleFolder, moduleObj.path, v)
             })
         }
         modules.push({

@@ -50,18 +50,13 @@ export function addModule(name, config, templateModule) {
             html: config.html ? config.html.spit(',') : [`${_name}.html`]
         }
         writeToModuleConfig(_moduleConfig)
-        let _html = _template ? path.join(env.pagePath, `${_template}.html`) : '',
-            _source = _template ? path.join(env.sourcePath, env.bundleFolder, _template) : ''
-        if (fs.existsSync(_html)) {
-            fs.copySync(_html, path.join(env.pagePath, `${_name}.html`))
-        } else {
-            fs.ensureFileSync(path.join(env.pagePath, `${_name}.html`))
-        }
+        let _source = _template ? path.join(env.sourcePath, env.bundleFolder, _template) : ''
         if (fs.existsSync(_source)) {
             fs.copySync(_source, path.join(env.sourcePath, env.bundleFolder, _name))
         } else {
             fs.ensureFileSync(path.join(env.sourcePath, env.bundleFolder, _name, `${_name}.js`))
             fs.ensureFileSync(path.join(env.sourcePath, env.bundleFolder, _name, `${_name}.css`))
+            fs.ensureFileSync(path.join(env.sourcePath, env.bundleFolder, _name, `${_name}.html`))
         }
     })
 }
@@ -74,16 +69,9 @@ export function removeModule(name) {
             delete _moduleConfig[_name]
         }
         writeToModuleConfig(_moduleConfig)
-        let _html = path.join(env.pagePath, `${_name}.html`),
-            _client = path.join(env.sourcePath, env.bundleFolder, _name)
-        if (fs.existsSync(_html)) {
-            fs.removeSync(_html)
-        } else {
-            console.log(chalk.red(`htmls of module '${_name}' not existed,maybe module '${_name}' have been removed?`))
-            return
-        }
-        if (fs.existsSync(_client)) {
-            fs.removeSync(_client)
+        let  _source = path.join(env.sourcePath, env.bundleFolder, _name)
+        if (fs.existsSync(_source)) {
+            fs.removeSync(_source)
         } else {
             console.log(chalk.red(`bundle directory of module '${_name}' not existed,maybe module '${_name}' have been removed?`))
             return

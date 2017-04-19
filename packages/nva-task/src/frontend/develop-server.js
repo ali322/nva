@@ -15,7 +15,7 @@ export default function(env, constants) {
         _devPort = port || _devPort
 
         const app = createApp({
-            path: env.pagePath,
+            path: path.join(env.sourcePath, env.bundleFolder),
             asset: env.distFolder,
             log: false,
             rewrites: env.spa || false,
@@ -36,7 +36,7 @@ export default function(env, constants) {
                 app
             ]),
             files: [
-                path.join(env.pagePath, '*.html')
+                path.join(env.sourcePath, env.bundleFolder, '**/*.html')
             ],
             online: false,
             notify: true,

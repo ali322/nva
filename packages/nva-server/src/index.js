@@ -5,7 +5,7 @@ import morgan from 'morgan'
 import compression from 'compression'
 import { join } from 'path'
 import fs from 'fs'
-import url from 'url'
+import { parse } from 'url'
 import mock from './mock'
 import historyAPIFallback from 'connect-history-api-fallback'
 
@@ -29,8 +29,8 @@ export default (options) => {
     }
 
     if (rewrites) {
-        if (typeof rewrites === 'object') {
-            app.use(historyAPIFallback(rewrites))
+        if (Array.isArray(rewrites)) {
+            app.use(historyAPIFallback({ rewrites }))
         } else {
             app.use(historyAPIFallback({
                 verbose: false
@@ -49,15 +49,13 @@ export default (options) => {
     }
 
     app.use(function(req, res, next) {
-        if (/(\.[^html]+$)/.test(req.url) && asset) {
+        if (/(\.[a-z|A-Z|0-9]+$)/.test(req.url) && asset) {
             serveStatic(asset, {
-                fallthrough: false
+                fallthrough: false,
+                extensions: ['html', 'htm']
             })(req, res, next)
-        } else if (path) {
-            let file = join(path, url.parse(req.url).pathname)
-            if(req.url === '/' && rewrites === false){
-                file = join(path, 'index.html')
-            }
+        } else if (path && rewrites) {
+            let file = join(path, parse(req.url).pathname)
             fs.readFile(file, 'utf8', function(err, str) {
                 if (err) return next(err)
                 res.setHeader('Content-Type', 'text/html');
