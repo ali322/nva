@@ -48,29 +48,44 @@ export default (options) => {
         })
     }
 
-    app.use(function(req, res, next) {
-        if (/(\.[a-z|A-Z|0-9]+$)/.test(req.url) && asset) {
-            serveStatic(asset, {
-                fallthrough: false,
-                extensions: ['html', 'htm']
-            })(req, res, next)
-        } else if (path && rewrites) {
-            let file = join(path, parse(req.url).pathname)
-            fs.readFile(file, 'utf8', function(err, str) {
-                if (err) return next(err)
-                res.setHeader('Content-Type', 'text/html');
-                res.setHeader('Content-Length', Buffer.byteLength(str));
-                res.end(str)
-            })
-        } else {
-            next()
-        }
-    })
+    if (asset) {
+        app.use(function(req, res, next) {
+            let parsed = parse(req.url)
+            if (parsed.pathname.match(/\.[^html]+$/)) {
+                serveStatic(asset, {
+                    fallthrough: false,
+                })(req, res, next)
+            } else {
+                next()
+            }
+        })
+    }
+
+    if (path) {
+        app.use(function(req, res, next) {
+            let parsed = parse(req.url)
+            if (parsed.pathname.match(/\.html$/)) {
+                let str
+                try {
+                    let file = join(path, parsed.pathname)
+                    str = fs.readFileSync(file, 'utf8')
+                    res.setHeader('Content-Type', 'text/html');
+                    res.setHeader('Content-Length', Buffer.byteLength(str));
+                    res.end(str)
+                } catch (err) {
+                    next(err)
+                }
+            } else {
+                next()
+            }
+        })
+    }
 
     app.use(function(err, req, res, next) {
         res.statusCode = 500
         res.end(err.message)
     })
+
 
     return app
 }

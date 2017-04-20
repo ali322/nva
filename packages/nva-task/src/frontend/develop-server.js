@@ -15,10 +15,10 @@ export default function(env, constants) {
         _devPort = port || _devPort
 
         const app = createApp({
-            path: path.join(env.sourcePath, env.bundleFolder),
-            asset: env.distFolder,
+            asset: env.spa ? env.distFolder : false,
+            path: env.spa ? path.join(env.sourcePath, env.bundleFolder) : false,
             log: false,
-            rewrites: env.spa || false,
+            rewrites: env.spa ? [{ from: /\/$/, to: '/index/index.html' }] : false,
             mockConf: path.join('.nva', 'api')
         })
 
@@ -29,15 +29,9 @@ export default function(env, constants) {
 
         browserSync.init({
             port: _devPort,
-            server: {
-                baseDir: "."
-            },
-            middleware: _middleware.concat([
-                app
-            ]),
-            files: [
-                path.join(env.sourcePath, env.bundleFolder, '**/*.html')
-            ],
+            server: env.spa ? false : [env.distFolder, path.join(env.sourcePath, env.bundleFolder)],
+            middleware: _middleware.concat([app]),
+            files: [path.join(env.sourcePath, env.bundleFolder, '**', '*.html')],
             online: false,
             notify: true,
             open: false,

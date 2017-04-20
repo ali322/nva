@@ -20,6 +20,7 @@ nva-server -p 5000 -P src
 
 cli options
 
+- `-c` or `--config` server config
 - `-p` or `--port`  server listen port
 - `-P` or `--path` serve htmls path
 - `-m` or `--mock-conf` mock api configs path
