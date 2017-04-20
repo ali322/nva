@@ -26,7 +26,7 @@ export default function(env, constants) {
         entry: entryJS,
         output: {
             path: VENDOR_OUTPUT,
-            filename: '[name]-[chunkhash:8].js',
+            filename: '[name]-[hash:8].js',
             library: '[name]_[hash]'
         },
         context: __dirname,

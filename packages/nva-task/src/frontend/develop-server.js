@@ -15,7 +15,7 @@ export default function(env, constants) {
         _devPort = port || _devPort
 
         const app = createApp({
-            asset: env.spa ? env.distFolder : false,
+            asset: env.distFolder,
             path: env.spa ? path.join(env.sourcePath, env.bundleFolder) : false,
             log: false,
             rewrites: env.spa ? [{ from: /\/$/, to: '/index/index.html' }] : false,
@@ -29,7 +29,7 @@ export default function(env, constants) {
 
         browserSync.init({
             port: _devPort,
-            server: env.spa ? false : [env.distFolder, path.join(env.sourcePath, env.bundleFolder)],
+            server: env.spa ? false : [path.join(env.sourcePath, env.bundleFolder)],
             middleware: _middleware.concat([app]),
             files: [path.join(env.sourcePath, env.bundleFolder, '**', '*.html')],
             online: false,
