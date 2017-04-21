@@ -1,9 +1,13 @@
 {
   "name": "nva-task",
-  "version": "0.1.77",
+  "version": "0.1.78",
   "description": "tasks for nva",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ali322/nva-task.git"
+  },
   "files": [
     "dist",
     "es",
@@ -17,10 +21,6 @@
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/ali322/nva-task.git"
   },
   "keywords": [
     "nva",
@@ -55,8 +55,8 @@
     "lodash": "^4.17.4",
     "node-sass": "^4.5.0",
     "nodemon": "^1.11.0",
-    "nva-core": "^0.1.77",
-    "nva-server": "^0.1.77",
+    "nva-core": "^0.1.78",
+    "nva-server": "^0.1.78",
     "postcss-loader": "^1.2.2",
     "progress-bar-webpack-plugin": "^1.9.3",
     "react-hot-loader": "^3.0.0-beta.6",

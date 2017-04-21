@@ -2,11 +2,13 @@ import webpack from 'webpack'
 import chalk from 'chalk'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import loadersFactory from './loaders'
 import { happypackPlugin } from '../lib'
 
-export default function(constants) {
+export default function(constants, profile = false) {
     let config = {
+        profile,
         module: {
             rules: loadersFactory(constants),
         },
@@ -18,10 +20,10 @@ export default function(constants) {
     const happypackTempDir = constants.HAPPYPACK_TEMP_DIR || '.happypack'
 
     const happypackPlugins = [
-        happypackPlugin('js', [{ loader: 'babel-loader', options: { cacheDirectory: true } }],happypackTempDir),
-        happypackPlugin('less', [{ loader: 'less-loader', options: { sourceMap: true } }],happypackTempDir),
-        happypackPlugin('sass', [{ loader: 'sass-loader', options: { sourceMap: true } }],happypackTempDir),
-        happypackPlugin('stylus', [{ loader: 'stylus-loader', options: { sourceMap: true } }],happypackTempDir)
+        happypackPlugin('js', [{ loader: 'babel-loader', options: { cacheDirectory: true } }], happypackTempDir),
+        happypackPlugin('less', [{ loader: 'less-loader', options: { sourceMap: true } }], happypackTempDir),
+        happypackPlugin('sass', [{ loader: 'sass-loader', options: { sourceMap: true } }], happypackTempDir),
+        happypackPlugin('stylus', [{ loader: 'stylus-loader', options: { sourceMap: true } }], happypackTempDir)
     ]
 
     let plugins = [
@@ -38,8 +40,16 @@ export default function(constants) {
         ...happypackPlugins
     ]
 
+    if (profile) {
+        plugins.push(new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-analyzer-report.html',
+            logLevel: 'info'
+        }))
+    }
+
     let restConfig = constants.HOT ? {
-        devtool: "#inline-source-map",
+        devtool: "#eval-source-map",
         watch: true,
         performance: { hints: false },
         plugins: [
@@ -48,6 +58,7 @@ export default function(constants) {
             new webpack.HotModuleReplacementPlugin()
         ]
     } : {
+        // devtool: "#cheap-module-source-map",
         devtool: false,
         plugins: [
             ...plugins,
@@ -61,7 +72,7 @@ export default function(constants) {
                     comments: false
                 }
             }),
-            new ExtractTextPlugin({filename:constants.CSS_OUTPUT})
+            new ExtractTextPlugin({ filename: constants.CSS_OUTPUT })
         ]
     }
     return { ...config, ...restConfig }

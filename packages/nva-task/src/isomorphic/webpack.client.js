@@ -6,11 +6,11 @@ import chalk from 'chalk'
 import { bundleTime, checkManifest } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
-export default function(env, constants) {
+export default function(env, constants, profile) {
     /** build variables*/
     let entry = {};
     let htmls = [];
-    let baseConfig = configFactory({ ...constants, HOT: false })
+    let baseConfig = configFactory({ ...constants, HOT: false }, profile)
 
     /** add vendors reference*/
     let dllRefs = []

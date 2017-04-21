@@ -5,11 +5,11 @@ import { config as configFactory } from 'nva-core'
 import { bundleTime, checkManifest } from '../lib/helper'
 import { relativeURL } from '../lib/'
 
-export default function(env, constants) {
+export default function(env, constants, profile) {
     /** build variables*/
     let entry = {}
     let htmls = []
-    let baseConfig = configFactory({ ...constants, HOT: false })
+    let baseConfig = configFactory({ ...constants, HOT: false }, profile)
 
     /** build vendors*/
     let dllRefs = []

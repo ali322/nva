@@ -90,7 +90,7 @@ export default function(constants) {
             loader: "file-loader",
             options: fileLoaderOptions
         }, {
-            test: /\.(png|jpg)$/,
+            test: /\.(png|jpg|gif|bmp)$/,
             exclude: [nodeModulesDir],
             loader: 'url-loader',
             options: {

@@ -79,8 +79,8 @@ export function removeModule(name) {
     })
 }
 
-export function build() {
-    let releaseConfig = mergeConfig(releaseConfigFactory(env, constants))
+export function build({profile}) {
+    let releaseConfig = mergeConfig(releaseConfigFactory(env, constants,profile))
     /** clean build assets*/
     env.modules.forEach(function(moduleObj) {
         del.sync(path.join(env.distFolder, moduleObj.name))

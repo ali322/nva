@@ -29,7 +29,7 @@ export default function(env, constants) {
     /** build modules */
     env.modules.forEach(function(moduleObj) {
         entry[moduleObj.name] = [
-            "webpack-hot-middleware/client",
+            // "webpack-hot-middleware/client",
             moduleObj.entryJS,
             moduleObj.entryCSS
         ];

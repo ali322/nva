@@ -8,9 +8,9 @@ import createApp from 'nva-server'
 export default function(env, constants) {
     return function(options) {
         let browserSync = BrowserSync.create()
+        const { port } = options
         const config = mergeConfig(hotUpdateConfig(env, constants))
         const _middleware = middlewareFactory(config)
-        const { port } = options
         let _devPort = env.reloaderPort;
         _devPort = port || _devPort
 

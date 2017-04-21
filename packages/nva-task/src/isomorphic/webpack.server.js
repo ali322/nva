@@ -4,9 +4,9 @@ import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
 import { config as configFactory } from 'nva-core'
 
-export default function(env, constants) {
-    let baseConfig = configFactory({ ...constants, HOT: false })
-    let externals = Object.keys(require(path.join(process.cwd(),'package.json')).dependencies)
+export default function(env, constants, profile) {
+    let baseConfig = configFactory({ ...constants, HOT: false }, profile)
+    let externals = Object.keys(require(path.join(process.cwd(), 'package.json')).dependencies)
 
     return {
         ...baseConfig,

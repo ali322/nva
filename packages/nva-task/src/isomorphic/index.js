@@ -4,7 +4,7 @@ import del from 'del'
 import fs from 'fs-extra'
 import path from 'path'
 import { DEBUG, env, mergeConfig } from '../lib'
-import { writeToModuleConfig,vendorManifest } from '../lib/helper'
+import { writeToModuleConfig, vendorManifest } from '../lib/helper'
 import vendorFactory from '../base/vendor'
 import serverConfigFactory from './webpack.server'
 import clientConfigFactory from './webpack.client'
@@ -56,7 +56,7 @@ const constants = {
     SPRITE_OUTPUT: path.join(env.clientPath, env.assetFolder, env.spriteFolder),
     IMAGE_PREFIX: path.join('..', '..', '..', env.distFolder, env.assetFolder, env.imageFolder),
     FONT_PREFIX: path.join('..', '..', env.distFolder, env.assetFolder, env.fontFolder),
-    VENDOR_OUTPUT: path.resolve(path.join(process.cwd(),env.clientPath, env.distFolder, env.vendorFolder)),
+    VENDOR_OUTPUT: path.resolve(path.join(process.cwd(), env.clientPath, env.distFolder, env.vendorFolder)),
     MANIFEST_PATH: path.join(env.clientPath, env.distFolder, env.vendorFolder),
     DEBUG
 }
@@ -116,9 +116,9 @@ export function addModule(name, config, templateModule) {
     })
 }
 
-export function build() {
-    let serverConfig = mergeConfig(serverConfigFactory(env, constants))
-    let clientConfig = mergeConfig(clientConfigFactory(env, constants))
+export function build({ profile }) {
+    let serverConfig = mergeConfig(serverConfigFactory(env, constants, profile))
+    let clientConfig = mergeConfig(clientConfigFactory(env, constants, profile))
     del.sync(path.join(env.serverFolder, env.distFolder))
     /** clean dist */
     env.modules.forEach(function(moduleObj) {
@@ -136,7 +136,7 @@ export function vendor() {
     del.sync([path.join(env.clientPath, env.distFolder, env.vendorFolder, '*.*')])
     let compiler = webpack(vendorConfig)
     compiler.run(function(err, stats) {
-        vendorManifest(stats,constants.VENDOR_OUTPUT)
+        vendorManifest(stats, constants.VENDOR_OUTPUT)
         callback('build vendor success!', err, stats)
     })
 }
