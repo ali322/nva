@@ -8,11 +8,11 @@ import { config as configFactory } from 'nva-core'
 export default function(env, constants) {
     let entry = {}
     let baseConfig = configFactory(constants)
-    let externals = Object.keys(require(path.join(process.cwd(),'package.json')).dependencies)
+    let externals = Object.keys(require(path.join(process.cwd(), 'package.json')).dependencies)
 
     /** build modules */
     env.modules.forEach(moduleObj => {
-        if(fs.existsSync(moduleObj.bundleEntry)){
+        if (fs.existsSync(moduleObj.bundleEntry)) {
             entry[moduleObj.name] = moduleObj.bundleEntry
         }
     })
@@ -27,10 +27,13 @@ export default function(env, constants) {
             filename: '[name].js'
         },
         context: __dirname,
-        resolve: { modules: [env.serverFolder, path.join(process.cwd(), "node_modules")] },
+        resolveLoader: {
+            modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
+        },
+        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
         externals,
         plugins: [
-            ...baseConfig.plugins.slice(1,-1),
+            ...baseConfig.plugins.slice(1, -1),
             new ProgressBarPlugin({
                 format: 'Building bundle [:bar] ' + chalk.green.bold(':percent'),
                 clear: false,

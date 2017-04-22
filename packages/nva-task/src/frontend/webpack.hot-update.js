@@ -15,6 +15,7 @@ export default function(env, constants) {
     /*build vendors*/
     let dllRefs = []
     let vendorManifestPath = path.join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
+    checkManifest(vendorManifestPath)
     let vendorManifest = require(vendorManifestPath)
     for (let key in env.vendors['js']) {
         let manifestPath = path.join(constants.VENDOR_OUTPUT, key + '-manifest.json')
@@ -29,7 +30,7 @@ export default function(env, constants) {
     /** build modules */
     env.modules.forEach(function(moduleObj) {
         entry[moduleObj.name] = [
-            // "webpack-hot-middleware/client",
+            "webpack-hot-middleware/client",
             moduleObj.entryJS,
             moduleObj.entryCSS
         ];
@@ -69,7 +70,10 @@ export default function(env, constants) {
             publicPath: env.hmrPath
         },
         context: __dirname,
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules"), "node_modules"] },
+        resolveLoader: {
+            modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
+        },
+        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
         plugins: [
             ...baseConfig.plugins,
             ...dllRefs,

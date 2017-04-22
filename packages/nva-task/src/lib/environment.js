@@ -16,6 +16,8 @@ delete nvaConfig['type']
 const isIsomorphic = nvaType === 'isomorphic'
 
 let env = {
+    sourcePath: "src",
+    clientPath: "",
     entryJSExt: '.js',
     entryCSSExt: '.css',
     buildFolder: "build",
@@ -29,9 +31,8 @@ let env = {
     fontFolder: 'font',
     imageFolder: 'image',
 
-    sourcePath: "src",
-    clientPath: "",
     hmrPath: "/hmr/",
+    enableMock: true,
     moduleConfig,
     nvaConfig
 }

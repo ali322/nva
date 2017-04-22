@@ -23,7 +23,10 @@ export default function(env, constants, profile) {
             libraryTarget: 'commonjs2'
         },
         context: __dirname,
-        resolve: { modules: [env.serverFolder, path.join(process.cwd(), "node_modules")] },
+        resolveLoader: {
+            modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
+        },
+        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
         externals,
         plugins: [
             ...baseConfig.plugins.slice(1),

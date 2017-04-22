@@ -86,6 +86,5 @@ export default (options) => {
         res.end(err.message)
     })
 
-
     return app
 }

@@ -70,7 +70,10 @@ export default function(env, constants, profile) {
             chunkFilename: path.join(env.distFolder, "[name]", "[id]-[hash:8].chunk.js")
         },
         context: __dirname,
-        resolve: { modules: [env.clientPath, path.join(process.cwd(), "node_modules")] },
+        resolveLoader: {
+            modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
+        },
+        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
         plugins: [
             ...baseConfig.plugins.slice(1),
             new ProgressBarPlugin({

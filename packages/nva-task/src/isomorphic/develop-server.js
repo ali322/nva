@@ -43,7 +43,7 @@ export default function(env, constants) {
 
         let app = createApp({
             log: false,
-            mockConf: path.join('.nva', 'api')
+            mockConf: env.enableMock ? path.join('.nva', 'api') : false
         })
         let middleware = [app]
         let hotUpdateConfig = hotUpdateConfigFactory(env, constants)

@@ -14,12 +14,19 @@ export default function(env, constants) {
         let _devPort = env.reloaderPort;
         _devPort = port || _devPort
 
+        let rewrites = env.spa === true ? [{
+            from: /\/$/,
+            to: env.moduleConfig['index'] ? path.join(path.sep, env.moduleConfig['index'].path, env.moduleConfig['index'].html[0]) : '/index.html'
+        }] : false
+        if (typeof env.spa === 'object') {
+            rewrites = env.spa
+        }
         const app = createApp({
             asset: env.distFolder,
             path: env.spa ? path.join(env.sourcePath, env.bundleFolder) : false,
             log: false,
-            rewrites: env.spa ? [{ from: /\/$/, to: '/index/index.html' }] : false,
-            mockConf: path.join('.nva', 'api')
+            rewrites,
+            mockConf: env.enableMock ? path.join('.nva', 'api') : false
         })
 
         process.once('SIGINT', () => {
