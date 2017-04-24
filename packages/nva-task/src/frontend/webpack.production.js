@@ -76,7 +76,7 @@ export default function(env, constants, profile) {
         resolveLoader: {
             modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
         },
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
+        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules"),'node_modules'] },
         plugins: [
             ...baseConfig.plugins,
             ...dllRefs,

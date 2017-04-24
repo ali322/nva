@@ -78,7 +78,7 @@ export default function(env, constants) {
         resolveLoader: {
             modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
         },
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
+        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules"),'node_modules'] },
         plugins: [
             ...baseConfig.plugins.slice(1),
             new ProgressBarPlugin({
