@@ -49,10 +49,10 @@ export default function(constants) {
         vueLoaderOptions = {
             ...vueLoaderOptions,
             loaders: {
-                css: cssLoadersFactory(constants, '', true),
-                less: cssLoadersFactory(constants, 'less', true),
-                stylus: cssLoadersFactory(constants, 'stylus', true),
-                scss: cssLoadersFactory(constants, 'sass', true)
+                css: cssLoaders,
+                less: lessLoaders,
+                stylus: stylusLoaders,
+                scss: sassLoaders
             }
         }
 
@@ -102,19 +102,19 @@ export default function(constants) {
             ...vueLoaderOptions,
             loaders: {
                 css: ExtractTextPlugin.extract({
-                    use: cssLoadersFactory(constants, '', true).slice(1),
+                    use: cssLoaders.slice(1),
                     fallback: 'vue-style-loader'
                 }),
                 less: ExtractTextPlugin.extract({
-                    use: cssLoadersFactory(constants, 'less', true).slice(1),
+                    use: lessLoaders.slice(1),
                     fallback: 'vue-style-loader'
                 }),
                 stylus: ExtractTextPlugin.extract({
-                    use: cssLoadersFactory(constants, 'stylus', true).slice(1),
+                    use: stylusLoaders.slice(1),
                     fallback: 'vue-style-loader'
                 }),
                 scss: ExtractTextPlugin.extract({
-                    use: cssLoadersFactory(constants, 'sass', true).slice(1),
+                    use: sassLoaders.slice(1),
                     fallback: 'vue-style-loader'
                 })
             }

@@ -21,9 +21,6 @@ export default function(constants, profile = false) {
 
     const happypackPlugins = [
         happypackPlugin('js', [{ loader: 'babel-loader', options: { cacheDirectory: true } }], happypackTempDir),
-        happypackPlugin('less', [{ loader: 'less-loader', options: { sourceMap: true } }], happypackTempDir),
-        happypackPlugin('sass', [{ loader: 'sass-loader', options: { sourceMap: true } }], happypackTempDir),
-        happypackPlugin('stylus', [{ loader: 'stylus-loader', options: { sourceMap: true } }], happypackTempDir)
     ]
 
     let plugins = [

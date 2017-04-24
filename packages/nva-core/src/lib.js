@@ -28,8 +28,7 @@ export const postcssOptions = ({HOT,SPRITE_OUTPUT})=>({
     }
 })
 
-export function cssLoaders(constants, preprocessor = '', inline = false) {
-    const { SPRITE_OUTPUT } = constants
+export function cssLoaders(constants, preprocessor = '', inline = true) {
 
     let cssLoaders = [
         { loader: 'style-loader' },
