@@ -1,6 +1,6 @@
 import path from 'path'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import { cssLoaders as cssLoadersFactory, postcssOptions } from '../lib'
+import { cssLoaders, postcssOptions, vueStyleLoaders } from '../lib'
 
 const nodeModulesDir = path.join(process.cwd(), 'node_modules')
 
@@ -18,13 +18,15 @@ export default function(constants) {
         }
     }
 
-    const cssLoaders = cssLoadersFactory(constants)
-    const lessLoaders = cssLoadersFactory(constants, 'less')
-    const sassLoaders = cssLoadersFactory(constants, 'sass')
-    const stylusLoaders = cssLoadersFactory(constants, 'stylus')
-
     let vueLoaderOptions = {
-        postcss: postcssOptions(constants).plugins()
+        postcss: postcssOptions(constants).plugins(),
+        loaders: {
+            css: vueStyleLoaders(constants),
+            less: vueStyleLoaders(constants, 'less'),
+            stylus: vueStyleLoaders(constants, 'stylus'),
+            scss: vueStyleLoaders(constants, { loader: 'sass-loader', options: { sourceMap: true } }),
+            sass: vueStyleLoaders(constants, { loader: 'sass-loader', options: { indentedSyntax: true, sourceMap: true } }),
+        }
     }
 
     let _loaders = [{
@@ -43,19 +45,24 @@ export default function(constants) {
         options: {
             id: "js"
         }
+    }, {
+        test: /\.less/,
+        exclude: [nodeModulesDir],
+        use: cssLoaders(constants, 'less')
+    }, {
+        test: /\.scss/,
+        exclude: [nodeModulesDir],
+        use: cssLoaders(constants, { loader: 'sass-loader', options: { sourceMap: true } })
+    }, {
+        test: /\.styl/,
+        exclude: [nodeModulesDir],
+        use: cssLoaders(constants, 'stylus')
+    }, {
+        test: /\.css/,
+        use: cssLoaders(constants)
     }]
 
     if (HOT) {
-        vueLoaderOptions = {
-            ...vueLoaderOptions,
-            loaders: {
-                css: cssLoaders,
-                less: lessLoaders,
-                stylus: stylusLoaders,
-                scss: sassLoaders
-            }
-        }
-
         _loaders = _loaders.concat([{
             test: /\.jsx$/,
             exclude: [nodeModulesDir],
@@ -63,21 +70,6 @@ export default function(constants) {
                 { loader: "react-hot-loader/webpack" },
                 { loader: "happypack/loader", options: { id: "js" } }
             ]
-        }, {
-            test: /\.less/,
-            exclude: [nodeModulesDir],
-            use: lessLoaders
-        }, {
-            test: /\.scss/,
-            exclude: [nodeModulesDir],
-            use: sassLoaders
-        }, {
-            test: /\.styl/,
-            exclude: [nodeModulesDir],
-            use: stylusLoaders
-        }, {
-            test: /\.css/,
-            use: cssLoaders
         }, {
             test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
             loader: 'url-loader',
@@ -98,28 +90,6 @@ export default function(constants) {
             }
         }])
     } else {
-        vueLoaderOptions = {
-            ...vueLoaderOptions,
-            loaders: {
-                css: ExtractTextPlugin.extract({
-                    use: cssLoaders.slice(1),
-                    fallback: 'vue-style-loader'
-                }),
-                less: ExtractTextPlugin.extract({
-                    use: lessLoaders.slice(1),
-                    fallback: 'vue-style-loader'
-                }),
-                stylus: ExtractTextPlugin.extract({
-                    use: stylusLoaders.slice(1),
-                    fallback: 'vue-style-loader'
-                }),
-                scss: ExtractTextPlugin.extract({
-                    use: sassLoaders.slice(1),
-                    fallback: 'vue-style-loader'
-                })
-            }
-        }
-
         _loaders = _loaders.concat([{
                 test: /\.jsx$/,
                 exclude: [nodeModulesDir],
@@ -127,33 +97,6 @@ export default function(constants) {
                 options: {
                     id: 'js'
                 }
-            }, {
-                test: /\.styl/,
-                exclude: [nodeModulesDir],
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: stylusLoaders.slice(1)
-                })
-            }, {
-                test: /\.less/,
-                exclude: [nodeModulesDir],
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: lessLoaders.slice(1)
-                })
-            }, {
-                test: /\.scss/,
-                exclude: [nodeModulesDir],
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: sassLoaders.slice(1)
-                })
-            }, {
-                test: /\.css/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: cssLoaders.slice(1)
-                })
             }, {
                 test: /\.(png|jpg|gif|bmp)$/,
                 exclude: [nodeModulesDir],

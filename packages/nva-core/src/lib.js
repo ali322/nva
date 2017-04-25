@@ -2,6 +2,7 @@ import HappyPack from 'happypack'
 import os from 'os'
 import autoPrefixer from 'autoprefixer'
 import sprites from 'postcss-sprites'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
 export function happypackPlugin(id, loaders, tempDir) {
     const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
@@ -14,7 +15,7 @@ export function happypackPlugin(id, loaders, tempDir) {
     })
 }
 
-export const postcssOptions = ({HOT,SPRITE_OUTPUT})=>({
+export const postcssOptions = ({ HOT, SPRITE_OUTPUT }) => ({
     plugins: function() {
         let plugins = [
             autoPrefixer()
@@ -28,31 +29,41 @@ export const postcssOptions = ({HOT,SPRITE_OUTPUT})=>({
     }
 })
 
-export function cssLoaders(constants, preprocessor = '', inline = true) {
+export function vueStyleLoaders(constants, preprocessor) {
+    let { HOT = false } = constants
+    let loaders = cssLoaders({ ...constants, HOT: true }, preprocessor)
+    let _loaders = loaders.filter((v, i) => i === 1 || i > 2)
+    if (!HOT) {
+        return ExtractTextPlugin.extract({
+            use: _loaders,
+            fallback: 'vue-style-loader'
+        })
+    }
+    return ['vue-style-loader'].concat(_loaders)
+}
 
-    let cssLoaders = [
+export function cssLoaders(constants, preprocessor = '') {
+    let { HOT = false } = constants
+    let loaders = [
         { loader: 'style-loader' },
-        { loader: 'css-loader', options: { minimize: !constants.HOT } },
+        { loader: 'css-loader', options: { minimize: !HOT } },
         { loader: 'postcss-loader', options: postcssOptions(constants) },
         { loader: 'resolve-url-loader' }
     ]
-
-    /* if inline mode,like in vue-loader */
-    if (inline) {
-        cssLoaders = cssLoaders.slice(0, -2).concat(cssLoaders.slice(-1))
-    }
     if (preprocessor) {
-        if (!inline && typeof preprocessor === 'string') {
-            cssLoaders = [
-                ...cssLoaders,
-                { loader: 'happypack/loader', options: { id: preprocessor } }
-            ]
+        if (typeof preprocessor === 'string') {
+            loaders = loaders.concat({ loader: `${preprocessor}-loader`, options: { sourceMap: true } })
+        } else if (typeof preprocessor === 'object') {
+            loaders = loaders.concat(preprocessor)
         } else {
-            cssLoaders = [
-                ...cssLoaders,
-                typeof preprocessor === 'string' ? `${preprocessor}-loader` : preprocessor
-            ]
+            throw new Error('invalid preprocessor')
         }
     }
-    return cssLoaders
+    if (!HOT) {
+        return ExtractTextPlugin.extract({
+            use: loaders.slice(1),
+            fallback: loaders[0]
+        })
+    }
+    return loaders
 }
