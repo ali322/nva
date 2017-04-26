@@ -33,7 +33,7 @@ export default function(env, constants) {
 
     env.modules.forEach(function(moduleObj) {
         let _moduleEntry = [
-            require.resolve('webpack-hot-middleware/client') + '?path=' + env.reloaderHost + '/__webpack_hmr',
+            'webpack-hot-middleware/client' + '?path=' + env.reloaderHost + '/__webpack_hmr',
             // require.resolve("webpack/hot/only-dev-server"),
             moduleObj.entryJS,
             moduleObj.entryCSS

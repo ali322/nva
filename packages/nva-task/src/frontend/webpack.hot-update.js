@@ -62,7 +62,7 @@ export default function(env, constants) {
     return {
         ...baseConfig,
         entry,
-        profile: true,
+        // profile: true,
         output: {
             path: constants.OUTPUT_PATH,
             filename: path.join("[name]", "[name].js"),

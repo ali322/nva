@@ -12,6 +12,9 @@ export default function(constants, profile = false) {
         module: {
             rules: loadersFactory(constants),
         },
+        performance: {
+            hints: false
+        },
         resolve: {
             extensions: [".js", ".json", ".es6", ".jsx", ".styl", ".css", ".less", '.scss'],
         }

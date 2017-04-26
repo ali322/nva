@@ -21,6 +21,7 @@ export default function(env, constants) {
         if (typeof env.spa === 'object') {
             rewrites = env.spa
         }
+
         const app = createApp({
             asset: env.spa ? env.distFolder : false,
             path: env.spa ? path.join(env.sourcePath, env.bundleFolder) : false,

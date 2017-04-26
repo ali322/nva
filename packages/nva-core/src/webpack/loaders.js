@@ -2,7 +2,7 @@ import path from 'path'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { cssLoaders, postcssOptions, vueStyleLoaders } from '../lib'
 
-const nodeModulesDir = path.join(process.cwd(), 'node_modules')
+const nodeModulesDir = path.resolve('node_modules')
 
 export default function(constants) {
     const { ASSET_FONT_OUTPUT, ASSET_IMAGE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX, HOT } = constants
