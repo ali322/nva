@@ -5,7 +5,7 @@ import path from 'path'
 import { DEBUG, env, mergeConfig } from '../lib'
 import fs from 'fs-extra'
 import { writeToModuleConfig, vendorManifest } from '../lib/helper'
-import vendorFactory from '../base/vendor'
+import vendorFactory from '../lib/vendor'
 import releaseConfigFactory from './webpack.production'
 import developServerFactory from './develop-server'
 

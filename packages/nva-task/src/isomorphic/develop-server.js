@@ -3,7 +3,7 @@ import nodemon from './nodemon'
 import path from 'path'
 import createApp from 'nva-server'
 import { env, mergeConfig } from '../lib'
-import middlewareFactory from '../base/middleware'
+import middlewareFactory from '../lib/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'
 
 const RUNNING_REGXP = new RegExp(env.nvaConfig.runningMessage || 'server is running')

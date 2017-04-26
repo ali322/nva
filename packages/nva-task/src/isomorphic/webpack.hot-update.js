@@ -1,6 +1,5 @@
 import webpack from 'webpack'
 import path from 'path'
-import glob from 'glob'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'

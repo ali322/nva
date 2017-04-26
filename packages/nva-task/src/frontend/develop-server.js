@@ -1,6 +1,6 @@
 import path from 'path'
 import { mergeConfig } from '../lib'
-import middlewareFactory from '../base/middleware'
+import middlewareFactory from '../lib/middleware'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
