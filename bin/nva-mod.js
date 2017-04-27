@@ -6,6 +6,7 @@ var program = require("commander"),
     path = require('path')
 var lib = require('../lib')
 var tasks = require('nva-task')
+tasks = tasks()
 
 program.usage('[name]')
 program.option("-d, --delete","delete action flag")
