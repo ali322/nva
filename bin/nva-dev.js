@@ -7,4 +7,4 @@ program.parse(process.argv)
 
 var port = program.port
 var tasks = require('nva-task')
-tasks.developServer({ port })
+tasks().dev({ port })

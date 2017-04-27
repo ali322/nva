@@ -22,7 +22,7 @@ export default function(env, constants) {
     
     const vendorJSConfig = {
         ...baseConfig,
-        name: "vendor:js",
+        name: "js",
         entry: entryJS,
         output: {
             path: VENDOR_OUTPUT,
@@ -48,7 +48,7 @@ export default function(env, constants) {
 
     const vendorCSSConfig = {
         ...baseConfig,
-        name: "vendor:css",
+        name: "css",
         entry: entryCSS,
         context: __dirname,
         resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },

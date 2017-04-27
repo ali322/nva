@@ -5,7 +5,7 @@ import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import chalk from 'chalk'
 import { config as configFactory } from 'nva-core'
-import { checkManifest } from '../lib/helper'
+import { checkManifest } from '../lib'
 
 export default function(env, constants) {
     /** build variables*/

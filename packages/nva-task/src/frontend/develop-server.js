@@ -1,22 +1,26 @@
 import path from 'path'
-import { mergeConfig } from '../lib'
 import middlewareFactory from '../lib/middleware'
+import { mergeConfig } from '../lib/'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
-export default function(env, constants) {
+export default function(context, constants) {
+    const { env, modules } = context
     return function(options) {
         let browserSync = BrowserSync.create()
         const { port } = options
-        const config = mergeConfig(hotUpdateConfig(env, constants))
+        let config = hotUpdateConfig(env, constants)
+        if (typeof context.beforeDev === 'function') {
+            config = mergeConfig(config, context.beforeDev(config))
+        }
         const _middleware = middlewareFactory(config)
         let _devPort = env.reloaderPort;
         _devPort = port || _devPort
 
         let rewrites = env.spa === true ? [{
             from: /\/$/,
-            to: env.moduleConfig['index'] ? path.join(path.sep, env.moduleConfig['index'].path, env.moduleConfig['index'].html[0]) : '/index.html'
+            to: modules['index'] ? path.join(path.sep, modules['index'].path, modules['index'].html[0]) : '/index.html'
         }] : false
         if (typeof env.spa === 'object') {
             rewrites = env.spa

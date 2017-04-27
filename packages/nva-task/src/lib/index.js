@@ -1,15 +1,13 @@
-import { find } from 'lodash'
+import { find, compact } from 'lodash'
 import merge from 'webpack-merge'
 import path from 'path'
-
-import env from './environment'
-
-export { env }
+import fs from 'fs'
+import chalk from 'chalk'
 
 export const DEBUG = process.env.NODE_ENV !== 'production'
 
-export function mergeConfig(config) {
-    const webpackConfig = Array.isArray(env.webpackConfig) ? env.webpackConfig : [env.webpackConfig]
+export function mergeConfig(config, value) {
+    const webpackConfig = Array.isArray(value) ? compact(value) : [value]
     if (Array.isArray(config)) {
         return config.map(v => {
             if (v.name) {
@@ -24,7 +22,32 @@ export function mergeConfig(config) {
     return merge(config, ...webpackConfig)
 }
 
-export function relativeURL(from, to) {
-    const _url = path.relative(from, path.dirname(to)) || '.'
-    return _url + path.sep + path.basename(to)
+export function writeToModuleConfig(target, config) {
+    try {
+        fs.existsSync(target) && fs.writeFileSync(target, JSON.stringify(config, null, 2))
+    } catch (e) {
+        return false
+    }
+    return true
+}
+
+export function checkManifest(destPath) {
+    if (!fs.existsSync(destPath)) {
+        console.log(chalk.red('vendor manifest not found,did you forget run `nva vendor`?'))
+        process.exit(1)
+    }
+}
+
+export function vendorManifest(stats, destPath) {
+    let assetByChunk = {}
+    stats.toJson().children.map(function(child) {
+        return child.assets
+    }).reduce(function(prev, current) {
+        return prev.concat(current)
+    }, []).forEach(function(v) {
+        if (v.chunkNames.length > 0) {
+            assetByChunk[v.chunkNames[0]] = path.basename(v.name)
+        }
+    })
+    fs.outputJsonSync(path.join(destPath, 'vendor-manifest.json'), assetByChunk)
 }

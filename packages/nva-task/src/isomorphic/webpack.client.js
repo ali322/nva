@@ -3,7 +3,8 @@ import path from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import { bundleTime, checkManifest } from '../lib/helper'
+import { bundleTime } from '../lib/helper'
+import {checkManifest} from '../lib'
 import { config as configFactory } from 'nva-core'
 
 export default function(env, constants, profile) {

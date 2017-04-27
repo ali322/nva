@@ -2,13 +2,14 @@ import browserSync from 'browser-sync'
 import nodemon from './nodemon'
 import path from 'path'
 import createApp from 'nva-server'
-import { env, mergeConfig } from '../lib'
+import { mergeConfig } from '../lib'
 import middlewareFactory from '../lib/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'
 
-const RUNNING_REGXP = new RegExp(env.nvaConfig.runningMessage || 'server is running')
 
-export default function(env, constants) {
+export default function(context, constants) {
+    const { env } = context
+    const RUNNING_REGXP = new RegExp(env.runningMessage || 'server is running')
     return function(options) {
         nodemon({
             // delay: "200ms",
@@ -47,7 +48,10 @@ export default function(env, constants) {
         })
         let middleware = [app]
         let hotUpdateConfig = hotUpdateConfigFactory(env, constants)
-        middleware = middleware.concat(middlewareFactory(mergeConfig(hotUpdateConfig)))
+        if (typeof context.beforeDev === 'function') {
+            hotUpdateConfig = mergeConfig(hotUpdateConfig, context.beforeDev(hotUpdateConfig))
+        }
+        middleware = middleware.concat(middlewareFactory(hotUpdateConfig))
 
         let bs = browserSync({
             proxy: {

@@ -3,7 +3,7 @@ import path from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
-import { checkManifest } from '../lib/helper'
+import { checkManifest } from '../lib/'
 
 export default function(env, constants) {
     /** build variables*/
@@ -28,13 +28,14 @@ export default function(env, constants) {
     }
 
     /** build modules */
-    env.modules.forEach(function(moduleObj) {
-        entry[moduleObj.name] = [
+    for(let moduleName in env.modules){
+        let moduleObj = env.modules[moduleName]
+        entry[moduleName] = [
             "webpack-hot-middleware/client",
             moduleObj.entryJS,
             moduleObj.entryCSS
         ];
-        let _chunks = [moduleObj.name]
+        let _chunks = [moduleName]
         let _more = { js: [], css: [] }
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
@@ -57,7 +58,7 @@ export default function(env, constants) {
                 }]
             }))
         })
-    })
+    }
 
     return {
         ...baseConfig,

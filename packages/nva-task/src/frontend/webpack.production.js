@@ -2,8 +2,8 @@ import webpack from 'webpack'
 import path from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import { config as configFactory } from 'nva-core'
-import { bundleTime, checkManifest } from '../lib/helper'
-import { relativeURL } from '../lib/'
+import { bundleTime, checkManifest } from '../lib/'
+import { relativeURL } from '../lib/helper'
 
 export default function(env, constants, profile) {
     /** build variables*/
@@ -26,11 +26,13 @@ export default function(env, constants, profile) {
         }))
     }
 
-    env.modules.forEach(function(moduleObj) {
-        entry[moduleObj.name] = [moduleObj.entryJS, moduleObj.entryCSS]
-        let _chunks = [moduleObj.name]
+    /** build modules */
+    for(let moduleName in env.modules){
+        let moduleObj = env.modules[moduleName]
+        entry[moduleName] = [moduleObj.entryJS, moduleObj.entryCSS]
+        let _chunks = [moduleName]
         let _more = { js: [], css: [] }
-        const htmlOutput = moduleObj.htmlOutput || path.join(env.distFolder, moduleObj.name)
+        const htmlOutput = moduleObj.htmlOutput || path.join(env.distFolder, moduleName)
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
                 let originalURL = path.join(env.distFolder, env.vendorFolder, vendorManifest[moduleObj.vendor.js])
@@ -62,7 +64,8 @@ export default function(env, constants, profile) {
                 }]
             }))
         })
-    })
+
+    }
 
     return {
         ...baseConfig,
