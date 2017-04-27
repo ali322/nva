@@ -6,5 +6,5 @@ program.option("-p, --port [value]", "dev server listen port")
 program.parse(process.argv)
 
 var port = program.port
-var tasks = require('nva-task')
-tasks().dev({ port })
+var tasks = require('nva-task')()
+tasks.dev({ port })

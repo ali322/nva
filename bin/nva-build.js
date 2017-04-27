@@ -7,5 +7,5 @@ program.parse(process.argv)
 
 var profile = program.profile
 
-var tasks = require('nva-task')
-tasks().build({profile})
+var tasks = require('nva-task')()
+tasks.build({profile})
