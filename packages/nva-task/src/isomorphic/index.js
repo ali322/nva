@@ -1,6 +1,7 @@
-import path from 'path'
+import { join, resolve, sep } from 'path'
 import webpack from 'webpack'
 import chalk from 'chalk'
+import { omit } from 'lodash'
 import del from 'del'
 import fs from 'fs-extra'
 import { writeToModuleConfig, vendorManifest, mergeConfig, DEBUG } from '../lib'
@@ -11,15 +12,31 @@ import clientConfigFactory from './webpack.client'
 import bundleConfigFactory from './webpack.bundle'
 import developServerFactory from './develop-server'
 
-
-
 module.exports = context => {
-    let { env, moduleConfPath } = context
+    let {
+        serverFolder,
+        distFolder,
+        sourceFolder,
+        vendorFolder,
+        bundleFolder,
+        pagePath,
+        assetFolder,
+        imageFolder,
+        fontFolder,
+        spriteFolder,
+        confFolder,
+        moduleConf,
+        moduleConfPath,
+        beforeBuild,
+        afterBuild,
+        beforeVendor,
+        afterVendor,
+        modules
+    } = context
 
     function createBundle(constants) {
-        let bundleConfig = bundleConfigFactory(env, constants)
-        del.sync(path.join(env.serverFolder, env.bundleFolder))
-        bundleConfig = mergeConfig(env, bundleConfig)
+        let bundleConfig = bundleConfigFactory(context, constants)
+        del.sync(join(serverFolder, bundleFolder))
         if (Object.keys(bundleConfig.entry).length === 0) {
             return
         }
@@ -40,105 +57,104 @@ module.exports = context => {
     }
 
     const constants = {
-        CSS_OUTPUT: path.join(env.distFolder, "[name]", "[name]-[contenthash:8].css"),
-        HAPPYPACK_TEMP_DIR: path.join('.nva', 'temp', 'happypack'),
-        OUTPUT_PATH: path.resolve(path.join(process.cwd(), env.clientPath)),
-        ASSET_IMAGE_OUTPUT: path.join(env.distFolder, env.assetFolder, env.imageFolder, path.sep),
-        ASSET_FONT_OUTPUT: path.join(env.distFolder, env.assetFolder, env.fontFolder, path.sep),
-        SPRITE_OUTPUT: path.join(env.clientPath, env.assetFolder, env.spriteFolder),
-        IMAGE_PREFIX: path.join('..', '..', '..', env.distFolder, env.assetFolder, env.imageFolder),
-        FONT_PREFIX: path.join('..', '..', env.distFolder, env.assetFolder, env.fontFolder),
-        VENDOR_OUTPUT: path.resolve(path.join(process.cwd(), env.clientPath, env.distFolder, env.vendorFolder)),
-        MANIFEST_PATH: path.join(env.clientPath, env.distFolder, env.vendorFolder),
+        CSS_OUTPUT: join(distFolder, "[name]", "[name]-[contenthash:8].css"),
+        HAPPYPACK_TEMP_DIR: join(confFolder, 'temp', 'happypack'),
+        OUTPUT_PATH: resolve(sourceFolder),
+        ASSET_IMAGE_OUTPUT: join(distFolder, assetFolder, imageFolder, sep),
+        ASSET_FONT_OUTPUT: join(distFolder, assetFolder, fontFolder, sep),
+        SPRITE_OUTPUT: join(sourceFolder, assetFolder, spriteFolder),
+        IMAGE_PREFIX: join('..', '..', '..', distFolder, assetFolder, imageFolder),
+        FONT_PREFIX: join('..', '..', distFolder, assetFolder, fontFolder),
+        VENDOR_OUTPUT: resolve(sourceFolder, distFolder, vendorFolder),
+        MANIFEST_PATH: join(sourceFolder, distFolder, vendorFolder),
         DEBUG
     }
 
     return {
-        removeModule(name) {
-            let _moduleConfig = { ...env.moduleConfig }
+        addModule(name, config, template) {
             let names = name.split(',')
+            let _template = template || 'index'
+            let _moduleConf = {}
             names.forEach(function(_name) {
-                if (_moduleConfig[_name]) {
-                    delete _moduleConfig[_name]
+                _moduleConf[_name] = {
+                    path: config.path || _name,
+                    html: config.html ? config.html.spit(',') : `${_name}.html`
                 }
-                writeToModuleConfig(moduleConfPath, _moduleConfig)
-                let _html = path.join(env.pagePath, `${_name}.html`),
-                    _client = path.join(env.clientPath, env.bundleFolder, _name)
-                if (fs.existsSync(_html)) {
-                    fs.removeSync(_html)
+
+                let from = join(sourceFolder, bundleFolder, _template)
+                let to = join(sourceFolder, bundleFolder, _name)
+                if (fs.existsSync(from)) {
+                    fs.copySync(from, to)
+                } else {
+                    fs.ensureFileSync(join(to, `${_name}.js`))
+                    fs.ensureFileSync(join(to, `${_name}.css`))
+                    fs.ensureFileSync(join(to, `${_name}.html`))
+                }
+                let fromHTML = join(pagePath, `${_template}.html`)
+                let toHTML = join(pagePath, `${_name}.html`)
+                if (fs.existsSync(fromHTML)) {
+                    fs.copySync(fromHTML, toHTML)
+                } else {
+                    fs.ensureFileSync(toHTML)
+                }
+            })
+            _moduleConf = { ...moduleConf, ..._moduleConf }
+            writeToModuleConfig(moduleConfPath, _moduleConf)
+        },
+        removeModule(name) {
+            let names = name.split(',')
+            let _moduleConf = omit(moduleConf, names)
+            writeToModuleConfig(moduleConfPath, _moduleConf)
+            names.forEach(function(_name) {
+                let to = join(sourceFolder, bundleFolder, _name)
+                if (fs.existsSync(to)) {
+                    fs.removeSync(to)
+                } else {
+                    console.log(chalk.red(`bundle directory of module '${_name}' not existed,maybe module '${_name}' have been removed?`))
+                    return
+                }
+                let toHTML = join(pagePath, `${_name}.html`)
+                if (fs.existsSync(toHTML)) {
+                    fs.removeSync(toHTML)
                 } else {
                     console.log(chalk.red(`htmls of module '${_name}' not existed,maybe module '${_name}' have been removed?`))
                     return
                 }
-                if (fs.existsSync(_client)) {
-                    fs.removeSync(_client)
-                } else {
-                    console.log(chalk.red(`client bundle of module '${_name}' not existed,maybe module '${_name}' have been removed?`))
-                    return
-                }
-            })
-        },
-        addModule(name, config, templateModule) {
-            let _moduleConfig = { ...env.moduleConfig }
-            let names = name.split(',')
-            let _template = templateModule || false
-            if (_template) {
-                _template = typeof _template === 'string' ? _template : 'index'
-            }
-            names.forEach(function(_name) {
-                _moduleConfig[_name] = {
-                    name: _name,
-                    path: config.path || _name,
-                    html: config.html ? config.html.spit(',') : [`${_name}.html`]
-                }
-                writeToModuleConfig(moduleConfPath, _moduleConfig)
-                let _html = _template ? path.join(env.pagePath, `${_template}.html`) : '',
-                    _client = _template ? path.join(env.clientPath, env.bundleFolder, _template) : ''
-                if (fs.existsSync(_html)) {
-                    fs.copySync(_html, path.join(env.pagePath, `${_name}.html`))
-                } else {
-                    fs.ensureFileSync(path.join(env.pagePath, `${_name}.html`))
-                }
-                if (fs.existsSync(_client)) {
-                    fs.copySync(_client, path.join(env.clientPath, env.bundleFolder, _name))
-                } else {
-                    fs.ensureFileSync(path.join(env.clientPath, env.bundleFolder, _name, `${_name}.js`))
-                    fs.ensureFileSync(path.join(env.clientPath, env.bundleFolder, _name, `${_name}.css`))
-                }
             })
         },
         build({ profile }) {
-            let serverConfig = mergeConfig(env, serverConfigFactory(env, constants, profile))
-            let clientConfig = mergeConfig(env, clientConfigFactory(env, constants, profile))
+            let serverConfig = serverConfigFactory(context, constants, profile)
+            let clientConfig = clientConfigFactory(context, constants, profile)
 
-            if (typeof context.beforeBuild === 'function') {
-                clientConfig = mergeConfig(clientConfig, context.beforeBuild(clientConfig))
+            if (typeof beforeBuild === 'function') {
+                clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
             }
-            del.sync(path.join(env.serverFolder, env.distFolder))
+            del.sync(join(serverFolder, distFolder))
             /** clean dist */
-            env.modules.forEach(function(moduleObj) {
-                del.sync(path.join(env.clientPath, env.distFolder, moduleObj.path, '/*.*'));
-            })
+            for(let moduleName in modules){
+                let moduleObj = modules[moduleName]
+                del.sync(join(sourceFolder, distFolder, moduleObj.path, '/*.*'));
+            }
             createBundle({ ...constants, HOT: false })
             let compiler = webpack([clientConfig, serverConfig])
             compiler.run(function(err, stats) {
-                if (typeof context.afterBuild === 'function') {
-                    context.afterBuild(err, stats)
+                if (typeof afterBuild === 'function') {
+                    afterBuild(err, stats)
                 }
                 callback('build success!', err, stats)
             })
         },
         vendor() {
-            let vendorConfig = mergeConfig(env, vendorFactory(env, constants))
-            if (typeof context.beforeVendor === 'function') {
-                vendorConfig = mergeConfig(vendorConfig, context.beforeVendor(vendorConfig))
+            let vendorConfig = vendorFactory(context, constants)
+            if (typeof beforeVendor === 'function') {
+                vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
             }
-            del.sync([path.join(env.clientPath, env.distFolder, env.vendorFolder, '*.*')])
+            del.sync([join(sourceFolder, distFolder, vendorFolder, '*.*')])
             let compiler = webpack(vendorConfig)
             compiler.run(function(err, stats) {
                 vendorManifest(stats, constants.VENDOR_OUTPUT)
-                if (typeof context.afterVendor === 'function') {
-                    context.afterVendor(err, stats)
+                if (typeof afterVendor === 'function') {
+                    afterVendor(err, stats)
                 }
                 callback('build vendor success!', err, stats)
             })

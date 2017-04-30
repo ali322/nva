@@ -1,10 +1,16 @@
 import { find, compact } from 'lodash'
 import merge from 'webpack-merge'
 import path from 'path'
-import fs from 'fs'
+import fs from 'fs-extra'
 import chalk from 'chalk'
+import { getLanIP } from './helper'
 
 export const DEBUG = process.env.NODE_ENV !== 'production'
+
+export function serverHost(port) {
+    const lanIP = getLanIP()
+    return `http://${lanIP}:${port}`
+}
 
 export function mergeConfig(config, value) {
     const webpackConfig = Array.isArray(value) ? compact(value) : [value]

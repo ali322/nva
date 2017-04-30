@@ -1,13 +1,14 @@
 import webpack from 'webpack'
-import path from 'path'
+import { join, resolve, sep } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
 import { bundleTime } from '../lib/helper'
-import {checkManifest} from '../lib'
+import { checkManifest } from '../lib'
 import { config as configFactory } from 'nva-core'
 
-export default function(env, constants, profile) {
+export default function(context, constants, profile) {
+    let { vendors, modules, sourceFolder, distFolder, vendorFolder } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
@@ -16,35 +17,36 @@ export default function(env, constants, profile) {
     /** add vendors reference*/
     let dllRefs = []
 
-    let vendorManifestPath = path.join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
+    let vendorManifestPath = join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
     checkManifest(vendorManifestPath)
     let vendorManifest = require(vendorManifestPath)
-    for (let key in env.vendors['js']) {
-        let manifestPath = path.join(constants.VENDOR_OUTPUT, key + '-manifest.json')
+    for (let key in vendors['js']) {
+        let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
         checkManifest(manifestPath)
         let _manifest = require(manifestPath)
         dllRefs.push(new webpack.DllReferencePlugin({
-            context: path.resolve(env.clientPath),
+            context: resolve(sourceFolder),
             manifest: _manifest,
         }))
     }
 
     /** build modules*/
-    env.modules.forEach(function(moduleObj) {
-        entry[moduleObj.name] = [moduleObj.entryJS, moduleObj.entryCSS]
-        let _chunks = [moduleObj.name]
+    for (let moduleName in modules) {
+        let moduleObj = modules[moduleName]
+        entry[moduleName] = [moduleObj.entryJS, moduleObj.entryCSS]
+        let _chunks = [moduleName]
         let _more = { js: [], css: [] }
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
-                _more.js = [path.join(path.sep, env.distFolder, env.vendorFolder, vendorManifest[moduleObj.vendor.js])]
+                _more.js = [join(sep, distFolder, vendorFolder, vendorManifest[moduleObj.vendor.js])]
             }
             if (moduleObj.vendor.css) {
-                _more.css = [path.join(path.sep, env.distFolder, env.vendorFolder, vendorManifest[moduleObj.vendor.css])]
+                _more.css = [join(sep, distFolder, vendorFolder, vendorManifest[moduleObj.vendor.css])]
             }
         }
         moduleObj.html.forEach(function(html) {
             htmls.push(new InjectHtmlPlugin({
-                processor: path.sep,
+                processor: sep,
                 chunks: _chunks,
                 filename: html,
                 more: _more,
@@ -59,22 +61,21 @@ export default function(env, constants, profile) {
                 }]
             }))
         })
-    })
+    }
 
     return {
         ...baseConfig,
-        name: 'client',
         entry,
         output: {
             path: constants.OUTPUT_PATH,
-            filename: path.join(env.distFolder, "[name]", "[name]-[hash:8].js"),
-            chunkFilename: path.join(env.distFolder, "[name]", "[id]-[hash:8].chunk.js")
+            filename: join(distFolder, "[name]", "[name]-[hash:8].js"),
+            chunkFilename: join(distFolder, "[name]", "[id]-[hash:8].chunk.js")
         },
         context: __dirname,
         resolveLoader: {
-            modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
+            modules: [resolve("node_modules"), "node_modules"]
         },
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules"),'node_modules'] },
+        resolve: { modules: [sourceFolder, resolve("node_modules"), 'node_modules'] },
         plugins: [
             ...baseConfig.plugins.slice(1),
             new ProgressBarPlugin({

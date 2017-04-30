@@ -1,36 +1,39 @@
-import webpack from 'webpack'
+import { IgnorePlugin } from 'webpack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import path from 'path'
+import { resolve } from 'path'
 import fs from 'fs'
 import { config as configFactory } from 'nva-core'
 
-export default function(env, constants) {
+export default function(context, constants) {
+    const { modules, serverFolder, bundleFolder, sourceFolder } = context
     let entry = {}
     let baseConfig = configFactory(constants)
-    let externals = Object.keys(require(path.join(process.cwd(), 'package.json')).dependencies)
+    let externals = Object.keys(require(resolve('package.json')).dependencies)
 
     /** build modules */
-    env.modules.forEach(moduleObj => {
+    for (let moduleName in modules) {
+        let moduleObj = modules[moduleName]
         if (fs.existsSync(moduleObj.bundleEntry)) {
-            entry[moduleObj.name] = moduleObj.bundleEntry
+            entry[moduleName] = moduleObj.bundleEntry
         }
-    })
+    }
+
     return {
         ...baseConfig,
         entry,
         name: 'bundle',
         target: 'node',
         output: {
-            path: path.join(process.cwd(), env.serverFolder, env.bundleFolder),
+            path: resolve(serverFolder, bundleFolder),
             libraryTarget: 'commonjs2',
             filename: '[name].js'
         },
         context: __dirname,
         resolveLoader: {
-            modules: [path.join(process.cwd(), "node_modules"), "node_modules"]
+            modules: [resolve("node_modules"), "node_modules"]
         },
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules"),'node_modules'] },
+        resolve: { modules: [sourceFolder, resolve("node_modules"), 'node_modules'] },
         externals,
         plugins: [
             ...baseConfig.plugins.slice(1, -1),
@@ -39,7 +42,7 @@ export default function(env, constants) {
                 clear: false,
                 summary: false
             }),
-            new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/)
+            new IgnorePlugin(/\.(css|less|scss|styl)$/)
         ]
     }
 }

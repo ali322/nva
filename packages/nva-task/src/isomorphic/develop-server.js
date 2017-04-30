@@ -1,6 +1,6 @@
 import browserSync from 'browser-sync'
 import nodemon from './nodemon'
-import path from 'path'
+import { join } from 'path'
 import createApp from 'nva-server'
 import { mergeConfig } from '../lib'
 import middlewareFactory from '../lib/middleware'
@@ -8,8 +8,8 @@ import hotUpdateConfigFactory from './webpack.hot-update'
 
 
 export default function(context, constants) {
-    const { env } = context
-    const RUNNING_REGXP = new RegExp(env.runningMessage || 'server is running')
+    const { runningMessage, serverFolder, pagePath, beforeDev, mockConf } = context
+    const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
     return function(options) {
         nodemon({
             // delay: "200ms",
@@ -21,7 +21,7 @@ export default function(context, constants) {
             stdout: false,
             // ignore: ["*"],
             watch: [
-                "server"
+                serverFolder
             ],
             ext: "js html json es6 jsx"
         }).on("readable", function() {
@@ -37,29 +37,28 @@ export default function(context, constants) {
             this.stderr.pipe(process.stderr);
         })
 
-        const { port } = options
-        let _devPort = env.reloaderPort;
-        _devPort = port || _devPort
-        let listenPort = process.env.LISTEN_PORT || 3000
+        const port = options.port || 7000
+        const proxyPort = context.port || 3000
 
         let app = createApp({
             log: false,
-            mockConf: env.enableMock ? path.join('.nva', 'api') : false
+            cors: true,
+            mockConf
         })
         let middleware = [app]
-        let hotUpdateConfig = hotUpdateConfigFactory(env, constants)
-        if (typeof context.beforeDev === 'function') {
-            hotUpdateConfig = mergeConfig(hotUpdateConfig, context.beforeDev(hotUpdateConfig))
+        let hotUpdateConfig = hotUpdateConfigFactory({ ...context, port }, constants)
+        if (typeof beforeDev === 'function') {
+            hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
         }
         middleware = middleware.concat(middlewareFactory(hotUpdateConfig))
 
         let bs = browserSync({
             proxy: {
-                target: "http://localhost:" + listenPort,
+                target: "http://localhost:" + proxyPort,
                 middleware
             },
-            port: _devPort,
-            files: "view/*.html",
+            port,
+            files: join(pagePath, '*.html'),
             online: false,
             logLevel: "silent",
             notify: true,
@@ -71,10 +70,10 @@ export default function(context, constants) {
             },
             scriptPath: function(path) {
                 path = path.replace(/browser-sync-client(\.\d+)+/, "browser-sync-client")
-                return "http://localhost:" + _devPort + path
+                return "http://localhost:" + port + path
             }
         }, function() {
-            console.log('🚀  develop server is started at %d', listenPort);
+            console.log('🚀  develop server is started at %d', proxyPort);
         })
 
         bs.emitter.on("reload", function() {

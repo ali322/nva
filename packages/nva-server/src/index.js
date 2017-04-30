@@ -24,19 +24,10 @@ export default (options) => {
         app.use(favicon(join(__dirname, '..', 'asset', 'nva-server.ico')))
     }
 
-    if (mockConf && fs.existsSync(mockConf)) {
+    if (mockConf) {
         app = mock(app, mockConf)
     }
 
-    if (rewrites) {
-        if (Array.isArray(rewrites)) {
-            app.use(historyAPIFallback({ rewrites }))
-        } else {
-            app.use(historyAPIFallback({
-                verbose: false
-            }))
-        }
-    }
 
     if (cors) {
         app.use(function(req, res, next) {
@@ -61,11 +52,22 @@ export default (options) => {
         })
     }
 
+    if (rewrites) {
+        if (Array.isArray(rewrites)) {
+            app.use(historyAPIFallback({ rewrites }))
+        } else {
+            app.use(historyAPIFallback({
+                verbose: false
+            }))
+        }
+    }
+
     if (path) {
         app.use(function(req, res, next) {
             let parsed = parse(req.url)
             if (parsed.pathname.match(/\.html$/)) {
                 let str
+                console.log(path, parsed.pathname)
                 try {
                     let file = join(path, parsed.pathname)
                     str = fs.readFileSync(file, 'utf8')

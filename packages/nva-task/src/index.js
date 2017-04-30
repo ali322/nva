@@ -4,10 +4,10 @@ import interceptor from './lib/interceptor'
 
 export default function(options = {}) {
     const namespace = options.namespace ? options.namespace : 'nva'
-    const { moduleConfPath, proj, vendors } = loadConf(options, namespace)
+    const { modules, proj, vendors } = loadConf(options, namespace)
     let context = {
         namespace,
-        modules: require(moduleConfPath),
+        modules,
         proj: { type: 'frontend', ...proj },
         vendors
     }
@@ -24,11 +24,11 @@ function init(context) {
 }
 
 function loadConf(options, namespace) {
-    const confDir = `.${namespace}`
+    const confFolder = `.${namespace}`
     const {
-        projConfPath = resolve(confDir, `${namespace}.js`),
-            moduleConfPath = resolve(confDir, 'module.json'),
-            vendorConfPath = resolve(confDir, 'vendor.json')
+        projConfPath = resolve(confFolder, `${namespace}.js`),
+            moduleConfPath = resolve(confFolder, 'module.json'),
+            vendorConfPath = resolve(confFolder, 'vendor.json')
     } = options
 
     let proj = {}
@@ -44,6 +44,10 @@ function loadConf(options, namespace) {
     if (!checkFile(moduleConfPath)) {
         error('module config invalid')
     }
+    let modules = require(moduleConfPath)
+    proj.confFolder = confFolder
+    proj.moduleConfPath = moduleConfPath
+    proj.moduleConf = modules
 
     let vendors = {}
     if (checkFile(vendorConfPath)) {
@@ -53,5 +57,5 @@ function loadConf(options, namespace) {
             error('vendor config invalid')
         }
     }
-    return { moduleConfPath, vendors, proj }
+    return { modules, vendors, proj }
 }

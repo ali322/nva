@@ -6,8 +6,14 @@ export default function(app, mockConf) {
         let faker = require('faker/locale/en_US')
         return faker
     })
-    try{
-        let apis = require(resolve(mockConf))
+    try {
+        let apis = []
+        if (typeof mockConf === 'string') {
+            apis = require(resolve(mockConf))
+        }
+        if (Array.isArray(mockConf)) {
+            apis = mockConf
+        }
         if (Array.isArray(apis)) {
             apis.forEach(function(rule) {
                 if ([].indexOf.call(['get', 'post', 'put', 'delete', 'head', 'patch'], rule.method) === -1) {
@@ -22,7 +28,7 @@ export default function(app, mockConf) {
                 })
             })
         }
-    }catch(err){
+    } catch (err) {
         throw new Error('mock config is invalid')
     }
 

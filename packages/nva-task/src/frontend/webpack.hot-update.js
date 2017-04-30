@@ -1,35 +1,36 @@
-import webpack from 'webpack'
-import path from 'path'
+import { DllReferencePlugin } from 'webpack'
+import { join, resolve, sep } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
-import { checkManifest } from '../lib/'
+import { checkManifest, serverHost } from '../lib/'
 
-export default function(env, constants) {
+export default function(context, constants) {
+    const { vendors, modules, sourceFolder, vendorFolder, hmrPath, port } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
-    let RELOADER_HOST = env.reloaderHost
+    let devServerHost = serverHost(port)
     let baseConfig = configFactory({ ...constants, HOT: true })
 
     /*build vendors*/
     let dllRefs = []
-    let vendorManifestPath = path.join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
+    let vendorManifestPath = join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
     checkManifest(vendorManifestPath)
     let vendorManifest = require(vendorManifestPath)
-    for (let key in env.vendors['js']) {
-        let manifestPath = path.join(constants.VENDOR_OUTPUT, key + '-manifest.json')
+    for (let key in vendors['js']) {
+        let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
         checkManifest(manifestPath)
         let _manifest = require(manifestPath)
-        dllRefs.push(new webpack.DllReferencePlugin({
+        dllRefs.push(new DllReferencePlugin({
             context: __dirname,
             manifest: _manifest,
         }))
     }
 
     /** build modules */
-    for(let moduleName in env.modules){
-        let moduleObj = env.modules[moduleName]
+    for (let moduleName in modules) {
+        let moduleObj = modules[moduleName]
         entry[moduleName] = [
             "webpack-hot-middleware/client",
             moduleObj.entryJS,
@@ -39,22 +40,22 @@ export default function(env, constants) {
         let _more = { js: [], css: [] }
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
-                _more.js = [path.join(path.sep, env.vendorFolder, vendorManifest[moduleObj.vendor.js])]
+                _more.js = [join(sep, vendorFolder, vendorManifest[moduleObj.vendor.js])]
             }
             if (moduleObj.vendor.css) {
-                _more.css = [path.join(path.sep, env.vendorFolder, vendorManifest[moduleObj.vendor.css])]
+                _more.css = [join(sep, vendorFolder, vendorManifest[moduleObj.vendor.css])]
             }
         }
         moduleObj.html.forEach(function(html) {
             htmls.push(new InjectHtmlPlugin({
-                processor: env.hmrPath,
+                processor: hmrPath,
                 chunks: _chunks,
                 filename: html,
                 more: _more,
                 customInject: [{
                     start: '<!-- start:browser-sync -->',
                     end: '<!-- end:browser-sync -->',
-                    content: '<script src="' + RELOADER_HOST + '/bs/browser-sync-client.js"></script>'
+                    content: '<script src="' + devServerHost + '/bs/browser-sync-client.js"></script>'
                 }]
             }))
         })
@@ -66,15 +67,15 @@ export default function(env, constants) {
         // profile: true,
         output: {
             path: constants.OUTPUT_PATH,
-            filename: path.join("[name]", "[name].js"),
-            chunkFilename: path.join("[name]", "[id].chunk.js"),
-            publicPath: env.hmrPath
+            filename: join("[name]", "[name].js"),
+            chunkFilename: join("[name]", "[id].chunk.js"),
+            publicPath: hmrPath
         },
         context: __dirname,
         resolveLoader: {
-            modules: ["node_modules", path.join(process.cwd(), "node_modules")]
+            modules: ["node_modules", resolve("node_modules")]
         },
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules"), "node_modules"] },
+        resolve: { modules: [sourceFolder, resolve("node_modules"), "node_modules"] },
         plugins: [
             ...baseConfig.plugins,
             ...dllRefs,

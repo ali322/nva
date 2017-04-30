@@ -1,25 +1,26 @@
-import path from 'path'
-import webpack from 'webpack'
+import { resolve, join, basename } from 'path'
+import { DllPlugin } from 'webpack'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import {config as configFactory} from 'nva-core'
+import { config as configFactory } from 'nva-core'
 
-export default function(env, constants) {
+export default function(context, constants) {
+    const { vendors, sourceFolder, distFolder, vendorFolder } = context
     const { VENDOR_OUTPUT, MANIFEST_PATH } = constants
     const baseConfig = configFactory({ ...constants, HOT: false })
 
     let entryJS = {},
         entryCSS = {},
-        vendorCSSChunks = []
-    for (let key in env.vendors['js']) {
-        entryJS[key] = env.vendors['js'][key]
+        cssChunks = []
+    for (let key in vendors['js']) {
+        entryJS[key] = vendors['js'][key]
     }
-    for (let key in env.vendors['css']) {
-        vendorCSSChunks.push(key)
-        entryCSS[key] = env.vendors['css'][key]
+    for (let key in vendors['css']) {
+        cssChunks.push(key)
+        entryCSS[key] = vendors['css'][key]
     }
-    
+
     const vendorJSConfig = {
         ...baseConfig,
         name: "js",
@@ -30,7 +31,7 @@ export default function(env, constants) {
             library: '[name]_[hash]'
         },
         context: __dirname,
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
+        resolve: { modules: [sourceFolder, resolve("node_modules")] },
         plugins: [
             ...baseConfig.plugins.slice(1),
             new ProgressBarPlugin({
@@ -38,9 +39,9 @@ export default function(env, constants) {
                 clear: false,
                 summary: false
             }),
-            new webpack.DllPlugin({
+            new DllPlugin({
                 name: '[name]_[hash]',
-                path: path.resolve(path.join(MANIFEST_PATH, '[name]-manifest.json')),
+                path: resolve(MANIFEST_PATH, '[name]-manifest.json'),
                 context: __dirname
             })
         ]
@@ -51,7 +52,7 @@ export default function(env, constants) {
         name: "css",
         entry: entryCSS,
         context: __dirname,
-        resolve: { modules: [env.sourcePath, path.join(process.cwd(), "node_modules")] },
+        resolve: { modules: [sourceFolder, resolve("node_modules")] },
         output: {
             path: constants.OUTPUT_PATH
         },
@@ -63,12 +64,12 @@ export default function(env, constants) {
                 summary: false
             }),
             new ChunkTransformPlugin({
-                chunks: vendorCSSChunks,
+                chunks: cssChunks,
                 test: /\.css/,
-                filename: function(filename) { return path.join(env.distFolder, env.vendorFolder, path.basename(filename)) }
+                filename: function(filename) { return join(distFolder, vendorFolder, basename(filename)) }
             })
         ]
     }
 
-    return [ vendorJSConfig ,vendorCSSConfig]
+    return [vendorJSConfig, vendorCSSConfig]
 }

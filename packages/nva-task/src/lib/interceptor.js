@@ -1,12 +1,11 @@
-import path from 'path'
-import { getLanIP } from './helper'
+import { join, resolve } from 'path'
 
 export default function(context) {
-    const { type, proj, modules, vendors } = context
-    const isIsomorphic = type === 'isomorphic'
+    const { proj, modules, vendors, namespace } = context
+    const isIsomorphic = proj.type === 'isomorphic'
 
-    let env = {
-        sourcePath: "src",
+    let _proj = {
+        sourceFolder: "src",
         clientPath: "",
         entryJSExt: '.js',
         entryCSSExt: '.css',
@@ -25,66 +24,53 @@ export default function(context) {
         enableMock: true
     }
 
-    let lanIP = getLanIP()
-    env.reloaderPort = process.env.RELOADER_PORT || 7000;
-    env.reloaderHost = "http://" + lanIP + ":" + env.reloaderPort
-
-    let _sourcePath = env.sourcePath
     if (isIsomorphic) {
-        env = {
-            ...env,
+        _proj = {
+            ..._proj,
             pagePath: 'view',
             cssFolder: 'stylesheet',
             moduleFolder: 'module',
             serverFolder: 'server',
             serverEntry: 'bootstrap.js',
-            clientPath: "client",
-            entryJSExt: '.jsx'
+            sourceFolder: "client",
         }
-        _sourcePath = env.clientPath
     }
 
-    env = { ...env, ...proj }
+    _proj = { ..._proj, ...proj }
+
+    const { pagePath, sourceFolder, bundleFolder, entryJSExt, entryCSSExt } = _proj
 
     let _modules = {}
     if (modules) {
         for (let moduleName in modules) {
             let moduleObj = modules[moduleName]
-            let entryJS = moduleObj.entryJS === undefined ? (moduleName + env.entryJSExt) : moduleObj.entryJS
-            let entryCSS = moduleObj.entryCSS === undefined ? (moduleName + env.entryCSSExt) : moduleObj.entryCSS
-            let bundleEntry = moduleObj.bundleEntry || (moduleName + '-server' + env.entryJSExt)
-            let entryHtml = []
-
-            entryJS = path.resolve(path.join(_sourcePath, env.bundleFolder, moduleObj.path, entryJS))
-            entryCSS = path.resolve(path.join(_sourcePath, env.bundleFolder, moduleObj.path, entryCSS))
-            if (isIsomorphic) {
-                bundleEntry = path.resolve(path.join(_sourcePath, env.bundleFolder, moduleObj.path, bundleEntry))
-            }
-            if (typeof moduleObj.html === 'string') {
-                entryHtml = [
-                    env.pagePath ? path.join(env.pagePath, moduleObj.html) :
-                    path.join(_sourcePath, env.bundleFolder, moduleObj.path, moduleObj.html)
-                ]
-            } else if (Array.isArray(moduleObj.html)) {
-                entryHtml = moduleObj.html.map(function(v) {
-                    return env.pagePath ? path.join(env.pagePath, v) : path.join(_sourcePath, env.bundleFolder, moduleObj.path, v)
-                })
-            }
+            let entryJS = moduleObj.entryJS || (moduleName + entryJSExt)
+            let entryCSS = moduleObj.entryCSS || (moduleName + entryCSSExt)
+            entryJS = resolve(join(sourceFolder, bundleFolder, moduleObj.path, entryJS))
+            entryCSS = resolve(join(sourceFolder, bundleFolder, moduleObj.path, entryCSS))
+            let entryHTML = Array.isArray(moduleObj.html) ? moduleObj.html : [moduleObj.html]
+            entryHTML = entryHTML.map(function(v) {
+                return pagePath ? resolve(pagePath, v) : resolve(sourceFolder, bundleFolder, moduleObj.path, v)
+            })
             _modules[moduleName] = {
                 ...moduleObj,
-                ...(isIsomorphic ? { bundleEntry } : null),
-                entryCSS,
                 entryJS,
-                html: entryHtml
+                entryCSS,
+                html: entryHTML
+            }
+            if (isIsomorphic) {
+                let bundleEntry = moduleObj.bundleEntry || (moduleName + '-server' + entryJSExt)
+                bundleEntry = resolve(sourceFolder, bundleFolder, moduleObj.path, bundleEntry)
+                _modules[moduleName].bundleEntry = bundleEntry
             }
         }
     }
 
-    env.modules = _modules
-    env.vendors = vendors
 
     return {
-        ...context,
-        env
+        namespace,
+        modules: _modules,
+        vendors,
+        ..._proj
     }
 }
