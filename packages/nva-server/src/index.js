@@ -28,7 +28,6 @@ export default (options) => {
         app = mock(app, mockConf)
     }
 
-
     if (cors) {
         app.use(function(req, res, next) {
             res.setHeader('Access-Control-Allow-Origin', '*');
@@ -67,7 +66,6 @@ export default (options) => {
             let parsed = parse(req.url)
             if (parsed.pathname.match(/\.html$/)) {
                 let str
-                console.log(path, parsed.pathname)
                 try {
                     let file = join(path, parsed.pathname)
                     str = fs.readFileSync(file, 'utf8')

@@ -3,14 +3,13 @@ import { join, resolve, sep } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
-import { checkManifest, serverHost } from '../lib/'
+import { checkManifest } from '../lib/'
 
 export default function(context, constants) {
     const { vendors, modules, sourceFolder, vendorFolder, hmrPath, port } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
-    let devServerHost = serverHost(port)
     let baseConfig = configFactory({ ...constants, HOT: true })
 
     /*build vendors*/
@@ -55,7 +54,7 @@ export default function(context, constants) {
                 customInject: [{
                     start: '<!-- start:browser-sync -->',
                     end: '<!-- end:browser-sync -->',
-                    content: '<script src="' + devServerHost + '/bs/browser-sync-client.js"></script>'
+                    content: '<script src="/bs/browser-sync-client.js"></script>'
                 }]
             }))
         })
