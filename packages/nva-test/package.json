@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "frontend test toolkit",
   "main": "src/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
@@ -17,6 +17,7 @@
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-register": "^6.24.1",
+    "chai": "^3.5.0",
     "chromedriver": "^2.29.0",
     "cross-spawn": "^5.1.0",
     "karma": "^1.5.0",
