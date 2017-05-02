@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "frontend test toolkit",
   "main": "src/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
@@ -16,7 +16,6 @@
   "dependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
-    "babel-register": "^6.24.1",
     "chai": "^3.5.0",
     "chromedriver": "^2.29.0",
     "cross-spawn": "^5.1.0",
@@ -33,6 +32,7 @@
     "nightwatch": "^0.9.14",
     "selenium-server": "^3.4.0",
     "sinon": "^2.1.0",
-    "sinon-chai": "^2.10.0"
+    "sinon-chai": "^2.10.0",
+    "webpack-merge": "^4.1.0"
   }
 }

@@ -1,5 +1,12 @@
 let { resolve, join } = require('path')
+let fs = require('fs')
+let merge = require('webpack-merge')
 let webpackConfig = require(join(__dirname, 'webpack.test'))
+
+let customWebpackConfig = resolve('test','unit','fixture','webpack.test.js')
+if(fs.existsSync(customWebpackConfig)){
+    webpackConfig = merge(webpackConfig,require(customWebpackConfig))
+}
 
 let entry = resolve('test', 'unit', 'fixture', 'setup.js')
 let reportFolder = resolve('test', 'unit', 'coverage')

@@ -1,5 +1,4 @@
 let { resolve, join } = require('path')
-require('babel-register')
 
 /* eslint-disable no-trailing-spaces*/
 module.exports = {
