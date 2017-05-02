@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "frontend static server",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -21,8 +21,7 @@
     "prepublish": "npm run clean && npm run build",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir dist",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
-    "lint": "eslint src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src"
   },
   "author": "alichen",
   "license": "MIT",
