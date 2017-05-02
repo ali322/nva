@@ -20,9 +20,9 @@ export const postcssOptions = ({ HOT, SPRITE_OUTPUT }) => ({
             autoPrefixer()
         ]
         if (!HOT) {
-            // plugins.push(sprites({
-            //     spritePath: SPRITE_OUTPUT
-            // }))
+            plugins.push(sprites({
+                spritePath: SPRITE_OUTPUT
+            }))
         }
         return plugins
     }

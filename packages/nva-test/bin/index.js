@@ -7,7 +7,7 @@ let version = require("../package.json").version
 program.version(version)
 program.option('    --e2e', 'is e2e test or not')
 program.option('-r, --runner <runner>', 'how to start project')
-program.option('-c, --config <config>', 'customize nightwatch config')
+program.option('-c, --config <config>', 'customize config')
 program.option('    --browser <browser>', 'which browser to run e2e test', 'chrome')
 
 program.parse(process.argv)
@@ -20,6 +20,6 @@ let browser = program.browser
 if (e2e) {
     test.e2e(runner, config, browser)
 }else{
-    test.unit()
+    test.unit(config)
 }
 

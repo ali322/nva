@@ -1,23 +1,40 @@
 let { join, resolve } = require('path')
 
+let cssLoaders = ['vue-style-loader', 'css-loader', 'resolve-url-loader']
+let lessLoaders = cssLoaders.concat([{ loader: 'less-loader', options: { sourceMap: true } }])
+let sassLoaders = cssLoaders.concat([{ loader: 'sass-loader', options: { indentedSyntax: true, sourceMap: true } }])
+let scssLoaders = cssLoaders.concat([{ loader: 'sass-loader', options: { sourceMap: true } }])
+let stylusLoaders = cssLoaders.concat([{ loader: 'stylus-loader', options: { sourceMap: true } }])
+
 module.exports = {
     module: {
         rules: [{
-                test: /\.(js|es6)/,
+                test: /\.(js|es6|jsx)/,
                 loader: 'babel-loader',
                 include: [resolve('test/unit/spec'), resolve('test/unit/fixture'), resolve('src')]
             },
             {
                 test: /\.(tpl|html)/,
-                loader: 'html-loader'
+                loader: 'html-loader',
+                include: resolve('src')
             },
             {
                 test: /\.vue/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                include: resolve('src'),
+                options: {
+                    loaders: {
+                        css: cssLoaders,
+                        less: lessLoaders,
+                        sass: sassLoaders,
+                        scss: scssLoaders,
+                        stylus: stylusLoaders
+                    }
+                }
             }
         ]
     },
-    devtool: '#inline-source-map',
+    devtool: '#eval-source-map',
     watch: true,
     context: __dirname,
     resolveLoader: {
