@@ -1,6 +1,7 @@
 import HappyPack from 'happypack'
 import os from 'os'
 import autoPrefixer from 'autoprefixer'
+import sprites from 'postcss-sprites'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
 export function happypackPlugin(id, loaders, tempDir) {
