@@ -58,10 +58,6 @@ export default function(context, constants, profile) {
                     start: '<!-- start:bundle-time -->',
                     end: '<!-- end:bundle-time -->',
                     content: bundleTime()
-                }, {
-                    start: '<!-- start:browser-sync -->',
-                    end: '<!-- end:browser-sync -->',
-                    content: ''
                 }]
             }))
         })

@@ -55,14 +55,7 @@ export default function(context, constants) {
             },
             logFileChanges: true,
             logConnections: false,
-            logLevel: "silent",
-            socket: {
-                clientPath: "/bs",
-            },
-            scriptPath: function(path) {
-                path = path.replace(/browser-sync-client(\.\d+)+/, "browser-sync-client")
-                return "http://localhost:" + port + path
-            }
+            logLevel: "silent"
         }, function() {
             console.log('🌎  develop server started at %d', port);
         })

@@ -50,12 +50,7 @@ export default function(context, constants) {
                 processor: hmrPath,
                 chunks: _chunks,
                 filename: html,
-                more: _more,
-                customInject: [{
-                    start: '<!-- start:browser-sync -->',
-                    end: '<!-- end:browser-sync -->',
-                    content: '<script src="/bs/browser-sync-client.js"></script>'
-                }]
+                more: _more
             }))
         })
     }
@@ -72,7 +67,7 @@ export default function(context, constants) {
         },
         context: __dirname,
         resolveLoader: {
-            modules: ["node_modules", resolve("node_modules")]
+            modules: ['node_modules',resolve("node_modules")]
         },
         resolve: { modules: [sourceFolder, resolve("node_modules"), "node_modules"] },
         plugins: [
