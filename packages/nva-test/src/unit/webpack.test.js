@@ -11,7 +11,10 @@ module.exports = {
         rules: [{
                 test: /\.(js|es6|jsx)/,
                 loader: 'babel-loader',
-                include: [resolve('test', 'unit', 'spec'), resolve('test', 'unit', 'fixture'), resolve('src')]
+                include: [resolve('test', 'unit', 'spec'),
+                    resolve('test', 'unit', 'fixture'),
+                    resolve('src')
+                ]
             },
             {
                 test: /\.(tpl|html)/,
@@ -46,7 +49,7 @@ module.exports = {
             vue: "vue/dist/vue.esm.js",
             vuex: "vuex/dist/vuex.esm.js",
             "vue-router": "vue-router/dist/vue-router.esm.js",
-            "@": resolve("src','bundle")
+            "@": resolve("src", "bundle")
         }
     }
 }

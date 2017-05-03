@@ -1,12 +1,18 @@
 let { resolve, join } = require('path')
+let fs = require('fs')
+let argv = require('yargs').argv
 
-/* eslint-disable no-trailing-spaces*/
-module.exports = {
+let customize = {
     src_folders: [resolve('test', 'e2e', 'spec')],
     output_folder: resolve('test', 'e2e', 'report'),
-    globals_path: join(__dirname,'global.js'),
+}
+if (argv.customize) {
+    customize = require(argv.customize)
+}
 
-    selenium: {
+module.exports = (function(settings) {
+    settings.globals_path = join(__dirname, 'global.js')
+    settings.selenium = {
         start_process: true,
         server_path: require('selenium-server').path,
         host: '127.0.0.1',
@@ -14,9 +20,9 @@ module.exports = {
         cli_args: {
             'webdriver.chrome.driver': require('chromedriver').path
         }
-    },
+    }
 
-    test_settings: {
+    settings.test_settings = {
         default: {
             selenium_port: 6666,
             selenium_host: 'localhost',
@@ -30,4 +36,5 @@ module.exports = {
             }
         }
     }
-}
+    return settings
+})(customize)

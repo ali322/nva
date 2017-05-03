@@ -1,5 +1,7 @@
 let spawn = require('cross-spawn')
+let nightwatch = require('nightwatch')
 let { resolve, join } = require('path')
+let fs = require('fs')
 let karma = require('karma')
 
 exports.e2e = function(runner, conf, browser = 'chrome') {
@@ -8,15 +10,15 @@ exports.e2e = function(runner, conf, browser = 'chrome') {
     try {
         server = require(resolve(runner))
     } catch (err) {
-        throw new Error('runner conf invalid')
+        throw err
     }
     let opts = []
 
-    if (conf) {
-        opts = opts.concat(['--config', resolve(conf)])
-    } else {
-        opts = opts.concat(['--config', join(__dirname, 'e2e', 'nightwatch.conf.js')])
+    if (fs.existsSync(resolve(conf))) {
+        opts = opts.concat(['--customize', resolve(conf)])
     }
+
+    opts = opts.concat(['--config', join(__dirname, 'e2e', 'nightwatch.conf.js')])
     if (['chrome'].indexOf(browser) === -1) {
         throw new Error('unsupported browser')
     }
@@ -34,9 +36,9 @@ exports.e2e = function(runner, conf, browser = 'chrome') {
     })
 }
 
-exports.unit = function(conf) {
+exports.unit = function() {
     new karma.Server({
-        configFile: conf ? resolve(conf) : join(__dirname, 'unit', 'karma.conf.js'),
+        configFile: join(__dirname, 'unit', 'karma.conf.js'),
         singleRun: true
     }).start()
 }

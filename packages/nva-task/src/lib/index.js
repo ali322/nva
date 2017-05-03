@@ -39,7 +39,7 @@ export function writeToModuleConfig(target, config) {
 
 export function checkManifest(destPath) {
     if (!fs.existsSync(destPath)) {
-        console.log(chalk.red('vendor manifest not found,did you forget run `nva vendor`?'))
+        console.log(chalk.red('vendor manifest not found,did you forget build vendor?'))
         process.exit(1)
     }
 }

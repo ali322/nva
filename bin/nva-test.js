@@ -18,5 +18,5 @@ let browser = program.browser
 if (e2e) {
     test.e2e(runner, config, browser)
 }else{
-    test.unit()
+    test.unit(config)
 }

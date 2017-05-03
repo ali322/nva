@@ -1,22 +1,27 @@
 let { resolve, join } = require('path')
 let fs = require('fs')
+let argv = require('yargs').argv
+let { assign, omit } = require('lodash')
 let merge = require('webpack-merge')
 let webpackConfig = require(join(__dirname, 'webpack.test'))
 
-let customWebpackConfig = resolve('test','unit','fixture','webpack.test.js')
-if(fs.existsSync(customWebpackConfig)){
-    webpackConfig = merge(webpackConfig,require(customWebpackConfig))
-}
-
 let entry = resolve('test', 'unit', 'fixture', 'setup.js')
 let reportFolder = resolve('test', 'unit', 'coverage')
+
+let customize = {}
+if (argv.c || argv.config) {
+    customize = require(resolve(argv.c || argv.config))
+}
+
+entry = customize.entry || entry
+reportFolder = customize.reportFolder || reportFolder
 
 let preprocessors = {}
 preprocessors[entry] = ['webpack', 'sourcemap']
 
 /* eslint-disable func-names */
 module.exports = function(config) {
-    config.set({
+    let opts = {
         basePath: '',
         frameworks: ['mocha', 'sinon-chai'],
         files: [
@@ -47,5 +52,9 @@ module.exports = function(config) {
         browserDisconnectTimeout: 10000,
         browserDisconnectTolerance: 1,
         browserNoActivityTimeout: 60000 //by default 10000
-    })
+    }
+    if(customize.webpack){
+        opts.webpack = merge(opts.webpack, customize.webpack)
+    }
+    config.set(opts)
 }
