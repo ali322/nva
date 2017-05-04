@@ -30,7 +30,7 @@ export function mergeConfig(config, value) {
 
 export function writeToModuleConfig(target, config) {
     try {
-        fs.existsSync(target) && fs.writeFileSync(target, JSON.stringify(config, null, 2))
+        fs.outputFileSync(target, JSON.stringify(config, null, 2))
     } catch (e) {
         return false
     }

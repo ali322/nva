@@ -76,6 +76,10 @@ module.exports = context => {
             let _template = template || 'index'
             let _moduleConf = {}
             names.forEach(function(_name) {
+                if (Object.keys(moduleConf).indexOf(_name) > -1) {
+                    console.log(chalk.red('name existed!'))
+                    return
+                }
                 _moduleConf[_name] = {
                     path: config.path || _name,
                     html: config.html ? config.html.spit(',') : `${_name}.html`
@@ -131,7 +135,7 @@ module.exports = context => {
             }
             del.sync(join(serverFolder, distFolder))
             /** clean dist */
-            for(let moduleName in modules){
+            for (let moduleName in modules) {
                 let moduleObj = modules[moduleName]
                 del.sync(join(sourceFolder, distFolder, moduleObj.path, '/*.*'));
             }
