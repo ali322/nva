@@ -5,7 +5,7 @@ import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
 import { bundleTime } from '../lib/helper'
 import { checkManifest } from '../lib'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 
 export default function(context, constants, profile) {
     let { vendors, modules, sourceFolder, distFolder, vendorFolder } = context

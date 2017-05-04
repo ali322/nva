@@ -3,7 +3,7 @@ import middlewareFactory from '../lib/middleware'
 import { mergeConfig } from '../lib/'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
-import createApp from 'nva-server'
+import createApp from '../../../nva-server/src'
 
 export default function(context, constants) {
     const { spa, moduleConf, sourceFolder, distFolder, bundleFolder, mockConf, beforeDev } = context

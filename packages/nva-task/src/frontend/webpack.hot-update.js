@@ -2,7 +2,7 @@ import { DllReferencePlugin } from 'webpack'
 import { join, resolve, sep } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 import { checkManifest } from '../lib/'
 
 export default function(context, constants) {

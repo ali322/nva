@@ -4,7 +4,7 @@ import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import chalk from 'chalk'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 import { checkManifest, serverHost } from '../lib'
 
 export default function(context, constants) {
