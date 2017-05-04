@@ -3,7 +3,7 @@ import { DllPlugin } from 'webpack'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 
 export default function(context, constants) {
     const { vendors, sourceFolder, distFolder, vendorFolder } = context
