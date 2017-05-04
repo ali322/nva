@@ -6,7 +6,7 @@ import { config as configFactory } from 'nva-core'
 import { checkManifest } from '../lib/'
 
 export default function(context, constants) {
-    const { vendors, modules, sourceFolder, vendorFolder, hmrPath, port } = context
+    const { vendors, modules, sourceFolder, vendorFolder, hmrPath } = context
     /** build variables*/
     let entry = {};
     let htmls = [];

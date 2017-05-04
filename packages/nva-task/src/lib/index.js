@@ -1,4 +1,3 @@
-import { find, compact } from 'lodash'
 import merge from 'webpack-merge'
 import path from 'path'
 import fs from 'fs-extra'
@@ -13,24 +12,14 @@ export function serverHost(port) {
 }
 
 export function mergeConfig(config, value) {
-    const webpackConfig = Array.isArray(value) ? compact(value) : [value]
-    if (Array.isArray(config)) {
-        return config.map(v => {
-            if (v.name) {
-                return merge(v, find(webpackConfig, { name: v.name }))
-            }
-            return merge(v, ...webpackConfig)
-        })
-    }
-    if (config.name) {
-        return merge(config, find(webpackConfig, { name: config.name }))
-    }
-    return merge(config, ...webpackConfig)
+    return merge.strategy({
+        entry: 'replace'
+    })(config, value)
 }
 
 export function writeToModuleConfig(target, config) {
     try {
-        fs.existsSync(target) && fs.writeFileSync(target, JSON.stringify(config, null, 2))
+        fs.outputFileSync(target, JSON.stringify(config, null, 2))
     } catch (e) {
         return false
     }

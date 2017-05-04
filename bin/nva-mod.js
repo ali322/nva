@@ -41,21 +41,9 @@ if(moduleName === '[object Object]'){
     program.help()
     process.exit(1)
 }
+
 if(program.delete){
     tasks.removeModule(moduleName)
-    process.exit(1)
-}
-
-var MODULE_CONFIG_FILE = path.join(process.cwd(), '.nva','module.json')
-var moduleConfig = {}
-if (fs.existsSync(MODULE_CONFIG_FILE)) {
-    moduleConfig = JSON.parse(fs.readFileSync(MODULE_CONFIG_FILE, 'utf8'))
-} else {
-    fs.ensureFileSync(MODULE_CONFIG_FILE)
-}
-
-if (Object.keys(moduleConfig).indexOf(moduleName) > -1) {
-    console.log(chalk.red('name existed!'))
     process.exit(1)
 }
 

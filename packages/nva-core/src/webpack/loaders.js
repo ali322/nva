@@ -6,16 +6,37 @@ const nodeModulesDir = path.resolve('node_modules')
 
 export default function(constants) {
     const { ASSET_FONT_OUTPUT, ASSET_IMAGE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX, HOT } = constants
-    const fileLoaderOptions = {
+    const urlLoaderOptions = {
         publicPath: function(url) {
             var _prefix = ''
             if (/\.(jpg|png|bmp|gif)$/.test(url)) {
                 _prefix = IMAGE_PREFIX
-            } else if (/\.(ttf|eot|svg|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)) {
+            } else if (/\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)) {
                 _prefix = FONT_PREFIX
             }
             return path.join(_prefix, url)
+        },
+        limit: 2500,
+        hash: 'sha512',
+        digest: 'hex',
+        name: '[hash:8].[ext]'
+    }
+
+    let imageLoaders = [{
+        loader: 'url-loader',
+        options: { ...urlLoaderOptions,
+            outputPath: ASSET_IMAGE_OUTPUT
         }
+    }]
+    if (HOT) {
+        imageLoaders.push({
+            loader: 'image-webpack-loader',
+            options: {
+                bypassOnDebug: true,
+                // optimizationLevel: 7,
+                // interlaced: false
+            }
+        })
     }
 
     let vueLoaderOptions = {
@@ -39,12 +60,10 @@ export default function(constants) {
         loader: 'vue-loader',
         options: vueLoaderOptions
     }, {
-        test: /\.(es6|js)$/,
+        test: /\.(es6|js|jsx)$/,
         exclude: [nodeModulesDir],
         loader: 'happypack/loader',
-        options: {
-            id: "js"
-        }
+        options: { id: "js" }
     }, {
         test: /\.less/,
         exclude: [nodeModulesDir],
@@ -60,92 +79,26 @@ export default function(constants) {
     }, {
         test: /\.css/,
         use: cssLoaders(constants)
+    }, {
+        test: /\.(png|jpg|gif|bmp)$/,
+        exclude: [nodeModulesDir],
+        use: imageLoaders
+    }, {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'url-loader',
+        options: {
+            ...urlLoaderOptions,
+            outputPath: ASSET_FONT_OUTPUT,
+            mimetype: "application/font-woff"
+        }
+    }, {
+        test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: "url-loader",
+        options: {
+            ...urlLoaderOptions,
+            outputPath: ASSET_FONT_OUTPUT
+        }
     }]
-
-    if (HOT) {
-        _loaders = _loaders.concat([{
-            test: /\.jsx$/,
-            exclude: [nodeModulesDir],
-            use: [
-                { loader: "react-hot-loader/webpack" },
-                { loader: "happypack/loader", options: { id: "js" } }
-            ]
-        }, {
-            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader',
-            options: {
-                limit: 2500,
-                mimetype: 'application/font-woff'
-            }
-        }, {
-            test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: "file-loader",
-            options: fileLoaderOptions
-        }, {
-            test: /\.(png|jpg|gif|bmp)$/,
-            exclude: [nodeModulesDir],
-            loader: 'url-loader',
-            options: {
-                limit: 2500
-            }
-        }])
-    } else {
-        _loaders = _loaders.concat([{
-                test: /\.jsx$/,
-                exclude: [nodeModulesDir],
-                loader: 'happypack/loader',
-                options: {
-                    id: 'js'
-                }
-            }, {
-                test: /\.(png|jpg|gif|bmp)$/,
-                exclude: [nodeModulesDir],
-                use: [{
-                        loader: 'url-loader',
-                        options: {
-                            limit: 2500,
-                            ...fileLoaderOptions,
-                            outputPath: ASSET_IMAGE_OUTPUT,
-                            hash: 'sha512',
-                            digest: 'hex',
-                            name: '[hash:8].[ext]'
-                        }
-                    },
-                    {
-                        loader: 'image-webpack-loader',
-                        options: {
-                            bypassOnDebug: true,
-                            // optimizationLevel: 7,
-                            // interlaced: false
-                        }
-                    }
-                ]
-            }, {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'url-loader',
-                options: {
-                    limit: 10000,
-                    ...fileLoaderOptions,
-                    mimetype: "application/font-woff",
-                    outputPath: ASSET_FONT_OUTPUT,
-                    hash: 'sha512',
-                    digest: 'hex',
-                    name: '[hash:8].[ext]'
-                }
-            },
-            {
-                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'file-loader',
-                options: {
-                    ...fileLoaderOptions,
-                    outputPath: ASSET_FONT_OUTPUT,
-                    hash: 'sha512',
-                    digest: 'hex',
-                    name: '[hash:8].[ext]'
-                }
-            }
-        ])
-    }
 
     return _loaders
 }
