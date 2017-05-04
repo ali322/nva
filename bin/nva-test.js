@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 var program = require("commander")
-var test = require('../packages/nva-test/src')
+var test = require('nva-test')
 
 program.option('    --e2e', 'is e2e test or not')
 program.option('-r, --runner <runner>', 'how to start project')

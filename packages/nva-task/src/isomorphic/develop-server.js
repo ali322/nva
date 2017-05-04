@@ -1,7 +1,7 @@
 import browserSync from 'browser-sync'
 import nodemon from './nodemon'
 import { join } from 'path'
-import createApp from '../../../nva-server/src'
+import createApp from 'nva-server'
 import { mergeConfig } from '../lib'
 import middlewareFactory from '../lib/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'

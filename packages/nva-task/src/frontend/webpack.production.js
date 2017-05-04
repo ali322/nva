@@ -1,7 +1,7 @@
 import { DllReferencePlugin } from 'webpack'
 import { join, basename, resolve } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
-import { config as configFactory } from '../../../nva-core/src'
+import { config as configFactory } from 'nva-core'
 import { checkManifest } from '../lib/'
 import { relativeURL, bundleTime } from '../lib/helper'
 

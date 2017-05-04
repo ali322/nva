@@ -5,7 +5,7 @@ var program = require("commander"),
     fs = require('fs-extra'),
     path = require('path')
 var lib = require('../lib')
-var tasks = require('../packages/nva-task/src').default()
+var tasks = require('nva-task')()
 
 program.usage('[name]')
 program.option("-d, --delete","delete action flag")
