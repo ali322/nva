@@ -1,6 +1,6 @@
 {
   "name": "nva",
-  "version": "0.2.26",
+  "version": "0.2.27",
   "description": "scaffold for frontend and isomorphic project",
   "bin": {
     "nva": "bin/nva.js"
@@ -23,8 +23,8 @@
     "fs-extra": "^2.1.2",
     "inquirer": "^3.0.6",
     "js-yaml": "^3.8.3",
-    "nva-task": "^0.2.26",
-    "nva-test": "^0.2.26",
+    "nva-task": "^0.2.27",
+    "nva-test": "^0.2.27",
     "object-assign": "^4.1.0",
     "ora": "^1.2.0",
     "rimraf": "^2.5.4"

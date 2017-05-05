@@ -57,7 +57,7 @@ export default function(context, constants, profile) {
                 customInject: [{
                     start: '<!-- start:bundle-time -->',
                     end: '<!-- end:bundle-time -->',
-                    content: bundleTime()
+                    content: `<meta name="bundleTime" content="${bundleTime()}"/>`
                 }]
             }))
         })
