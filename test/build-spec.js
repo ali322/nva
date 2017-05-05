@@ -7,9 +7,6 @@ describe.skip("build project test's", function() {
     let cli = path.join(__dirname, '..', 'bin', 'nva.js')
     let cwd = process.cwd()
     this.timeout(100000)
-    before(function() {
-        return setup()
-    })
 
     describe('source', function() {
         let result

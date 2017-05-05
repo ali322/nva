@@ -2,4 +2,4 @@ language: node_js
 node_js:
   - "6.10.0"
 before_script:
-  - npm install nva -g && node test/fixture/mock.js
+  - node test/fixture/init.js
