@@ -14,7 +14,7 @@ exports.e2e = function(runner, conf, browser = 'chrome') {
     }
     let opts = []
 
-    if (fs.existsSync(resolve(conf))) {
+    if (conf && fs.existsSync(resolve(conf))) {
         opts = opts.concat(['--customize', resolve(conf)])
     }
 

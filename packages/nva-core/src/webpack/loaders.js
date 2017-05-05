@@ -6,29 +6,35 @@ const nodeModulesDir = path.resolve('node_modules')
 
 export default function(constants) {
     const { ASSET_FONT_OUTPUT, ASSET_IMAGE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX, HOT } = constants
-    const urlLoaderOptions = {
-        publicPath: function(url) {
-            var _prefix = ''
-            if (/\.(jpg|png|bmp|gif)$/.test(url)) {
-                _prefix = IMAGE_PREFIX
-            } else if (/\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)) {
-                _prefix = FONT_PREFIX
-            }
-            return path.join(_prefix, url)
-        },
-        limit: 2500,
-        hash: 'sha512',
-        digest: 'hex',
-        name: '[hash:8].[ext]'
+    let urlLoaderOptions = {
+        limit: 2500
+    }
+    if (!HOT) {
+        urlLoaderOptions = {
+            ...urlLoaderOptions,
+            publicPath: function(url) {
+                var _prefix = ''
+                if (/\.(jpg|png|bmp|gif)$/.test(url)) {
+                    _prefix = IMAGE_PREFIX
+                } else if (/\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)) {
+                    _prefix = FONT_PREFIX
+                }
+                return path.join(_prefix, url)
+            },
+            hash: 'sha512',
+            digest: 'hex',
+            name: '[hash:8].[ext]'
+        }
     }
 
     let imageLoaders = [{
         loader: 'url-loader',
-        options: { ...urlLoaderOptions,
+        options: HOT ? urlLoaderOptions : {
+            ...urlLoaderOptions,
             outputPath: ASSET_IMAGE_OUTPUT
         }
     }]
-    if (HOT) {
+    if (!HOT) {
         imageLoaders.push({
             loader: 'image-webpack-loader',
             options: {
@@ -86,7 +92,7 @@ export default function(constants) {
     }, {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'url-loader',
-        options: {
+        options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
             outputPath: ASSET_FONT_OUTPUT,
             mimetype: "application/font-woff"
@@ -94,7 +100,7 @@ export default function(constants) {
     }, {
         test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: "url-loader",
-        options: {
+        options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
             outputPath: ASSET_FONT_OUTPUT
         }

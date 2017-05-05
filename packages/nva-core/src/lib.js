@@ -21,9 +21,9 @@ export const postcssOptions = ({ HOT, SPRITE_OUTPUT }) => ({
             autoPrefixer()
         ]
         if (!HOT) {
-            plugins.push(sprites({
-                spritePath: SPRITE_OUTPUT
-            }))
+            // plugins.push(sprites({
+            //     spritePath: SPRITE_OUTPUT
+            // }))
         }
         return plugins
     }
@@ -48,7 +48,7 @@ export function cssLoaders(constants, preprocessor = '') {
         { loader: 'style-loader' },
         { loader: 'css-loader', options: { minimize: !HOT } },
         { loader: 'postcss-loader', options: postcssOptions(constants) },
-        { loader: 'resolve-url-loader' }
+        { loader: 'resolve-url-loader', options: { debug: false } }
     ]
     if (preprocessor) {
         if (typeof preprocessor === 'string') {
