@@ -2,7 +2,7 @@ import browserSync from 'browser-sync'
 import nodemon from './nodemon'
 import { join } from 'path'
 import createApp from 'nva-server'
-import { mergeConfig } from '../lib'
+import { mergeConfig, openBrowser } from '../lib'
 import middlewareFactory from '../lib/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'
 
@@ -50,7 +50,10 @@ export default function(context, constants) {
         if (typeof beforeDev === 'function') {
             hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
         }
-        middleware = middleware.concat(middlewareFactory(hotUpdateConfig))
+        middleware = middleware.concat(middlewareFactory(hotUpdateConfig, () => {
+            let url = `http://localhost:${port}`
+            openBrowser(options.browser, url)
+        }))
 
         let bs = browserSync({
             proxy: {

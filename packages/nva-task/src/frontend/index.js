@@ -8,7 +8,7 @@ import fs from 'fs-extra'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
 import releaseConfigFactory from './webpack.production'
-import developServerFactory from './develop-server'
+import developServer from './develop-server'
 
 module.exports = context => {
     let {
@@ -119,6 +119,8 @@ module.exports = context => {
                 callback('build vendor success!', err, stats)
             })
         },
-        dev: developServerFactory(context, constants)
+        dev(options){
+            developServer(context,constants)(options)
+        }
     }
 }

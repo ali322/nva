@@ -3,6 +3,7 @@ import merge from 'webpack-merge'
 import path from 'path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
+import opn from 'opn'
 import { getLanIP } from './helper'
 
 export const DEBUG = process.env.NODE_ENV !== 'production'
@@ -17,12 +18,12 @@ export function mergeConfig(config, value) {
     if (Array.isArray(config)) {
         return config.map(v => {
             return merge.strategy({
-                entry:'replace'
+                entry: 'replace'
             })(v, ...webpackConfig)
         })
     }
     return merge.strategy({
-        entry:'replace'
+        entry: 'replace'
     })(config, ...webpackConfig)
 }
 
@@ -54,4 +55,15 @@ export function vendorManifest(stats, destPath) {
         }
     })
     fs.outputJsonSync(path.join(destPath, 'vendor-manifest.json'), assetByChunk)
+}
+
+export function openBrowser(target, url) {
+    let opts = { wait: false }
+    if (target !== 'none') {
+        if (target !== 'default') {
+            opts.app = target.split(',')
+        }
+        let opener = opn(url, opts)
+        opener.catch(err => console.log(chalk.red('canot open in browser'), err))
+    }
 }

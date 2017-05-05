@@ -10,7 +10,7 @@ import vendorFactory from '../lib/vendor'
 import serverConfigFactory from './webpack.server'
 import clientConfigFactory from './webpack.client'
 import bundleConfigFactory from './webpack.bundle'
-import developServerFactory from './develop-server'
+import developServer from './develop-server'
 
 module.exports = context => {
     let {
@@ -164,7 +164,7 @@ module.exports = context => {
         },
         dev(options) {
             createBundle({ ...constants, HOT: true })
-            developServerFactory(context, constants)(options)
+            developServer(context, constants)(options)
         }
     }
 }

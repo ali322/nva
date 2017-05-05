@@ -37,6 +37,7 @@ function loadConf(options, namespace) {
             proj = require(projConfPath)
         } catch (err) {
             error('project config invalid')
+            console.error(err)
         }
         proj.default && (proj = proj.default)
     }

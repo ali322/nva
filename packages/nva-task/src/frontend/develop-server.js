@@ -1,6 +1,6 @@
 import { join, sep } from 'path'
 import middlewareFactory from '../lib/middleware'
-import { mergeConfig } from '../lib/'
+import { mergeConfig, openBrowser } from '../lib/'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
@@ -14,7 +14,11 @@ export default function(context, constants) {
         if (typeof beforeDev === 'function') {
             config = mergeConfig(config, beforeDev(config))
         }
-        const middlewares = middlewareFactory(config)
+        const middlewares = middlewareFactory(config, () => {
+            let url = spa ? '/' : '/index'
+            url = `http://localhost:${port}${url}`
+            openBrowser(options.browser, url)
+        })
 
         let rewrites = spa === true ? [{
             from: /\/(\S+)?$/,
@@ -57,7 +61,7 @@ export default function(context, constants) {
             logConnections: false,
             logLevel: "silent"
         }, function() {
-            console.log('🌎  develop server started at %d', port);
+            console.log('🌎  develop server started at %d', port)
         })
     }
 }
