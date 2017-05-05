@@ -170,7 +170,7 @@ nva的初衷是提供尽量简洁高效的方式进行前端项目开发,所以�
     简单的模拟接口配置
 
     ```js
-    [{
+    module.exports = [{
         "url": "/mock/user",    /* 接口请求 url */
         "method": "get",        /* 接口请求方法名称 */
         "response": {           /* 接口响应 */
