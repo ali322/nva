@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import { omit } from 'lodash'
 import del from 'del'
 import fs from 'fs-extra'
-import { writeToModuleConfig, vendorManifest, mergeConfig, DEBUG } from '../lib'
+import { writeToModuleConfig, vendorManifest, mergeConfig, DEBUG, checkVendor } from '../lib'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
 import serverConfigFactory from './webpack.server'
@@ -31,7 +31,8 @@ module.exports = context => {
         afterBuild,
         beforeVendor,
         afterVendor,
-        modules
+        modules,
+        vendors,
     } = context
 
     function createBundle(constants) {
@@ -70,7 +71,7 @@ module.exports = context => {
         DEBUG
     }
 
-    return {
+    const tasks = {
         addModule(name, config, template) {
             let names = name.split(',')
             let _template = template || 'index'
@@ -126,9 +127,10 @@ module.exports = context => {
             })
         },
         build({ profile }) {
+            checkVendor(vendors, constants.VENDOR_OUTPUT, tasks.vendor)
+
             let serverConfig = serverConfigFactory(context, constants, profile)
             let clientConfig = clientConfigFactory(context, constants, profile)
-
             if (typeof beforeBuild === 'function') {
                 clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
             }
@@ -147,7 +149,7 @@ module.exports = context => {
                 callback('build success!', err, stats)
             })
         },
-        vendor() {
+        vendor(next) {
             let vendorConfig = vendorFactory(context, constants)
             if (typeof beforeVendor === 'function') {
                 vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
@@ -160,11 +162,19 @@ module.exports = context => {
                     afterVendor(err, stats)
                 }
                 callback('build vendor success!', err, stats)
+                if (next) next()
             })
         },
         dev(options) {
             createBundle({ ...constants, HOT: true })
-            developServer(context, constants)(options)
+            const runDev = developServer(context, constants)
+            if (checkVendor(vendors, constants.VENDOR_OUTPUT)) {
+                runDev(options)
+            } else {
+                tasks.vendor(runDev.bind(null, options))
+            }
         }
     }
+
+    return tasks
 }

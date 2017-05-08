@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import del from 'del'
 import { join, resolve, sep } from 'path'
 import { omit } from 'lodash'
-import { DEBUG, writeToModuleConfig, vendorManifest, mergeConfig } from '../lib'
+import { DEBUG, writeToModuleConfig, vendorManifest, mergeConfig, checkVendor } from '../lib'
 import fs from 'fs-extra'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
@@ -27,7 +27,8 @@ module.exports = context => {
         afterBuild,
         beforeVendor,
         afterVendor,
-        modules
+        modules,
+        vendors
     } = context
 
     const constants = {
@@ -44,7 +45,7 @@ module.exports = context => {
         DEBUG
     }
 
-    return {
+    const tasks = {
         addModule(name, config, template) {
             let names = name.split(',')
             let _template = template || 'index'
@@ -87,6 +88,7 @@ module.exports = context => {
             })
         },
         build({ profile }) {
+            checkVendor(vendors, constants.VENDOR_OUTPUT, tasks.vendor)
             let releaseConfig = releaseConfigFactory(context, constants, profile)
             if (typeof beforeBuild === 'function') {
                 releaseConfig = mergeConfig(releaseConfig, beforeBuild(releaseConfig))
@@ -104,7 +106,7 @@ module.exports = context => {
                 callback('build success!', err, stats)
             })
         },
-        vendor() {
+        vendor(next) {
             let vendorConfig = vendorFactory(context, constants)
             if (typeof beforeVendor === 'function') {
                 vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
@@ -117,10 +119,18 @@ module.exports = context => {
                     afterVendor(err, stats)
                 }
                 callback('build vendor success!', err, stats)
+                if (next) next()
             })
         },
-        dev(options){
-            developServer(context,constants)(options)
+        dev(options) {
+            const runDev = developServer(context, constants)
+            if (checkVendor(vendors, constants.VENDOR_OUTPUT)) {
+                runDev(options)
+            } else {
+                tasks.vendor(runDev.bind(null, options))
+            }
         }
     }
+
+    return tasks
 }

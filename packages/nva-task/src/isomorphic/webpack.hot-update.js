@@ -5,7 +5,7 @@ import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import chalk from 'chalk'
 import { config as configFactory } from 'nva-core'
-import { checkManifest, serverHost } from '../lib'
+import { serverHost } from '../lib'
 
 export default function(context, constants) {
     const { vendors, modules, sourceFolder, distFolder, vendorFolder, hmrPath, port } = context
@@ -18,11 +18,9 @@ export default function(context, constants) {
     /** add vendors reference*/
     let dllRefs = []
     let vendorManifestPath = join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
-    checkManifest(vendorManifestPath)
     let vendorManifest = require(vendorManifestPath)
     for (let key in vendors['js']) {
         let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
-        checkManifest(manifestPath)
         let _manifest = require(manifestPath)
         dllRefs.push(new webpack.DllReferencePlugin({
             context: resolve(sourceFolder),

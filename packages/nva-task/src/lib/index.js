@@ -1,6 +1,6 @@
 import { compact } from 'lodash'
 import merge from 'webpack-merge'
-import path from 'path'
+import { join, basename, resolve } from 'path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
 import opn from 'opn'
@@ -36,11 +36,19 @@ export function writeToModuleConfig(target, config) {
     return true
 }
 
-export function checkManifest(destPath) {
-    if (!fs.existsSync(destPath)) {
-        console.log(chalk.red('vendor manifest not found,did you forget build vendor?'))
-        process.exit(1)
+export function checkVendor(vendor, target) {
+    if (!vendor) return false
+    if (!fs.existsSync(resolve(target, 'vendor-manifest.json'))) return false
+    let passed = true
+    if (vendor.js) {
+        Object.keys(vendor.js).forEach(v => {
+            if (!fs.existsSync(resolve(target, `${v}-manifest.json`))) {
+                passed = false
+                return
+            }
+        })
     }
+    return passed
 }
 
 export function vendorManifest(stats, destPath) {
@@ -51,10 +59,10 @@ export function vendorManifest(stats, destPath) {
         return prev.concat(current)
     }, []).forEach(function(v) {
         if (v.chunkNames.length > 0) {
-            assetByChunk[v.chunkNames[0]] = path.basename(v.name)
+            assetByChunk[v.chunkNames[0]] = basename(v.name)
         }
     })
-    fs.outputJsonSync(path.join(destPath, 'vendor-manifest.json'), assetByChunk)
+    fs.outputJsonSync(join(destPath, 'vendor-manifest.json'), assetByChunk)
 }
 
 export function openBrowser(target, url) {

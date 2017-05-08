@@ -4,7 +4,6 @@ import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
 import { bundleTime } from '../lib/helper'
-import { checkManifest } from '../lib'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
@@ -18,11 +17,9 @@ export default function(context, constants, profile) {
     let dllRefs = []
 
     let vendorManifestPath = join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
-    checkManifest(vendorManifestPath)
     let vendorManifest = require(vendorManifestPath)
     for (let key in vendors['js']) {
         let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
-        checkManifest(manifestPath)
         let _manifest = require(manifestPath)
         dllRefs.push(new webpack.DllReferencePlugin({
             context: resolve(sourceFolder),

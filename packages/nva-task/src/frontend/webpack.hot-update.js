@@ -3,7 +3,6 @@ import { join, resolve, sep } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
-import { checkManifest } from '../lib/'
 
 export default function(context, constants) {
     const { vendors, modules, sourceFolder, vendorFolder, hmrPath } = context
@@ -15,11 +14,9 @@ export default function(context, constants) {
     /*build vendors*/
     let dllRefs = []
     let vendorManifestPath = join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
-    checkManifest(vendorManifestPath)
     let vendorManifest = require(vendorManifestPath)
     for (let key in vendors['js']) {
         let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
-        checkManifest(manifestPath)
         let _manifest = require(manifestPath)
         dllRefs.push(new DllReferencePlugin({
             context: __dirname,

@@ -2,7 +2,6 @@ import { DllReferencePlugin } from 'webpack'
 import { join, basename, resolve } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import { config as configFactory } from 'nva-core'
-import { checkManifest } from '../lib/'
 import { relativeURL, bundleTime } from '../lib/helper'
 
 export default function(context, constants, profile) {
@@ -15,11 +14,9 @@ export default function(context, constants, profile) {
     /** build vendors*/
     let dllRefs = []
     let vendorManifestPath = join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
-    checkManifest(vendorManifestPath)
     let vendorManifest = require(vendorManifestPath)
     for (let key in vendors['js']) {
         let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
-        checkManifest(manifestPath)
         let _manifest = require(manifestPath)
         dllRefs.push(new DllReferencePlugin({
             context: __dirname,

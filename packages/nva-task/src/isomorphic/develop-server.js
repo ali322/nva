@@ -8,7 +8,7 @@ import hotUpdateConfigFactory from './webpack.hot-update'
 
 
 export default function(context, constants) {
-    const { runningMessage, serverFolder, pagePath, beforeDev, mockConf } = context
+    const { runningMessage, serverFolder, pagePath, beforeDev, mockConf, afterDev } = context
     const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
     return function(options) {
         nodemon({
@@ -51,6 +51,9 @@ export default function(context, constants) {
             hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
         }
         middleware = middleware.concat(middlewareFactory(hotUpdateConfig, () => {
+            if (typeof afterDev === 'function') {
+                afterDev()
+            }
             let url = `http://localhost:${port}`
             openBrowser(options.browser, url)
         }))
