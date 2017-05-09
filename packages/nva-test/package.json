@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.2.31",
+  "version": "0.2.32",
   "description": "frontend test toolkit",
   "main": "src/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
@@ -21,6 +21,7 @@
     "cross-spawn": "^5.1.0",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
+    "karma-cli": "^1.0.1",
     "karma-coverage": "^1.1.1",
     "karma-mocha": "^1.3.0",
     "karma-phantomjs-launcher": "^1.0.2",

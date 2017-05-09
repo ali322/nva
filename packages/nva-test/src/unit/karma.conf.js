@@ -46,15 +46,16 @@ module.exports = function(config) {
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['PhantomJS'],
-        singleRun: false,
         concurrency: Infinity,
         captureTimeout: 60000,
         browserDisconnectTimeout: 10000,
         browserDisconnectTolerance: 1,
         browserNoActivityTimeout: 60000 //by default 10000
     }
-    if(customize.webpack){
-        opts.webpack = merge(opts.webpack, customize.webpack)
+    if (customize.webpack) {
+        opts.webpack = merge.smart(opts.webpack, customize.webpack)
     }
+    let restOpts = omit(customize, ['entry', 'reportFolder', 'webpack'])
+    opts = assign({}, opts, restOpts)
     config.set(opts)
 }

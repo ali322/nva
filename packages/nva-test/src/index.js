@@ -4,6 +4,8 @@ let { resolve, join } = require('path')
 let fs = require('fs')
 let karma = require('karma')
 
+const nodeModules = join(__dirname, '..', 'node_modules')
+
 exports.e2e = function(runner, conf, browser = 'chrome') {
     process.env.NODE_ENV = 'testing'
     let server
@@ -24,7 +26,7 @@ exports.e2e = function(runner, conf, browser = 'chrome') {
     }
     opts = opts.concat(['--env', browser])
 
-    let instance = spawn(join(__dirname, '..', 'node_modules', '.bin', 'nightwatch'), opts, { stdio: 'inherit' })
+    let instance = spawn(join(nodeModules, '.bin', 'nightwatch'), opts, { stdio: 'inherit' })
     instance.on('exit', (code) => {
         server.close()
         process.exit(code)
@@ -36,9 +38,9 @@ exports.e2e = function(runner, conf, browser = 'chrome') {
     })
 }
 
-exports.unit = function() {
+exports.unit = function(autowatch) {
     new karma.Server({
         configFile: join(__dirname, 'unit', 'karma.conf.js'),
-        singleRun: true
+        singleRun: !autowatch
     }).start()
 }
