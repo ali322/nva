@@ -4,12 +4,14 @@ import interceptor from './lib/interceptor'
 
 export default function(options = {}) {
     const namespace = options.namespace ? options.namespace : 'nva'
+    const hooks = options.hooks ? options.hooks : {}
     const { modules, proj, vendors } = loadConf(options, namespace)
     let context = {
         namespace,
         modules,
         proj: { type: 'frontend', ...proj },
-        vendors
+        vendors,
+        ...hooks
     }
     return init(context)
 }
