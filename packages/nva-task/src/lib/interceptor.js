@@ -1,7 +1,8 @@
 import { join, resolve } from 'path'
+import { omit } from 'lodash'
 
 export default function(context) {
-    const { proj, modules, vendors, namespace } = context
+    const { proj, modules } = context
     const isIsomorphic = proj.type === 'isomorphic'
 
     let _proj = {
@@ -66,11 +67,9 @@ export default function(context) {
         }
     }
 
-
     return {
-        namespace,
+        ...(omit(context, ['modules', 'proj'])),
         modules: _modules,
-        vendors,
         ..._proj
     }
 }

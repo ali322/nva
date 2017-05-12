@@ -8,5 +8,11 @@ program.parse(process.argv)
 
 var port = program.port
 var browser = program.browser
-var tasks = require('nva-task')()
+var tasks = require('nva-task')({
+    hooks:{
+        beforeDev(){
+            console.log('before')
+        }
+    }
+})
 tasks.dev({ port, browser })
