@@ -54,8 +54,6 @@ export default function(context, constants) {
             if (typeof afterDev === 'function') {
                 afterDev()
             }
-            let url = `http://localhost:${port}`
-            openBrowser(options.browser, url)
         }))
 
         let bs = browserSync({
@@ -80,6 +78,9 @@ export default function(context, constants) {
             }
         }, function() {
             console.log('🚀  develop server is started at %d', proxyPort);
+
+            let url = `http://localhost:${port}`
+            setTimeout(() => openBrowser(options.browser, url), 5000)
         })
 
         bs.emitter.on("reload", function() {

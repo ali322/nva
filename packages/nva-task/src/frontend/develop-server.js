@@ -6,7 +6,7 @@ import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
 export default function(context, constants) {
-    const { spa, moduleConf, sourceFolder, distFolder, bundleFolder, mockConf, beforeDev,afterDev } = context
+    const { spa, moduleConf, sourceFolder, distFolder, bundleFolder, mockConf, beforeDev, afterDev } = context
     return function(options) {
         let browserSync = BrowserSync.create()
         const port = options.port || 3000
@@ -15,12 +15,9 @@ export default function(context, constants) {
             config = mergeConfig(config, beforeDev(config))
         }
         const middlewares = middlewareFactory(config, () => {
-            if(typeof afterDev === 'function'){
+            if (typeof afterDev === 'function') {
                 afterDev()
             }
-            let url = spa ? '/' : '/index'
-            url = `http://localhost:${port}${url}`
-            openBrowser(options.browser, url)
         })
 
         let rewrites = spa === true ? [{
@@ -65,6 +62,10 @@ export default function(context, constants) {
             logLevel: "silent"
         }, function() {
             console.log('🌎  develop server started at %d', port)
+
+            let url = spa ? '/' : '/index'
+            url = `http://localhost:${port}${url}`
+            setTimeout(() => openBrowser(options.browser, url), 5000)
         })
     }
 }

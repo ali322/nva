@@ -79,6 +79,7 @@ module.exports = context => {
             writeToModuleConfig(moduleConfPath, _moduleConf)
             names.forEach(function(_name) {
                 let to = join(sourceFolder, bundleFolder, _name)
+                to = _name === modules[_name].path ? modules[_name].path : to
                 if (fs.existsSync(to)) {
                     fs.removeSync(to)
                 } else {
