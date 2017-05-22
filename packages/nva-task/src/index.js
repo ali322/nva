@@ -35,13 +35,10 @@ function loadConf(options, namespace) {
 
     let proj = {}
     if (checkFile(projConfPath)) {
-        try {
-            proj = require(projConfPath)
-        } catch (err) {
-            console.error(err)
-            error('project config invalid')
-        }
+        proj = require(projConfPath)
         proj.default && (proj = proj.default)
+    } else {
+        error('project config invalid')
     }
 
     if (!checkFile(moduleConfPath)) {
@@ -54,11 +51,9 @@ function loadConf(options, namespace) {
 
     let vendors = {}
     if (checkFile(vendorConfPath)) {
-        try{
-            vendors = require(vendorConfPath)
-        }catch(err){
-            error('vendor config invalid')
-        }
+        vendors = require(vendorConfPath)
+    } else {
+        error('vendor config invalid')
     }
     return { modules, vendors, proj }
 }
