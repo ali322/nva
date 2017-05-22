@@ -3,6 +3,7 @@ import { DllPlugin } from 'webpack'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
+import { isEmpty, isPlainObject } from 'lodash'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants) {
@@ -13,15 +14,19 @@ export default function(context, constants) {
     let entryJS = {},
         entryCSS = {},
         cssChunks = []
-    for (let key in vendors['js']) {
-        entryJS[key] = vendors['js'][key]
+    if (isPlainObject(vendors['js'])) {
+        for (let key in vendors['js']) {
+            entryJS[key] = vendors['js'][key]
+        }
     }
-    for (let key in vendors['css']) {
-        cssChunks.push(key)
-        entryCSS[key] = vendors['css'][key]
+    if (isPlainObject(vendors['css'])) {
+        for (let key in vendors['css']) {
+            cssChunks.push(key)
+            entryCSS[key] = vendors['css'][key]
+        }
     }
 
-    const vendorJSConfig = {
+    const jsConfig = {
         ...baseConfig,
         name: "js",
         entry: entryJS,
@@ -31,7 +36,7 @@ export default function(context, constants) {
             library: '[name]_[hash]'
         },
         context: __dirname,
-        resolve: { modules: [sourceFolder, resolve("node_modules")] },
+        resolve: { modules: [sourceFolder, 'node_modules', resolve("node_modules")] },
         plugins: [
             ...baseConfig.plugins.slice(1),
             new ProgressBarPlugin({
@@ -47,12 +52,12 @@ export default function(context, constants) {
         ]
     }
 
-    const vendorCSSConfig = {
+    const cssConfig = {
         ...baseConfig,
         name: "css",
         entry: entryCSS,
         context: __dirname,
-        resolve: { modules: [sourceFolder, resolve("node_modules")] },
+        resolve: { modules: [sourceFolder, 'node_modules', resolve("node_modules")] },
         output: {
             path: constants.OUTPUT_PATH
         },
@@ -71,5 +76,13 @@ export default function(context, constants) {
         ]
     }
 
-    return [vendorJSConfig, vendorCSSConfig]
+    let vendorConfig = []
+    if (!isEmpty(entryJS)) {
+        vendorConfig.push(jsConfig)
+    }
+    if (!isEmpty(entryCSS)) {
+        vendorConfig.push(cssConfig)
+    }
+
+    return vendorConfig
 }
