@@ -38,11 +38,11 @@ function loadConf(options, namespace) {
         proj = require(projConfPath)
         proj.default && (proj = proj.default)
     } else {
-        error('project config invalid')
+        error('project config is invalid')
     }
 
     if (!checkFile(moduleConfPath)) {
-        error('module config invalid')
+        error('module config is invalid')
     }
     let modules = require(moduleConfPath)
     proj.confFolder = confFolder
@@ -53,7 +53,7 @@ function loadConf(options, namespace) {
     if (checkFile(vendorConfPath)) {
         vendors = require(vendorConfPath)
     } else {
-        error('vendor config invalid')
+        error('vendor config is invalid')
     }
     return { modules, vendors, proj }
 }

@@ -32,7 +32,12 @@ export function relativeURL(from, to) {
 }
 
 export function checkFile(target) {
-    let stats = fs.statSync(path.resolve(target))
+    let stats
+    try{
+        stats = fs.statSync(path.resolve(target))
+    }catch(err){
+        return false
+    }
     return stats.isFile()
 }
 
