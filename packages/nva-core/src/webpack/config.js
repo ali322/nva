@@ -49,7 +49,7 @@ export default function(constants, profile = false) {
     }
 
     let restConfig = constants.HOT ? {
-        devtool: "#eval-source-map",
+        devtool: "#cheap-source-map",
         watch: true,
         performance: { hints: false },
         plugins: [
