@@ -30,5 +30,5 @@ function exec(cmd) {
 if (e2e) {
     exec(`nva-test --e2e --config ${config} --browser ${browser} --runner ${runner}`)
 } else {
-    exec(`nva-test --config ${config} ${autowatch?:'--watch':''}`)
+    exec(`nva-test --config ${config} ${autowatch?'--watch':''}`)
 }
