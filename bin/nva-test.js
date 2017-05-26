@@ -2,7 +2,6 @@
 
 var program = require("commander")
 var test = require('nva-test')
-var execSync = require('execa').shellSync
 
 program.option('    --e2e', 'is e2e test or not')
 program.option('-r, --runner <runner>', 'how to start project')
@@ -18,17 +17,8 @@ let config = program.config
 let browser = program.browser
 let autowatch = program.watch
 
-function exec(cmd) {
-    try {
-        execSync(cmd, { stdio: 'inherit' })
-    } catch (err) {
-        console.log(err)
-        process.exit(1)
-    }
-}
-
 if (e2e) {
-    exec(`nva-test --e2e --config ${config} --browser ${browser} --runner ${runner}`)
+    test.e2e(runner,config,browser)
 } else {
-    exec(`nva-test --config ${config} ${autowatch?'--watch':''}`)
+    test.unit(autowatch)
 }
