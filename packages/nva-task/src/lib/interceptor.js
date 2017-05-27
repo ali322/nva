@@ -21,6 +21,7 @@ export default function(context) {
         fontFolder: 'font',
         imageFolder: 'image',
 
+        vendorSourceMap:'sourcemap.json',
         hmrPath: "/hmr/",
         enableMock: true
     }

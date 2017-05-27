@@ -2,6 +2,7 @@ import os from 'os'
 import path from 'path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
+import net from 'net'
 
 export function getLanIP() {
     let interfaces = os.networkInterfaces();
@@ -14,6 +15,21 @@ export function getLanIP() {
         });
     }
     return IPv4;
+}
+
+export function checkPort(port, callback) {
+    let server = net.createServer(function(socket) {
+        socket.write('Echo server\r\n')
+        socket.pipe(socket)
+    })
+
+    server.listen(port, () => {
+        server.close()
+        callback(true)
+    })
+    server.on('error', () => {
+        callback(false)
+    })
 }
 
 export function bundleTime() {
@@ -33,9 +49,9 @@ export function relativeURL(from, to) {
 
 export function checkFile(target) {
     let stats
-    try{
+    try {
         stats = fs.statSync(path.resolve(target))
-    }catch(err){
+    } catch (err) {
         return false
     }
     return stats.isFile()

@@ -1,5 +1,6 @@
 import { join, sep } from 'path'
 import middlewareFactory from '../lib/middleware'
+import { error, checkPort } from '../lib/helper'
 import { mergeConfig, openBrowser } from '../lib/'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
@@ -41,31 +42,39 @@ export default function(context, constants) {
             process.exit(0)
         })
 
-        browserSync.init({
-            port,
-            server: spa ? false : [join(sourceFolder, bundleFolder), distFolder],
-            middleware: middlewares.concat([app]),
-            files: [join(sourceFolder, bundleFolder, '**', '*.html')],
-            online: false,
-            notify: true,
-            open: false,
-            watchOptions: {
-                debounceDelay: 1000
-            },
-            ghostMode: {
-                clicks: true,
-                forms: true,
-                scroll: true
-            },
-            logFileChanges: true,
-            logConnections: false,
-            logLevel: "silent"
-        }, function() {
-            console.log('🌎  develop server started at %d', port)
+        checkPort(port, available => {
+            if (!available) {
+                error('port is not avaiilable')
+            } else {
+                browserSync.init({
+                    port,
+                    server: spa ? false : [join(sourceFolder, bundleFolder), distFolder],
+                    middleware: middlewares.concat([app]),
+                    files: [join(sourceFolder, bundleFolder, '**', '*.html')],
+                    online: false,
+                    notify: true,
+                    open: false,
+                    watchOptions: {
+                        debounceDelay: 1000
+                    },
+                    ghostMode: {
+                        clicks: true,
+                        forms: true,
+                        scroll: true
+                    },
+                    logFileChanges: true,
+                    logConnections: false,
+                    logLevel: "silent"
+                }, function() {
+                    console.log('🌎  develop server started at %d', port)
 
-            let url = spa ? '/' : '/index'
-            url = `http://localhost:${port}${url}`
-            setTimeout(() => openBrowser(options.browser, url), 5000)
+                    let url = spa ? '/' : '/index'
+                    url = `http://localhost:${port}${url}`
+                    setTimeout(() => openBrowser(options.browser, url), 5000)
+                })
+
+            }
         })
+
     }
 }

@@ -7,7 +7,7 @@ import { bundleTime } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    let { vendors, modules, sourceFolder, distFolder, vendorFolder } = context
+    let { vendors, modules, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
@@ -16,7 +16,7 @@ export default function(context, constants, profile) {
     /** add vendors reference*/
     let dllRefs = []
 
-    let vendorManifestPath = join(constants.VENDOR_OUTPUT, 'vendor-manifest.json')
+    let vendorManifestPath = join(constants.VENDOR_OUTPUT, vendorSourceMap)
     let vendorManifest = require(vendorManifestPath)
     for (let key in vendors['js']) {
         let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
@@ -35,10 +35,10 @@ export default function(context, constants, profile) {
         let _more = { js: [], css: [] }
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
-                _more.js = [join(sep, distFolder, vendorFolder, vendorManifest[moduleObj.vendor.js])]
+                _more.js = [join(sep, distFolder, vendorFolder, vendorManifest.js[moduleObj.vendor.js])]
             }
             if (moduleObj.vendor.css) {
-                _more.css = [join(sep, distFolder, vendorFolder, vendorManifest[moduleObj.vendor.css])]
+                _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
             }
         }
         moduleObj.html.forEach(function(html) {

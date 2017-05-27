@@ -28,7 +28,8 @@ module.exports = context => {
         beforeVendor,
         afterVendor,
         modules,
-        vendors
+        vendors,
+        vendorSourceMap
     } = context
 
     const constants = {
@@ -89,7 +90,10 @@ module.exports = context => {
             })
         },
         build({ profile }) {
-            checkVendor(vendors, constants.VENDOR_OUTPUT, tasks.vendor)
+            if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) === false) {
+                tasks.vendor(tasks.build.bind(null, { profile }))
+                return
+            }
             let releaseConfig = releaseConfigFactory(context, constants, profile)
             if (typeof beforeBuild === 'function') {
                 releaseConfig = mergeConfig(releaseConfig, beforeBuild(releaseConfig))
@@ -115,7 +119,7 @@ module.exports = context => {
             del.sync([join(distFolder, vendorFolder, '*.*')])
             var compiler = webpack(vendorConfig)
             compiler.run(function(err, stats) {
-                vendorManifest(stats, constants.VENDOR_OUTPUT)
+                vendorManifest(stats, join(constants.VENDOR_OUTPUT, vendorSourceMap))
                 if (typeof afterVendor === 'function') {
                     afterVendor(err, stats)
                 }
@@ -125,7 +129,7 @@ module.exports = context => {
         },
         dev(options) {
             const runDev = developServer(context, constants)
-            if (checkVendor(vendors, constants.VENDOR_OUTPUT)) {
+            if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))) {
                 runDev(options)
             } else {
                 tasks.vendor(runDev.bind(null, options))

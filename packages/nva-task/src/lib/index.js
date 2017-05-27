@@ -1,6 +1,6 @@
-import { compact } from 'lodash'
+import { compact, mapValues } from 'lodash'
 import merge from 'webpack-merge'
-import { join, basename, resolve } from 'path'
+import { dirname, basename, resolve } from 'path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
 import opn from 'opn'
@@ -38,11 +38,11 @@ export function writeToModuleConfig(target, config) {
 
 export function checkVendor(vendor, target) {
     if (!vendor) return false
-    if (!fs.existsSync(resolve(target, 'vendor-manifest.json'))) return false
+    if (!fs.existsSync(resolve(target))) return false
     let passed = true
     if (vendor.js) {
         Object.keys(vendor.js).forEach(v => {
-            if (!fs.existsSync(resolve(target, `${v}-manifest.json`))) {
+            if (!fs.existsSync(resolve(dirname(target), `${v}-manifest.json`))) {
                 passed = false
                 return
             }
@@ -51,18 +51,12 @@ export function checkVendor(vendor, target) {
     return passed
 }
 
-export function vendorManifest(stats, destPath) {
+export function vendorManifest(stats, target) {
     let assetByChunk = {}
-    stats.toJson().children.map(function(child) {
-        return child.assets
-    }).reduce(function(prev, current) {
-        return prev.concat(current)
-    }, []).forEach(function(v) {
-        if (v.chunkNames.length > 0) {
-            assetByChunk[v.chunkNames[0]] = basename(v.name)
-        }
+    stats.toJson().children.forEach((child) => {
+        assetByChunk[child.name] = mapValues(child.assetsByChunkName, v => basename(v))
     })
-    fs.outputJsonSync(join(destPath, 'vendor-manifest.json'), assetByChunk)
+    fs.outputJsonSync(target, assetByChunk)
 }
 
 export function openBrowser(target, url) {
