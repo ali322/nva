@@ -91,7 +91,8 @@ module.exports = context => {
         },
         build({ profile }) {
             if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) === false) {
-                tasks.vendor(tasks.build.bind(null, { profile }))
+                console.log('vendor')
+                tasks.vendor()
                 return
             }
             let releaseConfig = releaseConfigFactory(context, constants, profile)
@@ -101,7 +102,11 @@ module.exports = context => {
             /** clean build assets*/
             for (let moduleName in modules) {
                 let moduleObj = modules[moduleName]
-                del.sync(join(distFolder, moduleObj.path))
+                if (moduleObj.path) {
+                    del.sync(join(distFolder, moduleObj.path))
+                } else {
+                    del.sync(join(distFolder, '*.*'))
+                }
             }
             let compiler = webpack(releaseConfig)
             compiler.run(function(err, stats) {

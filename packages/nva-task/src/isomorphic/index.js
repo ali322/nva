@@ -143,7 +143,11 @@ module.exports = context => {
             /** clean dist */
             for (let moduleName in modules) {
                 let moduleObj = modules[moduleName]
-                del.sync(join(sourceFolder, distFolder, moduleObj.path, '/*.*'));
+                if (moduleObj.path) {
+                    del.sync(join(sourceFolder, distFolder, moduleObj.path, '/*.*'));
+                } else {
+                    del.sync(join(sourceFolder, distFolder, '*.*'))
+                }
             }
             createBundle({ ...constants, HOT: false })
             let compiler = webpack([clientConfig, serverConfig])
