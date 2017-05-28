@@ -144,9 +144,9 @@ module.exports = context => {
             for (let moduleName in modules) {
                 let moduleObj = modules[moduleName]
                 if (moduleObj.path) {
-                    del.sync(join(sourceFolder, distFolder, moduleObj.path, '/*.*'));
+                    del.sync(join(sourceFolder, distFolder, moduleObj.path))
                 } else {
-                    del.sync(join(sourceFolder, distFolder, '*.*'))
+                    del.sync(join(sourceFolder, distFolder, moduleName))
                 }
             }
             createBundle({ ...constants, HOT: false })

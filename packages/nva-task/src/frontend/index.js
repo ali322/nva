@@ -105,7 +105,10 @@ module.exports = context => {
                 if (moduleObj.path) {
                     del.sync(join(distFolder, moduleObj.path))
                 } else {
-                    del.sync(join(distFolder, '*.*'))
+                    del.sync(join(distFolder, moduleName))
+                }
+                if (moduleObj.htmlOutput) {
+                    del.sync(join(moduleObj.htmlOutput, '*.html'))
                 }
             }
             let compiler = webpack(releaseConfig)
