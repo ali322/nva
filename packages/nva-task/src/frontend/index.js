@@ -124,7 +124,7 @@ module.exports = context => {
             if (typeof beforeVendor === 'function') {
                 vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
             }
-            del.sync([join(distFolder, vendorFolder, '*.*')])
+            del.sync([join(distFolder, vendorFolder)])
             var compiler = webpack(vendorConfig)
             compiler.run(function(err, stats) {
                 vendorManifest(stats, join(constants.VENDOR_OUTPUT, vendorSourceMap))
