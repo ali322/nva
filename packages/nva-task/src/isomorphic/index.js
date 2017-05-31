@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import { omit } from 'lodash'
 import del from 'del'
 import fs from 'fs-extra'
-import { writeToModuleConfig, vendorManifest, mergeConfig, DEBUG, checkVendor } from '../lib'
+import { writeToModuleConfig, vendorManifest, mergeConfig, checkVendor } from '../lib'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
 import serverConfigFactory from './webpack.server'
@@ -68,8 +68,7 @@ module.exports = context => {
         IMAGE_PREFIX: join('..', '..', '..', distFolder, assetFolder, imageFolder),
         FONT_PREFIX: join('..', '..', distFolder, assetFolder, fontFolder),
         VENDOR_OUTPUT: resolve(sourceFolder, distFolder, vendorFolder),
-        MANIFEST_PATH: join(sourceFolder, distFolder, vendorFolder),
-        DEBUG
+        MANIFEST_PATH: join(sourceFolder, distFolder, vendorFolder)
     }
 
     const tasks = {

@@ -25,16 +25,15 @@ export default function(context, constants) {
             ],
             ext: "js html json es6 jsx"
         }).on("readable", function() {
-            this.stdout.on('data', function(chunk) {
-                if (RUNNING_REGXP.test(chunk)) {
+            this.stdout.on('data', (chunk) => {
+                if (RUNNING_REGXP.test(chunk.toString())) {
                     browserSync.reload({
                         stream: false
                     })
                 }
-                // process.stdout.write(chunk);
-            });
-            // this.stdout.pipe(process.stdout);
-            this.stderr.pipe(process.stderr);
+            })
+            this.stdout.pipe(process.stdout)
+            this.stderr.pipe(process.stderr)
         })
 
         const port = options.port || 7000
@@ -77,7 +76,7 @@ export default function(context, constants) {
                 return "http://localhost:" + port + path
             }
         }, function() {
-            console.log('🚀  develop server is started at %d', proxyPort);
+            // console.log('🚀  develop server is started at %d', proxyPort);
 
             let url = `http://localhost:${port}`
             setTimeout(() => openBrowser(options.browser, url), 5000)

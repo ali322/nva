@@ -6,8 +6,6 @@ import chalk from 'chalk'
 import opn from 'opn'
 import { getLanIP } from './helper'
 
-export const DEBUG = process.env.NODE_ENV !== 'production'
-
 export function serverHost(port) {
     const lanIP = getLanIP()
     return `http://${lanIP}:${port}`
@@ -52,7 +50,6 @@ export function checkVendor(vendor, target) {
 }
 
 export function vendorManifest(stats, target) {
-    console.log('target',target)
     let assetByChunk = {}
     stats.toJson().children.forEach((child) => {
         assetByChunk[child.name] = mapValues(child.assetsByChunkName, v => basename(v))

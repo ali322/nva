@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import del from 'del'
 import { join, resolve, sep } from 'path'
 import { omit } from 'lodash'
-import { DEBUG, writeToModuleConfig, vendorManifest, mergeConfig, checkVendor } from '../lib'
+import { writeToModuleConfig, vendorManifest, mergeConfig, checkVendor } from '../lib'
 import fs from 'fs-extra'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
@@ -43,7 +43,6 @@ module.exports = context => {
         FONT_PREFIX: join('..', assetFolder, fontFolder),
         VENDOR_OUTPUT: resolve(distFolder, vendorFolder),
         MANIFEST_PATH: join(distFolder, vendorFolder),
-        DEBUG
     }
 
     const tasks = {
