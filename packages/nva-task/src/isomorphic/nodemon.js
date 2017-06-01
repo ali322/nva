@@ -1,28 +1,28 @@
 import nodemon from 'nodemon'
 import chalk from 'chalk'
+import { relative } from 'path'
 
-function nodemonLog(message){
-    let time = new Date().toString().split(' ')[4]
-    console.log(chalk.yellow(`[${time}]${message}`))
-}
-
-export default function(options){
+export default function(options) {
     let script = nodemon(options),
         started = false
 
-    let exitHanlder = function(options){
-        if(options.exit)script.emit('exit')
-        if(options.quit)process.exit(0)
+    let exitHanlder = function(options) {
+        if (options.exit) script.emit('exit')
+        if (options.quit) process.exit(0)
     }
 
-    process.once('exit',exitHanlder.bind(null,{exit:true}))
-    process.once('SIGINT',exitHanlder.bind(null,{quit:true}))
+    process.once('exit', exitHanlder.bind(null, { exit: true }))
+    process.once('SIGINT', exitHanlder.bind(null, { quit: true }))
 
-    script.on('log',function(log){
-        // nodemonLog(log.colour)
+    script.on('restart', function(files) {
+        console.log('🚀  ' + chalk.yellow('server restarting...'))
+        files.forEach(function(file) {
+            file = relative(process.cwd(), file)
+            console.log(chalk.yellow(`file changed: ${file}`))
+        })
     })
 
-    script.on('start',function(){
+    script.on('start', function() {
         if (!started) {
             return
         }

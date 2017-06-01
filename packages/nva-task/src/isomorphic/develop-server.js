@@ -21,7 +21,7 @@ export default function(context, constants) {
             stdout: false,
             // ignore: ["*"],
             watch: [
-                serverFolder
+                serverFolder, 'app.js'
             ],
             ext: "js html json es6 jsx"
         }).on("readable", function() {
@@ -82,8 +82,8 @@ export default function(context, constants) {
             setTimeout(() => openBrowser(options.browser, url), 5000)
         })
 
-        bs.emitter.on("reload", function() {
-            console.log("🌎  develop server reload");
+        bs.emitter.on("browser:reload", function() {
+            // console.log("🌎  develop server reload");
         })
     }
 }

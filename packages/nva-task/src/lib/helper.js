@@ -17,6 +17,10 @@ export function getLanIP() {
     return IPv4;
 }
 
+export function current(){
+    return new Date().toString().split(' ')[4]
+}
+
 export function checkPort(port, callback) {
     let server = net.createServer(function(socket) {
         socket.write('Echo server\r\n')
