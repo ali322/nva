@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.2.61",
+  "version": "0.2.62",
   "description": "frontend static server",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",

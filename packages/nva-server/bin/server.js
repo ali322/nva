@@ -56,10 +56,6 @@ if (config) {
     }
 }
 
-if (!options.path) {
-    console.log(chalk.red('no path specified'))
-    process.exit(1)
-}
 app = app(options)
 
 let server = app.listen(options.port, function(err) {
