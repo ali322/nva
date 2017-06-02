@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { checkFile, error } from './lib/helper'
-import interceptor from './lib/interceptor'
+import initializer from './lib/initializer'
 
 export default function(options = {}) {
     const namespace = options.namespace ? options.namespace : 'nva'
@@ -21,7 +21,7 @@ function init(context) {
     if (['frontend', 'isomorphic'].indexOf(type) === -1) {
         error('unsupported type')
     }
-    let tasks = require(`./${type}`)(interceptor(context))
+    let tasks = require(`./${type}`)(initializer(context))
     return tasks
 }
 

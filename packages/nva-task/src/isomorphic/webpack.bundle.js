@@ -1,7 +1,7 @@
 import { IgnorePlugin } from 'webpack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import { resolve } from 'path'
+import { resolve, join } from 'path'
 import fs from 'fs'
 import { config as configFactory } from 'nva-core'
 
@@ -14,8 +14,10 @@ export default function(context, constants) {
     /** build modules */
     for (let moduleName in modules) {
         let moduleObj = modules[moduleName]
-        if (fs.existsSync(moduleObj.bundleEntry)) {
-            entry[moduleName] = moduleObj.bundleEntry
+        let bundleEntry = moduleObj.bundleEntry || join(moduleName, moduleName + '-server.js')
+        bundleEntry = resolve(sourceFolder, bundleFolder, bundleEntry)
+        if (fs.existsSync(bundleEntry)) {
+            entry[moduleName] = bundleEntry
         }
     }
 

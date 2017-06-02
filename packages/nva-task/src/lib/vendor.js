@@ -70,7 +70,7 @@ export default function(context, constants) {
             }),
             new ChunkTransformPlugin({
                 chunks: cssChunks,
-                test: /\.css/,
+                test: /\.css$/,
                 filename: function(filename) { return join(distFolder, vendorFolder, basename(filename)) }
             })
         ]

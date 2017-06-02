@@ -33,11 +33,12 @@ export default function(context, constants) {
         let _moduleEntry = [
             'webpack-hot-middleware/client' + '?path=' + devServerHost + '/__webpack_hmr',
             // require.resolve("webpack/hot/only-dev-server"),
-            moduleObj.entryJS,
-            moduleObj.entryCSS
+            moduleObj.input.js,
+            moduleObj.input.css
         ];
         entry[moduleName] = _moduleEntry
         let _chunks = [moduleName]
+
         let _more = { js: [], css: [] }
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
@@ -47,19 +48,17 @@ export default function(context, constants) {
                 _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
             }
         }
-        moduleObj.html.forEach(function(html) {
-            htmls.push(new InjectHtmlPlugin({
-                processor: devServerHost + hmrPath,
-                chunks: _chunks,
-                filename: html,
-                more: _more,
-                customInject: [{
-                    start: '<!-- start:browser-sync -->',
-                    end: '<!-- end:browser-sync -->',
-                    content: '<script src="' + devServerHost + '/bs/browser-sync-client.js"></script>'
-                }]
-            }))
-        })
+        htmls.push(new InjectHtmlPlugin({
+            processor: devServerHost + hmrPath,
+            chunks: _chunks,
+            filename: moduleObj.input.html,
+            more: _more,
+            customInject: [{
+                start: '<!-- start:browser-sync -->',
+                end: '<!-- end:browser-sync -->',
+                content: '<script src="' + devServerHost + '/bs/browser-sync-client.js"></script>'
+            }]
+        }))
     }
 
     return {

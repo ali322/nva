@@ -1,7 +1,8 @@
 import webpack from 'webpack'
-import { join, resolve, sep } from 'path'
+import { join, resolve, sep, extname } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import chalk from 'chalk'
 import { bundleTime } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
@@ -9,8 +10,9 @@ import { config as configFactory } from 'nva-core'
 export default function(context, constants, profile) {
     let { vendors, modules, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
     /** build variables*/
-    let entry = {};
-    let htmls = [];
+    let entry = {}
+    let htmls = []
+    let transforms = []
     let baseConfig = configFactory({ ...constants, HOT: false }, profile)
 
     /** add vendors reference*/
@@ -30,8 +32,17 @@ export default function(context, constants, profile) {
     /** build modules*/
     for (let moduleName in modules) {
         let moduleObj = modules[moduleName]
-        entry[moduleName] = [moduleObj.entryJS, moduleObj.entryCSS]
+        entry[moduleName] = [moduleObj.input.js, moduleObj.input.css]
         let _chunks = [moduleName]
+
+        if (moduleObj.output.js || moduleObj.output.css) {
+            transforms.push(new ChunkTransformPlugin({
+                chunks: [moduleName],
+                test: /\.(js|css)$/,
+                filename: filename => extname(filename) === '.js' ? moduleObj.output.js : moduleObj.output.css
+            }))
+        }
+
         let _more = { js: [], css: [] }
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
@@ -41,23 +52,21 @@ export default function(context, constants, profile) {
                 _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
             }
         }
-        moduleObj.html.forEach(function(html) {
-            htmls.push(new InjectHtmlPlugin({
-                processor: sep,
-                chunks: _chunks,
-                filename: html,
-                more: _more,
-                customInject: [{
-                    start: '<!-- start:bundle-time -->',
-                    end: '<!-- end:bundle-time -->',
-                    content: `<meta name="bundleTime" content="${bundleTime()}"/>`
-                }, {
-                    start: '<!-- start:browser-sync -->',
-                    end: '<!-- end:browser-sync -->',
-                    content: ''
-                }]
-            }))
-        })
+        htmls.push(new InjectHtmlPlugin({
+            processor: sep,
+            chunks: _chunks,
+            filename: moduleObj.input.html,
+            more: _more,
+            customInject: [{
+                start: '<!-- start:bundle-time -->',
+                end: '<!-- end:bundle-time -->',
+                content: `<meta name="bundleTime" content="${bundleTime()}"/>`
+            }, {
+                start: '<!-- start:browser-sync -->',
+                end: '<!-- end:browser-sync -->',
+                content: ''
+            }]
+        }))
     }
 
     return {
@@ -80,6 +89,7 @@ export default function(context, constants, profile) {
                 clear: false,
                 summary: false
             }),
+            ...transforms,
             ...dllRefs,
             ...htmls
         ]

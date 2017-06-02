@@ -29,8 +29,8 @@ export default function(context, constants) {
         let moduleObj = modules[moduleName]
         entry[moduleName] = [
             "webpack-hot-middleware/client",
-            moduleObj.entryJS,
-            moduleObj.entryCSS
+            moduleObj.input.js,
+            moduleObj.input.css
         ];
         let _chunks = [moduleName]
         let _more = { js: [], css: [] }
@@ -42,14 +42,12 @@ export default function(context, constants) {
                 _more.css = [join(sep, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
             }
         }
-        moduleObj.html.forEach(function(html) {
-            htmls.push(new InjectHtmlPlugin({
-                processor: hmrPath,
-                chunks: _chunks,
-                filename: html,
-                more: _more
-            }))
-        })
+        htmls.push(new InjectHtmlPlugin({
+            processor: hmrPath,
+            chunks: _chunks,
+            filename: moduleObj.input.html,
+            more: _more
+        }))
     }
 
     return {

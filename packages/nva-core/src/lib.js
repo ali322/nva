@@ -15,15 +15,13 @@ export function happypackPlugin(id, loaders, tempDir) {
     })
 }
 
-export const postcssOptions = ({ HOT, SPRITE_OUTPUT }) => ({
+export const postcssOptions = ({ HOT }) => ({
     plugins: function() {
         let plugins = [
             autoPrefixer()
         ]
         if (!HOT) {
-            plugins.push(sprites({
-                spritePath: SPRITE_OUTPUT
-            }))
+            plugins.push(sprites())
         }
         return plugins
     }

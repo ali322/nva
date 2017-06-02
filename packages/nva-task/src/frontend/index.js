@@ -19,7 +19,6 @@ module.exports = context => {
         assetFolder,
         imageFolder,
         fontFolder,
-        spriteFolder,
         confFolder,
         moduleConf,
         moduleConfPath,
@@ -38,7 +37,6 @@ module.exports = context => {
         OUTPUT_PATH: resolve(),
         ASSET_IMAGE_OUTPUT: join(distFolder, assetFolder, imageFolder, sep),
         ASSET_FONT_OUTPUT: join(distFolder, assetFolder, fontFolder, sep),
-        SPRITE_OUTPUT: join(distFolder, assetFolder, spriteFolder),
         IMAGE_PREFIX: join('..', assetFolder, imageFolder),
         FONT_PREFIX: join('..', assetFolder, fontFolder),
         VENDOR_OUTPUT: resolve(distFolder, vendorFolder),
@@ -90,7 +88,6 @@ module.exports = context => {
         },
         build({ profile }) {
             if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) === false) {
-                console.log('vendor')
                 tasks.vendor()
                 return
             }
@@ -101,14 +98,10 @@ module.exports = context => {
             /** clean build assets*/
             for (let moduleName in modules) {
                 let moduleObj = modules[moduleName]
-                if (moduleObj.path) {
-                    del.sync(join(distFolder, moduleObj.path))
-                } else {
-                    del.sync(join(distFolder, moduleName))
-                }
-                if (moduleObj.htmlOutput) {
-                    del.sync(join(moduleObj.htmlOutput, '*.html'))
-                }
+                Object.keys(moduleObj.output).forEach(v => {
+                    del.sync(v)
+                })
+                del.sync(join(distFolder, moduleName))
             }
             let compiler = webpack(releaseConfig)
             compiler.run(function(err, stats) {

@@ -8,8 +8,9 @@ export default function(context) {
     let _proj = {
         sourceFolder: "src",
         clientPath: "",
-        entryJSExt: '.js',
-        entryCSSExt: '.css',
+        jsExt: '.js',
+        cssExt: '.css',
+        htmlExt: '.html',
         buildFolder: "build",
         distFolder: "dist",
         bundleFolder: "bundle",
@@ -17,11 +18,10 @@ export default function(context) {
 
         assetFolder: 'asset',
         cssFolder: '',
-        spriteFolder: 'sprites',
         fontFolder: 'font',
         imageFolder: 'image',
 
-        vendorSourceMap:'sourcemap.json',
+        vendorSourceMap: 'sourcemap.json',
         hmrPath: "/hmr/",
         enableMock: true
     }
@@ -40,30 +40,29 @@ export default function(context) {
 
     _proj = { ..._proj, ...proj }
 
-    const { pagePath, sourceFolder, bundleFolder, entryJSExt, entryCSSExt } = _proj
+    const { pagePath, sourceFolder, bundleFolder, jsExt, cssExt, htmlExt } = _proj
 
     let _modules = {}
     if (modules) {
         for (let moduleName in modules) {
             let moduleObj = modules[moduleName]
-            let entryJS = moduleObj.entryJS || (moduleName + entryJSExt)
-            let entryCSS = moduleObj.entryCSS || (moduleName + entryCSSExt)
-            entryJS = resolve(join(sourceFolder, bundleFolder, moduleObj.path, entryJS))
-            entryCSS = resolve(join(sourceFolder, bundleFolder, moduleObj.path, entryCSS))
-            let entryHTML = Array.isArray(moduleObj.html) ? moduleObj.html : [moduleObj.html]
-            entryHTML = entryHTML.map(function(v) {
-                return pagePath ? resolve(pagePath, v) : resolve(sourceFolder, bundleFolder, moduleObj.path, v)
-            })
+
+            // input
+            let input = moduleObj.input || {}
+            input.js = input.js || join(moduleName, moduleName + jsExt)
+            input.css = input.css || join(moduleName, moduleName + cssExt)
+            input.html = input.html || join(moduleName, moduleName + htmlExt)
+            input.js = resolve(join(sourceFolder, bundleFolder, input.js))
+            input.css = resolve(join(sourceFolder, bundleFolder, input.css))
+            input.html = pagePath ? resolve(pagePath, input.html) : resolve(sourceFolder, bundleFolder, input.html)
+
+            //output
+            let output = moduleObj.output || {}
+
             _modules[moduleName] = {
                 ...moduleObj,
-                entryJS,
-                entryCSS,
-                html: entryHTML
-            }
-            if (isIsomorphic) {
-                let bundleEntry = moduleObj.bundleEntry || (moduleName + '-server' + entryJSExt)
-                bundleEntry = resolve(sourceFolder, bundleFolder, moduleObj.path, bundleEntry)
-                _modules[moduleName].bundleEntry = bundleEntry
+                input,
+                output
             }
         }
     }

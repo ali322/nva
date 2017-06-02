@@ -1,6 +1,7 @@
 import { DllReferencePlugin } from 'webpack'
-import { join, basename, resolve } from 'path'
+import { join, resolve, dirname, extname } from 'path'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
+import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 import { relativeURL, bundleTime } from '../lib/helper'
 
@@ -9,6 +10,7 @@ export default function(context, constants, profile) {
     /** build variables*/
     let entry = {}
     let htmls = []
+    let transforms = []
     let baseConfig = configFactory({ ...constants, HOT: false }, profile)
 
     /** build vendors*/
@@ -27,37 +29,43 @@ export default function(context, constants, profile) {
     /** build modules */
     for (let moduleName in modules) {
         let moduleObj = modules[moduleName]
-        entry[moduleName] = [moduleObj.entryJS, moduleObj.entryCSS]
+        entry[moduleName] = [moduleObj.input.js, moduleObj.input.css]
         let _chunks = [moduleName]
+
+        if (moduleObj.output.js || moduleObj.output.css) {
+            transforms.push(new ChunkTransformPlugin({
+                chunks: [moduleName],
+                test: /\.(js|css)$/,
+                filename: filename => extname(filename) === '.js' ? moduleObj.output.js : moduleObj.output.css
+            }))
+        }
+
         let _more = { js: [], css: [] }
-        const htmlOutput = moduleObj.htmlOutput || join(distFolder, moduleName)
+        const htmlOutput = moduleObj.output.html || join(distFolder, moduleName, moduleObj.input.html)
         if (moduleObj.vendor) {
             if (moduleObj.vendor.js) {
                 let originalURL = join(distFolder, vendorFolder, vendorManifest.js[moduleObj.vendor.js])
-                _more.js = [relativeURL(htmlOutput, originalURL)]
+                _more.js = [relativeURL(dirname(htmlOutput), originalURL)]
             }
             if (moduleObj.vendor.css) {
                 let originalURL = join(distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])
-                _more.css = [relativeURL(htmlOutput, originalURL)]
+                _more.css = [relativeURL(dirname(htmlOutput), originalURL)]
             }
         }
-        moduleObj.html.forEach(function(html) {
-            const output = join(htmlOutput, basename(html))
-            htmls.push(new InjectHtmlPlugin({
-                processor: function(_url) {
-                    return relativeURL(htmlOutput, _url)
-                },
-                more: _more,
-                chunks: _chunks,
-                filename: html,
-                output,
-                customInject: [{
-                    start: '<!-- start:bundle-time -->',
-                    end: '<!-- end:bundle-time -->',
-                    content: `<meta name="bundleTime" content="${bundleTime()}"/>`
-                }]
-            }))
-        })
+        htmls.push(new InjectHtmlPlugin({
+            processor: function(_url) {
+                return relativeURL(dirname(htmlOutput), _url)
+            },
+            more: _more,
+            chunks: _chunks,
+            filename: moduleObj.input.html,
+            output: htmlOutput,
+            customInject: [{
+                start: '<!-- start:bundle-time -->',
+                end: '<!-- end:bundle-time -->',
+                content: `<meta name="bundleTime" content="${bundleTime()}"/>`
+            }]
+        }))
 
     }
 
@@ -76,6 +84,7 @@ export default function(context, constants, profile) {
         resolve: { modules: [sourceFolder, resolve("node_modules"), 'node_modules'] },
         plugins: [
             ...baseConfig.plugins,
+            ...transforms,
             ...dllRefs,
             ...htmls
         ]
