@@ -29,7 +29,6 @@ export default function(context) {
     if (isIsomorphic) {
         _proj = {
             ..._proj,
-            pagePath: 'view',
             cssFolder: 'stylesheet',
             moduleFolder: 'module',
             serverFolder: 'server',
@@ -40,29 +39,14 @@ export default function(context) {
 
     _proj = { ..._proj, ...proj }
 
-    const { pagePath, sourceFolder, bundleFolder, jsExt, cssExt, htmlExt } = _proj
-
     let _modules = {}
     if (modules) {
         for (let moduleName in modules) {
             let moduleObj = modules[moduleName]
 
-            // input
-            let input = moduleObj.input || {}
-            input.js = input.js || join(moduleName, moduleName + jsExt)
-            input.css = input.css || join(moduleName, moduleName + cssExt)
-            input.html = input.html || join(moduleName, moduleName + htmlExt)
-            input.js = resolve(join(sourceFolder, bundleFolder, input.js))
-            input.css = resolve(join(sourceFolder, bundleFolder, input.css))
-            input.html = pagePath ? resolve(pagePath, input.html) : resolve(sourceFolder, bundleFolder, input.html)
-
-            //output
-            let output = moduleObj.output || {}
-
             _modules[moduleName] = {
                 ...moduleObj,
-                input,
-                output
+                ...(initModule(moduleObj, moduleName, _proj))
             }
         }
     }
@@ -72,4 +56,22 @@ export default function(context) {
         modules: _modules,
         ..._proj
     }
+}
+
+export function initModule(moduleObj, moduleName, context) {
+    const { sourceFolder, bundleFolder, jsExt, cssExt, htmlExt } = context
+
+    // input
+    let input = { ...moduleObj.input } || {}
+    input.js = input.js || join(sourceFolder, bundleFolder, moduleName, moduleName + jsExt)
+    input.css = input.css || join(sourceFolder, bundleFolder, moduleName, moduleName + cssExt)
+    input.html = input.html || join(sourceFolder, bundleFolder, moduleName, moduleName + htmlExt)
+    input.js = resolve(input.js)
+    input.css = resolve(input.css)
+    input.html = resolve(input.html)
+
+    //output
+    let output = moduleObj.output || {}
+
+    return { input, output }
 }

@@ -1,10 +1,8 @@
 import webpack from 'webpack'
-import chalk from 'chalk'
 import del from 'del'
 import { join, resolve, sep } from 'path'
-import { omit } from 'lodash'
-import { writeToModuleConfig, vendorManifest, mergeConfig, checkVendor } from '../lib'
-import fs from 'fs-extra'
+import { addModule, removeModule } from '../lib/mod'
+import { vendorManifest, mergeConfig, checkVendor } from '../lib'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
 import releaseConfigFactory from './webpack.production'
@@ -13,15 +11,11 @@ import developServer from './develop-server'
 module.exports = context => {
     let {
         distFolder,
-        sourceFolder,
         vendorFolder,
-        bundleFolder,
         assetFolder,
         imageFolder,
         fontFolder,
         confFolder,
-        moduleConf,
-        moduleConfPath,
         beforeBuild,
         afterBuild,
         beforeVendor,
@@ -44,47 +38,11 @@ module.exports = context => {
     }
 
     const tasks = {
-        addModule(name, config, template) {
-            let names = name.split(',')
-            let _template = template || 'index'
-            let _moduleConf = {}
-            names.forEach(function(_name) {
-                if (Object.keys(moduleConf).indexOf(_name) > -1) {
-                    console.log(chalk.red('name existed!'))
-                    return
-                }
-                _moduleConf[_name] = {
-                    path: config.path || _name,
-                    html: config.html ? config.html.spit(',') : `${_name}.html`
-                }
-
-                let from = join(sourceFolder, bundleFolder, _template)
-                let to = join(sourceFolder, bundleFolder, _name)
-                if (fs.existsSync(from)) {
-                    fs.copySync(from, to)
-                } else {
-                    fs.ensureFileSync(join(to, `${_name}.js`))
-                    fs.ensureFileSync(join(to, `${_name}.css`))
-                    fs.ensureFileSync(join(to, `${_name}.html`))
-                }
-            })
-            _moduleConf = { ...moduleConf, ..._moduleConf }
-            writeToModuleConfig(moduleConfPath, _moduleConf)
+        addModule(names, answers, template) {
+            addModule(names, answers, template, context)
         },
-        removeModule(name) {
-            let names = name.split(',')
-            let _moduleConf = omit(moduleConf, names)
-            writeToModuleConfig(moduleConfPath, _moduleConf)
-            names.forEach(function(_name) {
-                let to = join(sourceFolder, bundleFolder, _name)
-                to = _name === modules[_name].path ? modules[_name].path : to
-                if (fs.existsSync(to)) {
-                    fs.removeSync(to)
-                } else {
-                    console.log(chalk.red(`bundle directory of module '${_name}' not existed,maybe module '${_name}' have been removed?`))
-                    return
-                }
-            })
+        removeModule(names) {
+            removeModule(names, context)
         },
         build({ profile }) {
             if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) === false) {

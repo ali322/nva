@@ -49,27 +49,23 @@ if(program.delete){
 
 var questions = [{
     type: 'input',
-    name: 'path',
-    message: 'path of module'
+    name: 'input.html',
+    message: "entry html's path"
 }, {
     type: 'input',
-    name: 'html',
-    message: "htmls of module,split htmls with ','"
-}, {
-    type: 'input',
-    name: 'entryJS',
+    name: 'input.js',
     message: "entry js's path,supported ext: .js, .es6, .jsx"
 }, {
     type: 'input',
-    name: 'entryCSS',
+    name: 'input.css',
     message: "entry css's path,supported ext: .css, .styl, .less, .sass"
 }, {
     type: 'input',
-    name: 'vendorJS',
+    name: 'vendor.js',
     message: "bundle name of vendor js"
 }, {
     type: 'input',
-    name: 'vendorCSS',
+    name: 'vendor.css',
     message: "bundle name of vendor css"
 }, {
     type: "confirm",

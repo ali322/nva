@@ -48,6 +48,7 @@ export default function(context, constants) {
                 _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
             }
         }
+        console.log('moduleObj',moduleObj)
         htmls.push(new InjectHtmlPlugin({
             processor: devServerHost + hmrPath,
             chunks: _chunks,
