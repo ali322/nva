@@ -5,7 +5,7 @@ import { cssLoaders, postcssOptions, vueStyleLoaders } from '../lib'
 const nodeModulesDir = path.resolve('node_modules')
 
 export default function(constants) {
-    const { ASSET_FONT_OUTPUT, ASSET_IMAGE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX, HOT } = constants
+    const { FONT_OUTPUT, IMAGE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX, HOT } = constants
     let urlLoaderOptions = {
         limit: 2500
     }
@@ -31,7 +31,7 @@ export default function(constants) {
         loader: 'url-loader',
         options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
-            outputPath: ASSET_IMAGE_OUTPUT
+            outputPath: IMAGE_OUTPUT
         }
     }]
     if (!HOT) {
@@ -94,7 +94,7 @@ export default function(constants) {
         loader: 'url-loader',
         options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
-            outputPath: ASSET_FONT_OUTPUT,
+            outputPath: FONT_OUTPUT,
             mimetype: "application/font-woff"
         }
     }, {
@@ -102,7 +102,7 @@ export default function(constants) {
         loader: "url-loader",
         options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
-            outputPath: ASSET_FONT_OUTPUT
+            outputPath: FONT_OUTPUT
         }
     }]
 

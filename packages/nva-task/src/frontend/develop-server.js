@@ -1,4 +1,4 @@
-import { join, sep } from 'path'
+import { join } from 'path'
 import middlewareFactory from '../lib/middleware'
 import { error, checkPort } from '../lib/helper'
 import { mergeConfig, openBrowser } from '../lib/'
@@ -7,7 +7,8 @@ import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
 export default function(context, constants) {
-    const { spa, moduleConf, sourceFolder, distFolder, bundleFolder, mockConf, beforeDev, afterDev } = context
+    const { spa, sourceFolder, distFolder, bundleFolder, mock, beforeDev, afterDev } = context
+
     return function(options) {
         let browserSync = BrowserSync.create()
         const port = options.port || 3000
@@ -23,7 +24,7 @@ export default function(context, constants) {
 
         let rewrites = spa === true ? [{
             from: /\/(\S+)?$/,
-            to: moduleConf['index'] ? join(sep, moduleConf['index'].path, moduleConf['index'].html[0]) : '/index.html'
+            to: '/index.html'
         }] : false
         if (typeof spa === 'object') {
             rewrites = spa
@@ -34,7 +35,7 @@ export default function(context, constants) {
             path: spa ? join(sourceFolder, bundleFolder) : false,
             log: false,
             rewrites,
-            mockConf
+            mock
         })
 
         process.once('SIGINT', () => {

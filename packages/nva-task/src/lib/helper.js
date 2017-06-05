@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 import chalk from 'chalk'
 import net from 'net'
 
-export function getLanIP() {
+export function lanIP() {
     let interfaces = os.networkInterfaces();
     let IPv4 = '127.0.0.1';
     for (let key in interfaces) {

@@ -1,8 +1,9 @@
 import { join, resolve, sep } from 'path'
+import { forEach } from 'lodash'
 import webpack from 'webpack'
 import chalk from 'chalk'
 import del from 'del'
-import { addModule, removeModule } from '../lib/mod'
+import { addMod, removeMod } from '../lib/mod'
 import { vendorManifest, mergeConfig, checkVendor } from '../lib'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
@@ -21,14 +22,16 @@ module.exports = context => {
         assetFolder,
         imageFolder,
         fontFolder,
-        confFolder,
+        imagePrefix,
+        fontPrefix,
         beforeBuild,
         afterBuild,
         beforeVendor,
         afterVendor,
-        modules,
+        mods,
         vendors,
-        vendorSourceMap
+        vendorSourceMap,
+        cachePath
     } = context
 
     function createBundle(constants) {
@@ -55,22 +58,22 @@ module.exports = context => {
 
     const constants = {
         CSS_OUTPUT: join(distFolder, "[name]", "[name]-[contenthash:8].css"),
-        HAPPYPACK_TEMP_DIR: join(confFolder, 'temp', 'happypack'),
         OUTPUT_PATH: resolve(sourceFolder),
-        ASSET_IMAGE_OUTPUT: join(distFolder, assetFolder, imageFolder, sep),
-        ASSET_FONT_OUTPUT: join(distFolder, assetFolder, fontFolder, sep),
-        IMAGE_PREFIX: join('..', '..', '..', distFolder, assetFolder, imageFolder),
-        FONT_PREFIX: join('..', '..', distFolder, assetFolder, fontFolder),
+        IMAGE_OUTPUT: join(distFolder, assetFolder, imageFolder, sep),
+        FONT_OUTPUT: join(distFolder, assetFolder, fontFolder, sep),
+        IMAGE_PREFIX: imagePrefix || join('..', '..', '..', distFolder, assetFolder, imageFolder),
+        FONT_PREFIX: fontPrefix || join('..', '..', distFolder, assetFolder, fontFolder),
         VENDOR_OUTPUT: resolve(sourceFolder, distFolder, vendorFolder),
-        MANIFEST_PATH: join(sourceFolder, distFolder, vendorFolder)
+        MANIFEST_PATH: join(sourceFolder, distFolder, vendorFolder),
+        CACHE_PATH: cachePath
     }
 
     const tasks = {
-        addModule(names, answers, template) {
-            addModule(names, answers, template, context)
+        addMod(names, answers, template) {
+            addMod(names, answers, template, context)
         },
-        removeModule(names) {
-            removeModule(names, context)
+        removeMod(names) {
+            removeMod(names, context)
         },
         build({ profile }) {
             if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) === false) {
@@ -85,14 +88,13 @@ module.exports = context => {
             }
             del.sync(join(serverFolder, distFolder))
             /** clean dist */
-            for (let moduleName in modules) {
-                let moduleObj = modules[moduleName]
-                if (moduleObj.path) {
-                    del.sync(join(sourceFolder, distFolder, moduleObj.path))
-                } else {
-                    del.sync(join(sourceFolder, distFolder, moduleName))
-                }
-            }
+            forEach(mods, (mod, name) => {
+                Object.keys(mod.output).forEach(v => {
+                    del.sync(v)
+                })
+                del.sync(join(sourceFolder, distFolder, name))
+            })
+
             createBundle({ ...constants, HOT: false })
             let compiler = webpack([clientConfig, serverConfig])
             compiler.run(function(err, stats) {

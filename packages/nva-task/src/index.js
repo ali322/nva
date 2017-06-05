@@ -4,13 +4,28 @@ import initializer from './lib/initializer'
 
 export default function(options = {}) {
     const namespace = options.namespace ? options.namespace : 'nva'
-    const hooks = options.hooks ? options.hooks : {}
-    const { modules, proj, vendors } = loadConf(options, namespace)
+    const rootPath = `.${namespace}`
+    const {
+        hooks = {},
+            projConfPath = resolve(rootPath, `${namespace}.js`),
+            modConfPath = resolve(rootPath, 'module.json'),
+            vendorConfPath = resolve(rootPath, 'vendor.json')
+    } = options
+
+    const proj = loadProj(projConfPath)
+    const mods = loadMods(modConfPath)
+    const vendors = loadVendors(vendorConfPath)
+
     let context = {
         namespace,
-        modules,
+        mods,
         proj: { type: 'frontend', ...proj },
         vendors,
+        conf: {
+            rootPath,
+            modConfPath,
+            mods
+        },
         ...hooks
     }
     return init(context)
@@ -25,35 +40,31 @@ function init(context) {
     return tasks
 }
 
-function loadConf(options, namespace) {
-    const confFolder = `.${namespace}`
-    const {
-        projConfPath = resolve(confFolder, `${namespace}.js`),
-            moduleConfPath = resolve(confFolder, 'module.json'),
-            vendorConfPath = resolve(confFolder, 'vendor.json')
-    } = options
-
+function loadProj(path) {
     let proj = {}
-    if (checkFile(projConfPath)) {
-        proj = require(projConfPath)
+    if (checkFile(path)) {
+        proj = require(path)
         proj.default && (proj = proj.default)
     } else {
         error('project config is invalid')
     }
+    return proj
+}
 
-    if (!checkFile(moduleConfPath)) {
+function loadMods(path) {
+    if (!checkFile(path)) {
         error('module config is invalid')
     }
-    let modules = require(moduleConfPath)
-    proj.confFolder = confFolder
-    proj.moduleConfPath = moduleConfPath
-    proj.moduleConf = modules
+    let mods = require(path)
+    return mods
+}
 
+function loadVendors(path) {
     let vendors = {}
-    if (checkFile(vendorConfPath)) {
-        vendors = require(vendorConfPath)
+    if (checkFile(path)) {
+        vendors = require(path)
     } else {
         error('vendor config is invalid')
     }
-    return { modules, vendors, proj }
+    return vendors
 }

@@ -1,5 +1,6 @@
 import webpack from 'webpack'
 import { join, resolve, sep, extname } from 'path'
+import { forEach } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
@@ -8,7 +9,7 @@ import { bundleTime } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    let { vendors, modules, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
+    let { vendors, mods, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
     /** build variables*/
     let entry = {}
     let htmls = []
@@ -30,32 +31,31 @@ export default function(context, constants, profile) {
     }
 
     /** build modules*/
-    for (let moduleName in modules) {
-        let moduleObj = modules[moduleName]
-        entry[moduleName] = [moduleObj.input.js, moduleObj.input.css]
-        let _chunks = [moduleName]
+    forEach(mods, (mod, name) => {
+        entry[name] = [mod.input.js, mod.input.css]
+        let _chunks = [name]
 
-        if (moduleObj.output.js || moduleObj.output.css) {
+        if (mod.output.js || mod.output.css) {
             transforms.push(new ChunkTransformPlugin({
-                chunks: [moduleName],
+                chunks: [name],
                 test: /\.(js|css)$/,
-                filename: filename => extname(filename) === '.js' ? moduleObj.output.js : moduleObj.output.css
+                filename: filename => extname(filename) === '.js' ? mod.output.js : mod.output.css
             }))
         }
 
         let _more = { js: [], css: [] }
-        if (moduleObj.vendor) {
-            if (moduleObj.vendor.js) {
-                _more.js = [join(sep, distFolder, vendorFolder, vendorManifest.js[moduleObj.vendor.js])]
+        if (mod.vendor) {
+            if (mod.vendor.js) {
+                _more.js = [join(sep, distFolder, vendorFolder, vendorManifest.js[mod.vendor.js])]
             }
-            if (moduleObj.vendor.css) {
-                _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
+            if (mod.vendor.css) {
+                _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[mod.vendor.css])]
             }
         }
         htmls.push(new InjectHtmlPlugin({
             processor: sep,
             chunks: _chunks,
-            filename: moduleObj.input.html,
+            filename: mod.input.html,
             more: _more,
             customInject: [{
                 start: '<!-- start:bundle-time -->',
@@ -67,7 +67,8 @@ export default function(context, constants, profile) {
                 content: ''
             }]
         }))
-    }
+    })
+
 
     return {
         ...baseConfig,

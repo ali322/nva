@@ -20,7 +20,7 @@ export default function(constants, profile = false) {
         }
     }
 
-    const happypackTempDir = constants.HAPPYPACK_TEMP_DIR || '.happypack'
+    const happypackTempDir = constants.CACHE_PATH || '.happypack'
 
     const happypackPlugins = [
         happypackPlugin('js', [{ loader: 'babel-loader', options: { cacheDirectory: true } }], happypackTempDir),

@@ -2,24 +2,24 @@ import { IgnorePlugin } from 'webpack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
 import { resolve, join } from 'path'
-import fs from 'fs'
+import { forEach } from 'lodash'
+import { existsSync } from 'fs'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants) {
-    const { modules, serverFolder, bundleFolder, sourceFolder } = context
+    const { mods, serverFolder, bundleFolder, sourceFolder } = context
     let entry = {}
     let baseConfig = configFactory(constants)
     let externals = Object.keys(require(resolve('package.json')).dependencies)
 
     /** build modules */
-    for (let moduleName in modules) {
-        let moduleObj = modules[moduleName]
-        let bundleEntry = moduleObj.bundleEntry || join(moduleName, moduleName + '-server.js')
+    forEach(mods, (mod, name) => {
+        let bundleEntry = mod.bundleEntry || join(name, name + '-server.js')
         bundleEntry = resolve(sourceFolder, bundleFolder, bundleEntry)
-        if (fs.existsSync(bundleEntry)) {
-            entry[moduleName] = bundleEntry
+        if (existsSync(bundleEntry)) {
+            entry[name] = bundleEntry
         }
-    }
+    })
 
     return {
         ...baseConfig,

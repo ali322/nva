@@ -1,21 +1,21 @@
 import jsf from 'json-schema-faker'
 import { resolve } from 'path'
 
-export default function(app, mockConf) {
+export default function(app, mock) {
     jsf.extend('faker', function() {
         let faker = require('faker/locale/en_US')
         return faker
     })
     try {
-        let apis = []
-        if (typeof mockConf === 'string') {
-            apis = require(resolve(mockConf))
+        let mocks = []
+        if (typeof mock === 'string') {
+            mocks = require(resolve(mock))
         }
-        if (Array.isArray(mockConf)) {
-            apis = mockConf
+        if (Array.isArray(mock)) {
+            mocks = mock
         }
-        if (Array.isArray(apis)) {
-            apis.forEach(function(rule) {
+        if (Array.isArray(mocks)) {
+            mocks.forEach(function(rule) {
                 if ([].indexOf.call(['get', 'post', 'put', 'delete', 'head', 'patch'], rule.method) === -1) {
                     throw new Error('method invalid!')
                 }

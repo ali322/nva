@@ -1,5 +1,6 @@
 import webpack from 'webpack'
 import { join, resolve, sep } from 'path'
+import { forEach } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
@@ -8,7 +9,7 @@ import { config as configFactory } from 'nva-core'
 import { serverHost } from '../lib'
 
 export default function(context, constants) {
-    const { vendors, modules, sourceFolder, distFolder, vendorFolder, vendorSourceMap, hmrPath, port } = context
+    const { vendors, mods, sourceFolder, distFolder, vendorFolder, vendorSourceMap, hmrPath, port } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
@@ -28,31 +29,29 @@ export default function(context, constants) {
         }))
     }
 
-    for (let moduleName in modules) {
-        let moduleObj = modules[moduleName]
-        let _moduleEntry = [
+    /** build modules */
+    forEach(mods, (mod, name) => {
+        entry[name] = [
             'webpack-hot-middleware/client' + '?path=' + devServerHost + '/__webpack_hmr',
             // require.resolve("webpack/hot/only-dev-server"),
-            moduleObj.input.js,
-            moduleObj.input.css
-        ];
-        entry[moduleName] = _moduleEntry
-        let _chunks = [moduleName]
+            mod.input.js,
+            mod.input.css
+        ]
+        let _chunks = [name]
 
         let _more = { js: [], css: [] }
-        if (moduleObj.vendor) {
-            if (moduleObj.vendor.js) {
-                _more.js = [join(sep, distFolder, vendorFolder, vendorManifest.js[moduleObj.vendor.js])]
+        if (mod.vendor) {
+            if (mod.vendor.js) {
+                _more.js = [join(sep, distFolder, vendorFolder, vendorManifest.js[mod.vendor.js])]
             }
-            if (moduleObj.vendor.css) {
-                _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
+            if (mod.vendor.css) {
+                _more.css = [join(sep, distFolder, vendorFolder, vendorManifest.css[mod.vendor.css])]
             }
         }
-        console.log('moduleObj',moduleObj)
         htmls.push(new InjectHtmlPlugin({
             processor: devServerHost + hmrPath,
             chunks: _chunks,
-            filename: moduleObj.input.html,
+            filename: mod.input.html,
             more: _more,
             customInject: [{
                 start: '<!-- start:browser-sync -->',
@@ -60,7 +59,7 @@ export default function(context, constants) {
                 content: '<script src="' + devServerHost + '/bs/browser-sync-client.js"></script>'
             }]
         }))
-    }
+    })
 
     return {
         ...baseConfig,

@@ -6,11 +6,11 @@ import compression from 'compression'
 import { join } from 'path'
 import fs from 'fs'
 import { parse } from 'url'
-import mock from './mock'
+import mockFactory from './mock'
 import historyAPIFallback from 'connect-history-api-fallback'
 
 export default (options) => {
-    let { path = '', asset = '', mockConf = '', rewrites = false, cors = false, log = true } = options
+    let { path = '', asset = '', mock = '', rewrites = false, cors = false, log = true } = options
     let app = connect()
 
     if (log) {
@@ -24,8 +24,8 @@ export default (options) => {
         app.use(favicon(join(__dirname, '..', 'asset', 'nva-server.ico')))
     }
 
-    if (mockConf) {
-        app = mock(app, mockConf)
+    if (mock) {
+        app = mockFactory(app, mock)
     }
 
     if (cors) {

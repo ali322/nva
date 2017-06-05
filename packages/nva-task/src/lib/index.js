@@ -4,11 +4,11 @@ import { dirname, basename, resolve } from 'path'
 import fs from 'fs-extra'
 import chalk from 'chalk'
 import opn from 'opn'
-import { getLanIP } from './helper'
+import { lanIP } from './helper'
 
 export function serverHost(port) {
-    const lanIP = getLanIP()
-    return `http://${lanIP}:${port}`
+    const ip = lanIP()
+    return `http://${ip}:${port}`
 }
 
 export function mergeConfig(config, value) {
@@ -25,7 +25,7 @@ export function mergeConfig(config, value) {
     })(config, ...webpackConfig)
 }
 
-export function writeToModuleConfig(target, config) {
+export function writeModConf(target, config) {
     try {
         fs.outputFileSync(target, JSON.stringify(config, null, 2))
     } catch (e) {

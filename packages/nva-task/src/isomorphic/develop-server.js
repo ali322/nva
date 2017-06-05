@@ -8,7 +8,7 @@ import hotUpdateConfigFactory from './webpack.hot-update'
 
 
 export default function(context, constants) {
-    const { runningMessage, serverFolder, pagePath, beforeDev, mockConf, afterDev } = context
+    const { runningMessage, serverFolder, viewFolder, beforeDev, mock, afterDev } = context
     const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
     return function(options) {
         nodemon({
@@ -42,7 +42,7 @@ export default function(context, constants) {
         let app = createApp({
             log: false,
             cors: true,
-            mockConf
+            mock
         })
         let middleware = [app]
         let hotUpdateConfig = hotUpdateConfigFactory({ ...context, port }, constants)
@@ -61,7 +61,7 @@ export default function(context, constants) {
                 middleware
             },
             port,
-            files: join(pagePath, '*.html'),
+            files: join(viewFolder, '*.html'),
             online: false,
             logLevel: "silent",
             notify: true,

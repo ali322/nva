@@ -43,7 +43,7 @@ if(moduleName === '[object Object]'){
 }
 
 if(program.delete){
-    tasks.removeModule(moduleName)
+    tasks.removeMod(moduleName)
     process.exit(1)
 }
 
@@ -75,5 +75,5 @@ var questions = [{
 
 lib.ask(questions, 'yes', function(answers) {
     delete answers.yes
-    tasks.addModule(moduleName,answers,program.template)
+    tasks.addMod(moduleName,answers,program.template)
 })

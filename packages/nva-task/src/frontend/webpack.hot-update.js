@@ -1,11 +1,12 @@
 import { DllReferencePlugin } from 'webpack'
 import { join, resolve, sep } from 'path'
+import { forEach } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants) {
-    const { vendors, modules, sourceFolder, vendorFolder, vendorSourceMap, hmrPath } = context
+    const { vendors, mods, sourceFolder, vendorFolder, vendorSourceMap, hmrPath } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
@@ -25,30 +26,29 @@ export default function(context, constants) {
     }
 
     /** build modules */
-    for (let moduleName in modules) {
-        let moduleObj = modules[moduleName]
-        entry[moduleName] = [
+    forEach(mods, (mod, name) => {
+        entry[name] = [
             "webpack-hot-middleware/client",
-            moduleObj.input.js,
-            moduleObj.input.css
+            mod.input.js,
+            mod.input.css
         ];
-        let _chunks = [moduleName]
+        let _chunks = [name]
         let _more = { js: [], css: [] }
-        if (moduleObj.vendor) {
-            if (moduleObj.vendor.js) {
-                _more.js = [join(sep, vendorFolder, vendorManifest.js[moduleObj.vendor.js])]
+        if (mod.vendor) {
+            if (mod.vendor.js) {
+                _more.js = [join(sep, vendorFolder, vendorManifest.js[mod.vendor.js])]
             }
-            if (moduleObj.vendor.css) {
-                _more.css = [join(sep, vendorFolder, vendorManifest.css[moduleObj.vendor.css])]
+            if (mod.vendor.css) {
+                _more.css = [join(sep, vendorFolder, vendorManifest.css[mod.vendor.css])]
             }
         }
         htmls.push(new InjectHtmlPlugin({
             processor: hmrPath,
             chunks: _chunks,
-            filename: moduleObj.input.html,
+            filename: mod.input.html,
             more: _more
         }))
-    }
+    })
 
     return {
         ...baseConfig,

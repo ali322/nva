@@ -1,12 +1,13 @@
 import { DllReferencePlugin } from 'webpack'
 import { join, resolve, dirname, extname } from 'path'
+import { forEach } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 import { relativeURL, bundleTime } from '../lib/helper'
 
 export default function(context, constants, profile) {
-    const { vendors, modules, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
+    const { vendors, mods, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
     /** build variables*/
     let entry = {}
     let htmls = []
@@ -27,28 +28,27 @@ export default function(context, constants, profile) {
     }
 
     /** build modules */
-    for (let moduleName in modules) {
-        let moduleObj = modules[moduleName]
-        entry[moduleName] = [moduleObj.input.js, moduleObj.input.css]
-        let _chunks = [moduleName]
+    forEach(mods, (mod, name) => {
+        entry[name] = [mod.input.js, mod.input.css]
+        let _chunks = [name]
 
-        if (moduleObj.output.js || moduleObj.output.css) {
+        if (mod.output.js || mod.output.css) {
             transforms.push(new ChunkTransformPlugin({
-                chunks: [moduleName],
+                chunks: [name],
                 test: /\.(js|css)$/,
-                filename: filename => extname(filename) === '.js' ? moduleObj.output.js : moduleObj.output.css
+                filename: filename => extname(filename) === '.js' ? mod.output.js : mod.output.css
             }))
         }
 
         let _more = { js: [], css: [] }
-        const htmlOutput = moduleObj.output.html || join(distFolder, moduleName, moduleObj.input.html)
-        if (moduleObj.vendor) {
-            if (moduleObj.vendor.js) {
-                let originalURL = join(distFolder, vendorFolder, vendorManifest.js[moduleObj.vendor.js])
+        const htmlOutput = mod.output.html || join(distFolder, name, mod.input.html)
+        if (mod.vendor) {
+            if (mod.vendor.js) {
+                let originalURL = join(distFolder, vendorFolder, vendorManifest.js[mod.vendor.js])
                 _more.js = [relativeURL(dirname(htmlOutput), originalURL)]
             }
-            if (moduleObj.vendor.css) {
-                let originalURL = join(distFolder, vendorFolder, vendorManifest.css[moduleObj.vendor.css])
+            if (mod.vendor.css) {
+                let originalURL = join(distFolder, vendorFolder, vendorManifest.css[mod.vendor.css])
                 _more.css = [relativeURL(dirname(htmlOutput), originalURL)]
             }
         }
@@ -58,7 +58,7 @@ export default function(context, constants, profile) {
             },
             more: _more,
             chunks: _chunks,
-            filename: moduleObj.input.html,
+            filename: mod.input.html,
             output: htmlOutput,
             customInject: [{
                 start: '<!-- start:bundle-time -->',
@@ -66,8 +66,7 @@ export default function(context, constants, profile) {
                 content: `<meta name="bundleTime" content="${bundleTime()}"/>`
             }]
         }))
-
-    }
+    })
 
     return {
         ...baseConfig,

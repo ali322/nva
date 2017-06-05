@@ -11,7 +11,7 @@ program.version(version)
     .option('-v, --version')
     .option("-c, --config <config>", 'server config path')
     .option("-p, --port [port]", 'listening port', 3000)
-    .option("-m, --mock-path <mockPath>", 'mock config path')
+    .option("-m, --mock <mock>", 'mock config')
     .option("-P, --path <path>", 'serve page path')
     .option("-A, --asset <asset>", 'serve static asset')
     .option("    --rewrites", 'enable rewrites request to index.html')
@@ -31,7 +31,7 @@ let port = program.port
 let rewrites = program.rewrites
 let cors = program.cors
 let log = program.log
-let mockPath = program.mockPath
+let mock = program.mock
 let path = program.path
 let asset = program.asset
 
@@ -41,7 +41,7 @@ let options = {
     path,
     port,
     asset,
-    mockPath,
+    mock,
     rewrites,
     cors,
     log
