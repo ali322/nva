@@ -3,13 +3,16 @@
 var program = require("commander"),
     chalk = require("chalk"),
     fs = require('fs-extra'),
-    path = require('path')
+    path = require('path'),
+    _ = require('lodash')
 var lib = require('../lib')
+var config = require("../lib/config")
+var questions = config.questions('mod')
 var tasks = require('nva-task')()
 
 program.usage('[name]')
-program.option("-d, --delete","delete action flag")
-program.option("-t, --template [value]","choose template module")
+program.option("-d, --delete", "delete action flag")
+program.option("-t, --template [value]", "choose template module")
 
 program.on('--help', function() {
     console.log(`
@@ -36,44 +39,27 @@ if (!program.args.length) {
 }
 
 var moduleName = program.args[0]
-if(moduleName === '[object Object]'){
+if (moduleName === '[object Object]') {
     console.log(chalk.red('name required!'))
     program.help()
     process.exit(1)
 }
 
-if(program.delete){
+if (program.delete) {
     tasks.removeMod(moduleName)
     process.exit(1)
 }
 
-var questions = [{
-    type: 'input',
-    name: 'input.html',
-    message: "entry html's path"
-}, {
-    type: 'input',
-    name: 'input.js',
-    message: "entry js's path,supported ext: .js, .es6, .jsx"
-}, {
-    type: 'input',
-    name: 'input.css',
-    message: "entry css's path,supported ext: .css, .styl, .less, .sass"
-}, {
-    type: 'input',
-    name: 'vendor.js',
-    message: "bundle name of vendor js"
-}, {
-    type: 'input',
-    name: 'vendor.css',
-    message: "bundle name of vendor css"
-}, {
-    type: "confirm",
-    name: 'yes',
-    message: "Are your sure about above answers?"
-}]
-
 lib.ask(questions, 'yes', function(answers) {
-    delete answers.yes
-    tasks.addMod(moduleName,answers,program.template)
+    answers = _.omit(answers, 'yes')
+
+    _.forEach(questions, function(q) {
+        if (_.get(answers, q.name) === '') {
+            answers = _.omit(answers, q.name)
+        }
+    })
+    answers = _.omitBy(answers, function(v) {
+        return _.isEmpty(v)
+    })
+    tasks.addMod(moduleName, answers, program.template)
 })

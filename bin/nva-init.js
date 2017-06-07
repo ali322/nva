@@ -4,16 +4,18 @@ let program = require("commander")
 let chalk = require("chalk")
 let path = require("path")
 let fs = require("fs")
+let _ = require('lodash')
 let objectAssign = require("object-assign")
 let inquirer = require("inquirer")
 let rm = require("rimraf").sync
 
 let config = require("../lib/config")
 let generator = require('../lib/generator')
-let isWebProject = require('../lib').isWebProject
+let lib = require('../lib')
 
 program.usage('[project]')
 program.option("-r, --repo [value]", "choose specified repo")
+program.option("--no-install", "do not execute npm install?")
 
 program.on('--help', function() {
     console.log(`
@@ -35,6 +37,7 @@ if (!program.args.length) {
 }
 
 let repo = program.repo
+let noInstall = program.noInstall
 
 let projectName = program.args[0]
 let projectPath = path.resolve(projectName)
@@ -44,6 +47,23 @@ if (projectName === '[object Object]') {
     program.help()
     process.exit(1)
 }
+
+let questions = config.questions('init')
+
+questions[1] = _.assign({}, questions[1], { when: lib.isWebProject })
+questions[2] = _.assign({}, questions[2], { when: lib.isWebProject })
+questions[3] = _.assign({}, questions[2], { when: lib.isWebProject })
+
+if (repo) {
+    questions = _.reject(questions, function(v) {
+        return v.name === 'template'
+    })
+}
+
+function generate(answers) {
+    generator(projectName, projectPath, answers, repo, !noInstall)
+}
+
 if (fs.existsSync(projectPath)) {
     inquirer.prompt([{
         type: "confirm",
@@ -52,32 +72,9 @@ if (fs.existsSync(projectPath)) {
     }]).then(function(answer) {
         if (answer.yes) {
             rm(projectPath)
-            ask(generator)
+            lib.ask(questions, 'yes', generate)
         }
     })
 } else {
-    ask(generator)
-}
-
-function ask(cb) {
-    var _questions = config.questions()
-    _questions[1] = objectAssign({}, _questions[1], { when: isWebProject })
-    _questions[2] = objectAssign({}, _questions[2], { when: isWebProject })
-    _questions.push({
-        type: "confirm",
-        name: 'yes',
-        message: "Are your sure about above answers?"
-    })
-    if (repo) {
-        _questions = _questions.filter(function(v) {
-            return v.name !== "template"
-        })
-    }
-    inquirer.prompt(_questions).then(function(answers) {
-        if (answers.yes) {
-            cb(projectName, projectPath, answers, repo)
-        } else {
-            ask(cb)
-        }
-    })
+    lib.ask(questions, 'yes', generate)
 }

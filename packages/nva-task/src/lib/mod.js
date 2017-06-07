@@ -1,25 +1,19 @@
-import { forEach, omit } from 'lodash'
+import { forEach, zipObject, fill } from 'lodash'
 import { resolve, join } from 'path'
-import chalk from 'chalk'
+import { error } from './helper'
 import { existsSync, copySync, ensureFileSync, removeSync } from 'fs-extra'
-import { writeModConf } from './'
-
 
 export function addMod(names, answers, template, context) {
-    const { conf, mods } = context
+    const { mods, addMods } = context
     names = names.split(',')
-    let _mods = {}
-    forEach(names, name => {
-        if (Object.keys(conf.modConfPath).indexOf(name) > -1) {
-            console.log(chalk.red('name existed!'))
-            return
-        }
-        _mods[name] = answers
-        let { input } = initMod(answers, name, context)
 
+    forEach(names, name => {
+        if (Object.keys(mods).indexOf(name) > -1) {
+            error('name existed!')
+        }
+        let { input } = initMod(answers, name, context)
         let from = (template && mods[template]) ? mods[template].input : {}
         let to = input
-
         forEach(to, (v, k) => {
             if (existsSync(from[k])) {
                 copySync(from[k], v)
@@ -28,31 +22,30 @@ export function addMod(names, answers, template, context) {
             }
         })
     })
-    _mods = { ...conf.mods, ..._mods }
-    writeModConf(conf.modConfPath, _mods)
+    addMods(zipObject(names, fill(Array(3), answers)))
 }
 
 export function removeMod(names, context) {
-    const { conf, mods } = context
+    const { mods, removeMods, sourceFolder, bundleFolder } = context
     names = names.split(',')
-    let _mods = omit(conf.mods, names)
-    writeModConf(conf.modConfPath, _mods)
-
     forEach(names, name => {
-        let to = mods[name].input
+        let to = mods[name] && mods[name].input
         if (!to) {
-            console.log(chalk.red(`module ${name} not existed,is it have been removed?`))
-            return
+            error(`module ${name} not existed,is it have been removed?`)
         }
         forEach(to, (v) => {
             if (existsSync(v)) {
                 removeSync(v)
             } else {
-                console.log(chalk.red(`file ${v} not existed,is it have been removed?`))
-                return
+                error(`file ${v} not existed,is it have been removed?`)
             }
         })
+        const modFolder = join(sourceFolder, bundleFolder, name)
+        if (existsSync(resolve(modFolder))) {
+            removeSync(resolve(modFolder))
+        }
     })
+    removeMods(names)
 }
 
 export function initMod(mod, name, context) {

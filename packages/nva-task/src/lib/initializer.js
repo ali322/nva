@@ -3,7 +3,7 @@ import { join } from 'path'
 import { initMod } from './mod'
 
 export default function(context) {
-    const { proj, mods, conf } = context
+    const { proj, mods, namespace } = context
     const isIsomorphic = proj.type === 'isomorphic'
 
     let _proj = {
@@ -25,7 +25,7 @@ export default function(context) {
         imagePrefix: '',
 
         hmrPath: "/hmr/",
-        cachePath: join(conf.rootPath, 'temp', 'happypack')
+        cachePath: join(`.${namespace}`, 'temp', 'happypack')
     }
 
     if (isIsomorphic) {

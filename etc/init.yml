@@ -27,3 +27,6 @@ questions:
     type: input
     message: 'project license'
     default: 'MIT'
+  yes:
+    type: confirm
+    message: Are your sure about above answers?

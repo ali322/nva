@@ -1,6 +1,8 @@
 import { resolve } from 'path'
+import { omit } from 'lodash'
 import { checkFile, error } from './lib/helper'
 import initializer from './lib/initializer'
+import { writeModConf } from './lib'
 
 export default function(options = {}) {
     const namespace = options.namespace ? options.namespace : 'nva'
@@ -16,16 +18,21 @@ export default function(options = {}) {
     const mods = loadMods(modConfPath)
     const vendors = loadVendors(vendorConfPath)
 
+    function addMods(more) {
+        writeModConf(modConfPath, { ...mods, ...more })
+    }
+
+    function removeMods(keys) {
+        writeModConf(modConfPath, omit(mods, keys))
+    }
+
     let context = {
         namespace,
         mods,
         proj: { type: 'frontend', ...proj },
         vendors,
-        conf: {
-            rootPath,
-            modConfPath,
-            mods
-        },
+        addMods,
+        removeMods,
         ...hooks
     }
     return init(context)
