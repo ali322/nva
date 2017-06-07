@@ -1,7 +1,7 @@
 let exec = require('execa')
 let nightwatch = require('nightwatch')
 let { existsSync } = require('fs')
-let { resolve } = require('path')
+let { resolve, join } = require('path')
 
 module.exports = function(runner, conf, browser = 'chrome') {
     process.env.NODE_ENV = 'testing'
