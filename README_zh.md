@@ -44,7 +44,7 @@ npm test
 可选: 集成测试
 
 ```bash
-npm run e2e
+npm run test:e2e
 ```
 基于nightwatch的集成测试,测试浏览器为 chrome,可依照项目目录中的 `test/e2e` 对照修改为 firefox 或 IE
 
