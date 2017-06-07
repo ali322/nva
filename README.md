@@ -107,7 +107,7 @@ all config files alive in `.nva` directory of project
 ```bash
 |-- .nva/
     |-- temp/   # build caching directory
-    |-- api/   # mock server setting files
+    |-- mock/   # mock server setting files
         |-- user.json  # mock user api setting
         |-- ...
     |-- nva.json    # global settings
@@ -121,20 +121,18 @@ all config files alive in `.nva` directory of project
     {
         "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
         "spa":true            /* is an single page application(SPA)? */
-        "entryJSExt":".jsx",    /* entry js file extension */
-        "entryCSSExt":".styl",   /* entry css file extension */
+        "jsExt":".jsx",    /* entry js file extension */
+        "cssExt":".styl",   /* entry css file extension */
         "distFolder": "dist",   /* dist folder of build */
         "bundleFolder": "bundle",   /* all project module's parent folder */
         "vendorFolder": "vendor",   /* vendor folder of build */
         "assetFolder": "asset",    /* asset files folder */
-        "spriteFolder": "sprites",    /* sprites background image folder */
         "fontFolder": "font",   /* icon font folder */
         "imageFolder": "image",    /* compressed image folder */
         "sourcePath": "src",    /* frontend project only, source code folder */
-        "pagePath": "page",    /* html files folder */
+        "viewFolder": "view",    /* isomorphic project only,html files folder */
         "serverFolder": "server",   /* isomorphic project only, server side source code folder */
         "serverEntryJS": "bootstrap.js",    /* isomorphic project only,server entry file */
-        "clientPath": "client"    /* isomorphic project only,client side source code folder */
     }
     ```
 - `module.json` project module settings
@@ -142,9 +140,12 @@ all config files alive in `.nva` directory of project
     ```js
     {
         "index": {  /* module name */
-            "html": ["index.html"],     /* entry html file(s),nva will inject asset in these files */
-            "path": "index",            /* relative path to `bundleFolder` */
-            "vendor": {"js": "react","css": "common"}   /* module vendors,`react` and `common` reference to `vendor.json` */
+            "input":{
+                "js":"index.js",    /* entry js file */
+                "css":"index.css",  /* entry css file */
+                "html":"index.html"   /* entry html file */
+            },
+            "vendor": {"js": "base","css": "base"}   /* module vendors,`js.base` and `css.base` reference to `vendor.json` */
         }
     }
     ```
@@ -154,10 +155,10 @@ all config files alive in `.nva` directory of project
     ```js
     {
         "js":{
-            "react":["react","react-dom"]     /* define js vendor */
+            "base":["react","react-dom"]     /* define js vendor */
         },
         "css":{
-            "common":["font-awesome/css/font-awesome.css"]     /* define css vendor */
+            "base":["font-awesome/css/font-awesome.css"]     /* define css vendor */
         }
     }
     ```

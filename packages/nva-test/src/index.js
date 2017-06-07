@@ -1,4 +1,5 @@
 let spawn = require('cross-spawn')
+let exec = require('execa')
 let nightwatch = require('nightwatch')
 let { resolve, join } = require('path')
 let fs = require('fs')
@@ -26,7 +27,7 @@ exports.e2e = function(runner, conf, browser = 'chrome') {
     }
     opts = opts.concat(['--env', browser])
 
-    let instance = spawn(join(nodeModules, '.bin', 'nightwatch'), opts, { stdio: 'inherit' })
+    let instance = exec.sync(join(nodeModules, '.bin', 'nightwatch'), opts, { stdio: 'inherit' })
     instance.on('exit', (code) => {
         server.close()
         process.exit(code)
