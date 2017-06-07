@@ -1,0 +1,23 @@
+{
+  "name": "nva-test-e2e",
+  "version": "0.3.7",
+  "description": "frontend e2e test toolkit",
+  "main": "src/index.js",
+  "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test-e2e",
+  "files": [
+    "bin",
+    "src"
+  ],
+  "bin": {
+    "nva-test-e2e": "bin/index.js"
+  },
+  "author": "alichen",
+  "license": "MIT",
+  "dependencies": {
+    "chromedriver": "^2.29.0",
+    "execa": "^0.6.3",
+    "nightwatch": "^0.9.14",
+    "selenium-server": "^3.4.0",
+    "yargs": "^7.1.0"
+  }
+}

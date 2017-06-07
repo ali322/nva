@@ -1,13 +1,13 @@
 nva-test
 ===
 
-frontend unit test toolkit
+frontend e2e test toolkit
 
 ### Install
 
 
 ```javascript
-npm install nva-test --save
+npm install nva-test-e2e --save
 ```
 
 ### Usage
@@ -15,7 +15,7 @@ npm install nva-test --save
 - run e2e test
 
     ```bash
-    nva-test -w
+    nva-test-e2e -r test/e2e/server.js
     ```
 
 ### License
