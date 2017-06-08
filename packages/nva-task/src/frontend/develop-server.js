@@ -26,7 +26,7 @@ export default function(context, constants) {
             from: /\/(\S+)?$/,
             to: '/index.html'
         }] : false
-        if (typeof spa === 'object') {
+        if (Array.isArray(spa)) {
             rewrites = spa
         }
 

@@ -5,14 +5,14 @@ nva [![Build Status](https://travis-ci.org/ali322/nva.svg?branch=master)](https:
 yet another efficient and painless scaffold for frontend and isomorphic project [中文文档](./README_zh.md)
 
 
-### Install
+## Install
 
 Prerequisites: [Node.js](https://nodejs.org/en/) (>=4.x, 6.x preferred), npm version 3+ and [Git](https://git-scm.com)
 ```javascript
 npm install nva -g
 ```
 
-### Quick Start
+## Quick Start
 
 - generate project 
 
@@ -50,7 +50,7 @@ npm install nva -g
     build project to dist
 
 
-### Manage Modules
+## Manage Modules
 
 - add module in project
 
@@ -65,7 +65,7 @@ npm install nva -g
     nva mod <module name, ...> -d
     ```
  
-### Other CLI
+## Other CLI
 
 - list all available commands
 
@@ -79,7 +79,7 @@ npm install nva -g
     nva -v
     ```
 
-### Supported Template
+## Supported Template
 
 - [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
 
@@ -99,7 +99,7 @@ npm install nva -g
 
   just simple [react-native boilerplate](https://github.com/ali322/react-native-boilerplate)
 
-### Config
+## Config
 
 The purpose of nva is provide easy and painless way so that users can get started with actual app code as fast as possible,Howerver,nva need some configure to work in order
 all config files alive in `.nva` directory of project
@@ -219,72 +219,112 @@ all config files alive in `.nva` directory of project
     ```
 
 
-### Test and Lint
+## Test and Lint
 
 lint your project source code
+
+run lint
 
 ```bash
 npm run lint
 ```
-
-project test with `ava` + `tap-spec`
+run test
 
 ```bash
 npm run test
 ```
 
-### Packages
+## Packages
 
-`nva-core` `nva-task` `nva-server` in the packages directory can be install through npm independently
+`nva-core` `nva-task` `nva-server` `nva-test` `nva-test-e2e` in the packages directory can be install through npm independently
 
-- nva-core: basic webpack config,you can extend like
+### nva-core
 
-  ```javascript
-  import config from 'nva-core'
-  const buildConfig = config(constants)
-  webpack({
-    ...buildConfig,
-    entry:'index.js',
-    output:{
-      ...
-    }
-  }).run((err,stats)=>{ ... })
-  ``
+basic webpack config,you can extend like
+
+```javascript
+import config from 'nva-core'
+const buildConfig = config(constants)
+webpack({
+...buildConfig,
+entry:'index.js',
+output:{
+    ...
+}
+}).run((err,stats)=>{ ... })
+```
+
+### nva-task 
+
+nva task collections,customize for your need
+
+```javascript
+var tasks = require('nva-tasks')
+tasks.frontend.build() //frontend project build
+task.isomorphic.build()  //isomorphic project build
+```
   
-- nva-task: nva task collections,customize for your need
+### nva-server
 
-  ```javascript
-  var tasks = require('nva-tasks')
-  tasks.frontend.build() //frontend project build
-  task.isomorphic.build()  //isomorphic project build
-  ```
-  
-- nva-server: development server base on connect
+development server base on connect
 
-  ```javascript
-  import App from 'nva-server'
-  let app = App()
-  app.listen(3000,()=>{
-    console.log('==> server stared at %d',3000)
-  })
-  ```
+```javascript
+import App from 'nva-server'
+let app = App()
+app.listen(3000,()=>{
+console.log('==> server stared at %d',3000)
+})
+```
 
-  alsoo can run it in cli,more options refer to [nva-task](https://github.com/ali322/nva/blob/master/packages/nva-server/README.md)
-  
-  ```bash
-  nva-server -p 5000 -P src
-  ```
+alsoo can run it in cli,more options refer to [nva-task](https://github.com/ali322/nva/blob/master/packages/nva-server/README.md)
 
+```bash
+nva-server -p 5000 -P src
+```
 
-### Todo
+### nva-test
+
+frontend test toolkit based on karma + mocha
+
+run test
+
+```bash
+nva test
+```
+
+cli options
+
+|     param      |  default   |     description     |
+| :----------: | :----: | :----------: |
+| -c or —-config |   none    |    test config    |
+
+### nva-test-e2e
+
+frontend e2e test toolkit based on nightwatch
+
+run test
+
+```bash
+nva test -r path/to/server.js -c path/to/config.js
+```
+
+cli options
+
+|     param      |  default   |     description     |
+| :----------: | :----: | :----------: |
+| -c or —-config |   none    |    test config    |
+| -r or —-runner |   none    |    app test server    |
+| —-browser |   phantom.js    |    test on which browser    |
+
+## Todo
 
 - fix some unknow bugs
 - add more template
 
-### Contrib
+## Contribution
 
-welcome to pull request and issues,help to improve `nva` more powerful and better 
+welcome to pull request and issues,help to improve `nva` better 
 
-### License
+## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)

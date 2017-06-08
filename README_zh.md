@@ -2,11 +2,11 @@
 
 简洁高效的前端项目脚手架, [英文文档](./README.md)
 
-### nva是什么?
+## nva是什么?
 
 nva是一个基于webpack,提供灵活配置的前端项目脚手架工具,既能支持纯前端项目(html+css+js)的开发需求,也能支持同构JS/SSR项目(node+react/node+vue)的开发,提供了多达8种不同的便捷项目模板,满足自动化开发,数据模拟,资源构建,模块管理,打包发布等等日常开发任务需求
 
-### 快速开始
+## 快速开始
 
 安装环境依赖: [Node.js](https://nodejs.org/en/) (>=4.x, 6.x preferred), npm 3+ and [Git](https://git-scm.com)
 
@@ -56,7 +56,7 @@ nva build
 
 完成源码的编译压缩,静态资源合并压缩,路径处理,html注入,构建版本号处理等等
 
-### 模块化管理
+## 模块化管理
 
 - 增加模块
 
@@ -84,7 +84,7 @@ nva build
   
   支持批量删除,多个模块名使用英文逗号 `,` 分隔
 
-### 项目模板
+## 项目模板
 
 - [纯前端模板](https://github.com/ali322/frontend-boilerplate)
 
@@ -101,7 +101,7 @@ nva build
   - vue + vuex + vue-router + koa@2 的单页面项目
 
 
-### 配置参数
+## 配置参数
 
 nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时候使用默认配置即可,但是为了满足不同的业务场景,也提供了灵活的配置入口方便自定义,配置文件都位于项目的 .nva 目录下
 
@@ -222,49 +222,89 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
     }]
     ```
 
-### 子包
+## 子包
 
-packages 目录下的 `nva-core` `nva-task` `nva-server`的三个子包可以独立安装使用
+packages 目录下的 `nva-core` `nva-task` `nva-server` `nva-test` `nva-test-e2e` 等子包可以独立安装使用
 
-- nva-core: 基础webpack编译配置,满足一般的构建需求
+### nva-core
 
-  ```javascript
-  import config from 'nva-core'
-  const buildConfig = config(constants)
-  webpack({
-    ...buildConfig,
-    entry:'index.js',
-    output:{
-      ...
-    }
-  }).run((err,stats)=>{ ... })
-  ``
+基础webpack编译配置,满足一般的构建需求
+
+```javascript
+import config from 'nva-core'
+const buildConfig = config(constants)
+webpack({
+...buildConfig,
+entry:'index.js',
+output:{
+    ...
+}
+}).run((err,stats)=>{ ... })
+```
   
-- nva-task: nva构建任务集合,可以根据需求自定义组合
+### nva-task
 
-  ```javascript
-  var tasks = require('nva-tasks')
-  tasks.frontend.build() //前端项目构建
-  task.isomorphic.build()  //同构JS项目构建
-  ```
-  
-- nva-server: 基于connect的前端开发服务,带模拟数据接口功能
+nva构建任务集合,可以根据需求自定义组合
 
-  ```javascript
-  import App from 'nva-server'
-  let app = App()
-  app.listen(3000,()=>{
-    console.log('==> server stared at %d',3000)
-  })
-  ```
+```javascript
+var tasks = require('nva-tasks')
+tasks.frontend.build() //前端项目构建
+task.isomorphic.build()  //同构JS项目构建
+```
   
-  也可以通过命令行方式调用,具体参数说明请参见 [nva-task](https://github.com/ali322/nva/blob/master/packages/nva-server/README.md)
+### nva-server
+
+基于connect的前端开发服务,带模拟数据接口功能
+
+```javascript
+import App from 'nva-server'
+let app = App()
+app.listen(3000,()=>{
+console.log('==> server stared at %d',3000)
+})
+```
   
-  ```bash
-  nva-server -p 5000 -P src
-  ```
+也可以通过命令行方式调用,具体参数说明请参见 [nva-task](https://github.com/ali322/nva/blob/master/packages/nva-server/README.md)
+
+```bash
+nva-server -p 5000 -P src
+```
+
+### nva-test
+
+基于 karma + mocha 的单元测试服务
+
+运行测试
+
+```bash
+nva test
+```
+
+命令行参数
+
+|     参数名      |  默认   |     描述     |
+| :----------: | :----: | :----------: |
+| -c or —-config |   无    |   测试配置    |
+
+### nva-test-e2e
+
+基于 nightwatch 的e2e测试服务
+
+运行测试
+
+```bash
+nva test -r path/to/server.js -c path/to/config.js
+```
+
+命令行参数
+
+|     参数名      |  默认   |     描述     |
+| :----------: | :----: | :----------: |
+| -c or —-config |   无    |    测试配置    |
+| -r or —-runner |   无    |    应用测试服务器    |
+| —-browser |   phantom.js    |    测试浏览器    |
     
-### 代码规范校验
+## 代码规范校验
 
 校验项目源码
 
@@ -272,15 +312,15 @@ packages 目录下的 `nva-core` `nva-task` `nva-server`的三个子包可以独
 npm run lint
 ```
 
-### 待办
+## 待办
 
 - 改进构建流程
 - 提供更多的业务模板
 
-### 贡献
+## 贡献
 
-欢迎 PR 和 issues,帮助 `nva` 更好更强大
+欢迎 PR 和 issues,帮助 `nva` 更好
 
-### 许可协议
+## 许可协议
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)

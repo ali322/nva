@@ -41,7 +41,7 @@ export default function(context, constants, profile) {
         }
 
         let _more = { js: [], css: [] }
-        const htmlOutput = mod.output.html || join(distFolder, name, mod.input.html)
+        const htmlOutput = mod.output.html || join(distFolder, name, `${name}.html`)
         if (mod.vendor) {
             if (mod.vendor.js) {
                 let originalURL = join(distFolder, vendorFolder, vendorManifest.js[mod.vendor.js])
@@ -83,7 +83,7 @@ export default function(context, constants, profile) {
         resolve: { modules: [sourceFolder, resolve("node_modules"), 'node_modules'] },
         plugins: [
             ...baseConfig.plugins,
-            ...transforms,
+            // ...transforms,
             ...dllRefs,
             ...htmls
         ]

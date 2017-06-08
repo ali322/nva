@@ -49,7 +49,7 @@ module.exports = context => {
         },
         build({ profile }) {
             if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) === false) {
-                tasks.vendor()
+                tasks.vendor(tasks.build.bind(null, { profile }))
                 return
             }
             let releaseConfig = releaseConfigFactory(context, constants, profile)
@@ -59,7 +59,7 @@ module.exports = context => {
             /** clean build assets*/
             forEach(mods, (mod, name) => {
                 Object.keys(mod.output).forEach(v => {
-                    del.sync(v)
+                    del.sync(mod.output[v])
                 })
                 del.sync(join(distFolder, name))
             })

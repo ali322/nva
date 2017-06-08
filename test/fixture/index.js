@@ -17,8 +17,8 @@ let tempDir = path.join('temp', 'mock-project')
 let projectPath = path.join(tempDir, 'test')
 
 function setup() {
-    if(!fs.existsSync(projectPath)){
-        return generator('test', projectPath, answers)
+    if (!fs.existsSync(projectPath)) {
+        return generator('test', projectPath, answers, null, true)
     }
 }
 

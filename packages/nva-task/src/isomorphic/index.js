@@ -90,7 +90,7 @@ module.exports = context => {
             /** clean dist */
             forEach(mods, (mod, name) => {
                 Object.keys(mod.output).forEach(v => {
-                    del.sync(v)
+                    del.sync(mod.output[v])
                 })
                 del.sync(join(sourceFolder, distFolder, name))
             })
