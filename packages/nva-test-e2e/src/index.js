@@ -25,7 +25,7 @@ module.exports = function(runner, conf, browser = 'chrome') {
     }
     opts = opts.concat(['--env', browser])
 
-    let instance = exec.sync(join(nodeModules, '.bin', 'nightwatch'), opts, { stdio: 'inherit' })
+    let instance = exec(join(nodeModules, '.bin', 'nightwatch'), opts, { stdio: 'inherit' })
     instance.on('exit', (code) => {
         server.close()
         process.exit(code)
