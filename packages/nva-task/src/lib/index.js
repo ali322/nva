@@ -35,33 +35,33 @@ export function writeModConf(target, config) {
 }
 
 export function checkVendor(vendors, target) {
-    if (isEmpty(vendors) || !isPlainObject(vendors)) return false
-    if (vendors.js || vendors.css) {
+    if ((vendors.js && isPlainObject(vendors.js)) || (vendors.css && isPlainObject(vendors.css))) {
         if (!existsSync(resolve(target))) return false
         let sourcemap = readJsonSync(resolve(target))
         if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) == false) return false
-        let passed = true
-        if (vendors.js) {
+        let clean = true
+        const vendorOutput = dirname(target)
+        if (isPlainObject(vendors.js)) {
             Object.keys(vendors.js).forEach(v => {
-                if (!existsSync(resolve(dirname(target), `${v}-manifest.json`))) {
-                    passed = false
+                if (!existsSync(resolve(vendorOutput, `${v}-manifest.json`))) {
+                    clean = false
                     return false
                 }
-                if (!existsSync(sourcemap.js[v])) {
-                    passed = false
+                if (!existsSync(resolve(vendorOutput, sourcemap.js[v]))) {
+                    clean = false
                     return false
                 }
             })
         }
-        if (vendors.css) {
+        if (isPlainObject(vendors.css)) {
             Object.keys(vendors.css).forEach(v => {
-                if (!existsSync(sourcemap.css[v])) {
-                    passed = false
+                if (!existsSync(resolve(vendorOutput, sourcemap.css[v]))) {
+                    clean = false
                     return false
                 }
             })
         }
-        return passed
+        return clean
     }
     return true
 }
