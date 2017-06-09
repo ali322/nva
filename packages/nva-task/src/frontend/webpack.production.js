@@ -1,6 +1,6 @@
 import { DllReferencePlugin } from 'webpack'
 import { join, resolve, dirname, extname } from 'path'
-import { forEach } from 'lodash'
+import { forEach,isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import { config as configFactory } from 'nva-core'
@@ -16,15 +16,17 @@ export default function(context, constants, profile) {
 
     /** build vendors*/
     let dllRefs = []
-    let vendorManifestPath = join(constants.VENDOR_OUTPUT, vendorSourceMap)
-    let vendorManifest = require(vendorManifestPath)
-    for (let key in vendors['js']) {
-        let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
-        let _manifest = require(manifestPath)
-        dllRefs.push(new DllReferencePlugin({
-            context: __dirname,
-            manifest: _manifest,
-        }))
+    let sourcemapPath = join(constants.VENDOR_OUTPUT, vendorSourceMap)
+    let sourcemap = require(sourcemapPath)
+    if(isPlainObject(vendors.js)){
+        for (let key in vendors['js']) {
+            let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
+            let _manifest = require(manifestPath)
+            dllRefs.push(new DllReferencePlugin({
+                context: __dirname,
+                manifest: _manifest,
+            }))
+        }
     }
 
     /** build modules */
@@ -43,12 +45,12 @@ export default function(context, constants, profile) {
         let _more = { js: [], css: [] }
         const htmlOutput = mod.output.html || join(distFolder, name, `${name}.html`)
         if (mod.vendor) {
-            if (mod.vendor.js) {
-                let originalURL = join(distFolder, vendorFolder, vendorManifest.js[mod.vendor.js])
+            if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
+                let originalURL = join(distFolder, vendorFolder, sourcemap.js[mod.vendor.js])
                 _more.js = [relativeURL(dirname(htmlOutput), originalURL)]
             }
-            if (mod.vendor.css) {
-                let originalURL = join(distFolder, vendorFolder, vendorManifest.css[mod.vendor.css])
+            if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
+                let originalURL = join(distFolder, vendorFolder, sourcemap.css[mod.vendor.css])
                 _more.css = [relativeURL(dirname(htmlOutput), originalURL)]
             }
         }

@@ -1,7 +1,7 @@
-import { compact, mapValues } from 'lodash'
+import { compact, mapValues, isEqual, isEmpty, isPlainObject } from 'lodash'
 import merge from 'webpack-merge'
 import { dirname, basename, resolve } from 'path'
-import fs from 'fs-extra'
+import { existsSync, outputFileSync, outputJsonSync, readJsonSync } from 'fs-extra'
 import chalk from 'chalk'
 import opn from 'opn'
 import { lanIP } from './helper'
@@ -27,34 +27,51 @@ export function mergeConfig(config, value) {
 
 export function writeModConf(target, config) {
     try {
-        fs.outputFileSync(target, JSON.stringify(config, null, 2))
+        outputFileSync(target, JSON.stringify(config, null, 2))
     } catch (e) {
         return false
     }
     return true
 }
 
-export function checkVendor(vendor, target) {
-    if (!vendor) return false
-    if (!fs.existsSync(resolve(target))) return false
-    let passed = true
-    if (vendor.js) {
-        Object.keys(vendor.js).forEach(v => {
-            if (!fs.existsSync(resolve(dirname(target), `${v}-manifest.json`))) {
-                passed = false
-                return
-            }
-        })
+export function checkVendor(vendors, target) {
+    if (isEmpty(vendors) || !isPlainObject(vendors)) return false
+    if (vendors.js || vendors.css) {
+        if (!existsSync(resolve(target))) return false
+        let sourcemap = readJsonSync(resolve(target))
+        if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) == false) return false
+        let passed = true
+        if (vendors.js) {
+            Object.keys(vendors.js).forEach(v => {
+                if (!existsSync(resolve(dirname(target), `${v}-manifest.json`))) {
+                    passed = false
+                    return false
+                }
+                if (!existsSync(sourcemap.js[v])) {
+                    passed = false
+                    return false
+                }
+            })
+        }
+        if (vendors.css) {
+            Object.keys(vendors.css).forEach(v => {
+                if (!existsSync(sourcemap.css[v])) {
+                    passed = false
+                    return false
+                }
+            })
+        }
+        return passed
     }
-    return passed
+    return true
 }
 
-export function vendorManifest(stats, target) {
-    let assetByChunk = {}
+export function vendorManifest(stats, meta, target) {
+    let assetByChunk = { meta }
     stats.toJson().children.forEach((child) => {
         assetByChunk[child.name] = mapValues(child.assetsByChunkName, v => basename(v))
     })
-    fs.outputJsonSync(target, assetByChunk)
+    outputJsonSync(target, assetByChunk)
 }
 
 export function openBrowser(target, url) {

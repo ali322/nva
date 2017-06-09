@@ -14,9 +14,10 @@ export default function(options = {}) {
             vendorConfPath = resolve(rootPath, 'vendor.json')
     } = options
 
-    const proj = loadProj(projConfPath)
-    const mods = loadMods(modConfPath)
-    const vendors = loadVendors(vendorConfPath)
+    let proj = loadConf(projConfPath, () => error('project config is invalid'))
+    proj.default && (proj = proj.default)
+    const mods = loadConf(modConfPath, () => error('module config is invalid'))
+    const vendors = loadConf(vendorConfPath, () => error('vendor config is invalid'))
 
     function addMods(more) {
         writeModConf(modConfPath, { ...mods, ...more })
@@ -47,31 +48,15 @@ function init(context) {
     return tasks
 }
 
-function loadProj(path) {
-    let proj = {}
-    if (checkFile(path)) {
-        proj = require(path)
-        proj.default && (proj = proj.default)
-    } else {
-        error('project config is invalid')
-    }
-    return proj
-}
-
-function loadMods(path) {
+function loadConf(path, onError) {
+    let conf = {}
     if (!checkFile(path)) {
-        error('module config is invalid')
+        onError(new Error('config not exist'))
     }
-    let mods = require(path)
-    return mods
-}
-
-function loadVendors(path) {
-    let vendors = {}
-    if (checkFile(path)) {
-        vendors = require(path)
-    } else {
-        error('vendor config is invalid')
+    try {
+        conf = require(path)
+    } catch (e) {
+        onError(e)
     }
-    return vendors
+    return conf
 }

@@ -112,7 +112,7 @@ module.exports = context => {
             del.sync([join(sourceFolder, distFolder, vendorFolder)])
             let compiler = webpack(vendorConfig)
             compiler.run(function(err, stats) {
-                vendorManifest(stats, join(constants.VENDOR_OUTPUT, vendorSourceMap))
+                vendorManifest(stats, vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))
                 if (typeof afterVendor === 'function') {
                     afterVendor(err, stats)
                 }
