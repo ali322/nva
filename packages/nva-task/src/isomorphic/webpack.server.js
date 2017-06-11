@@ -23,10 +23,10 @@ export default function(context, constants, profile) {
             filename: serverEntry,
             libraryTarget: 'commonjs2'
         },
-        context: __dirname,
-        resolveLoader: {
-            modules: [resolve("node_modules"), "node_modules"]
-        },
+        // context: __dirname,
+        // resolveLoader: {
+        //     modules: [resolve("node_modules"), "node_modules"]
+        // },
         resolve: { modules: [sourceFolder, resolve("node_modules"), 'node_modules'] },
         externals,
         plugins: [

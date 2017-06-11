@@ -30,7 +30,7 @@ export default function(context, constants) {
     /** build modules */
     forEach(mods, (mod, name) => {
         entry[name] = [
-            "webpack-hot-middleware/client",
+            require.resolve("webpack-hot-middleware/client"),
             mod.input.js,
             mod.input.css
         ];
@@ -62,10 +62,10 @@ export default function(context, constants) {
             chunkFilename: join("[name]", "[id].chunk.js"),
             publicPath: hmrPath
         },
-        context: __dirname,
-        resolveLoader: {
-            modules: ['node_modules', resolve("node_modules")]
-        },
+        // context: __dirname,
+        // resolveLoader: {
+        //     modules: [resolve("node_modules")]
+        // },
         resolve: { modules: [sourceFolder, resolve("node_modules"), "node_modules"] },
         plugins: [
             ...baseConfig.plugins,

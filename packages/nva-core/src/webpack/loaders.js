@@ -28,7 +28,7 @@ export default function(constants) {
     }
 
     let imageLoaders = [{
-        loader: 'url-loader',
+        loader: require.resolve('url-loader'),
         options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
             outputPath: IMAGE_OUTPUT
@@ -36,7 +36,7 @@ export default function(constants) {
     }]
     if (!HOT) {
         imageLoaders.push({
-            loader: 'image-webpack-loader',
+            loader: require.resolve('image-webpack-loader'),
             options: {
                 bypassOnDebug: true,
                 // optimizationLevel: 7,
@@ -51,60 +51,68 @@ export default function(constants) {
             css: vueStyleLoaders(constants),
             less: vueStyleLoaders(constants, 'less'),
             stylus: vueStyleLoaders(constants, 'stylus'),
-            scss: vueStyleLoaders(constants, { loader: 'sass-loader', options: { sourceMap: true } }),
-            sass: vueStyleLoaders(constants, { loader: 'sass-loader', options: { indentedSyntax: true, sourceMap: true } }),
+            scss: vueStyleLoaders(constants, { loader: require.resolve('sass-loader'), options: { sourceMap: true } }),
+            sass: vueStyleLoaders(constants, { loader: require.resolve('sass-loader'), options: { indentedSyntax: true, sourceMap: true } }),
         }
     }
 
     let _loaders = [{
-        test: /\.(tpl|html)/,
-        exclude: [nodeModulesDir],
-        loader: 'html-loader'
-    }, {
-        test: /\.vue/,
-        exclude: [nodeModulesDir],
-        loader: 'vue-loader',
-        options: vueLoaderOptions
-    }, {
-        test: /\.(es6|js|jsx)$/,
-        exclude: [nodeModulesDir],
-        loader: 'happypack/loader',
-        options: { id: "js" }
-    }, {
-        test: /\.less/,
-        exclude: [nodeModulesDir],
-        use: cssLoaders(constants, 'less')
-    }, {
-        test: /\.scss/,
-        exclude: [nodeModulesDir],
-        use: cssLoaders(constants, { loader: 'sass-loader', options: { sourceMap: true } })
-    }, {
-        test: /\.styl/,
-        exclude: [nodeModulesDir],
-        use: cssLoaders(constants, 'stylus')
-    }, {
-        test: /\.css/,
-        use: cssLoaders(constants)
-    }, {
-        test: /\.(png|jpg|gif|bmp)$/,
-        exclude: [nodeModulesDir],
-        use: imageLoaders
-    }, {
-        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url-loader',
-        options: HOT ? urlLoaderOptions : {
-            ...urlLoaderOptions,
-            outputPath: FONT_OUTPUT,
-            mimetype: "application/font-woff"
+            test: /\.(tpl|html)/,
+            exclude: [nodeModulesDir],
+            loader: require.resolve('html-loader')
+        },
+        {
+            test: /\.vue/,
+            exclude: [nodeModulesDir],
+            loader: 'vue-loader',
+            options: vueLoaderOptions
+        },
+        {
+            test: /\.(es6|js|jsx)$/,
+            exclude: [nodeModulesDir],
+            loader: require.resolve('happypack/loader'),
+            options: { id: "js" }
+        },
+        {
+            test: /\.less/,
+            exclude: [nodeModulesDir],
+            use: cssLoaders(constants, 'less')
+        },
+        {
+            test: /\.scss/,
+            exclude: [nodeModulesDir],
+            use: cssLoaders(constants, { loader: require.resolve('sass-loader'), options: { sourceMap: true } })
+        },
+        {
+            test: /\.styl/,
+            exclude: [nodeModulesDir],
+            use: cssLoaders(constants, 'stylus')
+        },
+        {
+            test: /\.css/,
+            use: cssLoaders(constants)
+        },
+        {
+            test: /\.(png|jpg|gif|bmp)$/,
+            exclude: [nodeModulesDir],
+            use: imageLoaders
+        }, {
+            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: require.resolve('url-loader'),
+            options: HOT ? urlLoaderOptions : {
+                ...urlLoaderOptions,
+                outputPath: FONT_OUTPUT,
+                mimetype: "application/font-woff"
+            }
+        }, {
+            test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: require.resolve("url-loader"),
+            options: HOT ? urlLoaderOptions : {
+                ...urlLoaderOptions,
+                outputPath: FONT_OUTPUT
+            }
         }
-    }, {
-        test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: "url-loader",
-        options: HOT ? urlLoaderOptions : {
-            ...urlLoaderOptions,
-            outputPath: FONT_OUTPUT
-        }
-    }]
+    ]
 
     return _loaders
 }

@@ -34,7 +34,7 @@ export default function(context, constants) {
     /** build modules */
     forEach(mods, (mod, name) => {
         entry[name] = [
-            'webpack-hot-middleware/client' + '?path=' + devServerHost + '/__webpack_hmr',
+            require.resolve('webpack-hot-middleware/client') + '?path=' + devServerHost + '/__webpack_hmr',
             // require.resolve("webpack/hot/only-dev-server"),
             mod.input.js,
             mod.input.css
@@ -72,10 +72,10 @@ export default function(context, constants) {
             chunkFilename: "[id].chunk.js",
             publicPath: devServerHost + hmrPath
         },
-        context: __dirname,
-        resolveLoader: {
-            modules: [resolve("node_modules"), "node_modules"]
-        },
+        // context: __dirname,
+        // resolveLoader: {
+        //     modules: [resolve("node_modules"), "node_modules"]
+        // },
         resolve: { modules: [sourceFolder, resolve("node_modules"), 'node_modules'] },
         plugins: [
             ...baseConfig.plugins.slice(1),
