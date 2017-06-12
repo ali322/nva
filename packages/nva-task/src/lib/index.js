@@ -1,4 +1,4 @@
-import { compact, mapValues, isEqual, isEmpty, isPlainObject } from 'lodash'
+import { compact, mapValues, isEqual, isPlainObject } from 'lodash'
 import merge from 'webpack-merge'
 import { dirname, basename, resolve } from 'path'
 import { existsSync, outputFileSync, outputJsonSync, readJsonSync } from 'fs-extra'
