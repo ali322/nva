@@ -6,10 +6,10 @@ import { forEach } from 'lodash'
 import { existsSync } from 'fs'
 import { config as configFactory } from 'nva-core'
 
-export default function(context, constants) {
+export default function(context, constants, profile) {
     const { mods, serverFolder, bundleFolder, sourceFolder } = context
     let entry = {}
-    let baseConfig = configFactory(constants)
+    let baseConfig = configFactory(constants, profile)
     let externals = Object.keys(require(resolve('package.json')).dependencies)
 
     /** build modules */

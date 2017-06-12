@@ -45,7 +45,7 @@ export default function(context, constants) {
             mock
         })
         let middleware = [app]
-        let hotUpdateConfig = hotUpdateConfigFactory({ ...context, port }, constants)
+        let hotUpdateConfig = hotUpdateConfigFactory({ ...context, port }, constants, options.profile)
         if (typeof beforeDev === 'function') {
             hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
         }
@@ -53,7 +53,7 @@ export default function(context, constants) {
             if (typeof afterDev === 'function') {
                 afterDev()
             }
-        }))
+        }, options.profile))
 
         let bs = browserSync({
             proxy: {

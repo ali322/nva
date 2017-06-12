@@ -12,7 +12,7 @@ export default function(context, constants) {
     return function(options) {
         let browserSync = BrowserSync.create()
         const port = options.port || 3000
-        let config = hotUpdateConfig({ ...context, port }, constants)
+        let config = hotUpdateConfig({ ...context, port }, constants, options.profile)
         if (typeof beforeDev === 'function') {
             config = mergeConfig(config, beforeDev(config))
         }
@@ -20,7 +20,7 @@ export default function(context, constants) {
             if (typeof afterDev === 'function') {
                 afterDev()
             }
-        })
+        }, options.profile)
 
         let rewrites = spa === true ? [{
             from: /\/(\S+)?$/,

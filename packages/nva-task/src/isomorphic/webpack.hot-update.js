@@ -8,13 +8,13 @@ import chalk from 'chalk'
 import { config as configFactory } from 'nva-core'
 import { serverHost } from '../lib'
 
-export default function(context, constants) {
+export default function(context, constants, profile) {
     const { vendors, mods, sourceFolder, distFolder, vendorFolder, vendorSourceMap, hmrPath, port } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
     let devServerHost = serverHost(port)
-    let baseConfig = configFactory({ ...constants, HOT: true })
+    let baseConfig = configFactory({ ...constants, HOT: true }, profile)
 
     /** add vendors reference*/
     let dllRefs = []

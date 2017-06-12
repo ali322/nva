@@ -1,22 +1,22 @@
 import { DllReferencePlugin } from 'webpack'
 import { join, resolve, sep } from 'path'
-import { forEach,isPlainObject } from 'lodash'
+import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
-export default function(context, constants) {
+export default function(context, constants, profile) {
     const { vendors, mods, sourceFolder, vendorFolder, vendorSourceMap, hmrPath } = context
     /** build variables*/
     let entry = {};
     let htmls = [];
-    let baseConfig = configFactory({ ...constants, HOT: true })
+    let baseConfig = configFactory({ ...constants, HOT: true }, profile)
 
     /*build vendors*/
     let dllRefs = []
     let sourcemapPath = join(constants.VENDOR_OUTPUT, vendorSourceMap)
     let sourcemap = require(sourcemapPath)
-    if(isPlainObject(vendors.js)){
+    if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
             let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
             let _manifest = require(manifestPath)
@@ -55,7 +55,7 @@ export default function(context, constants) {
     return {
         ...baseConfig,
         entry,
-        // profile: true,
+        profile,
         output: {
             path: constants.OUTPUT_PATH,
             filename: join("[name]", "[name].js"),

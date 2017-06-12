@@ -34,8 +34,8 @@ module.exports = context => {
         cachePath
     } = context
 
-    function createBundle(constants) {
-        let bundleConfig = bundleConfigFactory(context, constants)
+    function createBundle(constants, profile) {
+        let bundleConfig = bundleConfigFactory(context, constants, profile)
         del.sync(join(serverFolder, bundleFolder))
         if (Object.keys(bundleConfig.entry).length === 0) {
             return
@@ -95,7 +95,7 @@ module.exports = context => {
                 del.sync(join(sourceFolder, distFolder, name))
             })
 
-            createBundle({ ...constants, HOT: false })
+            createBundle({ ...constants, HOT: false }, profile)
             let compiler = webpack([clientConfig, serverConfig])
             compiler.run(function(err, stats) {
                 if (typeof afterBuild === 'function') {
@@ -121,7 +121,7 @@ module.exports = context => {
             })
         },
         dev(options) {
-            createBundle({ ...constants, HOT: true })
+            createBundle({ ...constants, HOT: true }, options.profile)
             const runDev = developServer(context, constants)
             if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))) {
                 runDev(options)

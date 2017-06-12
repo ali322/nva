@@ -2,9 +2,9 @@ import webpack from 'webpack'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 
-export default function(config, done) {
+export default function(config, done, profile) {
     let bundler = webpack(config)
-    bundler.plugin('done',done)
+    bundler.plugin('done', done)
     return [
         webpackDevMiddleware(bundler, {
             publicPath: config.output.publicPath,
@@ -12,7 +12,7 @@ export default function(config, done) {
                 colors: true
             },
             hot: true,
-            noInfo: true,
+            noInfo: !profile,
             lazy: false,
             watchOptions: {
                 aggregateTimeout: 300,

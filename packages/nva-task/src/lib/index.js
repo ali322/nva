@@ -16,12 +16,14 @@ export function mergeConfig(config, value) {
     if (Array.isArray(config)) {
         return config.map(v => {
             return merge.strategy({
-                entry: 'replace'
+                entry: 'replace',
+                "module.rules": "replace"
             })(v, ...webpackConfig)
         })
     }
     return merge.strategy({
-        entry: 'replace'
+        entry: 'replace',
+        "module.rules": "replace"
     })(config, ...webpackConfig)
 }
 
@@ -41,7 +43,7 @@ export function checkVendor(vendors, target) {
         if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) == false) return false
         let clean = true
         const vendorOutput = dirname(target)
-        if (isPlainObject(vendors.js)) {
+        if (isPlainObject(vendors.js) && isPlainObject(sourcemap.js)) {
             Object.keys(vendors.js).forEach(v => {
                 if (!existsSync(resolve(vendorOutput, `${v}-manifest.json`))) {
                     clean = false
@@ -53,7 +55,7 @@ export function checkVendor(vendors, target) {
                 }
             })
         }
-        if (isPlainObject(vendors.css)) {
+        if (isPlainObject(vendors.css) && isPlainObject(sourcemap.css)) {
             Object.keys(vendors.css).forEach(v => {
                 if (!existsSync(resolve(vendorOutput, sourcemap.css[v]))) {
                     clean = false
