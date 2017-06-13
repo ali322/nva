@@ -124,12 +124,12 @@ all config files alive in `.nva` directory of project
         "jsExt":".jsx",    /* entry js file extension */
         "cssExt":".styl",   /* entry css file extension */
         "distFolder": "dist",   /* dist folder of build */
-        "bundleFolder": "bundle",   /* all project module's parent folder */
         "vendorFolder": "vendor",   /* vendor folder of build */
         "assetFolder": "asset",    /* asset files folder */
         "fontFolder": "font",   /* icon font folder */
         "imageFolder": "image",    /* compressed image folder */
         "sourcePath": "src",    /* frontend project only, source code folder */
+        "bundleFolder": "bundle",   /* isomorphic project only, client side bundle folder */
         "viewFolder": "view",    /* isomorphic project only,html files folder */
         "serverFolder": "server",   /* isomorphic project only, server side source code folder */
         "serverEntryJS": "bootstrap.js",    /* isomorphic project only,server entry file */
