@@ -26,14 +26,14 @@ export const postcssOptions = ({ HOT, IMAGE_OUTPUT }) => ({
 export function vueStyleLoaders(constants, preprocessor) {
     let { HOT = false } = constants
     let loaders = cssLoaders({ ...constants, HOT: true }, preprocessor)
-    let _loaders = loaders.filter((v, i) => i === 1 || i > 2)
+    loaders = loaders.filter((v, i) => i === 1 || i > 2)
     if (!HOT) {
         return ExtractTextPlugin.extract({
-            use: _loaders,
+            use: loaders,
             fallback: 'vue-style-loader'
         })
     }
-    return ['vue-style-loader'].concat(_loaders)
+    return ['vue-style-loader'].concat(loaders)
 }
 
 export function cssLoaders(constants, preprocessor = '') {

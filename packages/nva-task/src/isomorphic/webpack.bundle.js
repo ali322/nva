@@ -15,7 +15,7 @@ export default function(context, constants, profile) {
     /** build modules */
     forEach(mods, (mod, name) => {
         let bundleEntry = mod.bundleEntry || join(name, name + '-server.js')
-        bundleEntry = resolve(sourceFolder, bundleFolder, bundleEntry)
+        bundleEntry = resolve(sourceFolder, bundleEntry)
         if (existsSync(bundleEntry)) {
             entry[name] = bundleEntry
         }

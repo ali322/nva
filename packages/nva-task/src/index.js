@@ -14,7 +14,7 @@ export default function(options = {}) {
             vendorConfPath = resolve(rootPath, 'vendor.json')
     } = options
 
-    let proj = loadConf(projConfPath, () => error('project config is invalid!!'))
+    let proj = loadConf(projConfPath, () => error('project config is invalid'))
     proj.default && (proj = proj.default)
     const mods = loadConf(modConfPath, () => error('module config is invalid'))
     const vendors = loadConf(vendorConfPath, () => error('vendor config is invalid'))

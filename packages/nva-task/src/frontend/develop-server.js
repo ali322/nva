@@ -1,4 +1,5 @@
 import { join } from 'path'
+import { isString } from 'lodash'
 import middlewareFactory from '../lib/middleware'
 import { error, checkPort } from '../lib/helper'
 import { mergeConfig, openBrowser } from '../lib/'
@@ -7,7 +8,7 @@ import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
 export default function(context, constants) {
-    const { spa, sourceFolder, distFolder, bundleFolder, mock, beforeDev, afterDev } = context
+    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev } = context
 
     return function(options) {
         let browserSync = BrowserSync.create()
@@ -26,13 +27,13 @@ export default function(context, constants) {
             from: /\/(\S+)?$/,
             to: '/index.html'
         }] : false
-        if (Array.isArray(spa)) {
+        if (isString(spa) || Array.isArray(spa)) {
             rewrites = spa
         }
 
         const app = createApp({
             asset: spa ? distFolder : false,
-            path: spa ? join(sourceFolder, bundleFolder) : false,
+            path: spa ? sourceFolder : false,
             log: false,
             rewrites,
             mock
@@ -49,9 +50,9 @@ export default function(context, constants) {
             } else {
                 browserSync.init({
                     port,
-                    server: spa ? false : [join(sourceFolder, bundleFolder), distFolder],
+                    server: spa ? false : [sourceFolder, distFolder],
                     middleware: middlewares.concat([app]),
-                    files: [join(sourceFolder, bundleFolder, '**', '*.html')],
+                    files: [join(sourceFolder, '**', '*.html')],
                     online: false,
                     notify: true,
                     open: false,

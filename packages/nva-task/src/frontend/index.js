@@ -1,6 +1,6 @@
 import webpack from 'webpack'
 import del from 'del'
-import { forEach } from 'lodash'
+import { forEach,isString } from 'lodash'
 import { join, resolve, sep } from 'path'
 import { addMod, removeMod } from '../lib/mod'
 import { vendorManifest, mergeConfig, checkVendor } from '../lib'
@@ -29,10 +29,10 @@ module.exports = context => {
     } = context
 
     const constants = {
-        CSS_OUTPUT: join(distFolder, "[name]", "[name]-[hash:8].css"),
-        OUTPUT_PATH: resolve(),
-        IMAGE_OUTPUT: join(distFolder, assetFolder, imageFolder, sep),
-        FONT_OUTPUT: join(distFolder, assetFolder, fontFolder, sep),
+        CSS_OUTPUT: join("[name]", "[name]-[hash:8].css"),
+        OUTPUT_PATH: resolve(distFolder),
+        IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
+        FONT_OUTPUT: join(assetFolder, fontFolder, sep),
         IMAGE_PREFIX: imagePrefix || join('..', assetFolder, imageFolder),
         FONT_PREFIX: fontPrefix || join('..', assetFolder, fontFolder),
         VENDOR_OUTPUT: resolve(distFolder, vendorFolder),
@@ -59,7 +59,9 @@ module.exports = context => {
             /** clean build assets*/
             forEach(mods, (mod, name) => {
                 Object.keys(mod.output).forEach(v => {
-                    del.sync(mod.output[v])
+                    if(isString(mod.output[v])){
+                        del.sync(mod.output[v])
+                    }
                 })
                 del.sync(join(distFolder, name))
             })

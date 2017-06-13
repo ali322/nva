@@ -35,30 +35,28 @@ export default function(context, constants, profile) {
     /** build modules*/
     forEach(mods, (mod, name) => {
         entry[name] = [mod.input.js, mod.input.css]
-        let _chunks = [name]
+        let chunks = [name]
 
-        if (mod.output.js || mod.output.css) {
-            transforms.push(new ChunkTransformPlugin({
-                chunks: [name],
-                test: /\.(js|css)$/,
-                filename: filename => extname(filename) === '.js' ? mod.output.js : mod.output.css
-            }))
-        }
+        transforms.push(new ChunkTransformPlugin({
+            chunks: [name],
+            test: /\.(js|css)$/,
+            filename: file => extname(file) === '.js' ? (mod.output.js || file) : (mod.output.css || file)
+        }))
 
-        let _more = { js: [], css: [] }
+        let more = { js: [], css: [] }
         if (mod.vendor) {
             if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-                _more.js = [join(sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
+                more.js = [join(sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
             }
             if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-                _more.css = [join(sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
+                more.css = [join(sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
             }
         }
         htmls.push(new InjectHtmlPlugin({
             processor: sep,
-            chunks: _chunks,
+            chunks,
             filename: mod.input.html,
-            more: _more,
+            more,
             customInject: [{
                 start: '<!-- start:bundle-time -->',
                 end: '<!-- end:bundle-time -->',

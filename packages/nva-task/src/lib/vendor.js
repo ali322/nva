@@ -7,8 +7,8 @@ import { isEmpty, isPlainObject } from 'lodash'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants) {
-    const { vendors, sourceFolder, distFolder, vendorFolder } = context
-    const { VENDOR_OUTPUT, MANIFEST_PATH } = constants
+    const { vendors, sourceFolder, vendorFolder } = context
+    const { VENDOR_OUTPUT, MANIFEST_PATH, OUTPUT_PATH } = constants
     const baseConfig = configFactory({ ...constants, HOT: false })
 
     let entryJS = {},
@@ -59,7 +59,7 @@ export default function(context, constants) {
         context: __dirname,
         resolve: { modules: [sourceFolder, 'node_modules', resolve("node_modules")] },
         output: {
-            path: constants.OUTPUT_PATH
+            path: OUTPUT_PATH
         },
         plugins: [
             ...baseConfig.plugins.slice(1),
@@ -71,7 +71,7 @@ export default function(context, constants) {
             new ChunkTransformPlugin({
                 chunks: cssChunks,
                 test: /\.css$/,
-                filename: function(filename) { return join(distFolder, vendorFolder, basename(filename)) }
+                filename: function(filename) { return join(vendorFolder, basename(filename)) }
             })
         ]
     }

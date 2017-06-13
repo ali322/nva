@@ -1,5 +1,5 @@
 import { join, resolve, sep } from 'path'
-import { forEach } from 'lodash'
+import { forEach, isString } from 'lodash'
 import webpack from 'webpack'
 import chalk from 'chalk'
 import del from 'del'
@@ -90,7 +90,9 @@ module.exports = context => {
             /** clean dist */
             forEach(mods, (mod, name) => {
                 Object.keys(mod.output).forEach(v => {
-                    del.sync(mod.output[v])
+                    if (isString(mod.output[v])) {
+                        del.sync(mod.output[v])
+                    }
                 })
                 del.sync(join(sourceFolder, distFolder, name))
             })

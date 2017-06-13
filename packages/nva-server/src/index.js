@@ -54,6 +54,13 @@ export default (options) => {
     if (rewrites) {
         if (Array.isArray(rewrites)) {
             app.use(historyAPIFallback({ rewrites }))
+        } else if (typeof rewrites === 'string') {
+            app.use(historyAPIFallback({
+                rewrites: [{
+                    from: /\/(\S+)?$/,
+                    to: rewrites
+                }]
+            }))
         } else {
             app.use(historyAPIFallback({
                 verbose: false

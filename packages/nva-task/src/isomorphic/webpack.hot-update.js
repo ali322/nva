@@ -39,22 +39,22 @@ export default function(context, constants, profile) {
             mod.input.js,
             mod.input.css
         ]
-        let _chunks = [name]
+        let chunks = [name]
 
-        let _more = { js: [], css: [] }
+        let more = { js: [], css: [] }
         if (mod.vendor) {
             if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-                _more.js = [join(sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
+                more.js = [join(sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
             }
             if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-                _more.css = [join(sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
+                more.css = [join(sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
             }
         }
         htmls.push(new InjectHtmlPlugin({
             processor: devServerHost + hmrPath,
-            chunks: _chunks,
+            chunks,
             filename: mod.input.html,
-            more: _more,
+            more,
             customInject: [{
                 start: '<!-- start:browser-sync -->',
                 end: '<!-- end:browser-sync -->',
