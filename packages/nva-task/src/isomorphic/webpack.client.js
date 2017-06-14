@@ -1,6 +1,6 @@
 import webpack from 'webpack'
 import { join, resolve, sep, extname } from 'path'
-import { forEach,isPlainObject } from 'lodash'
+import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
@@ -21,13 +21,13 @@ export default function(context, constants, profile) {
 
     let sourcemapPath = join(constants.VENDOR_OUTPUT, vendorSourceMap)
     let sourcemap = require(sourcemapPath)
-    if(isPlainObject(vendors.js)){
+    if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
             let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
-            let _manifest = require(manifestPath)
+            let manifest = require(manifestPath)
             dllRefs.push(new webpack.DllReferencePlugin({
                 context: resolve(sourceFolder),
-                manifest: _manifest,
+                manifest,
             }))
         }
     }
@@ -53,7 +53,7 @@ export default function(context, constants, profile) {
             }
         }
         htmls.push(new InjectHtmlPlugin({
-            processor: sep,
+            processor: join(sep, distFolder, sep),
             chunks,
             filename: mod.input.html,
             more,
@@ -75,8 +75,8 @@ export default function(context, constants, profile) {
         entry,
         output: {
             path: constants.OUTPUT_PATH,
-            filename: join(distFolder, "[name]", "[name]-[hash:8].js"),
-            chunkFilename: join(distFolder, "[name]", "[id]-[hash:8].chunk.js")
+            filename: join("[name]", "[name]-[hash:8].js"),
+            chunkFilename: join("[name]", "[id]-[hash:8].chunk.js")
         },
         context: __dirname,
         resolveLoader: {

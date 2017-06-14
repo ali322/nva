@@ -20,10 +20,10 @@ export default function(context, constants, profile) {
     if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
             let manifestPath = join(VENDOR_OUTPUT, key + '-manifest.json')
-            let _manifest = require(manifestPath)
+            let manifest = require(manifestPath)
             dllRefs.push(new DllReferencePlugin({
                 context: __dirname,
-                manifest: _manifest,
+                manifest,
             }))
         }
     }

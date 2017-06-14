@@ -57,12 +57,12 @@ module.exports = context => {
     }
 
     const constants = {
-        CSS_OUTPUT: join(distFolder, "[name]", "[name]-[contenthash:8].css"),
-        OUTPUT_PATH: resolve(sourceFolder),
-        IMAGE_OUTPUT: join(distFolder, assetFolder, imageFolder, sep),
-        FONT_OUTPUT: join(distFolder, assetFolder, fontFolder, sep),
-        IMAGE_PREFIX: imagePrefix || join('..', '..', '..', distFolder, assetFolder, imageFolder),
-        FONT_PREFIX: fontPrefix || join('..', '..', distFolder, assetFolder, fontFolder),
+        CSS_OUTPUT: join("[name]", "[name]-[hash:8].css"),
+        OUTPUT_PATH: resolve(sourceFolder, distFolder),
+        IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
+        FONT_OUTPUT: join(assetFolder, fontFolder, sep),
+        IMAGE_PREFIX: imagePrefix || join('..', assetFolder, imageFolder),
+        FONT_PREFIX: fontPrefix || join('..', assetFolder, fontFolder),
         VENDOR_OUTPUT: resolve(sourceFolder, distFolder, vendorFolder),
         MANIFEST_PATH: join(sourceFolder, distFolder, vendorFolder),
         CACHE_PATH: cachePath

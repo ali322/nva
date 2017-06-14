@@ -4,20 +4,21 @@ import chalk from 'chalk'
 import { resolve, join } from 'path'
 import { forEach } from 'lodash'
 import { existsSync } from 'fs'
+import { relativeURL } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    const { mods, serverFolder, bundleFolder, sourceFolder } = context
+    const { mods, serverFolder, distFolder, bundleFolder, sourceFolder } = context
     let entry = {}
     let baseConfig = configFactory(constants, profile)
     let externals = Object.keys(require(resolve('package.json')).dependencies)
 
     /** build modules */
     forEach(mods, (mod, name) => {
-        let bundleEntry = mod.bundleEntry || join(name, name + '-server.js')
-        bundleEntry = resolve(sourceFolder, bundleEntry)
-        if (existsSync(bundleEntry)) {
-            entry[name] = bundleEntry
+        let serverBundle = mod.serverBundle ? relativeURL(sourceFolder, mod.serverBundle) : join(name, name + '-server.js')
+        serverBundle = resolve(sourceFolder, serverBundle)
+        if (existsSync(serverBundle)) {
+            entry[name] = serverBundle
         }
     })
 
@@ -27,7 +28,7 @@ export default function(context, constants, profile) {
         name: 'bundle',
         target: 'node',
         output: {
-            path: resolve(serverFolder, bundleFolder),
+            path: resolve(serverFolder, distFolder, bundleFolder),
             libraryTarget: 'commonjs2',
             filename: '[name].js'
         },

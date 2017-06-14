@@ -57,8 +57,8 @@ export function initMod(mod, name, context) {
     input.css = isString(input.css) ? input.css : join(sourceFolder, name, name + cssExt)
     input.js = resolve(input.js)
     input.css = resolve(input.css)
-    input.html = isString(input.html) ? input.html : (type === 'frontend' ?
-        join(sourceFolder, name, name + htmlExt) : join(viewFolder, name + htmlExt))
+    input.html = isString(input.html) ? input.html :
+        (type === 'frontend' ? join(sourceFolder, name, name + htmlExt) : join(viewFolder, name + htmlExt))
     input.html = resolve(input.html)
 
     //output
