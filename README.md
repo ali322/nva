@@ -27,13 +27,6 @@ npm install nva -g
     The shorthand repo notation is passed to download-git-repo so you can also use things like bitbucket:username/repo for a Bitbucket repo and username/repo#branch for tags or branches
 
 
-- build project vendors
-
-    ```bash
-    nva vendor
-    ```
-    build project's third-party libraries
-
 - start to develop
 
     ```bash

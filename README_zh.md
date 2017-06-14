@@ -28,25 +28,25 @@ nva init my-project
 
 ```bash
 cd my-project
-nva vendor
 nva dev -p 3000
 ```
 
-使用 `nva vendor` 将项目第三方依赖包预先打包,提升项目开发编译速度,然后使用 `nva dev` 启动开发服务器,打开浏览器输入 `http://localhost:3000`即可看到项目的初始化界面
+使用 `nva dev` 启动开发服务器,启动完毕后会打开用户默认浏览器
 
 第四步: 测试
 
 ```bash
-npm test
+nva test
 ```
 根据不同的项目模板执行不同的单元测试
 
 可选: 集成测试
 
 ```bash
-npm run test:e2e
+npm i nva-test-e2e -g
+nva-test-e2e -r path/ro/server.js -c path/to/config.js
 ```
-基于nightwatch的集成测试,测试浏览器为 chrome,可依照项目目录中的 `test/e2e` 对照修改为 firefox 或 IE
+基于nightwatch的集成测试,测试浏览器为 chrome
 
 后续: 打包发布
 
