@@ -7,7 +7,7 @@ import { config as configFactory } from 'nva-core'
 import { relativeURL, bundleTime } from '../lib/helper'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
+    const { vendors, mods, sourceFolder, distFolder, chunkFolder, vendorSourceMap } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {}
@@ -17,11 +17,11 @@ export default function(context, constants, profile) {
 
     /** build vendors*/
     let dllRefs = []
-    let sourcemapPath = join(VENDOR_OUTPUT, vendorSourceMap)
+    let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
     let sourcemap = require(sourcemapPath)
     if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
-            let manifestPath = join(VENDOR_OUTPUT, key + '-manifest.json')
+            let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
             let manifest = require(manifestPath)
             dllRefs.push(new DllReferencePlugin({
                 context: __dirname,
@@ -44,11 +44,11 @@ export default function(context, constants, profile) {
         const htmlOutput = mod.output.html
         if (mod.vendor) {
             if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-                let originalURL = join(distFolder, vendorFolder, sourcemap.js[mod.vendor.js])
+                let originalURL = join(VENDOR_OUTPUT, sourcemap.js[mod.vendor.js])
                 more.js = [relativeURL(dirname(htmlOutput), originalURL)]
             }
             if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-                let originalURL = join(distFolder, vendorFolder, sourcemap.css[mod.vendor.css])
+                let originalURL = join(VENDOR_OUTPUT, sourcemap.css[mod.vendor.css])
                 more.css = [relativeURL(dirname(htmlOutput), originalURL)]
             }
         }
@@ -74,7 +74,7 @@ export default function(context, constants, profile) {
         output: {
             path: OUTPUT_PATH,
             filename: join("[name]", "[name]-[hash:8].js"),
-            chunkFilename: join("[name]", "[id]-[hash:8].chunk.js")
+            chunkFilename: join(chunkFolder, "[id]-[hash:8].chunk.js")
         },
         context: __dirname,
         resolveLoader: {

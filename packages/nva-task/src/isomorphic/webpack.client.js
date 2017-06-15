@@ -9,7 +9,8 @@ import { bundleTime } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    let { vendors, mods, sourceFolder, distFolder, vendorFolder, vendorSourceMap } = context
+    let { vendors, mods, sourceFolder, chunkFolder, vendorFolder, vendorSourceMap } = context
+    const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {}
     let htmls = []
@@ -19,11 +20,11 @@ export default function(context, constants, profile) {
     /** add vendors reference*/
     let dllRefs = []
 
-    let sourcemapPath = join(constants.VENDOR_OUTPUT, vendorSourceMap)
+    let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
     let sourcemap = require(sourcemapPath)
     if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
-            let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
+            let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
             let manifest = require(manifestPath)
             dllRefs.push(new webpack.DllReferencePlugin({
                 context: resolve(sourceFolder),
@@ -74,9 +75,9 @@ export default function(context, constants, profile) {
         ...baseConfig,
         entry,
         output: {
-            path: constants.OUTPUT_PATH,
+            path: OUTPUT_PATH,
             filename: join("[name]", "[name]-[hash:8].js"),
-            chunkFilename: join("[name]", "[id]-[hash:8].chunk.js")
+            chunkFilename: join(chunkFolder, "[id]-[hash:8].chunk.js")
         },
         context: __dirname,
         resolveLoader: {

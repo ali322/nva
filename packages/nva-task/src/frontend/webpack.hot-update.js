@@ -6,7 +6,7 @@ import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, vendorFolder, vendorSourceMap, hmrPath } = context
+    const { vendors, mods, sourceFolder, vendorFolder, chunkFolder, vendorSourceMap, hmrPath } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {};
@@ -15,11 +15,11 @@ export default function(context, constants, profile) {
 
     /*build vendors*/
     let dllRefs = []
-    let sourcemapPath = join(VENDOR_OUTPUT, vendorSourceMap)
+    let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
     let sourcemap = require(sourcemapPath)
     if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
-            let manifestPath = join(VENDOR_OUTPUT, key + '-manifest.json')
+            let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
             let manifest = require(manifestPath)
             dllRefs.push(new DllReferencePlugin({
                 context: __dirname,
@@ -60,7 +60,7 @@ export default function(context, constants, profile) {
         output: {
             path: OUTPUT_PATH,
             filename: join("[name]", "[name].js"),
-            chunkFilename: join("[name]", "[id].chunk.js"),
+            chunkFilename: join(chunkFolder, "[id].chunk.js"),
             publicPath: hmrPath
         },
         context: __dirname,

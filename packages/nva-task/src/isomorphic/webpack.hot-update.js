@@ -9,7 +9,8 @@ import { config as configFactory } from 'nva-core'
 import { serverHost } from '../lib'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, distFolder, vendorFolder, vendorSourceMap, hmrPath, port } = context
+    const { vendors, mods, sourceFolder, vendorFolder, vendorSourceMap, hmrPath, port } = context
+    const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {};
     let htmls = [];
@@ -18,11 +19,11 @@ export default function(context, constants, profile) {
 
     /** add vendors reference*/
     let dllRefs = []
-    let sourcemapPath = join(constants.VENDOR_OUTPUT, vendorSourceMap)
+    let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
     let sourcemap = require(sourcemapPath)
     if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
-            let manifestPath = join(constants.VENDOR_OUTPUT, key + '-manifest.json')
+            let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
             let manifest = require(manifestPath)
             dllRefs.push(new webpack.DllReferencePlugin({
                 context: resolve(sourceFolder),
@@ -67,7 +68,7 @@ export default function(context, constants, profile) {
         ...baseConfig,
         entry,
         output: {
-            path: constants.OUTPUT_PATH,
+            path: OUTPUT_PATH,
             filename: "[name].js",
             chunkFilename: "[id].chunk.js",
             publicPath: devServerHost + hmrPath

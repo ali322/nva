@@ -31,7 +31,7 @@ export default function(context, constants) {
         name: "js",
         entry: entryJS,
         output: {
-            path: VENDOR_OUTPUT,
+            path: resolve(VENDOR_OUTPUT),
             filename: '[name]-[hash:8].js',
             library: '[name]_[hash]'
         },

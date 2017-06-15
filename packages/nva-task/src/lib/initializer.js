@@ -14,7 +14,7 @@ export default function(context) {
         htmlExt: '.html',
         buildFolder: "build",
         distFolder: "dist",
-        bundleFolder: "bundle",
+        chunkFolder: "chunk",
         vendorFolder: "vendor",
         vendorSourceMap: 'sourcemap.json',
 
@@ -32,6 +32,7 @@ export default function(context) {
         _proj = {
             ..._proj,
             moduleFolder: 'module',
+            bundleFolder: "bundle",
             serverFolder: 'server',
             serverEntry: 'bootstrap.js',
             viewFolder: 'view',

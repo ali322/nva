@@ -35,7 +35,7 @@ module.exports = context => {
         FONT_OUTPUT: join(assetFolder, fontFolder, sep),
         IMAGE_PREFIX: imagePrefix || join('..', assetFolder, imageFolder),
         FONT_PREFIX: fontPrefix || join('..', assetFolder, fontFolder),
-        VENDOR_OUTPUT: resolve(distFolder, vendorFolder),
+        VENDOR_OUTPUT: join(distFolder, vendorFolder),
         MANIFEST_PATH: join(distFolder, vendorFolder),
         CACHE_PATH: cachePath
     }
