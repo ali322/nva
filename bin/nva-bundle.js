@@ -7,7 +7,7 @@ var program = require("commander"),
     _ = require('lodash')
 var lib = require('../lib')
 var config = require("../lib/config")
-var questions = config.questions('mod')
+var questions = config.questions('bundle')
 var tasks = require('nva-task')()
 
 program.usage('[name]')
