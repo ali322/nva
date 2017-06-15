@@ -58,13 +58,13 @@ module.exports = context => {
 
     const constants = {
         CSS_OUTPUT: join("[name]", "[name]-[hash:8].css"),
-        OUTPUT_PATH: resolve(sourceFolder, distFolder),
+        OUTPUT_PATH: resolve(distFolder, sourceFolder),
         IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
         FONT_OUTPUT: join(assetFolder, fontFolder, sep),
         IMAGE_PREFIX: imagePrefix || join('..', assetFolder, imageFolder),
         FONT_PREFIX: fontPrefix || join('..', assetFolder, fontFolder),
-        VENDOR_OUTPUT: resolve(sourceFolder, distFolder, vendorFolder),
-        MANIFEST_PATH: join(sourceFolder, distFolder, vendorFolder),
+        VENDOR_OUTPUT: resolve(distFolder, sourceFolder, vendorFolder),
+        MANIFEST_PATH: join(distFolder, sourceFolder, vendorFolder),
         CACHE_PATH: cachePath
     }
 
@@ -86,7 +86,7 @@ module.exports = context => {
             if (typeof beforeBuild === 'function') {
                 clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
             }
-            del.sync(join(serverFolder, distFolder))
+            del.sync(join(distFolder, serverFolder))
             /** clean dist */
             forEach(mods, (mod, name) => {
                 Object.keys(mod.output).forEach(v => {
@@ -94,7 +94,7 @@ module.exports = context => {
                         del.sync(mod.output[v])
                     }
                 })
-                del.sync(join(sourceFolder, distFolder, name))
+                del.sync(join(distFolder, sourceFolder, name))
             })
 
             createBundle({ ...constants, HOT: false }, profile)
@@ -111,7 +111,7 @@ module.exports = context => {
             if (typeof beforeVendor === 'function') {
                 vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
             }
-            del.sync([join(sourceFolder, distFolder, vendorFolder)])
+            del.sync([join(distFolder, sourceFolder, vendorFolder)])
             let compiler = webpack(vendorConfig)
             compiler.run(function(err, stats) {
                 vendorManifest(stats, vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))

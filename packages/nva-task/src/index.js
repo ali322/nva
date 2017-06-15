@@ -10,7 +10,7 @@ export default function(options = {}) {
     const {
         hooks = {},
             projConfPath = resolve(rootPath, `${namespace}.js`),
-            modConfPath = resolve(rootPath, 'module.json'),
+            modConfPath = resolve(rootPath, 'bundle.json'),
             vendorConfPath = resolve(rootPath, 'vendor.json')
     } = options
 

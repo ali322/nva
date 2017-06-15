@@ -12,23 +12,23 @@ var tasks = require('nva-task')()
 
 program.usage('[name]')
 program.option("-d, --delete", "delete action flag")
-program.option("-t, --template [value]", "choose template module")
+program.option("-t, --template [value]", "choose template bundle")
 
 program.on('--help', function() {
     console.log(`
   Examples:
 
-    ${chalk.cyan(' # add a new module in project')}
-    nva mod todo
+    ${chalk.cyan(' # add a new bundle in project')}
+    nva bundle todo
     
-    ${chalk.cyan(' # add new modules in project,spit name with \',\'')}
-    nva mod todo,...
+    ${chalk.cyan(' # add new bundles in project,spit name with \',\'')}
+    nva bundle todo,...
 
-    ${chalk.cyan(' # add new modules in project base on template module \',\'')}
-    nva mod todo -t <template module>
+    ${chalk.cyan(' # add new bundle in project base on template bundle \',\'')}
+    nva bundle todo -t template-bundle
 
-    ${chalk.cyan(' # remove modules in project,spit name with \',\'')}
-    nva mod todo,... -d
+    ${chalk.cyan(' # remove bundles in project,spit name with \',\'')}
+    nva bundle todo,... -d
 
     `)
 })

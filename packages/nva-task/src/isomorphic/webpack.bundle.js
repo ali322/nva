@@ -28,7 +28,7 @@ export default function(context, constants, profile) {
         name: 'bundle',
         target: 'node',
         output: {
-            path: resolve(serverFolder, distFolder, bundleFolder),
+            path: resolve(distFolder, serverFolder, bundleFolder),
             libraryTarget: 'commonjs2',
             filename: '[name].js'
         },

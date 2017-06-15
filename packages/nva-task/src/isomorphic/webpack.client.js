@@ -46,14 +46,14 @@ export default function(context, constants, profile) {
         let more = { js: [], css: [] }
         if (mod.vendor) {
             if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-                more.js = [join(sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
+                more.js = [join(sep, vendorFolder, sourcemap.js[mod.vendor.js])]
             }
             if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-                more.css = [join(sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
+                more.css = [join(sep, vendorFolder, sourcemap.css[mod.vendor.css])]
             }
         }
         htmls.push(new InjectHtmlPlugin({
-            processor: join(sep, distFolder, sep),
+            processor: sep,
             chunks,
             filename: mod.input.html,
             more,

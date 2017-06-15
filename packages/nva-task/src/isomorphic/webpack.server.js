@@ -19,7 +19,7 @@ export default function(context, constants, profile) {
             __filename: true
         },
         output: {
-            path: resolve(serverFolder, distFolder),
+            path: resolve(distFolder, serverFolder),
             filename: serverEntry,
             libraryTarget: 'commonjs2'
         },

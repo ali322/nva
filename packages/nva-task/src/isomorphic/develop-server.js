@@ -78,7 +78,7 @@ export default function(context, constants) {
         }, function() {
             // console.log('🚀  develop server is started at %d', proxyPort);
 
-            let url = `http://localhost:${port}`
+            let url = `http://localhost:${proxyPort}`
             setTimeout(() => openBrowser(options.browser, url), 5000)
         })
 
