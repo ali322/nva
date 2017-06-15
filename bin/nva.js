@@ -15,7 +15,7 @@ program.version(version)
     .command('test', 'run unit or e2e test')
     .command('*')
     .action(function(cmd) {
-        if (['init', 'list', 'mod', 'dev', 'build', 'vendor','test'].indexOf(cmd) === -1) {
+        if (['init', 'list', 'bundle', 'dev', 'build', 'vendor','test'].indexOf(cmd) === -1) {
             console.log('unsupported nva command')
             process.exit(1)
         }
