@@ -43,19 +43,19 @@ npm install nva -g
     build project to dist
 
 
-## Manage Modules
+## Manage bundles
 
-- add module in project
+- add bundle in project
 
     ```bash
-    nva mod <module name, ...> #just simple module(s)
-    nva mod <module name, ...> -t <copy from module>
+    nva bundle <bundle name, ...> #just simple bundle(s)
+    nva bundle <bundle name, ...> -t <copy from bundle>
     ```
 
-- delete module in project
+- delete bundle in project
 
     ```bash
-    nva mod <module name, ...> -d
+    nva mod <bundle name, ...> -d
     ```
  
 ## Other CLI
@@ -104,7 +104,7 @@ all config files alive in `.nva` directory of project
         |-- user.json  # mock user api setting
         |-- ...
     |-- nva.json    # global settings
-    |-- module.json # project module settings
+    |-- bundle.json # project module settings
     |-- vendor.json # project third-party libraries settings
 ```
 

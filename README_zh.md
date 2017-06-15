@@ -56,30 +56,30 @@ nva build
 
 完成源码的编译压缩,静态资源合并压缩,路径处理,html注入,构建版本号处理等等
 
-## 模块化管理
+## bundle 管理
 
-- 增加模块
+- 增加 bundle
 
-  添加一个空白模块
+  添加一个空白 bundle
   
   ```bash
-  nva mod my-module
+  nva bundle my-bundle
   ```
   
-  以 other-module 为模板添加一个模块
+  以 other-bundle 为模板添加一个 bundle
   
   ```bash
-  nva mod my-module -t other-module
+  nva mod my-bundle -t other-bundle
   ```
   
   支持批量添加,多个模块名使用英文逗号 `,` 分隔
 
-- 删除模块
+- 删除 bundle
 
-  删除一个已有的模块
+  删除一个已有的 bundle
   
   ```bash
-  nva mod existed-module -d
+  nva bundle existed-bundle -d
   ```
   
   支持批量删除,多个模块名使用英文逗号 `,` 分隔
