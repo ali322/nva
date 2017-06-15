@@ -10,7 +10,11 @@ import hotUpdateConfigFactory from './webpack.hot-update'
 export default function(context, constants) {
     const { runningMessage, serverFolder, viewFolder, beforeDev, mock, afterDev } = context
     const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
+    let cnt = 0
     return function(options) {
+        const port = options.port || 7000
+        const proxyPort = context.port || 3000
+
         nodemon({
             // delay: "200ms",
             script: "app.js",
@@ -27,6 +31,11 @@ export default function(context, constants) {
         }).on("readable", function() {
             this.stdout.on('data', (chunk) => {
                 if (RUNNING_REGXP.test(chunk.toString())) {
+                    ++cnt
+                    if (cnt === 1) {
+                        let url = `http://localhost:${proxyPort}`
+                        setTimeout(() => openBrowser(options.browser, url), 5000)
+                    }
                     browserSync.reload({
                         stream: false
                     })
@@ -35,9 +44,6 @@ export default function(context, constants) {
             this.stdout.pipe(process.stdout)
             this.stderr.pipe(process.stderr)
         })
-
-        const port = options.port || 7000
-        const proxyPort = context.port || 3000
 
         let app = createApp({
             log: false,
@@ -77,9 +83,6 @@ export default function(context, constants) {
             }
         }, function() {
             // console.log('🚀  develop server is started at %d', proxyPort);
-
-            let url = `http://localhost:${proxyPort}`
-            setTimeout(() => openBrowser(options.browser, url), 5000)
         })
 
         bs.emitter.on("browser:reload", function() {
