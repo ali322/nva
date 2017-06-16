@@ -40,15 +40,15 @@ export function cssLoaders(constants, preprocessor = '') {
     let { HOT = false } = constants
     let loaders = [
         { loader: 'style-loader' },
-        { loader: 'css-loader', options: { minimize: !HOT } },
+        { loader: require.resolve('css-loader'), options: { minimize: !HOT } },
         { loader: 'postcss-loader', options: postcssOptions(constants) },
-        { loader: 'resolve-url-loader', options: { debug: false } }
+        { loader: require.resolve('resolve-url-loader'), options: { debug: false } }
     ]
     if (preprocessor) {
         if (typeof preprocessor === 'string') {
-            loaders = loaders.concat({ loader: `${preprocessor}-loader`, options: { sourceMap: true } })
+            loaders = loaders.concat({ loader: require.resolve(`${preprocessor}-loader`), options: { sourceMap: true } })
         } else if (typeof preprocessor === 'object') {
-            loaders = loaders.concat(preprocessor)
+            loaders = loaders.concat({ ...preprocessor, loader: require.resolve(preprocessor.loader) })
         } else {
             throw new Error('invalid preprocessor')
         }
