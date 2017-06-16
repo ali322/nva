@@ -34,7 +34,7 @@ export default function(context, constants) {
                     ++cnt
                     if (cnt === 1) {
                         let url = `http://localhost:${proxyPort}`
-                        setTimeout(() => openBrowser(options.browser, url), 5000)
+                        setTimeout(() => openBrowser(options.browser, url), 1000)
                     }
                     browserSync.reload({
                         stream: false
