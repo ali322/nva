@@ -1,4 +1,5 @@
 #! /usr/bin/env node
 
-var tasks = require('nva-task')()
+var hooks = require('../lib/hook')
+var tasks = require('nva-task')({hooks})
 tasks.vendor()
