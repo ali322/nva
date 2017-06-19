@@ -34,6 +34,12 @@ module.exports = {
                         stylus: stylusLoaders
                     }
                 }
+            }, {
+                test: /\.(gif|jpg|png|woff|svg|eot|ttf|otf)\??.*$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 1000
+                }
             }
         ]
     },
@@ -49,7 +55,7 @@ module.exports = {
             vue: "vue/dist/vue.esm.js",
             vuex: "vuex/dist/vuex.esm.js",
             "vue-router": "vue-router/dist/vue-router.esm.js",
-            "@": resolve("src", "bundle")
+            "@": resolve("src")
         }
     }
 }
