@@ -39,9 +39,9 @@ export function vueStyleLoaders(constants, preprocessor) {
 export function cssLoaders(constants, preprocessor = '') {
     let { HOT = false } = constants
     let loaders = [
-        { loader: 'style-loader' },
+        { loader: require.resolve('style-loader') },
         { loader: require.resolve('css-loader'), options: { minimize: !HOT } },
-        { loader: 'postcss-loader', options: postcssOptions(constants) },
+        { loader: require.resolve('postcss-loader'), options: postcssOptions(constants) },
         { loader: require.resolve('resolve-url-loader'), options: { debug: false } }
     ]
     if (preprocessor) {
