@@ -1,24 +1,21 @@
 let { join, resolve } = require('path')
 
-let cssLoaders = ['vue-style-loader', 'css-loader', 'resolve-url-loader']
-let lessLoaders = cssLoaders.concat([{ loader: 'less-loader', options: { sourceMap: true } }])
-let sassLoaders = cssLoaders.concat([{ loader: 'sass-loader', options: { indentedSyntax: true, sourceMap: true } }])
-let scssLoaders = cssLoaders.concat([{ loader: 'sass-loader', options: { sourceMap: true } }])
-let stylusLoaders = cssLoaders.concat([{ loader: 'stylus-loader', options: { sourceMap: true } }])
+let cssLoaders = ['vue-style-loader', require.resolve('css-loader'), require.resolve('resolve-url-loader')]
+let lessLoaders = cssLoaders.concat([{ loader: require.resolve('less-loader'), options: { sourceMap: true } }])
+let sassLoaders = cssLoaders.concat([{ loader: require.resolve('sass-loader'), options: { indentedSyntax: true, sourceMap: true } }])
+let scssLoaders = cssLoaders.concat([{ loader: require.resolve('sass-loader'), options: { sourceMap: true } }])
+let stylusLoaders = cssLoaders.concat([{ loader: require.resolve('stylus-loader'), options: { sourceMap: true } }])
 
 module.exports = {
     module: {
         rules: [{
                 test: /\.(js|es6|jsx)/,
-                loader: 'babel-loader',
-                include: [resolve('test', 'unit', 'spec'),
-                    resolve('test', 'unit', 'fixture'),
-                    resolve('src')
-                ]
+                loader: require.resolve('babel-loader'),
+                exclude: [resolve('node_modules')]
             },
             {
                 test: /\.(tpl|html)/,
-                loader: 'html-loader',
+                loader: require.resolve('html-loader'),
                 exclude: [resolve('node_modules')],
             },
             {
@@ -36,26 +33,13 @@ module.exports = {
                 }
             }, {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf|otf)\??.*$/,
-                loader: 'url-loader',
+                loader: require.resolve('url-loader'),
                 options: {
                     limit: 1000
                 }
             }
         ]
     },
-    devtool: '#eval-source-map',
-    watch: true,
-    context: __dirname,
-    resolveLoader: {
-        modules: [resolve('node_modules'), 'node_modules']
-    },
-    resolve: {
-        extensions: ['.js', '.json', '.vue'],
-        alias: {
-            vue: "vue/dist/vue.esm.js",
-            vuex: "vuex/dist/vuex.esm.js",
-            "vue-router": "vue-router/dist/vue-router.esm.js",
-            "@": resolve("src")
-        }
-    }
+    devtool: '#eval',
+    watch: true
 }
