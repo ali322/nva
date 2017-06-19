@@ -8,16 +8,22 @@ import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
 export default function(context, constants) {
-    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev } = context
+    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev, hooks } = context
 
     return function(options) {
         let browserSync = BrowserSync.create()
         const port = options.port || 3000
         let config = hotUpdateConfig({ ...context, port }, constants, options.profile)
+        if (typeof hooks.beforeDev === 'function') {
+            config = mergeConfig(config, hooks.beforeDev(config))
+        }
         if (typeof beforeDev === 'function') {
             config = mergeConfig(config, beforeDev(config))
         }
         const middlewares = middlewareFactory(config, () => {
+            if (typeof hooks.afterDev === 'function') {
+                hooks.afterDev()
+            }
             if (typeof afterDev === 'function') {
                 afterDev()
             }

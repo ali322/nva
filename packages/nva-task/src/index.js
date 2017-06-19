@@ -9,9 +9,9 @@ export default function(options = {}) {
     const rootPath = `.${namespace}`
     const {
         hooks = {},
-            projConfPath = resolve(rootPath, `${namespace}.js`),
-            modConfPath = resolve(rootPath, 'bundle.json'),
-            vendorConfPath = resolve(rootPath, 'vendor.json')
+        projConfPath = resolve(rootPath, `${namespace}.js`),
+        modConfPath = resolve(rootPath, 'bundle.json'),
+        vendorConfPath = resolve(rootPath, 'vendor.json')
     } = options
 
     let proj = loadConf(projConfPath, () => error('project config is invalid'))
@@ -34,7 +34,7 @@ export default function(options = {}) {
         vendors,
         addMods,
         removeMods,
-        ...hooks
+        hooks
     }
     return init(context)
 }

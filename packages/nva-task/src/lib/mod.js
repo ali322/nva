@@ -49,16 +49,16 @@ export function removeMod(names, context) {
 }
 
 export function initMod(mod, name, context) {
-    const { sourceFolder, jsExt, cssExt, htmlExt, type, viewFolder, distFolder } = context
+    const { sourceFolder, jsExt, cssExt, htmlExt, viewFolder, distFolder } = context
 
     // input
     let input = { ...mod.input } || {}
     input.js = isString(input.js) ? input.js : join(sourceFolder, name, name + jsExt)
-    input.css = isString(input.css) ? input.css : join(sourceFolder, name, name + cssExt)
+    input.css = isString(input.css) || input.css === false ? input.css : join(sourceFolder, name, name + cssExt)
     input.js = resolve(input.js)
-    input.css = resolve(input.css)
+    input.css = isString(input.css) ? resolve(input.css) : input.css
     input.html = isString(input.html) ? input.html :
-        (type === 'frontend' ? join(sourceFolder, name, name + htmlExt) : join(viewFolder, name + htmlExt))
+        (viewFolder ? join(viewFolder, name + htmlExt) : join(sourceFolder, name, name + htmlExt))
     input.html = resolve(input.html)
 
     //output

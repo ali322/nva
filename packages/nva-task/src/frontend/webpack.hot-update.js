@@ -32,9 +32,9 @@ export default function(context, constants, profile) {
     forEach(mods, (mod, name) => {
         entry[name] = [
             "webpack-hot-middleware/client",
-            mod.input.js,
-            mod.input.css
-        ];
+            mod.input.js
+        ].concat(mod.input.css ? [mod.input.css] : [])
+
         let chunks = [name]
         let more = { js: [], css: [] }
         if (mod.vendor) {

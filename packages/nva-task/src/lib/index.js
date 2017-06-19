@@ -16,12 +16,14 @@ export function mergeConfig(config, value) {
     if (Array.isArray(config)) {
         return config.map(v => {
             return merge.strategy({
+                plugins: 'replace',
                 entry: 'replace',
                 "module.rules": "replace"
             })(v, ...webpackConfig)
         })
     }
     return merge.strategy({
+        plugins: 'replace',
         entry: 'replace',
         "module.rules": "replace"
     })(config, ...webpackConfig)

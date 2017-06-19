@@ -8,7 +8,7 @@ import hotUpdateConfigFactory from './webpack.hot-update'
 
 
 export default function(context, constants) {
-    const { runningMessage, serverFolder, viewFolder, beforeDev, mock, afterDev } = context
+    const { runningMessage, serverFolder, viewFolder, beforeDev, mock, afterDev, hooks } = context
     const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
     let cnt = 0
     return function(options) {
@@ -52,10 +52,16 @@ export default function(context, constants) {
         })
         let middleware = [app]
         let hotUpdateConfig = hotUpdateConfigFactory({ ...context, port }, constants, options.profile)
+        if (typeof hooks.beforeDev === 'function') {
+            hotUpdateConfig = mergeConfig(hotUpdateConfig, hooks.beforeDev(hotUpdateConfig))
+        }
         if (typeof beforeDev === 'function') {
             hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
         }
         middleware = middleware.concat(middlewareFactory(hotUpdateConfig, () => {
+            if (typeof hooks.afterDev === 'function') {
+                hooks.afterDev()
+            }
             if (typeof afterDev === 'function') {
                 afterDev()
             }

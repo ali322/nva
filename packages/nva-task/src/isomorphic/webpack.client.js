@@ -35,7 +35,7 @@ export default function(context, constants, profile) {
 
     /** build modules*/
     forEach(mods, (mod, name) => {
-        entry[name] = [mod.input.js, mod.input.css]
+        entry[name] = [mod.input.js].concat(mod.input.css ? [mod.input.css] : [])
         let chunks = [name]
 
         transforms.push(new ChunkTransformPlugin({

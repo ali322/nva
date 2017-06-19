@@ -16,6 +16,7 @@ module.exports = context => {
     let {
         serverFolder,
         distFolder,
+        chunkFolder,
         sourceFolder,
         vendorFolder,
         bundleFolder,
@@ -28,6 +29,7 @@ module.exports = context => {
         afterBuild,
         beforeVendor,
         afterVendor,
+        hooks,
         mods,
         vendors,
         vendorSourceMap,
@@ -83,6 +85,9 @@ module.exports = context => {
 
             let serverConfig = serverConfigFactory(context, constants, profile)
             let clientConfig = clientConfigFactory(context, constants, profile)
+            if (typeof hooks.beforeBuild === 'function') {
+                clientConfig = mergeConfig(clientConfig, hooks.beforeBuild(clientConfig))
+            }
             if (typeof beforeBuild === 'function') {
                 clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
             }
@@ -96,10 +101,14 @@ module.exports = context => {
                 })
                 del.sync(join(distFolder, sourceFolder, name))
             })
+            del.sync(join(distFolder, chunkFolder))
 
             createBundle({ ...constants, HOT: false }, profile)
             let compiler = webpack([clientConfig, serverConfig])
             compiler.run(function(err, stats) {
+                if (typeof hooks.afterBuild === 'function') {
+                    hooks.afterBuild(err, stats)
+                }
                 if (typeof afterBuild === 'function') {
                     afterBuild(err, stats)
                 }
@@ -108,6 +117,9 @@ module.exports = context => {
         },
         vendor(next) {
             let vendorConfig = vendorFactory(context, constants)
+            if (typeof hooks.beforeVendor === 'function') {
+                vendorConfig = mergeConfig(vendorConfig, hooks.beforeVendor(vendorConfig))
+            }
             if (typeof beforeVendor === 'function') {
                 vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
             }
@@ -115,6 +127,9 @@ module.exports = context => {
             let compiler = webpack(vendorConfig)
             compiler.run(function(err, stats) {
                 vendorManifest(stats, vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))
+                if (typeof hooks.afterVendor === 'function') {
+                    hooks.afterVendor(err, stats)
+                }
                 if (typeof afterVendor === 'function') {
                     afterVendor(err, stats)
                 }

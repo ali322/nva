@@ -1,6 +1,6 @@
 import webpack from 'webpack'
 import del from 'del'
-import { forEach,isString } from 'lodash'
+import { forEach, isString } from 'lodash'
 import { join, resolve, sep } from 'path'
 import { addMod, removeMod } from '../lib/mod'
 import { vendorManifest, mergeConfig, checkVendor } from '../lib'
@@ -12,6 +12,7 @@ import developServer from './develop-server'
 module.exports = context => {
     let {
         distFolder,
+        chunkFolder,
         vendorFolder,
         assetFolder,
         imageFolder,
@@ -22,6 +23,7 @@ module.exports = context => {
         afterBuild,
         beforeVendor,
         afterVendor,
+        hooks,
         mods,
         vendors,
         vendorSourceMap,
@@ -53,21 +55,28 @@ module.exports = context => {
                 return
             }
             let releaseConfig = releaseConfigFactory(context, constants, profile)
+            if (typeof hooks.beforeBuild === 'function') {
+                releaseConfig = mergeConfig(releaseConfig, hooks.beforeBuild(releaseConfig))
+            }
             if (typeof beforeBuild === 'function') {
                 releaseConfig = mergeConfig(releaseConfig, beforeBuild(releaseConfig))
             }
             /** clean build assets*/
             forEach(mods, (mod, name) => {
                 Object.keys(mod.output).forEach(v => {
-                    if(isString(mod.output[v])){
+                    if (isString(mod.output[v])) {
                         del.sync(mod.output[v])
                     }
                 })
                 del.sync(join(distFolder, name))
             })
+            del.sync(join(distFolder, chunkFolder))
 
             let compiler = webpack(releaseConfig)
             compiler.run(function(err, stats) {
+                if (typeof hooks.afterBuild === 'function') {
+                    hooks.afterBuild(err, stats)
+                }
                 if (typeof afterBuild === 'function') {
                     afterBuild(err, stats)
                 }
@@ -76,6 +85,9 @@ module.exports = context => {
         },
         vendor(next) {
             let vendorConfig = vendorFactory(context, constants)
+            if (typeof hooks.beforeVendor === 'function') {
+                vendorConfig = mergeConfig(vendorConfig, hooks.beforeVendor(vendorConfig))
+            }
             if (typeof beforeVendor === 'function') {
                 vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
             }
@@ -83,6 +95,9 @@ module.exports = context => {
             var compiler = webpack(vendorConfig)
             compiler.run(function(err, stats) {
                 vendorManifest(stats, vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))
+                if (typeof hooks.afterVendor === 'function') {
+                    hooks.afterVendor(err, stats)
+                }
                 if (typeof afterVendor === 'function') {
                     afterVendor(err, stats)
                 }
