@@ -7,7 +7,7 @@ frontend unit test toolkit
 
 
 ```javascript
-npm install nva-test --save
+npm install nva-test --save-dev
 ```
 
 ### Usage

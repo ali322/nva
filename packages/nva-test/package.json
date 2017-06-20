@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.3.38",
+  "version": "0.3.40",
   "description": "frontend test toolkit",
   "main": "src/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
@@ -32,6 +32,7 @@
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.3",
+    "resolve-url-loader": "^2.0.3",
     "sass-loader": "^6.0.6",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.10.0",

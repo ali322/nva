@@ -7,7 +7,7 @@ frontend e2e test toolkit
 
 
 ```javascript
-npm install nva-test-e2e --save
+npm install nva-test-e2e -g
 ```
 
 ### Usage
