@@ -19,7 +19,7 @@ export default function(context, constants) {
             // delay: "200ms",
             script: "app.js",
             execMap: {
-                "js": "node_modules/.bin/babel-node"
+                "js": "babel-node"
             },
             verbose: false,
             stdout: false,
