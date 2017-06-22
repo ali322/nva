@@ -3,7 +3,7 @@ import { join, resolve, sep } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 
 export default function(context, constants, profile) {
     const { vendors, mods, sourceFolder, vendorFolder, chunkFolder, vendorSourceMap, hmrPath } = context

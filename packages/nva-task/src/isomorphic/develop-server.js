@@ -1,17 +1,19 @@
 import browserSync from 'browser-sync'
 import nodemon from './nodemon'
 import { join } from 'path'
-import createApp from 'nva-server'
+import createApp from '../../../nva-server/src'
 import { mergeConfig, openBrowser } from '../lib'
 import middlewareFactory from '../lib/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'
 
 
 export default function(context, constants) {
-    const { runningMessage, serverFolder, viewFolder, beforeDev, mock, afterDev, hooks } = context
+    const { runningMessage, serverFolder, viewFolder, beforeDev, mock, afterDev, hooks, startWatcher } = context
     const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
     let cnt = 0
     return function(options) {
+        startWatcher()
+
         const port = options.port || 7000
         const proxyPort = context.port || 3000
 

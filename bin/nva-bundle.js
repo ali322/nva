@@ -8,7 +8,7 @@ let program = require("commander"),
 let lib = require('../lib')
 let config = require("../lib/config")
 let questions = config.questions('bundle')
-let tasks = require('nva-task')()
+let tasks = require('../packages/nva-task/src').default()
 
 program.usage('[name]')
 program.option("-d, --delete", "delete action flag")

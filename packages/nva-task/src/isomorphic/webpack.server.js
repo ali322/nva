@@ -2,7 +2,7 @@ import webpack from 'webpack'
 import { resolve } from 'path'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 
 export default function(context, constants, profile) {
     const { serverFolder, distFolder, sourceFolder, serverEntry } = context

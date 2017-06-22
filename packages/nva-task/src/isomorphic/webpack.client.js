@@ -6,7 +6,7 @@ import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import chalk from 'chalk'
 import { bundleTime } from '../lib/helper'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 
 export default function(context, constants, profile) {
     let { vendors, mods, sourceFolder, chunkFolder, vendorFolder, vendorSourceMap } = context

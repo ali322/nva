@@ -3,7 +3,7 @@ import { join, resolve, dirname, extname } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 import { relativeURL, bundleTime } from '../lib/helper'
 
 export default function(context, constants, profile) {

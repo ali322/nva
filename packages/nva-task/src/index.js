@@ -32,6 +32,10 @@ export default function(options = {}) {
         writeModConf(modConfPath, omit(mods, keys))
     }
 
+    function startWatcher(){
+        watch([projConfPath, modConfPath, vendorConfPath, mockPath])
+    }
+
     let context = {
         namespace,
         mods,
@@ -39,9 +43,9 @@ export default function(options = {}) {
         vendors,
         addMods,
         removeMods,
+        startWatcher,
         hooks
     }
-    watch([projConfPath, modConfPath, vendorConfPath, mockPath])
 
     return init(context)
 }

@@ -5,7 +5,7 @@ import { resolve, join } from 'path'
 import { forEach } from 'lodash'
 import { existsSync } from 'fs'
 import { relativeURL } from '../lib/helper'
-import { config as configFactory } from 'nva-core'
+import { config as configFactory } from '../../../nva-core/src'
 
 export default function(context, constants, profile) {
     const { mods, serverFolder, distFolder, bundleFolder, sourceFolder } = context

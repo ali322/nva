@@ -5,12 +5,14 @@ import { error, checkPort } from '../lib/helper'
 import { mergeConfig, openBrowser } from '../lib/'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
-import createApp from 'nva-server'
+import createApp from '../../../nva-server/src'
 
 export default function(context, constants) {
-    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev, hooks } = context
+    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev, hooks, startWatcher } = context
 
     return function(options) {
+        startWatcher()
+
         let browserSync = BrowserSync.create()
         const port = options.port || 3000
         let config = hotUpdateConfig({ ...context, port }, constants, options.profile)
