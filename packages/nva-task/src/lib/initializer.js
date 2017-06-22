@@ -8,7 +8,6 @@ export default function(context) {
 
     let _proj = {
         sourceFolder: "src",
-        clientPath: "",
         jsExt: '.js',
         cssExt: '.css',
         htmlExt: '.html',
