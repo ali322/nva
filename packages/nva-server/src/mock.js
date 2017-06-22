@@ -1,5 +1,6 @@
 import jsf from 'json-schema-faker'
 import { resolve } from 'path'
+import glob from 'glob'
 
 export default function(app, mock) {
     jsf.extend('faker', function() {
@@ -10,8 +11,11 @@ export default function(app, mock) {
         let mocks = []
         if (typeof mock === 'string') {
             mock.split(',').forEach((v) => {
-                let _v = require(resolve(v))
-                mocks = mocks.concat(Array.isArray(_v) ? _v : [])
+                let files = glob.sync(v)
+                files.forEach(file => {
+                    let rules = require(resolve(file))
+                    mocks = mocks.concat(Array.isArray(rules) ? rules : [])
+                })
             })
         }
         if (Array.isArray(mock)) {
@@ -30,7 +34,6 @@ export default function(app, mock) {
             })
         })
     } catch (err) {
-        console.log(err)
         throw new Error('mock config is invalid')
     }
 
