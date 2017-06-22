@@ -1,6 +1,5 @@
 import { resolve, join, relative } from 'path'
 import chalk from 'chalk'
-import glob from 'glob'
 import { omit } from 'lodash'
 import { watch as watching } from 'chokidar'
 import { checkFile, checkDir, error } from './lib/helper'
@@ -10,7 +9,7 @@ import { writeModConf } from './lib'
 export default function(options = {}) {
     const namespace = options.namespace ? options.namespace : 'nva'
     const rootPath = `.${namespace}`
-    const {
+    let {
         hooks = {},
         projConfPath = resolve(rootPath, `${namespace}.js`),
         modConfPath = resolve(rootPath, 'bundle.json'),
@@ -20,6 +19,10 @@ export default function(options = {}) {
 
     let proj = loadConf(projConfPath, () => error('project config is invalid'))
     proj.default && (proj = proj.default)
+
+    modConfPath = proj.modConfPath || modConfPath
+    vendorConfPath = proj.vendorConfPath || vendorConfPath
+    mockPath = proj.mockPath || mockPath
     const mods = loadConf(modConfPath, () => error('module config is invalid'))
     const vendors = loadConf(vendorConfPath, () => error('vendor config is invalid'))
     const mock = loadMock(mockPath, () => error('mock config is invalid'))
@@ -32,7 +35,7 @@ export default function(options = {}) {
         writeModConf(modConfPath, omit(mods, keys))
     }
 
-    function startWatcher(){
+    function startWatcher() {
         watch([projConfPath, modConfPath, vendorConfPath, mockPath])
     }
 
@@ -87,19 +90,9 @@ function loadConf(path, onError) {
     return conf
 }
 
-function loadMock(path, onError) {
-    let mocks = []
+function loadMock(path) {
     if (!checkDir(path)) {
         error(`${path} not exist`)
     }
-    const files = glob.sync(join(path, '**', '*.json'))
-    files.forEach(file => {
-        try {
-            const mock = require(file)
-            mocks = mocks.concat(Array.isArray(mock) ? mock : [])
-        } catch (e) {
-            onError(e)
-        }
-    })
-    return mocks
+    return join(path, '**', '*.json')
 }
