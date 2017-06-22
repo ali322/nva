@@ -10,7 +10,7 @@ export default function(app, mock) {
         let mocks = []
         if (typeof mock === 'string') {
             mock.split(',').forEach((v) => {
-                let _v = require(v)
+                let _v = require(resolve(v))
                 mocks = mocks.concat(Array.isArray(_v) ? _v : [])
             })
         }
@@ -30,6 +30,7 @@ export default function(app, mock) {
             })
         })
     } catch (err) {
+        console.log(err)
         throw new Error('mock config is invalid')
     }
 
