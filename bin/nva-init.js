@@ -15,7 +15,8 @@ let lib = require('../lib')
 
 program.usage('[project]')
 program.option("-r, --repo [value]", "choose specified repo")
-program.option("--no-install", "do not execute npm install?")
+program.option("--no-install", "do not execute npm install")
+program.option("--mirror [value]", "supported npm mirror: taobao, offical")
 
 program.on('--help', function() {
     console.log(`
@@ -38,6 +39,7 @@ if (!program.args.length) {
 
 let repo = program.repo
 let noInstall = program.noInstall
+let mirror = program.mirror
 
 let projectName = program.args[0]
 let projectPath = path.resolve(projectName)
@@ -50,10 +52,6 @@ if (projectName === '[object Object]') {
 
 let questions = config.questions('init')
 
-questions[1] = _.assign({}, questions[1], { when: lib.isWebProject })
-questions[2] = _.assign({}, questions[2], { when: lib.isWebProject })
-questions[3] = _.assign({}, questions[2], { when: lib.isWebProject })
-
 if (repo) {
     questions = _.reject(questions, function(v) {
         return v.name === 'template'
@@ -61,7 +59,7 @@ if (repo) {
 }
 
 function generate(answers) {
-    generator(projectName, projectPath, answers, repo, !noInstall)
+    generator(projectName, projectPath, answers, repo, !noInstall, mirror)
 }
 
 if (fs.existsSync(projectPath)) {

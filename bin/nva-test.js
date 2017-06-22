@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
-var program = require("commander")
-var test = require('nva-test')
+let program = require("commander")
+let test = require('nva-test')
 
 program.option('-c, --config <config>', 'customize config')
 program.option('-w, --watch', 'auto watch test spec')

@@ -36,7 +36,6 @@ export default function(context, constants) {
         if (isString(spa) || Array.isArray(spa)) {
             rewrites = spa
         }
-
         const app = createApp({
             asset: spa ? distFolder : false,
             path: spa ? sourceFolder : false,

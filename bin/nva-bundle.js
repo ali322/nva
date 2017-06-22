@@ -1,14 +1,14 @@
 #! /usr/bin/env node
 
-var program = require("commander"),
+let program = require("commander"),
     chalk = require("chalk"),
     fs = require('fs-extra'),
     path = require('path'),
     _ = require('lodash')
-var lib = require('../lib')
-var config = require("../lib/config")
-var questions = config.questions('bundle')
-var tasks = require('nva-task')()
+let lib = require('../lib')
+let config = require("../lib/config")
+let questions = config.questions('bundle')
+let tasks = require('nva-task')()
 
 program.usage('[name]')
 program.option("-d, --delete", "delete action flag")
@@ -38,7 +38,7 @@ if (!program.args.length) {
     program.help()
 }
 
-var moduleName = program.args[0]
+let moduleName = program.args[0]
 if (moduleName === '[object Object]') {
     console.log(chalk.red('name required!'))
     program.help()

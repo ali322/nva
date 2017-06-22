@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var program = require("commander")
-var version = require("../package.json").version
+let program = require("commander")
+let version = require("../package.json").version
 
 program.version(version)
     .usage('<command> [options]')

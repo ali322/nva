@@ -1,5 +1,5 @@
-var chalk = require("chalk")
-var config = require("../lib/config")
+let chalk = require("chalk")
+let config = require("../lib/config")
 
 console.log('')
 console.log('  Available Templates:')

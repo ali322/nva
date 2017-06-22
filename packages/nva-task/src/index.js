@@ -1,6 +1,9 @@
-import { resolve } from 'path'
+import { resolve, join, relative } from 'path'
+import chalk from 'chalk'
+import glob from 'glob'
 import { omit } from 'lodash'
-import { checkFile, error } from './lib/helper'
+import { watch as watching } from 'chokidar'
+import { checkFile, checkDir, error } from './lib/helper'
 import initializer from './lib/initializer'
 import { writeModConf } from './lib'
 
@@ -11,6 +14,7 @@ export default function(options = {}) {
         hooks = {},
         projConfPath = resolve(rootPath, `${namespace}.js`),
         modConfPath = resolve(rootPath, 'bundle.json'),
+        mockPath = resolve(rootPath, 'mock'),
         vendorConfPath = resolve(rootPath, 'vendor.json')
     } = options
 
@@ -18,6 +22,7 @@ export default function(options = {}) {
     proj.default && (proj = proj.default)
     const mods = loadConf(modConfPath, () => error('module config is invalid'))
     const vendors = loadConf(vendorConfPath, () => error('vendor config is invalid'))
+    const mock = loadMock(mockPath, () => error('mock config is invalid'))
 
     function addMods(more) {
         writeModConf(modConfPath, { ...mods, ...more })
@@ -30,12 +35,14 @@ export default function(options = {}) {
     let context = {
         namespace,
         mods,
-        proj: { type: 'frontend', ...proj },
+        proj: { type: 'frontend', mock, ...proj },
         vendors,
         addMods,
         removeMods,
         hooks
     }
+    watch([projConfPath, modConfPath, vendorConfPath, mockPath])
+
     return init(context)
 }
 
@@ -44,8 +51,23 @@ function init(context) {
     if (['frontend', 'isomorphic'].indexOf(type) === -1) {
         error('unsupported type')
     }
-    let tasks = require(`./${type}`)(initializer(context))
+    context = initializer(context)
+    let tasks = require(`./${type}`)(context)
     return tasks
+}
+
+function watch(files) {
+    const watcher = watching(files, {
+        persistent: true
+    })
+    watcher.on('change', path => {
+        path = relative(process.cwd(), path)
+        console.log(chalk.yellow(`file ${path} changed`))
+        console.log(chalk.yellow(`develop server restarting...`))
+        watcher.close()
+        process.send('RESTART')
+    })
+
 }
 
 function loadConf(path, onError) {
@@ -59,4 +81,21 @@ function loadConf(path, onError) {
         onError(e)
     }
     return conf
+}
+
+function loadMock(path, onError) {
+    let mocks = []
+    if (!checkDir(path)) {
+        error(`${path} not exist`)
+    }
+    const files = glob.sync(join(path, '**', '*.json'))
+    files.forEach(file => {
+        try {
+            const mock = require(file)
+            mocks = mocks.concat(Array.isArray(mock) ? mock : [])
+        } catch (e) {
+            onError(e)
+        }
+    })
+    return mocks
 }

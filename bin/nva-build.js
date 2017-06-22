@@ -1,12 +1,15 @@
 #! /usr/bin/env node
 
-var program = require("commander")
-var hooks = require('../lib/hook')
+let program = require("commander")
+let hooks = require('../lib/hook')
+let checkVersion = require('../lib/check-version')
 
 program.option("-p, --profile","enable profile mode",false)
 program.parse(process.argv)
 
-var profile = program.profile
+let profile = program.profile
 
-var tasks = require('nva-task')({hooks})
-tasks.build({profile})
+checkVersion(function(){
+    let tasks = require('nva-task')({hooks})
+    tasks.build({profile})
+})

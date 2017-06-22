@@ -2,7 +2,7 @@ questions:
   template:
     type: list
     message: which template to apply?
-    choices: ['frontend', 'isomorphic', 'react-native']
+    choices: ['frontend', 'isomorphic']
   framework:
     type: list
     message: which framework to use?

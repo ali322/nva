@@ -18,7 +18,7 @@ export default function(options) {
         console.log('🚀  ' + chalk.yellow('server restarting...'))
         files.forEach(function(file) {
             file = relative(process.cwd(), file)
-            console.log(chalk.yellow(`file changed: ${file}`))
+            console.log(chalk.yellow(`file ${file} changed`))
         })
     })
 
