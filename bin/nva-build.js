@@ -10,6 +10,6 @@ program.parse(process.argv)
 let profile = program.profile
 
 checkVersion(function(){
-    let tasks = require('../packages/nva-task/src').default({hooks})
+    let tasks = require('nva-task')({hooks})
     tasks.build({profile})
 })

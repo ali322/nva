@@ -5,7 +5,7 @@ import { error, checkPort } from '../lib/helper'
 import { mergeConfig, openBrowser } from '../lib/'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
-import createApp from '../../../nva-server/src'
+import createApp from 'nva-server'
 
 export default function(context, constants) {
     const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev, hooks, startWatcher } = context

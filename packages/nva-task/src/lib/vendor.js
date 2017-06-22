@@ -4,7 +4,7 @@ import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
 import { isEmpty, isPlainObject } from 'lodash'
-import { config as configFactory } from '../../../nva-core/src'
+import { config as configFactory } from 'nva-core'
 
 export default function(context, constants) {
     const { vendors, sourceFolder, vendorFolder } = context
