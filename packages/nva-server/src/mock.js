@@ -12,7 +12,6 @@ export default function(app, mock) {
         if (typeof mock === 'string') {
             mock.split(',').forEach((v) => {
                 let files = glob.sync(v)
-                console.log('files',files,v)
                 files.forEach(file => {
                     let rules = require(resolve(file))
                     mocks = mocks.concat(Array.isArray(rules) ? rules : [])
