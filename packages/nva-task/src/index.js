@@ -10,6 +10,7 @@ export default function(options = {}) {
     const namespace = options.namespace ? options.namespace : 'nva'
     const rootPath = `.${namespace}`
     let {
+        favicon = '',
         hooks = {},
         projConfPath = resolve(rootPath, `${namespace}.js`),
         modConfPath = resolve(rootPath, 'bundle.json'),
@@ -42,7 +43,7 @@ export default function(options = {}) {
     let context = {
         namespace,
         mods,
-        proj: { type: 'frontend', mock, ...proj },
+        proj: { type: 'frontend', favicon, mock, ...proj },
         vendors,
         addMods,
         removeMods,

@@ -8,7 +8,7 @@ import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
 export default function(context, constants) {
-    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev, hooks, startWatcher } = context
+    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev, hooks, startWatcher, favicon } = context
 
     return function(options) {
         startWatcher()
@@ -43,7 +43,8 @@ export default function(context, constants) {
             path: spa ? sourceFolder : false,
             log: false,
             rewrites,
-            mock
+            mock,
+            favicon
         })
 
         process.once('SIGINT', () => {
