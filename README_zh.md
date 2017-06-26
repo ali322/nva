@@ -144,7 +144,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
 ```
 #### `module.json` 项目模块配置
 
-```json
+```js
 {
     "index": {  /* 模块名称 */
         "input":{
@@ -159,7 +159,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
 
 #### `vendor.json` 第三方依赖包配置
 
-```json
+```js
 {
     "js":{
         "base":["react","react-dom"]     /* 定义一个JS依赖引用 */
@@ -175,7 +175,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
 支持 `.json`, `.js` 后缀的配置文件
 
 
-```json
+```js
 module.exports = [{
     "url": "/mock/user",    /* 请求 url */
     "method": "get",        /* 请求方法 */

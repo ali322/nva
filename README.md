@@ -134,7 +134,7 @@ all config files alive in `.nva` directory of project
 ```
 #### `module.json` project module settings
 
-```json
+```js
 {
     "index": {  /* module name */
         "input":{
@@ -149,7 +149,7 @@ all config files alive in `.nva` directory of project
 
 #### `vendor.json` project vendors settings
 
-```json
+```js
 {
     "js":{
         "base":["react","react-dom"]     /* define js vendor */
@@ -164,7 +164,7 @@ all config files alive in `.nva` directory of project
 
 support `.json`, `.js` settings file
 
-```json
+```js
 [{
     "url": "/mock/user",    /* request url */
     "method": "get",        /* request method */
