@@ -1,4 +1,5 @@
 # nva
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url]
 
 简洁高效的前端项目脚手架, [英文文档](./README.md)
 
@@ -325,3 +326,13 @@ npm run lint
 ## 许可协议
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: http://en.wikipedia.org/wiki/MIT_License
+
+[npm-url]: https://npmjs.org/package/nva
+[npm-version-image]: http://img.shields.io/npm/v/nva.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/nva.svg?style=flat
+
+[travis-url]: http://travis-ci.org/ali322/nva
+[travis-image]: http://img.shields.io/travis/ali322/nva.svg?style=flat
