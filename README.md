@@ -51,14 +51,14 @@ build project to dist,prepare for deploy
 
 split bundle name with `,`
 
-### add bundle in project
+#### add bundle in project
 
 ```bash
 nva bundle <bundle name, ...> #just simple bundle(s)
 nva bundle <bundle name, ...> -t <copy from bundle>
 ```
 
-### delete bundle in project
+#### delete bundle in project
 
 ```bash
 nva mod <bundle name, ...> -d
@@ -66,13 +66,13 @@ nva mod <bundle name, ...> -d
  
 ## Other CLI
 
-### list all available commands
+#### list all available commands
 
 ```bash
 nva list
 ```
 
-### show current version
+#### show current version
 
 ```bash
 nva -v
@@ -80,14 +80,16 @@ nva -v
 
 ## Supported Template
 
-### [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
+#### [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
 
 - multiple pages project with react + redux 
 - single page project with react + redux + react-router
 - multiple pages project with vue + vuex
 - single page project with vue + vuex + vue-router 
 
-### [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react or koa@2+vue,server side render
+#### [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate)
+
+koa@2+react or koa@2+vue,server side render
 
 - multiple pages project with react + redux + koa@2
 - single page project with react + redux + react-router + koa@2
@@ -110,7 +112,7 @@ all config files alive in `.nva` directory of project
     |-- vendor.json # project third-party libraries settings
 ```
 
-### `nva.js` project global settings
+#### `nva.js` project global settings
 
 ```js
 {
@@ -130,7 +132,7 @@ all config files alive in `.nva` directory of project
     "serverEntryJS": "bootstrap.js",    /* isomorphic project only,server entry file */
 }
 ```
-### `module.json` project module settings
+#### `module.json` project module settings
 
 ```json
 {
@@ -145,7 +147,7 @@ all config files alive in `.nva` directory of project
 }
 ```
 
-### `vendor.json` project vendors settings
+#### `vendor.json` project vendors settings
 
 ```json
 {
@@ -158,7 +160,7 @@ all config files alive in `.nva` directory of project
 }
 ```
 
-### `mock/` all mock api settings 
+#### `mock/` all mock api settings 
 
 support `.json`, `.js` settings file
 
@@ -225,7 +227,7 @@ npm test
 
 `nva-core` `nva-task` `nva-server` `nva-test` `nva-test-e2e` in the packages directory can be install through npm independently
 
-### nva-core
+#### nva-core
 
 basic webpack config,you can extend like
 
@@ -241,7 +243,7 @@ output:{
 }).run((err,stats)=>{ ... })
 ```
 
-### nva-task 
+#### nva-task 
 
 nva task collections,customize for your need
 
@@ -251,7 +253,7 @@ tasks.frontend.build() //frontend project build
 task.isomorphic.build()  //isomorphic project build
 ```
   
-### nva-server
+#### nva-server
 
 development server base on connect
 
@@ -269,7 +271,7 @@ alsoo can run it in cli,more options refer to [nva-task](https://github.com/ali3
 nva-server -p 5000 -P src
 ```
 
-### nva-test
+#### nva-test
 
 frontend test toolkit based on karma + mocha
 
@@ -285,7 +287,7 @@ cli options
 | :----------: | :----: | :----------: |
 | -c or —-config |   none    |    test config    |
 
-### nva-test-e2e
+#### nva-test-e2e
 
 frontend e2e test toolkit based on nightwatch
 

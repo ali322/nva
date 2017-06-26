@@ -63,7 +63,7 @@ nva build
 
 使用 `,` 分隔 bundle name
 
-### 增加 bundle
+#### 增加 bundle
 
 添加一个空白 bundle
 
@@ -79,7 +79,7 @@ nva mod my-bundle -t other-bundle
 
 支持批量添加,多个模块名使用英文逗号 `,` 分隔
 
-### 删除 bundle
+#### 删除 bundle
 
 删除一个已有的 bundle
 
@@ -89,14 +89,14 @@ nva bundle existed-bundle -d
 
 ## 项目模板
 
-### [纯前端模板](https://github.com/ali322/frontend-boilerplate)
+#### [纯前端模板](https://github.com/ali322/frontend-boilerplate)
 
   - react + redux 的多页面项目
   - react + redux + react-router 的单页面项目
   - vue + vuex 的多页面项目
   - vue + vuex + vue-router 的单页面项目
   
-### [同构JS模板](https://github.com/ali322/isomorphic-boilerplate)
+#### [同构JS模板](https://github.com/ali322/isomorphic-boilerplate)
 
   - react + redux + koa@2 的多页面项目
   - react + redux + react-router + koa@2 的单页面项目
@@ -121,7 +121,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
     |-- vendor.json # 项目第三方包依赖设置
 ```
 
-### `nva.js` 全局配置
+#### `nva.js` 全局配置
 
 ```js
 {
@@ -142,7 +142,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
     "serverEntryJS": "bootstrap.js",    /* 服务端入口文件(仅限同构JS项目) */
 }
 ```
-### `module.json` 项目模块配置
+#### `module.json` 项目模块配置
 
 ```json
 {
@@ -157,7 +157,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
 }
 ```
 
-### `vendor.json` 第三方依赖包配置
+#### `vendor.json` 第三方依赖包配置
 
 ```json
 {
@@ -170,7 +170,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
 }
 ```
     
-### `mock/` 目录存放所有模拟接口配置
+#### `mock/` 目录存放所有模拟接口配置
 
 支持 `.json`, `.js` 后缀的配置文件
 
@@ -222,7 +222,7 @@ module.exports = [{
 
 packages 目录下的 `nva-core` `nva-task` `nva-server` `nva-test` `nva-test-e2e` 等子包可以独立安装使用
 
-### nva-core
+#### nva-core
 
 基础webpack编译配置,满足一般的构建需求
 
@@ -238,7 +238,7 @@ output:{
 }).run((err,stats)=>{ ... })
 ```
   
-### nva-task
+#### nva-task
 
 nva构建任务集合,可以根据需求自定义组合
 
@@ -248,7 +248,7 @@ tasks.frontend.build() //前端项目构建
 task.isomorphic.build()  //同构JS项目构建
 ```
   
-### nva-server
+#### nva-server
 
 基于connect的前端开发服务,带模拟数据接口功能
 
@@ -266,7 +266,7 @@ console.log('==> server stared at %d',3000)
 nva-server -p 5000 -P src
 ```
 
-### nva-test
+#### nva-test
 
 基于 karma + mocha 的单元测试服务
 
@@ -282,7 +282,7 @@ nva test
 | :----------: | :----: | :----------: |
 | -c or —-config |   无    |   测试配置    |
 
-### nva-test-e2e
+#### nva-test-e2e
 
 基于 nightwatch 的e2e测试服务
 
