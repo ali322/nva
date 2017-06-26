@@ -1,6 +1,6 @@
-nva [![Build Status](https://travis-ci.org/ali322/nva.svg?branch=master)](https://travis-ci.org/ali322/nva) [![Dependency Status](https://gemnasium.com/badges/github.com/ali322/nva.svg)](https://gemnasium.com/github.com/ali322/nva)
+nva 
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url]
 ===
-[![NPM](https://nodei.co/npm/nva.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nva/)
 
 yet another efficient and painless scaffold for frontend and isomorphic project [中文文档](./README_zh.md)
 
@@ -321,3 +321,10 @@ welcome to pull request and issues,help to improve `nva` better
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
+
+[npm-url]: https://npmjs.org/package/nva
+[npm-version-image]: http://img.shields.io/npm/v/nva.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/nva.svg?style=flat
+
+[travis-url]: http://travis-ci.org/ali322/nva
+[travis-image]: http://img.shields.io/travis/ali322/nva.svg?style=flat
