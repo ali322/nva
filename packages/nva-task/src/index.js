@@ -95,5 +95,5 @@ function loadMock(path) {
     if (!checkDir(path)) {
         error(`${path} not exist`)
     }
-    return join(path, '**', '*.json')
+    return join(path, '**', '*.(json|js)')
 }
