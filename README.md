@@ -1,96 +1,98 @@
 nva 
-[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url]
 ===
+
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url]
 
 yet another efficient and painless scaffold for frontend and isomorphic project [中文文档](./README_zh.md)
 
 
 ## Install
 
-Prerequisites: [Node.js](https://nodejs.org/en/) (>=4.x, 6.x preferred), npm version 3+ and [Git](https://git-scm.com)
+Prerequisites: [Node.js](https://nodejs.org/en/) (>=4.x, LTS preferred), npm version 3+ and [Git](https://git-scm.com)
 ```javascript
 npm install nva -g
 ```
 
 ## Quick Start
 
-- generate project 
+1. generate project 
 
-    ```bash
-    nva init <project name>
-    ```
-    pull the template that you specified in question,generate project in `./<project name>`,you can also specified git repo to take place
+```bash
+nva init <project name>
+```
 
-    ```bash
-    nva init <project name> -r [github repo]
-    ```
-    The shorthand repo notation is passed to download-git-repo so you can also use things like bitbucket:username/repo for a Bitbucket repo and username/repo#branch for tags or branches
+pull the template that you specified in question,generate project in `./<project name>`,you can also specified git repo to take place
+
+```bash
+nva init <project name> -r [github repo]
+```
+
+The shorthand repo notation is passed to download-git-repo so you can also use things like bitbucket:username/repo for a Bitbucket repo and username/repo#branch for tags or branches
 
 
-- start to develop
+2. start to develop
 
-    ```bash
-    nva dev
-    nva dev -p <port>
-    ```
-    start develop server that [hot-module-replacement](http://webpack.github.io/docs/hot-module-replacement-with-webpack.html)(HMR) enabled,feel free get into your own business
+```bash
+nva dev
+nva dev -p <port>
+```
+start develop server that [hot-module-replacement](http://webpack.github.io/docs/hot-module-replacement-with-webpack.html)(HMR) enabled,feel free get into your own business
 
-- build project
+3. build project
 
-    ```bash
-    nva build
-    ```
-    build project to dist
+```bash
+nva build
+```
+
+build project to dist,prepare for deploy
 
 
 ## Manage bundles
 
-- add bundle in project
+split bundle name with `,`
 
-    ```bash
-    nva bundle <bundle name, ...> #just simple bundle(s)
-    nva bundle <bundle name, ...> -t <copy from bundle>
-    ```
+### add bundle in project
 
-- delete bundle in project
+```bash
+nva bundle <bundle name, ...> #just simple bundle(s)
+nva bundle <bundle name, ...> -t <copy from bundle>
+```
 
-    ```bash
-    nva mod <bundle name, ...> -d
-    ```
+### delete bundle in project
+
+```bash
+nva mod <bundle name, ...> -d
+```
  
 ## Other CLI
 
-- list all available commands
+### list all available commands
 
-    ```bash
-    nva list
-    ```
+```bash
+nva list
+```
 
-- show current version
+### show current version
 
-    ```bash
-    nva -v
-    ```
+```bash
+nva -v
+```
 
 ## Supported Template
 
-- [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
+### [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
 
-  - multiple pages project with react + redux 
-  - single page project with react + redux + react-router
-  - multiple pages project with vue + vuex
-  - single page project with vue + vuex + vue-router 
+- multiple pages project with react + redux 
+- single page project with react + redux + react-router
+- multiple pages project with vue + vuex
+- single page project with vue + vuex + vue-router 
 
-- [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react or koa@2+vue,server side render
+### [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate) with koa@2+react or koa@2+vue,server side render
 
-  - multiple pages project with react + redux + koa@2
-  - single page project with react + redux + react-router + koa@2
-  - multiple pages project with vue + vuex + koa@2
-  - single page project with vue + vuex + vue-router + koa@2
-
-- react-native
-
-  just simple [react-native boilerplate](https://github.com/ali322/react-native-boilerplate)
+- multiple pages project with react + redux + koa@2
+- single page project with react + redux + react-router + koa@2
+- multiple pages project with vue + vuex + koa@2
+- single page project with vue + vuex + vue-router + koa@2
 
 ## Config
 
@@ -108,108 +110,100 @@ all config files alive in `.nva` directory of project
     |-- vendor.json # project third-party libraries settings
 ```
 
-- `nva.json` project global settings
+### `nva.js` project global settings
 
-    ```js
-    {
-        "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
-        "spa":true            /* is an single page application(SPA)? */
-        "jsExt":".jsx",    /* entry js file extension */
-        "cssExt":".styl",   /* entry css file extension */
-        "distFolder": "dist",   /* dist folder of build */
-        "vendorFolder": "vendor",   /* vendor folder of build */
-        "assetFolder": "asset",    /* asset files folder */
-        "fontFolder": "font",   /* icon font folder */
-        "imageFolder": "image",    /* compressed image folder */
-        "sourcePath": "src",    /* frontend project only, source code folder */
-        "bundleFolder": "bundle",   /* isomorphic project only, client side bundle folder */
-        "viewFolder": "view",    /* isomorphic project only,html files folder */
-        "serverFolder": "server",   /* isomorphic project only, server side source code folder */
-        "serverEntryJS": "bootstrap.js",    /* isomorphic project only,server entry file */
-    }
-    ```
-- `module.json` project module settings
+```js
+{
+    "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
+    "spa":true            /* is an single page application(SPA)? */
+    "jsExt":".jsx",    /* entry js file extension */
+    "cssExt":".styl",   /* entry css file extension */
+    "distFolder": "dist",   /* dist folder of build */
+    "vendorFolder": "vendor",   /* vendor folder of build */
+    "assetFolder": "asset",    /* asset files folder */
+    "fontFolder": "font",   /* icon font folder */
+    "imageFolder": "image",    /* compressed image folder */
+    "sourcePath": "src",    /* frontend project only, source code folder */
+    "bundleFolder": "bundle",   /* isomorphic project only, client side bundle folder */
+    "viewFolder": "view",    /* isomorphic project only,html files folder */
+    "serverFolder": "server",   /* isomorphic project only, server side source code folder */
+    "serverEntryJS": "bootstrap.js",    /* isomorphic project only,server entry file */
+}
+```
+### `module.json` project module settings
 
-    ```js
-    {
-        "index": {  /* module name */
-            "input":{
-                "js":"index.js",    /* entry js file */
-                "css":"index.css",  /* entry css file */
-                "html":"index.html"   /* entry html file */
-            },
-            "vendor": {"js": "base","css": "base"}   /* module vendors,`js.base` and `css.base` reference to `vendor.json` */
-        }
-    }
-    ```
-
-- `vendor.json` project vendors settings
-
-    ```js
-    {
-        "js":{
-            "base":["react","react-dom"]     /* define js vendor */
+```json
+{
+    "index": {  /* module name */
+        "input":{
+            "js":"index.js",    /* entry js file */
+            "css":"index.css",  /* entry css file */
+            "html":"index.html"   /* entry html file */
         },
-        "css":{
-            "base":["font-awesome/css/font-awesome.css"]     /* define css vendor */
+        "vendor": {"js": "base","css": "base"}   /* module vendors,`js.base` and `css.base` reference to `vendor.json` */
+    }
+}
+```
+
+### `vendor.json` project vendors settings
+
+```json
+{
+    "js":{
+        "base":["react","react-dom"]     /* define js vendor */
+    },
+    "css":{
+        "base":["font-awesome/css/font-awesome.css"]     /* define css vendor */
+    }
+}
+```
+
+### `mock/` all mock api settings 
+
+support `.json`, `.js` settings file
+
+```json
+[{
+    "url": "/mock/user",    /* request url */
+    "method": "get",        /* request method */
+    "response": {           /* response */
+        "code": 200,        /* response code */
+        "data": {           /* response data */
+            "id": 6,
+            "name": "Mr.smith"
         }
     }
-    ```
+}]
+```
 
-- `mock` project mock server settings
+you can also use [JSON Schema](http://json-schema.org) along with fake generators to provide consistent and meaningful fake data for your system
 
-    simple mock api setting
-
-    ```js
-    [{
-        "url": "/mock/user",    /* mock api request url */
-        "method": "get",        /* mock api request method */
-        "response": {           /* mock api response */
-            "code": 200,
-            "data": {
-                "id": 6,
-                "name": "Mr.smith"
-            }
-        }
-    }]
-    ```
-    you can also use [JSON Schema](http://json-schema.org) along with fake generators to provide consistent and meaningful fake data for your system
-
-    ```json
-    [{
-        "url": "/mock/users",
-        "method": "get",   
-        "response": {        
-            "type": "object",
-            "properties": {
-                "id": {
-                    "$ref": "#/definitions/positiveInt"
-                },
-                "name": {
-                    "type": "string",
-                    "faker": "name.findName"
-                },
+```json
+[{
+    "url": "/mock/users",
+    "method": "get",   
+    "response": {        
+        "type": "object",
+        "properties": {
+            "id": {
+                "$ref": "#/definitions/positiveInt"
             },
-            "required": ["id", "name"],
-            "definitions": {
-                "positiveInt": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "exclusiveMinimum": true
-                }
+            "name": {
+                "type": "string",
+                "faker": "name.findName"
+            },
+        },
+        "required": ["id", "name"],
+        "definitions": {
+            "positiveInt": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true
             }
         }
-    },{
-         "url": "/mock/user",
-        "method": "post",
-        "response": {
-            "code": 200,
-            "data": {
-                "status": "ok"
-            }
-        }
-    }]
-    ```
+    }
+}]
+```
 
 
 ## Test and Lint
@@ -224,7 +218,7 @@ npm run lint
 run test
 
 ```bash
-npm run test
+npm test
 ```
 
 ## Packages

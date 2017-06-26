@@ -1,4 +1,6 @@
-# nva
+nva
+===
+
 [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url]
 
 简洁高效的前端项目脚手架, [英文文档](./README.md)
@@ -7,17 +9,17 @@
 
 nva是一个基于webpack,提供灵活配置的前端项目脚手架工具,既能支持纯前端项目(html+css+js)的开发需求,也能支持同构JS/SSR项目(node+react/node+vue)的开发,提供了多达8种不同的便捷项目模板,满足自动化开发,数据模拟,资源构建,模块管理,打包发布等等日常开发任务需求
 
-## 快速开始
+## 安装
 
-安装环境依赖: [Node.js](https://nodejs.org/en/) (>=4.x, 6.x preferred), npm 3+ and [Git](https://git-scm.com)
-
-第一步: 安装nva命令行工具
+安装环境依赖: [Node.js](https://nodejs.org/en/) (>=4.x, LTS preferred), npm 3+ and [Git](https://git-scm.com)
 
 ```bash
 npm install nva -g
 ```
 
-第二步: 初始化项目
+## 快速开始
+
+1. 初始化项目
 
 ```bash
 nva init my-project
@@ -25,7 +27,7 @@ nva init my-project
 
 根据命令行提示填写,包含项目模板,框架,是否单页应用,版本号,描述信息,仓库地址,发布协议等等
 
-第三步: 开始开发
+2. 开始开发
 
 ```bash
 cd my-project
@@ -34,7 +36,7 @@ nva dev -p 3000
 
 使用 `nva dev` 启动开发服务器,启动完毕后会打开用户默认浏览器
 
-第四步: 测试
+3. 测试
 
 ```bash
 nva test
@@ -59,42 +61,42 @@ nva build
 
 ## bundle 管理
 
-- 增加 bundle
+使用 `,` 分隔 bundle name
 
-  添加一个空白 bundle
-  
-  ```bash
-  nva bundle my-bundle
-  ```
-  
-  以 other-bundle 为模板添加一个 bundle
-  
-  ```bash
-  nva mod my-bundle -t other-bundle
-  ```
-  
-  支持批量添加,多个模块名使用英文逗号 `,` 分隔
+### 增加 bundle
 
-- 删除 bundle
+添加一个空白 bundle
 
-  删除一个已有的 bundle
+```bash
+nva bundle my-bundle
+```
   
-  ```bash
-  nva bundle existed-bundle -d
-  ```
-  
-  支持批量删除,多个模块名使用英文逗号 `,` 分隔
+以 other-bundle 为模板添加一个 bundle
+
+```bash
+nva mod my-bundle -t other-bundle
+```
+
+支持批量添加,多个模块名使用英文逗号 `,` 分隔
+
+### 删除 bundle
+
+删除一个已有的 bundle
+
+```bash
+nva bundle existed-bundle -d
+```
 
 ## 项目模板
 
-- [纯前端模板](https://github.com/ali322/frontend-boilerplate)
+### [纯前端模板](https://github.com/ali322/frontend-boilerplate)
 
   - react + redux 的多页面项目
   - react + redux + react-router 的单页面项目
   - vue + vuex 的多页面项目
   - vue + vuex + vue-router 的单页面项目
   
-- [同构JS模板](https://github.com/ali322/isomorphic-boilerplate)
+### [同构JS模板](https://github.com/ali322/isomorphic-boilerplate)
 
   - react + redux + koa@2 的多页面项目
   - react + redux + react-router + koa@2 的单页面项目
@@ -119,110 +121,102 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
     |-- vendor.json # 项目第三方包依赖设置
 ```
 
-- `nva.json` 全局配置
+### `nva.js` 全局配置
 
-    ```js
-    {
-        "type":"isomorphic",    /* 项目类型: `frontend`,`isomorphic`,`react-native` */
-        "spa":true            /* 是否单页面项目(SPA)? */
-        "jsExt":".jsx",    /* 入口 js 文件扩展名 */
-        "cssExt":".styl",   /* 入口 css 文件扩展名 */
-        "distFolder": "dist",   /* 源码编译目标目录名称 */
-        "vendorFolder": "vendor",   /* 第三方依赖包编译目标目录名称 */
-        "assetFolder": "asset",    /* 静态资源目录名称 */
-        "fontFolder": "font",   /* 字体目录名称 */
-        "imageFolder": "image",    /* 图片目录名称 */
-        "sourcePath": "src",    /* 源码目录名称(仅限纯前端项目) */
-        "bundleFolder": "bundle",   /* 客户端 bundle 目录(仅限同构JS项目) */
-        "viewFolder": "view",    /* html 文件目录名称(仅限同构JS项目) */
-        "bundleFolder": "bundle", /* 服务端 bundle 目录(仅限同构JS项目) */
-        "serverFolder": "server",   /* 服务端源码目录(仅限同构JS项目) */
-        "serverEntryJS": "bootstrap.js",    /* 服务端入口文件(仅限同构JS项目) */
-    }
-    ```
-- `module.json` 项目模块配置
+```js
+{
+    "type":"isomorphic",    /* 项目类型: `frontend`,`isomorphic`,`react-native` */
+    "spa":true            /* 是否单页面项目(SPA)? */
+    "jsExt":".jsx",    /* 入口 js 文件扩展名 */
+    "cssExt":".styl",   /* 入口 css 文件扩展名 */
+    "distFolder": "dist",   /* 源码编译目标目录名称 */
+    "vendorFolder": "vendor",   /* 第三方依赖包编译目标目录名称 */
+    "assetFolder": "asset",    /* 静态资源目录名称 */
+    "fontFolder": "font",   /* 字体目录名称 */
+    "imageFolder": "image",    /* 图片目录名称 */
+    "sourcePath": "src",    /* 源码目录名称(仅限纯前端项目) */
+    "bundleFolder": "bundle",   /* 客户端 bundle 目录(仅限同构JS项目) */
+    "viewFolder": "view",    /* html 文件目录名称(仅限同构JS项目) */
+    "bundleFolder": "bundle", /* 服务端 bundle 目录(仅限同构JS项目) */
+    "serverFolder": "server",   /* 服务端源码目录(仅限同构JS项目) */
+    "serverEntryJS": "bootstrap.js",    /* 服务端入口文件(仅限同构JS项目) */
+}
+```
+### `module.json` 项目模块配置
 
-    ```js
-    {
-        "index": {  /* 模块名称 */
-            "input":{
-                "js":"index.js",    /* 入口 js 文件 */
-                "css":"index.css",  /* 入口 css 文件 */
-                "html":"index.html"   /* 入口 html 文件 */
-            },
-            "vendor": {"js": "base","css": "base"}   /* 模块依赖引用名称,引用自 `vendor.json` */
-        }
-    }
-    ```
-
-- `vendor.json` 第三方依赖包配置
-
-    ```js
-    {
-        "js":{
-            "base":["react","react-dom"]     /* 定义一个JS依赖引用 */
+```json
+{
+    "index": {  /* 模块名称 */
+        "input":{
+            "js":"index.js",    /* 入口 js 文件 */
+            "css":"index.css",  /* 入口 css 文件 */
+            "html":"index.html"   /* 入口 html 文件 */
         },
-        "css":{
-            "base":["font-awesome/css/font-awesome.css"]     /* 定义一个css依赖引用 */
+        "vendor": {"js": "base","css": "base"}   /* 模块依赖引用名称,引用自 `vendor.json` */
+    }
+}
+```
+
+### `vendor.json` 第三方依赖包配置
+
+```json
+{
+    "js":{
+        "base":["react","react-dom"]     /* 定义一个JS依赖引用 */
+    },
+    "css":{
+        "base":["font-awesome/css/font-awesome.css"]     /* 定义一个css依赖引用 */
+    }
+}
+```
+    
+### `mock/` 目录存放所有模拟接口配置
+
+支持 `.json`, `.js` 后缀的配置文件
+
+
+```json
+module.exports = [{
+    "url": "/mock/user",    /* 请求 url */
+    "method": "get",        /* 请求方法 */
+    "response": {           /* 响应 */
+        "code": 200,        /* 响应状态码 */
+        "data": {           /* 响应结果 */
+            "id": 6,
+            "name": "Mr.smith"
         }
     }
-    ```
+}]
+```
     
-- `mock` 模拟数据接口服务配置
+也可以使用 [JSON Schema](http://json-schema.org) 一个更具语义化和持续化的模拟数据生成器来生成模拟数据
 
-    简单的模拟接口配置
-
-    ```js
-    module.exports = [{
-        "url": "/mock/user",    /* 接口请求 url */
-        "method": "get",        /* 接口请求方法名称 */
-        "response": {           /* 接口响应 */
-            "code": 200,
-            "data": {
-                "id": 6,
-                "name": "Mr.smith"
-            }
-        }
-    }]
-    ```
-    
-    你也可以使用 [JSON Schema](http://json-schema.org) 一个更具语义化和持续化的模拟数据生成器来生成模拟数据
-
-    ```json
-    [{
-        "url": "/mock/users",
-        "method": "get",   
-        "response": {        
-            "type": "object",
-            "properties": {
-                "id": {
-                    "$ref": "#/definitions/positiveInt"
-                },
-                "name": {
-                    "type": "string",
-                    "faker": "name.findName"
-                },
+```json
+[{
+    "url": "/mock/users",
+    "method": "get",   
+    "response": {        
+        "type": "object",
+        "properties": {
+            "id": {
+                "$ref": "#/definitions/positiveInt"
             },
-            "required": ["id", "name"],
-            "definitions": {
-                "positiveInt": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "exclusiveMinimum": true
-                }
+            "name": {
+                "type": "string",
+                "faker": "name.findName"
+            },
+        },
+        "required": ["id", "name"],
+        "definitions": {
+            "positiveInt": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true
             }
         }
-    },{
-         "url": "/mock/user",
-        "method": "post",
-        "response": {
-            "code": 200,
-            "data": {
-                "status": "ok"
-            }
-        }
-    }]
-    ```
+    }
+}]
+```
 
 ## 子包
 
