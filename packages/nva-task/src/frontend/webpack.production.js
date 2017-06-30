@@ -53,7 +53,7 @@ export default function(context, constants, profile) {
             }
         }
         htmls.push(new InjectHtmlPlugin({
-            processor: function(url) {
+            transducer: function(url) {
                 return relativeURL(dirname(htmlOutput), join(distFolder, url))
             },
             more,

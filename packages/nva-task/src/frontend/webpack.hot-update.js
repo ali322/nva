@@ -46,7 +46,7 @@ export default function(context, constants, profile) {
             }
         }
         htmls.push(new InjectHtmlPlugin({
-            processor: hmrPath,
+            transducer: hmrPath,
             chunks,
             filename: mod.input.html,
             more

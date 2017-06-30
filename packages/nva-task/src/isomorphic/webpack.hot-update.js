@@ -50,7 +50,7 @@ export default function(context, constants, profile) {
             }
         }
         htmls.push(new InjectHtmlPlugin({
-            processor: devServerHost + hmrPath,
+            transducer: devServerHost + hmrPath,
             chunks,
             filename: mod.input.html,
             more,

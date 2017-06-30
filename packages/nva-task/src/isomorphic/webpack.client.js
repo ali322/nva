@@ -54,7 +54,7 @@ export default function(context, constants, profile) {
             }
         }
         htmls.push(new InjectHtmlPlugin({
-            processor: sep,
+            transducer: sep,
             chunks,
             filename: mod.input.html,
             more,
