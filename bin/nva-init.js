@@ -4,8 +4,7 @@ let program = require("commander")
 let chalk = require("chalk")
 let path = require("path")
 let fs = require("fs")
-let _ = require('lodash')
-let objectAssign = require("object-assign")
+let reject = require('lodash/reject')
 let inquirer = require("inquirer")
 let rm = require("rimraf").sync
 
@@ -53,7 +52,7 @@ if (projectName === '[object Object]') {
 let questions = config.questions('init')
 
 if (repo) {
-    questions = _.reject(questions, function(v) {
+    questions = reject(questions, function(v) {
         return v.name === 'template'
     })
 }

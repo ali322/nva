@@ -4,7 +4,11 @@ let program = require("commander"),
     chalk = require("chalk"),
     fs = require('fs-extra'),
     path = require('path'),
-    _ = require('lodash')
+    omit = require('lodash/omit'),
+    get = require('lodash/get'),
+    forEach = require('lodash/forEach'),
+    omitBy = require('lodash/omitBy'),
+    isEmpty = require('lodash/isEmpty')
 let lib = require('../lib')
 let config = require("../lib/config")
 let questions = config.questions('bundle')
@@ -51,15 +55,15 @@ if (program.delete) {
 }
 
 lib.ask(questions, 'yes', function(answers) {
-    answers = _.omit(answers, 'yes')
+    answers = omit(answers, 'yes')
 
-    _.forEach(questions, function(q) {
-        if (_.get(answers, q.name) === '') {
-            answers = _.omit(answers, q.name)
+    forEach(questions, function(q) {
+        if (get(answers, q.name) === '') {
+            answers = omit(answers, q.name)
         }
     })
-    answers = _.omitBy(answers, function(v) {
-        return _.isEmpty(v)
+    answers = omitBy(answers, function(v) {
+        return isEmpty(v)
     })
     tasks.addMod(moduleName, answers, program.template)
 })
