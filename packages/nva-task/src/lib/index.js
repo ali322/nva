@@ -1,4 +1,4 @@
-import { compact, mapValues, isEqual, isPlainObject } from 'lodash'
+import { compact, mapValues, isEqual, isPlainObject, forEach, startsWith, every } from 'lodash'
 import merge from 'webpack-merge'
 import { dirname, basename, resolve } from 'path'
 import { existsSync, outputFileSync, outputJsonSync, readJsonSync } from 'fs-extra'
@@ -42,40 +42,60 @@ export function checkVendor(vendors, target) {
     if ((vendors.js && isPlainObject(vendors.js)) || (vendors.css && isPlainObject(vendors.css))) {
         if (!existsSync(resolve(target))) return false
         let sourcemap = readJsonSync(resolve(target))
+        /* check meta */
         if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) == false) return false
-        let clean = true
+
+        /* check version */
+        let version = sourcemap.version
+        let localModChecked = every(version, (ver, mod) => isEqual(ver, modVersion(mod)))
+
+        /* check output */
+        let output = sourcemap.output || {}
+        let jsChecked = true,
+            cssChecked = true
         const vendorOutput = dirname(target)
-        if (isPlainObject(vendors.js) && isPlainObject(sourcemap.js)) {
-            Object.keys(vendors.js).forEach(v => {
-                if (!existsSync(resolve(vendorOutput, `${v}-manifest.json`))) {
-                    clean = false
-                    return false
-                }
-                if (!existsSync(resolve(vendorOutput, sourcemap.js[v]))) {
-                    clean = false
-                    return false
-                }
-            })
+        if (isPlainObject(vendors.js) && isPlainObject(output.js)) {
+            jsChecked = every(Object.keys(vendors.js), v => existsSync(resolve(vendorOutput, `${v}-manifest.json`)) &&
+                existsSync(resolve(vendorOutput, output.js[v])))
         }
-        if (isPlainObject(vendors.css) && isPlainObject(sourcemap.css)) {
-            Object.keys(vendors.css).forEach(v => {
-                if (!existsSync(resolve(vendorOutput, sourcemap.css[v]))) {
-                    clean = false
-                    return false
-                }
-            })
+        if (isPlainObject(vendors.css) && isPlainObject(output.css)) {
+            cssChecked = every(Object.keys(vendors.js), v => existsSync(resolve(vendorOutput, output.css[v])))
         }
-        return clean
+        return jsChecked && cssChecked && localModChecked
     }
     return true
 }
 
 export function vendorManifest(stats, meta, target) {
-    let assetByChunk = { meta }
+    let output = {}
     stats.toJson().children.forEach((child) => {
-        assetByChunk[child.name] = mapValues(child.assetsByChunkName, v => basename(v))
+        output[child.name] = mapValues(child.assetsByChunkName, v => basename(v))
     })
-    outputJsonSync(target, assetByChunk)
+    outputJsonSync(target, { output, meta, version: vendorVersion(meta) })
+}
+
+function vendorVersion(meta) {
+    let version = {},
+        metas = []
+    const mapper = mod => startsWith(mod, '@') ? mod.split('/').slice(0, 1).join('/') : mod.split('/')[0]
+    if (meta.js) {
+        forEach(meta.js, v => {
+            metas = metas.concat(v)
+        })
+    }
+    if (meta.css) {
+        forEach(meta.css, v => {
+            metas = metas.concat(v)
+        })
+    }
+    metas.map(mapper).forEach(mod => {
+        version[mod] = modVersion(mod)
+    })
+    return version
+}
+
+function modVersion(mod) {
+    return require(resolve('node_modules', mod, 'package.json')).version
 }
 
 export function openBrowser(target, url) {

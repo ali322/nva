@@ -25,6 +25,7 @@
   "author": "alichen",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.2",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",

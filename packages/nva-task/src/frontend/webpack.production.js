@@ -18,7 +18,7 @@ export default function(context, constants, profile) {
     /** build vendors*/
     let dllRefs = []
     let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
-    let sourcemap = require(sourcemapPath)
+    let sourcemap = require(sourcemapPath).output
     if (isPlainObject(vendors.js)) {
         for (let key in vendors['js']) {
             let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')

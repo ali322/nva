@@ -4,6 +4,7 @@ import { forEach, isString } from 'lodash'
 import { join, resolve, sep } from 'path'
 import { addMod, removeMod } from '../lib/mod'
 import { vendorManifest, mergeConfig, checkVendor } from '../lib'
+import checkVersion from '../lib/check-version'
 import { callback } from '../lib/helper'
 import vendorFactory from '../lib/vendor'
 import releaseConfigFactory from './webpack.production'
@@ -107,11 +108,13 @@ module.exports = context => {
         },
         dev(options) {
             const runDev = developServer(context, constants)
-            if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))) {
-                runDev(options)
-            } else {
-                tasks.vendor(runDev.bind(null, options))
-            }
+            checkVersion(join(constants.VENDOR_OUTPUT, vendorSourceMap),()=>{
+                if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))) {
+                    runDev(options)
+                } else {
+                    tasks.vendor(runDev.bind(null, options))
+                }
+            })
         }
     }
 
