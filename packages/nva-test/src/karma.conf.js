@@ -3,21 +3,24 @@ let fs = require('fs')
 let argv = require('yargs').argv
 let { assign, omit } = require('lodash')
 let merge = require('webpack-merge')
-let webpackConfig = require(join(__dirname, 'webpack.test'))
-
-let entry = resolve('test', 'unit', 'fixture', 'setup.js')
-let reportFolder = resolve('test', 'unit', 'coverage')
 
 let customize = {}
 if (argv.c || argv.config) {
     customize = require(resolve(argv.c || argv.config))
 }
 
+let sourcePath = resolve('src')
+let entry = resolve('test', 'unit', 'fixture', 'setup.js')
+let reportPath = resolve('test', 'unit', 'coverage')
+
+sourcePath = customize.sourcePath || sourcePath
 entry = customize.entry || entry
-reportFolder = customize.reportFolder || reportFolder
+reportPath = customize.reportPath || reportPath
+
+let webpackConfig = require('./webpack.test')({ sourcePath })
 
 let preprocessors = {}
-preprocessors[entry] = ['webpack', 'sourcemap']
+preprocessors[entry] = ['webpack','sourcemap']
 
 /* eslint-disable func-names */
 module.exports = function(config) {
@@ -33,14 +36,12 @@ module.exports = function(config) {
         webpackMiddleware: {
             stats: 'errors-only'
         },
-        coverageReporter: {
-            dir: reportFolder,
-            reporters: [
-                { type: 'lcov', subdir: '.' },
-                { type: 'text-summary' }
-            ]
+        coverageIstanbulReporter: {
+            dir: reportPath,
+            fixWebpackSourcePaths: true,
+            reports: ['html', 'lcovonly', 'text-summary']
         },
-        reporters: ['spec', 'coverage'],
+        reporters: ['spec', 'coverage-istanbul'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -55,7 +56,7 @@ module.exports = function(config) {
     if (customize.webpack) {
         opts.webpack = merge.smart(opts.webpack, customize.webpack)
     }
-    let restOpts = omit(customize, ['entry', 'reportFolder', 'webpack'])
+    let restOpts = omit(customize, ['entry', 'reportPath', 'webpack'])
     opts = assign({}, opts, restOpts)
     config.set(opts)
 }

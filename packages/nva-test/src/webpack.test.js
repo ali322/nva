@@ -6,40 +6,57 @@ let sassLoaders = cssLoaders.concat([{ loader: require.resolve('sass-loader'), o
 let scssLoaders = cssLoaders.concat([{ loader: require.resolve('sass-loader'), options: { sourceMap: true } }])
 let stylusLoaders = cssLoaders.concat([{ loader: require.resolve('stylus-loader'), options: { sourceMap: true } }])
 
-module.exports = {
-    module: {
-        rules: [{
-                test: /\.(js|es6|jsx)/,
-                loader: require.resolve('babel-loader'),
-                exclude: [resolve('node_modules')]
-            },
-            {
-                test: /\.(tpl|html)/,
-                loader: require.resolve('html-loader'),
-                exclude: [resolve('node_modules')],
-            },
-            {
-                test: /\.vue/,
-                loader: 'vue-loader',
-                exclude: [resolve('node_modules')],
-                options: {
-                    loaders: {
-                        css: cssLoaders,
-                        less: lessLoaders,
-                        sass: sassLoaders,
-                        scss: scssLoaders,
-                        stylus: stylusLoaders
+module.exports = ({ sourcePath }) => {
+    return {
+        module: {
+            rules: [{
+                    test: /\.(js|es6|jsx)/,
+                    loader: require.resolve('babel-loader'),
+                    exclude: [resolve('node_modules')]
+                },
+                {
+                    test: /\.(js|es6|jsx)/,
+                    loader: require.resolve('istanbul-instrumenter-loader') + '?esModules=true',
+                    enforce: 'post',
+                    // exclude: [resolve('node_modules')],
+                    include: sourcePath
+                },
+                {
+                    test: /\.html/,
+                    loader: require.resolve('html-loader'),
+                    exclude: [resolve('node_modules')],
+                },
+                {
+                    test: /\.vue/,
+                    loader: 'vue-loader',
+                    // exclude: [resolve('node_modules')],
+                    include: sourcePath,
+                    options: {
+                        loaders: {
+                            css: cssLoaders,
+                            less: lessLoaders,
+                            sass: sassLoaders,
+                            scss: scssLoaders,
+                            stylus: stylusLoaders
+                        },
+                        postLoaders: {
+                            js: require.resolve('istanbul-instrumenter-loader') + '?esModules=true'
+                        }
+                    }
+                },
+                {
+                    test: /\.css$/,
+                    use: [require.resolve('style-loader'), require.resolve('css-loader')]
+                }, {
+                    test: /\.(gif|jpg|png|woff|svg|eot|ttf|otf)\??.*$/,
+                    loader: require.resolve('url-loader'),
+                    options: {
+                        limit: 1000
                     }
                 }
-            }, {
-                test: /\.(gif|jpg|png|woff|svg|eot|ttf|otf)\??.*$/,
-                loader: require.resolve('url-loader'),
-                options: {
-                    limit: 1000
-                }
-            }
-        ]
-    },
-    devtool: '#eval',
-    watch: true
+            ]
+        },
+        devtool: '#eval',
+        watch: true
+    }
 }

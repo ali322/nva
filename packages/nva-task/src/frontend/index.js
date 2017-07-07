@@ -106,17 +106,15 @@ module.exports = context => {
                 if (next) next()
             })
         },
-        dev(options) {
+        async dev(options) {
+            await checkVersion(join(constants.VENDOR_OUTPUT, vendorSourceMap))
             const runDev = developServer(context, constants)
-            checkVersion(join(constants.VENDOR_OUTPUT, vendorSourceMap),()=>{
-                if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))) {
-                    runDev(options)
-                } else {
-                    tasks.vendor(runDev.bind(null, options))
-                }
-            })
+            if (checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))) {
+                runDev(options)
+            } else {
+                tasks.vendor(runDev.bind(null, options))
+            }
         }
     }
-
     return tasks
 }
