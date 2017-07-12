@@ -10,10 +10,10 @@ export default function(options = {}) {
     const { rootPath } = options
     let {
         namespace,
-        proj,
         favicon = '',
         hooks = {},
-        projConfPath = resolve(rootPath, `${namespace}.js`),
+        proj,
+        projConfPath,
         modConfPath = resolve(rootPath, 'bundle.json'),
         mockPath = resolve(rootPath, 'mock'),
         vendorConfPath = resolve(rootPath, 'vendor.json')
