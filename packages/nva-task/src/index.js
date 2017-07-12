@@ -7,9 +7,10 @@ import initializer from './lib/initializer'
 import { writeModConf } from './lib'
 
 export default function(options = {}) {
-    const namespace = options.namespace ? options.namespace : 'nva'
-    const rootPath = `.${namespace}`
+    const { rootPath } = options
     let {
+        namespace,
+        proj,
         favicon = '',
         hooks = {},
         projConfPath = resolve(rootPath, `${namespace}.js`),
@@ -17,9 +18,6 @@ export default function(options = {}) {
         mockPath = resolve(rootPath, 'mock'),
         vendorConfPath = resolve(rootPath, 'vendor.json')
     } = options
-
-    let proj = loadConf(projConfPath, () => error('project config is invalid'))
-    proj.default && (proj = proj.default)
 
     modConfPath = proj.modConfPath || modConfPath
     vendorConfPath = proj.vendorConfPath || vendorConfPath

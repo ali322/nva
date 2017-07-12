@@ -1,5 +1,5 @@
 let program = require("commander")
-let hooks = require('../lib/hook')
+let project = require('../lib/project')()
 let checkVersion = require('../lib/check-version')
 
 program.option("-p, --port [value]", "dev server listen port")
@@ -13,6 +13,6 @@ let browser = program.browser
 let profile = program.profile
 
 checkVersion(function(){
-    let tasks = require('nva-task')({ hooks })
+    let tasks = require('nva-task')(project)
     tasks.dev({ port, browser, profile })
 })
