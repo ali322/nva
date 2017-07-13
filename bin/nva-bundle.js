@@ -9,10 +9,11 @@ let program = require("commander"),
     forEach = require('lodash/forEach'),
     omitBy = require('lodash/omitBy'),
     isEmpty = require('lodash/isEmpty')
+let project = require('../lib/project')()
+let tasks = require('nva-task')(project)
 let lib = require('../lib')
 let config = require("../lib/config")
 let questions = config.questions('bundle')
-let tasks = require('nva-task')()
 
 program.usage('[name]')
 program.option("-d, --delete", "delete action flag")
