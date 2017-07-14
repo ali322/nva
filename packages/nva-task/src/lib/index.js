@@ -95,7 +95,8 @@ function vendorVersion(meta) {
 }
 
 function modVersion(mod) {
-    return require(resolve('node_modules', mod, 'package.json')).version
+    const pkg = readJsonSync(resolve('node_modules', mod, 'package.json'))
+    return pkg && pkg.version
 }
 
 export function openBrowser(target, url) {

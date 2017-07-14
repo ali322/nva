@@ -13,9 +13,9 @@ let port = program.port
 let browser = program.browser
 let profile = program.profile
 
-checkVersion(function(){
-    checkPkgs(function(){
-    let tasks = require('nva-task')(project)
-    tasks.dev({ port, browser, profile })
-    },['axios','vue-router'])
+checkVersion(function() {
+    checkPkgs(function() {
+        let tasks = require('nva-task')(project)
+        tasks.dev({ port, browser, profile })
+    }, project.autocheck)
 })
