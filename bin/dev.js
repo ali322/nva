@@ -13,9 +13,7 @@ let port = program.port
 let browser = program.browser
 let profile = program.profile
 
-checkVersion(function() {
-    checkPKG(function() {
-        let tasks = require('nva-task')(project)
-        tasks.dev({ port, browser, profile })
-    }, project.autocheck)
-})
+checkVersion(checkPKG.bind(null,function(){
+    let tasks = require('nva-task')(project)
+    tasks.dev({ port, browser, profile })
+},project.autocheck))
