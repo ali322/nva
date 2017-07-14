@@ -13,4 +13,4 @@ let profile = program.profile
 checkVersion(checkPKG.bind(null, function() {
     let tasks = require('nva-task')(project)
     tasks.build({ profile })
-}, project.autocheck))
+}, project.proj.autocheck))
