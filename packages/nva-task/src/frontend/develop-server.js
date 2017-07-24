@@ -22,6 +22,7 @@ export default function(context, constants) {
         if (typeof beforeDev === 'function') {
             config = mergeConfig(config, beforeDev(config))
         }
+        console.log('config',config)
         const middlewares = middlewareFactory(config, () => {
             if (typeof hooks.afterDev === 'function') {
                 hooks.afterDev()
