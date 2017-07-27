@@ -44,7 +44,6 @@ export default function(constants) {
             }
         })
     }
-
     let vueLoaderOptions = {
         postcss: postcssOptions(constants).plugins(),
         loaders: {
@@ -67,7 +66,8 @@ export default function(constants) {
         options: vueLoaderOptions
     }, {
         test: /\.(es6|js|jsx)$/,
-        exclude: [nodeModulesDir],
+        exclude: /node_modules/,
+        // exclude: [nodeModulesDir],
         loader: 'happypack/loader',
         options: { id: "js" }
     }, {

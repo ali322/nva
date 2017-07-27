@@ -8,7 +8,7 @@ import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
 export default function(context, constants) {
-    const { spa, sourceFolder, distFolder, mock, beforeDev, afterDev, hooks, startWatcher, favicon } = context
+    const { spa, sourceFolder, distFolder, staticFolder, mock, beforeDev, afterDev, hooks, startWatcher, favicon, proxy } = context
 
     return function(options) {
         startWatcher()
@@ -22,7 +22,6 @@ export default function(context, constants) {
         if (typeof beforeDev === 'function') {
             config = mergeConfig(config, beforeDev(config))
         }
-        console.log('config',config)
         const middlewares = middlewareFactory(config, () => {
             if (typeof hooks.afterDev === 'function') {
                 hooks.afterDev()
@@ -40,8 +39,9 @@ export default function(context, constants) {
             rewrites = spa
         }
         const app = createApp({
-            asset: spa ? distFolder : false,
+            asset: spa ? [distFolder, staticFolder] : false,
             path: spa ? sourceFolder : false,
+            proxy,
             log: false,
             rewrites,
             mock,

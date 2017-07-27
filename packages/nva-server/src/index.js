@@ -1,16 +1,17 @@
 import connect from 'connect'
 import serveStatic from 'serve-static'
 import favicon from 'serve-favicon'
+import proxyMiddleware from 'http-proxy-middleware'
 import morgan from 'morgan'
 import compression from 'compression'
-import { join } from 'path'
+import { join, resolve,isAbsolute } from 'path'
 import fs from 'fs'
 import { parse } from 'url'
 import mockFactory from './mock'
 import historyAPIFallback from 'connect-history-api-fallback'
 
 export default (options) => {
-    let { path = '', asset = '', mock = '', rewrites = false, cors = false, log = true } = options
+    let { path = '', asset = '', mock = '', rewrites = false, cors = false, log = true, proxy } = options
     let app = connect()
 
     if (log) {
@@ -38,17 +39,26 @@ export default (options) => {
         })
     }
 
-    if (asset) {
+    if (proxy) {
+        Array.isArray(proxy) ? proxy.forEach(v => app.use(proxyMiddleware(v.url, { ...v.options, logLevel: 'silent' }))) :
+            app.use(proxyMiddleware(proxy.url, { ...proxy.options, logLevel: 'silent' }))
+    }
+
+    function applyAsset(assetPath, fallthrough = true) {
         app.use(function(req, res, next) {
             let parsed = parse(req.url)
             if (parsed.pathname.match(/\.[^html]+$/)) {
-                serveStatic(asset, {
-                    fallthrough: false,
+                serveStatic(resolve(assetPath), {
+                    fallthrough,
                 })(req, res, next)
             } else {
                 next()
             }
         })
+    }
+
+    if (asset) {
+        Array.isArray(asset) ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1)) : applyAsset(asset, true)
     }
 
     if (rewrites) {

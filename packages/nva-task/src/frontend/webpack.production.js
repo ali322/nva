@@ -3,11 +3,12 @@ import { join, resolve, dirname, extname } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 import { relativeURL, bundleTime } from '../lib/helper'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, distFolder, chunkFolder, vendorSourceMap } = context
+    const { vendors, mods, sourceFolder, distFolder, staticFolder, chunkFolder, vendorSourceMap } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {}
@@ -85,7 +86,12 @@ export default function(context, constants, profile) {
             ...baseConfig.plugins,
             ...transforms,
             ...dllRefs,
-            ...htmls
+            ...htmls,
+            new CopyPlugin([{
+                from: resolve(staticFolder),
+                to: join(OUTPUT_PATH, staticFolder),
+                ignore: ['.*']
+            }])
         ]
     }
 }
