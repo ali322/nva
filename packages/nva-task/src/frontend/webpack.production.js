@@ -4,6 +4,7 @@ import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
+import { existsSync } from 'fs-extra'
 import { config as configFactory } from 'nva-core'
 import { relativeURL, bundleTime } from '../lib/helper'
 
@@ -86,12 +87,11 @@ export default function(context, constants, profile) {
             ...baseConfig.plugins,
             ...transforms,
             ...dllRefs,
-            ...htmls,
-            new CopyPlugin([{
-                from: resolve(staticFolder),
-                to: join(OUTPUT_PATH, staticFolder),
-                ignore: ['.*']
-            }])
-        ]
+            ...htmls
+        ].concat(existsSync(resolve(staticFolder)) ? new CopyPlugin([{
+            from: resolve(staticFolder),
+            to: join(OUTPUT_PATH, staticFolder),
+            ignore: ['.*']
+        }]) : [])
     }
 }
