@@ -4,11 +4,11 @@ import favicon from 'serve-favicon'
 import proxyMiddleware from 'http-proxy-middleware'
 import morgan from 'morgan'
 import compression from 'compression'
-import { join, resolve,isAbsolute } from 'path'
+import { join, resolve } from 'path'
 import fs from 'fs'
 import { parse } from 'url'
-import mockFactory from './mock'
 import historyAPIFallback from 'connect-history-api-fallback'
+import mockFactory from './mock'
 
 export default (options) => {
     let { path = '', asset = '', mock = '', rewrites = false, cors = false, log = true, proxy } = options
