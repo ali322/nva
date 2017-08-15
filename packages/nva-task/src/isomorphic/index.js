@@ -63,8 +63,8 @@ module.exports = context => {
         OUTPUT_PATH: resolve(distFolder, sourceFolder),
         IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
         FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-        IMAGE_PREFIX: imagePrefix || join('..', assetFolder, imageFolder),
-        FONT_PREFIX: fontPrefix || join('..', assetFolder, fontFolder),
+        IMAGE_PREFIX: imagePrefix || join('..', assetFolder, imageFolder, sep),
+        FONT_PREFIX: fontPrefix || join('..', assetFolder, fontFolder, sep),
         VENDOR_OUTPUT: resolve(distFolder, sourceFolder, vendorFolder),
         MANIFEST_PATH: join(distFolder, sourceFolder, vendorFolder),
         CACHE_PATH: cachePath

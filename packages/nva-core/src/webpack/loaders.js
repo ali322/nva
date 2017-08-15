@@ -1,5 +1,4 @@
 import path from 'path'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { cssLoaders, postcssOptions, vueStyleLoaders } from '../lib'
 
 const nodeModulesDir = path.resolve('node_modules')
@@ -19,7 +18,7 @@ export default function(constants) {
                 } else if (/\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)) {
                     _prefix = FONT_PREFIX
                 }
-                return path.join(_prefix, url)
+                return _prefix + url
             },
             hash: 'sha512',
             digest: 'hex',

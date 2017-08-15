@@ -11,6 +11,7 @@
         "indent": ["error", 4],
         "eol-last": "off",
         "space-before-function-paren": "off",
-        "import/no-dynamic-require": "off"
+        "import/no-dynamic-require": "off",
+        "standard/no-callback-literal": "off"
     }
 }
