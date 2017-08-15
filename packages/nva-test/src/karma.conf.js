@@ -1,5 +1,4 @@
-let { resolve, join } = require('path')
-let fs = require('fs')
+let { resolve } = require('path')
 let argv = require('yargs').argv
 let { assign, omit } = require('lodash')
 let merge = require('webpack-merge')
@@ -46,7 +45,7 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['PhantomJS'],
+        browsers: ['jsdom'],
         concurrency: Infinity,
         captureTimeout: 60000,
         browserDisconnectTimeout: 10000,
