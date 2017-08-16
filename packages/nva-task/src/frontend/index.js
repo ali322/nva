@@ -35,8 +35,8 @@ module.exports = context => {
         OUTPUT_PATH: resolve(distFolder),
         IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
         FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-        IMAGE_PREFIX: imagePrefix || join('..', assetFolder, imageFolder, sep),
-        FONT_PREFIX: fontPrefix || join('..', assetFolder, fontFolder, sep),
+        IMAGE_PREFIX: imagePrefix || `../${assetFolder}/${imageFolder}/`,
+        FONT_PREFIX: fontPrefix || `../${assetFolder}/${fontFolder}/`,
         VENDOR_OUTPUT: join(distFolder, vendorFolder),
         MANIFEST_PATH: join(distFolder, vendorFolder),
         CACHE_PATH: cachePath
