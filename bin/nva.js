@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-let program = require("commander")
-let version = require("../package.json").version
+let program = require('commander')
+let version = require('../package.json').version
 
 program.version(version)
     .usage('<command> [options]')
@@ -15,7 +15,7 @@ program.version(version)
     .command('test', 'run unit or e2e test')
     .command('*')
     .action(function(cmd) {
-        if (['init', 'list', 'bundle', 'dev', 'build', 'vendor','test'].indexOf(cmd) === -1) {
+        if (['init', 'list', 'bundle', 'dev', 'build', 'vendor', 'test'].indexOf(cmd) === -1) {
             console.log('unsupported nva command')
             process.exit(1)
         }

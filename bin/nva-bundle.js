@@ -1,23 +1,21 @@
 #! /usr/bin/env node
 
-let program = require("commander"),
-    chalk = require("chalk"),
-    fs = require('fs-extra'),
-    path = require('path'),
-    omit = require('lodash/omit'),
-    get = require('lodash/get'),
-    forEach = require('lodash/forEach'),
-    omitBy = require('lodash/omitBy'),
-    isEmpty = require('lodash/isEmpty')
-let project = require('../lib/project')()
-let tasks = require('nva-task')(project)
+let program = require('commander')
+let chalk = require('chalk')
+let omit = require('lodash/omit')
+let get = require('lodash/get')
+let forEach = require('lodash/forEach')
+let omitBy = require('lodash/omitBy')
+let isEmpty = require('lodash/isEmpty')
+let context = require('../lib/context')()
 let lib = require('../lib')
-let config = require("../lib/config")
+let config = require('../lib/config')
 let questions = config.questions('bundle')
+let tasks = require('nva-task')(context)
 
 program.usage('[name]')
-program.option("-d, --delete", "delete action flag")
-program.option("-t, --template [value]", "choose template bundle")
+program.option('-d, --delete', 'delete action flag')
+program.option('-t, --template [value]', 'choose template bundle')
 
 program.on('--help', function() {
     console.log(`

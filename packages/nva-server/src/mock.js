@@ -29,7 +29,13 @@ export default function(app, mock) {
                 if (req.method.toLowerCase() === rule.method) {
                     res.statusCode = 200
                     res.setHeader("content-type", "application/json;charset=utf-8")
-                    res.end(JSON.stringify(rule.response.type ? jsf(rule.response) : rule.response))
+                    let response = rule.response
+                    if (rule.type === 'jsf') {
+                        response = jsf(response)
+                    } else if (rule.type === 'func') {
+                        response = response(req)
+                    }
+                    res.end(JSON.stringify(response))
                 }
             })
         })

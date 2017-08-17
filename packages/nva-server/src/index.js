@@ -1,4 +1,6 @@
 import connect from 'connect'
+import bodyParser from 'body-parser'
+import methodOverride from 'method-override'
 import serveStatic from 'serve-static'
 import favicon from 'serve-favicon'
 import proxyMiddleware from 'http-proxy-middleware'
@@ -14,6 +16,9 @@ export default (options) => {
     let { path = '', asset = '', mock = '', rewrites = false, cors = false, log = true, proxy } = options
     let app = connect()
 
+    app.use(methodOverride())
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({ extended: false }))
     if (log) {
         app.use(morgan('dev'))
     }

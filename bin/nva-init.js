@@ -1,21 +1,21 @@
 #! /usr/bin/env node
 
-let program = require("commander")
-let chalk = require("chalk")
-let path = require("path")
-let fs = require("fs")
+let program = require('commander')
+let chalk = require('chalk')
+let path = require('path')
+let fs = require('fs')
 let reject = require('lodash/reject')
-let inquirer = require("inquirer")
-let rm = require("rimraf").sync
+let inquirer = require('inquirer')
+let rm = require('rimraf').sync
 
-let config = require("../lib/config")
+let config = require('../lib/config')
 let generator = require('../lib/generator')
 let lib = require('../lib')
 
 program.usage('[project]')
-program.option("-r, --repo [value]", "choose specified repo")
-program.option("--no-install", "do not execute npm install")
-program.option("--mirror [value]", "supported npm mirror: taobao, offical")
+program.option('-r, --repo [value]', 'choose specified repo')
+program.option('--no-install', 'do not execute npm install')
+program.option('--mirror [value]', 'supported npm mirror: taobao, offical')
 
 program.on('--help', function() {
     console.log(`
@@ -63,9 +63,9 @@ function generate(answers) {
 
 if (fs.existsSync(projectPath)) {
     inquirer.prompt([{
-        type: "confirm",
+        type: 'confirm',
         name: 'yes',
-        message: "current project directory is not empty,continue?"
+        message: 'current project directory is not empty,continue?'
     }]).then(function(answer) {
         if (answer.yes) {
             rm(projectPath)

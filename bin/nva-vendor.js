@@ -1,5 +1,5 @@
 #! /usr/bin/env node
 
-let project = require('../lib/project')()
-let tasks = require('nva-task')(project)
+let context = require('../lib/context')()
+let tasks = require('nva-task')(context)
 tasks.vendor()
