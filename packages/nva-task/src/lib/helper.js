@@ -76,10 +76,10 @@ export function callback(info, err, stats) {
         console.log(chalk.red(err, stats))
         return
     }
-    console.log('😌  ' + info)
     console.log(stats.toString({
         version: false,
         chunks: false,
         colors: true
     }))
+    console.log('😌  ' + info)
 }

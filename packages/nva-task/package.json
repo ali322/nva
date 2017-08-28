@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.3.108",
+  "version": "0.3.109",
   "description": "tasks for nva",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -48,8 +48,8 @@
     "lodash": "^4.17.4",
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
-    "nva-core": "^0.3.108",
-    "nva-server": "^0.3.108",
+    "nva-core": "^0.3.109",
+    "nva-server": "^0.3.109",
     "opn": "^5.0.0",
     "portfinder": "^1.0.13",
     "progress-bar-webpack-plugin": "^1.9.3",
