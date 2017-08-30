@@ -35,7 +35,7 @@ export default function(context, constants, profile) {
     /** build modules */
     forEach(mods, (mod, name) => {
         entry[name] = [
-            'webpack-hot-middleware/client' + '?path=' + devServerHost + '/__webpack_hmr',
+            require.resolve('webpack-hot-middleware/client') + '?path=' + devServerHost + '/__webpack_hmr',
             mod.input.js
         ].concat(mod.input.css ? [mod.input.css] : [])
         let chunks = [name]

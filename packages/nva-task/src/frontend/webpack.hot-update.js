@@ -31,7 +31,7 @@ export default function(context, constants, profile) {
     /** build modules */
     forEach(mods, (mod, name) => {
         entry[name] = [
-            "webpack-hot-middleware/client",
+            require.resolve("webpack-hot-middleware/client"),
             mod.input.js
         ].concat(mod.input.css ? [mod.input.css] : [])
 
