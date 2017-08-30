@@ -55,7 +55,7 @@ export default function(constants) {
     }
 
     let _loaders = [{
-        test: /\.(tpl|html|xml)/,
+        test: /\.(tpl|html)/,
         exclude: [nodeModulesDir],
         loader: require.resolve('html-loader')
     }, {
