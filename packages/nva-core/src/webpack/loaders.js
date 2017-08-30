@@ -27,7 +27,7 @@ export default function(constants) {
     }
 
     let imageLoaders = [{
-        loader: 'url-loader',
+        loader: require.resolve('url-loader'),
         options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
             outputPath: IMAGE_OUTPUT
@@ -35,7 +35,7 @@ export default function(constants) {
     }]
     if (!HOT) {
         imageLoaders.push({
-            loader: 'image-webpack-loader',
+            loader: require.resolve('image-webpack-loader'),
             options: {
                 bypassOnDebug: true,
                 // optimizationLevel: 7,
@@ -55,9 +55,9 @@ export default function(constants) {
     }
 
     let _loaders = [{
-        test: /\.(tpl|html)/,
+        test: /\.(tpl|html|xml)/,
         exclude: [nodeModulesDir],
-        loader: 'html-loader'
+        loader: require.resolve('html-loader')
     }, {
         test: /\.vue/,
         exclude: [nodeModulesDir],
@@ -67,7 +67,7 @@ export default function(constants) {
         test: /\.(es6|js|jsx)$/,
         exclude: /node_modules/,
         // exclude: [nodeModulesDir],
-        loader: 'happypack/loader',
+        loader: require.resolve('happypack/loader'),
         options: { id: "js" }
     }, {
         test: /\.less/,
@@ -90,7 +90,7 @@ export default function(constants) {
         use: imageLoaders
     }, {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url-loader',
+        loader: require.resolve('url-loader'),
         options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
             outputPath: FONT_OUTPUT,
@@ -98,7 +98,7 @@ export default function(constants) {
         }
     }, {
         test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: "url-loader",
+        loader: require.resolve("url-loader"),
         options: HOT ? urlLoaderOptions : {
             ...urlLoaderOptions,
             outputPath: FONT_OUTPUT

@@ -26,7 +26,7 @@ export const postcssOptions = ({ HOT, IMAGE_OUTPUT }) => ({
 export function vueStyleLoaders(constants, preprocessor) {
     let { HOT = false } = constants
     let loaders = cssLoaders({ ...constants, HOT: true }, preprocessor)
-    loaders = loaders.filter((v, i) => i === 1 || i > 2)
+    loaders = loaders.filter((v, i) => i > 0 && i !== 2)
     if (!HOT) {
         return ExtractTextPlugin.extract({
             use: loaders,

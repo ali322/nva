@@ -71,7 +71,7 @@ export default function(context, constants, profile) {
             chunkFilename: "[id].chunk.js",
             publicPath: devServerHost + hmrPath
         },
-        context: __dirname,
+        // context: __dirname,
         resolveLoader: {
             modules: [resolve("node_modules"), "node_modules"]
         },

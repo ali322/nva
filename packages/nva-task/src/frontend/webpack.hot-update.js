@@ -63,7 +63,7 @@ export default function(context, constants, profile) {
             chunkFilename: join(chunkFolder, "[id].chunk.js"),
             publicPath: hmrPath
         },
-        context: __dirname,
+        // context: __dirname,
         resolveLoader: {
             modules: ['node_modules', resolve("node_modules")]
         },

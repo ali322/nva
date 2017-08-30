@@ -32,7 +32,7 @@ export default function(context, constants, profile) {
             libraryTarget: 'commonjs2',
             filename: '[name].js'
         },
-        context: __dirname,
+        // context: __dirname,
         resolveLoader: {
             modules: [resolve("node_modules"), "node_modules"]
         },
