@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { isString } from 'lodash'
 import middlewareFactory from '../lib/middleware'
-import { error, checkPort } from '../lib/helper'
+import { error, checkPort, emojis } from '../lib/helper'
 import { mergeConfig, openBrowser } from '../lib/'
 import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
@@ -77,7 +77,7 @@ export default function(context, constants) {
                     logConnections: false,
                     logLevel: "silent"
                 }, function() {
-                    console.log('🌎  develop server started at %d', port)
+                    console.log(`${emojis('rocket')}  develop server started at ${port}`)
 
                     let url = spa ? '/' : '/index'
                     url = `http://localhost:${port}${url}`

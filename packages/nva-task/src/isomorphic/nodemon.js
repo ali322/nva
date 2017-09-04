@@ -1,5 +1,6 @@
 import nodemon from 'nodemon'
 import chalk from 'chalk'
+import { emojis } from '../lib/helper'
 import { relative } from 'path'
 
 export default function(options) {
@@ -15,7 +16,7 @@ export default function(options) {
     process.once('SIGINT', exitHanlder.bind(null, { quit: true }))
 
     script.on('restart', function(files) {
-        console.log('🚀  ' + chalk.yellow('server restarting...'))
+        console.log(`${emojis('rocket')}  ` + chalk.yellow('server restarting...'))
         files.forEach(function(file) {
             file = relative(process.cwd(), file)
             console.log(chalk.yellow(`file ${file} changed`))
