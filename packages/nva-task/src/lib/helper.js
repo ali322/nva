@@ -91,5 +91,5 @@ export function callback(info, err, stats) {
         chunks: false,
         colors: true
     }))
-    console.log(`${emojis('simle')}  ` + info)
+    console.log(emojis(':ok_hand:') + '  ' + info)
 }
