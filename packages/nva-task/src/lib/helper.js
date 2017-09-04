@@ -18,7 +18,7 @@ export function lanIP() {
     return IPv4;
 }
 
-export function current(){
+export function current() {
     return new Date().toString().split(' ')[4]
 }
 
@@ -72,6 +72,15 @@ export function error(msg) {
     process.exit(1)
 }
 
+
+export function emojis(key) {
+    if (os.platform() === 'darwin') {
+        return emoji.get(key)
+    } else {
+        return '>'
+    }
+}
+
 export function callback(info, err, stats) {
     if (err || stats.hasErrors()) {
         console.log(chalk.red(err, stats))
@@ -83,12 +92,4 @@ export function callback(info, err, stats) {
         colors: true
     }))
     console.log(`${emojis('simle')}  ` + info)
-}
-
-export function emojis(key){
-    if(os.platform() === 'darwin') {
-        return emoji.get(key)
-    } else {
-        return '>'
-    }
 }
