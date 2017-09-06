@@ -1,7 +1,6 @@
 import webpack from 'webpack'
 import { resolve } from 'path'
-import ProgressBarPlugin from 'progress-bar-webpack-plugin'
-import chalk from 'chalk'
+import ProgressPlugin from 'progress-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
@@ -31,11 +30,7 @@ export default function(context, constants, profile) {
         externals,
         plugins: [
             ...baseConfig.plugins.slice(1),
-            new ProgressBarPlugin({
-                format: 'Building server [:bar] ' + chalk.green.bold(':percent'),
-                clear: false,
-                summary: false
-            }),
+            new ProgressPlugin(true),
             new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/),
             new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
         ],

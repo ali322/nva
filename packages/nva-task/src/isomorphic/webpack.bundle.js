@@ -1,6 +1,5 @@
 import { IgnorePlugin } from 'webpack'
-import ProgressBarPlugin from 'progress-bar-webpack-plugin'
-import chalk from 'chalk'
+import ProgressPlugin from 'progress-webpack-plugin'
 import { resolve, join } from 'path'
 import { forEach } from 'lodash'
 import { existsSync } from 'fs'
@@ -40,11 +39,7 @@ export default function(context, constants, profile) {
         externals,
         plugins: [
             ...baseConfig.plugins.slice(1, -1),
-            new ProgressBarPlugin({
-                format: 'Building bundle [:bar] ' + chalk.green.bold(':percent'),
-                clear: false,
-                summary: false
-            }),
+            new ProgressPlugin(true),
             new IgnorePlugin(/\.(css|less|scss|styl)$/)
         ]
     }

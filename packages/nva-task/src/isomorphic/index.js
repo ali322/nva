@@ -112,7 +112,7 @@ module.exports = context => {
                 if (typeof afterBuild === 'function') {
                     afterBuild(err, stats)
                 }
-                callback('build success!', err, stats)
+                callback('Build success!', err, stats)
             })
         },
         vendor(next) {
@@ -133,7 +133,7 @@ module.exports = context => {
                 if (typeof afterVendor === 'function') {
                     afterVendor(err, stats)
                 }
-                callback('build vendor success!', err, stats)
+                callback('Build vendor success!', err, stats)
                 if (next) next()
             })
         },

@@ -12,9 +12,6 @@ export default function(constants, profile = false) {
         module: {
             rules: loadersFactory(constants),
         },
-        performance: {
-            hints: false
-        },
         resolve: {
             extensions: [".js", ".json", ".es6", ".jsx", ".styl", ".css", ".less", '.scss'],
         }
@@ -27,16 +24,12 @@ export default function(constants, profile = false) {
     ]
 
     let plugins = [
-        new ProgressBarPlugin({
-            format: 'Building [:bar] ' + chalk.green.bold(':percent'),
-            clear: false,
-            summary: false
-        }),
         new webpack.LoaderOptionsPlugin({
             options: {
                 context: __dirname
             }
         }),
+        new webpack.NoEmitOnErrorsPlugin(),
         ...happypackPlugins
     ]
 

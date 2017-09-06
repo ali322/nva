@@ -1,6 +1,6 @@
 {
   "name": "nva-core",
-  "version": "0.3.116",
+  "version": "0.3.117",
   "description": "nva core module",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-core",
   "main": "dist/index.js",
@@ -39,7 +39,6 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "happypack": "^3.0.3",
     "postcss-loader": "^2.0.6",
-    "progress-bar-webpack-plugin": "^1.9.3",
     "resolve-url-loader": "^2.1.0",
     "style-loader": "^0.18.2",
     "webpack": "^2.4.1",

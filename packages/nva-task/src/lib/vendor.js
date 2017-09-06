@@ -1,8 +1,7 @@
 import { resolve, join, basename } from 'path'
 import { DllPlugin } from 'webpack'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
-import ProgressBarPlugin from 'progress-bar-webpack-plugin'
-import chalk from 'chalk'
+import ProgressPlugin from 'progress-webpack-plugin'
 import { isEmpty, isPlainObject } from 'lodash'
 import { config as configFactory } from 'nva-core'
 
@@ -39,11 +38,7 @@ export default function(context, constants) {
         resolve: { modules: [sourceFolder, 'node_modules', resolve("node_modules")] },
         plugins: [
             ...baseConfig.plugins.slice(1),
-            new ProgressBarPlugin({
-                format: 'Building vendor:js [:bar] ' + chalk.green.bold(':percent'),
-                clear: false,
-                summary: false
-            }),
+            new ProgressPlugin(true),
             new DllPlugin({
                 name: '[name]_[hash]',
                 path: resolve(MANIFEST_PATH, '[name]-manifest.json'),
@@ -63,11 +58,7 @@ export default function(context, constants) {
         },
         plugins: [
             ...baseConfig.plugins.slice(1),
-            new ProgressBarPlugin({
-                format: 'Building vendor:css [:bar] ' + chalk.green.bold(':percent'),
-                clear: false,
-                summary: false
-            }),
+            new ProgressPlugin(true),
             new ChunkTransformPlugin({
                 chunks: cssChunks,
                 test: /\.css$/,

@@ -3,6 +3,7 @@ import { join, resolve, sep } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
+import ProgressPlugin from '../lib/progress'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
@@ -63,6 +64,7 @@ export default function(context, constants, profile) {
             chunkFilename: join(chunkFolder, "[id].chunk.js"),
             publicPath: hmrPath
         },
+        bail: true,
         // context: __dirname,
         resolveLoader: {
             modules: ['node_modules', resolve("node_modules")]
@@ -72,7 +74,8 @@ export default function(context, constants, profile) {
             ...baseConfig.plugins,
             ...dllRefs,
             ...htmls,
-            new FriendlyErrorsPlugin({ clearConsole: false })
+            new ProgressPlugin(true, { onProgress: context.onDevProgress }),
+            new FriendlyErrorsPlugin({ clearConsole: false, errorsOnly: true })
         ]
     }
 }

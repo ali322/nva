@@ -21,7 +21,7 @@ export default function(config, done, profile) {
                     /node_modules/
                 ]
             },
-            quiet: false
+            quiet: !profile
         }),
         webpackHotMiddleware(bundler, { log: false })
     ]

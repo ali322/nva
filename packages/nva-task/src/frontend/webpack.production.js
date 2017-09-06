@@ -3,6 +3,7 @@ import { join, resolve, dirname, extname } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
+import ProgressPlugin from 'progress-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import { existsSync } from 'fs-extra'
 import { config as configFactory } from 'nva-core'
@@ -87,7 +88,8 @@ export default function(context, constants, profile) {
             ...baseConfig.plugins,
             ...transforms,
             ...dllRefs,
-            ...htmls
+            ...htmls,
+            new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
         ].concat(existsSync(resolve(staticFolder)) ? new CopyPlugin([{
             from: resolve(staticFolder),
             to: join(OUTPUT_PATH, staticFolder),

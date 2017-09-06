@@ -2,9 +2,8 @@ import webpack from 'webpack'
 import { join, resolve, sep } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
-import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import ProgressPlugin from 'progress-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
-import chalk from 'chalk'
 import { config as configFactory } from 'nva-core'
 import { serverHost } from '../lib'
 
@@ -78,12 +77,8 @@ export default function(context, constants, profile) {
         resolve: { modules: [sourceFolder, resolve("node_modules"), 'node_modules'] },
         plugins: [
             ...baseConfig.plugins.slice(1),
-            new ProgressBarPlugin({
-                format: 'Building client [:bar] ' + chalk.green.bold(':percent'),
-                clear: false,
-                summary: false
-            }),
-            new FriendlyErrorsPlugin({ clearConsole: false }),
+            new ProgressPlugin(true, { onProgress: context.onDevProgress }),
+            new FriendlyErrorsPlugin({ clearConsole: false, errorsOnly: true }),
             ...dllRefs,
             ...htmls
         ]
