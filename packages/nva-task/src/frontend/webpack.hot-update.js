@@ -7,7 +7,7 @@ import ProgressPlugin from '../lib/progress'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, vendorFolder, chunkFolder, vendorSourceMap, hmrPath } = context
+    const { vendors, mods, sourceFolder, distFolder, vendorFolder, chunkFolder, vendorSourceMap, hmrPath } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {};
@@ -40,10 +40,10 @@ export default function(context, constants, profile) {
         let more = { js: [], css: [] }
         if (mod.vendor) {
             if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-                more.js = [join(sep, vendorFolder, sourcemap.js[mod.vendor.js])]
+                more.js = [join(sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
             }
             if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-                more.css = [join(sep, vendorFolder, sourcemap.css[mod.vendor.css])]
+                more.css = [join(sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
             }
         }
         htmls.push(new InjectHtmlPlugin({
