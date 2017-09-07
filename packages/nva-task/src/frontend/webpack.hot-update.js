@@ -3,7 +3,7 @@ import { join, resolve, posix } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
-import ProgressPlugin from '../lib/progress'
+import ProgressPlugin from 'progress-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
