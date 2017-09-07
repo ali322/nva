@@ -12,13 +12,13 @@ export default function(constants) {
         urlLoaderOptions = {
             ...urlLoaderOptions,
             publicPath: function(url) {
-                var _prefix = ''
+                let prefix = ''
                 if (/\.(jpg|png|bmp|gif)$/.test(url)) {
-                    _prefix = IMAGE_PREFIX
+                    prefix = IMAGE_PREFIX
                 } else if (/\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)) {
-                    _prefix = FONT_PREFIX
+                    prefix = FONT_PREFIX
                 }
-                return _prefix + url
+                return path.posix.join(prefix, url)
             },
             hash: 'sha512',
             digest: 'hex',
@@ -54,7 +54,7 @@ export default function(constants) {
         }
     }
 
-    let _loaders = [{
+    let loaders = [{
         test: /\.(tpl|html)/,
         exclude: [nodeModulesDir],
         loader: require.resolve('html-loader')
@@ -105,5 +105,5 @@ export default function(constants) {
         }
     }]
 
-    return _loaders
+    return loaders
 }

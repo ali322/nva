@@ -1,4 +1,4 @@
-import { join, resolve, sep } from 'path'
+import { join, resolve, sep, posix } from 'path'
 import { forEach, isString } from 'lodash'
 import webpack from 'webpack'
 import chalk from 'chalk'
@@ -63,8 +63,8 @@ module.exports = context => {
         OUTPUT_PATH: resolve(distFolder, sourceFolder),
         IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
         FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-        IMAGE_PREFIX: imagePrefix || `../${assetFolder}/${imageFolder}/`,
-        FONT_PREFIX: fontPrefix || `../${assetFolder}/${fontFolder}/`,
+        IMAGE_PREFIX: imagePrefix || posix.join('..', assetFolder, imageFolder),
+        FONT_PREFIX: fontPrefix || posix.join('..', assetFolder, fontFolder),
         VENDOR_OUTPUT: resolve(distFolder, sourceFolder, vendorFolder),
         MANIFEST_PATH: join(distFolder, sourceFolder, vendorFolder),
         CACHE_PATH: cachePath

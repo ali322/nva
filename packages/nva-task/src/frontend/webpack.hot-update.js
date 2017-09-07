@@ -1,5 +1,5 @@
 import { DllReferencePlugin } from 'webpack'
-import { join, resolve, sep } from 'path'
+import { join, resolve, posix } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
@@ -40,10 +40,10 @@ export default function(context, constants, profile) {
         let more = { js: [], css: [] }
         if (mod.vendor) {
             if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-                more.js = [join(sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
+                more.js = [posix.join(posix.sep, distFolder, vendorFolder, sourcemap.js[mod.vendor.js])]
             }
             if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-                more.css = [join(sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
+                more.css = [posix.join(posix.sep, distFolder, vendorFolder, sourcemap.css[mod.vendor.css])]
             }
         }
         htmls.push(new InjectHtmlPlugin({

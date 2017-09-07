@@ -6,11 +6,15 @@ import favicon from 'serve-favicon'
 import proxyMiddleware from 'http-proxy-middleware'
 import morgan from 'morgan'
 import compression from 'compression'
-import { join, resolve } from 'path'
-import fs from 'fs'
-import { parse } from 'url'
+import { join, resolve, parse, posix } from 'path'
+import { parse as urlParse } from 'url'
 import historyAPIFallback from 'connect-history-api-fallback'
 import mockFactory from './mock'
+
+function extname(val) {
+    let parsed = urlParse(val)
+    return parse(parsed.pathname).ext
+}
 
 export default (options) => {
     let { path = '', asset = '', mock = '', rewrites = false, cors = false, log = true, proxy } = options
@@ -51,8 +55,7 @@ export default (options) => {
 
     function applyAsset(assetPath, fallthrough = true) {
         app.use(assetPath === '.' ? '' : `/${assetPath}`, function(req, res, next) {
-            let parsed = parse(req.url)
-            if (parsed.pathname.match(/\.[^html]+$/)) {
+            if (extname(req.url) !== '.html') {
                 serveStatic(resolve(assetPath), {
                     fallthrough,
                 })(req, res, next)
@@ -63,7 +66,7 @@ export default (options) => {
     }
 
     if (asset) {
-        Array.isArray(asset) ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1)) : applyAsset(asset, true)
+        Array.isArray(asset) ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1)) : applyAsset(asset, false)
     }
 
     if (rewrites) {
@@ -85,18 +88,11 @@ export default (options) => {
 
     if (path) {
         app.use(function(req, res, next) {
-            let parsed = parse(req.url)
-            if (parsed.pathname.match(/\.html$/)) {
-                let str
-                try {
-                    let file = join(path, parsed.pathname)
-                    str = fs.readFileSync(file, 'utf8')
-                    res.setHeader('Content-Type', 'text/html');
-                    res.setHeader('Content-Length', Buffer.byteLength(str));
-                    res.end(str)
-                } catch (err) {
-                    next(err)
-                }
+            let ext = extname(req.url)
+            if (ext === '.html' || req.url.endsWith(posix.sep)) {
+                serveStatic(resolve(path), {
+                    fallthrough: false,
+                })(req, res, next)
             } else {
                 next()
             }

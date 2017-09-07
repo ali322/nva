@@ -1,7 +1,7 @@
 import webpack from 'webpack'
 import del from 'del'
 import { forEach, isString } from 'lodash'
-import { join, resolve, sep } from 'path'
+import { join, resolve, sep, posix } from 'path'
 import { addMod, removeMod } from '../lib/mod'
 import { vendorManifest, mergeConfig, checkVendor } from '../lib'
 import { callback } from '../lib/helper'
@@ -35,8 +35,8 @@ module.exports = context => {
         OUTPUT_PATH: resolve(distFolder),
         IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
         FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-        IMAGE_PREFIX: imagePrefix || `../${assetFolder}/${imageFolder}/`,
-        FONT_PREFIX: fontPrefix || `../${assetFolder}/${fontFolder}/`,
+        IMAGE_PREFIX: imagePrefix || posix.join('..', assetFolder, imageFolder),
+        FONT_PREFIX: fontPrefix || posix.join('..', assetFolder, fontFolder),
         VENDOR_OUTPUT: join(distFolder, vendorFolder),
         MANIFEST_PATH: join(distFolder, vendorFolder),
         CACHE_PATH: cachePath

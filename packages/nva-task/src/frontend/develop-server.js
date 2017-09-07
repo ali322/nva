@@ -39,8 +39,8 @@ export default function(context, constants) {
             rewrites = spa
         }
         const app = createApp({
-            asset: spa ? [distFolder, staticFolder] : false,
-            path: spa ? sourceFolder : false,
+            asset: [distFolder, staticFolder],
+            path:  sourceFolder,
             proxy,
             log: false,
             rewrites,
@@ -59,7 +59,7 @@ export default function(context, constants) {
             } else {
                 browserSync.init({
                     port,
-                    server: spa ? false : [sourceFolder, distFolder],
+                    // server: spa ? false : [sourceFolder, distFolder],
                     middleware: middlewares.concat([app]),
                     files: [join(sourceFolder, '**', '*.html')],
                     online: false,
