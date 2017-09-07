@@ -1,5 +1,4 @@
 import webpack from 'webpack'
-import chalk from 'chalk'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import loadersFactory from './loaders'
@@ -19,7 +18,7 @@ export default function(constants, profile = false) {
     const happypackTempDir = constants.CACHE_PATH || '.happypack'
 
     const happypackPlugins = [
-        happypackPlugin('js', [{ loader: 'babel-loader', options: { cacheDirectory: true } }], happypackTempDir),
+        happypackPlugin('js', [{ loader: require.resolve('babel-loader'), options: { cacheDirectory: true } }], happypackTempDir),
     ]
 
     let plugins = [
