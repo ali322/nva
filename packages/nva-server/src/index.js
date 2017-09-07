@@ -50,7 +50,7 @@ export default (options) => {
     }
 
     function applyAsset(assetPath, fallthrough = true) {
-        app.use(`/${assetPath}`, function(req, res, next) {
+        app.use(assetPath === '.' ? '' : `/${assetPath}`, function(req, res, next) {
             let parsed = parse(req.url)
             if (parsed.pathname.match(/\.[^html]+$/)) {
                 serveStatic(resolve(assetPath), {
