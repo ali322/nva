@@ -1,6 +1,5 @@
 import webpack from 'webpack'
 import chalk from 'chalk'
-import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import loadersFactory from './loaders'
