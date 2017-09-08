@@ -30,7 +30,7 @@ export default function(context, constants, profile) {
         externals,
         plugins: [
             ...baseConfig.plugins.slice(1),
-            new ProgressPlugin(true, 'server'),
+            new ProgressPlugin(true, { identifier: 'server' }),
             new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/),
             new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
         ],

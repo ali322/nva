@@ -38,7 +38,7 @@ export default function(context, constants) {
         resolve: { modules: [sourceFolder, 'node_modules', resolve("node_modules")] },
         plugins: [
             ...baseConfig.plugins.slice(1),
-            new ProgressPlugin(true, 'vendor:js'),
+            new ProgressPlugin(true, { identifier: 'vendor:js' }),
             new DllPlugin({
                 name: '[name]_[hash]',
                 path: resolve(MANIFEST_PATH, '[name]-manifest.json'),
@@ -58,7 +58,7 @@ export default function(context, constants) {
         },
         plugins: [
             ...baseConfig.plugins.slice(1),
-            new ProgressPlugin(true, 'vendor:css'),
+            new ProgressPlugin(true, { identifier: 'vendor:css' }),
             new ChunkTransformPlugin({
                 chunks: cssChunks,
                 test: /\.css$/,

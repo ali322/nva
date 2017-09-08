@@ -39,7 +39,7 @@ export default function(context, constants, profile) {
         externals,
         plugins: [
             ...baseConfig.plugins.slice(1, -1),
-            new ProgressPlugin(true, 'bundle'),
+            new ProgressPlugin(true, { identifier: 'bundle' }),
             new IgnorePlugin(/\.(css|less|scss|styl)$/)
         ]
     }
