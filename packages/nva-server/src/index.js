@@ -21,6 +21,10 @@ export default (options) => {
     let app = connect()
 
     app.use(methodOverride())
+    if (proxy) {
+        Array.isArray(proxy) ? proxy.forEach(v => app.use(proxyMiddleware(v.url, { ...v.options, logLevel: 'silent' }))) :
+            app.use(proxyMiddleware(proxy.url, { ...proxy.options, logLevel: 'silent' }))
+    }
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
     if (log) {
@@ -48,10 +52,6 @@ export default (options) => {
         })
     }
 
-    if (proxy) {
-        Array.isArray(proxy) ? proxy.forEach(v => app.use(proxyMiddleware(v.url, { ...v.options, logLevel: 'silent' }))) :
-            app.use(proxyMiddleware(proxy.url, { ...proxy.options, logLevel: 'silent' }))
-    }
 
     function applyAsset(assetPath, fallthrough = true) {
         app.use(assetPath === '.' ? '' : `/${assetPath}`, function(req, res, next) {
