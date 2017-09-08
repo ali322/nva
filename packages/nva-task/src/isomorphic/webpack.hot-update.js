@@ -3,7 +3,7 @@ import { resolve, posix } from 'path'
 import { forEach, isPlainObject } from 'lodash'
 import InjectHtmlPlugin from 'inject-html-webpack-plugin'
 import ProgressPlugin from 'progress-webpack-plugin'
-import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
+import TidyErrorsPlugin from 'tidy-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 import { serverHost } from '../lib'
 
@@ -78,7 +78,7 @@ export default function(context, constants, profile) {
         plugins: [
             ...baseConfig.plugins.slice(1),
             new ProgressPlugin(true, { onProgress: context.onDevProgress }),
-            new FriendlyErrorsPlugin({ clearConsole: false, errorsOnly: true }),
+            new TidyErrorsPlugin({ clearConsole: false, errorsOnly: true }),
             ...dllRefs,
             ...htmls
         ]
