@@ -7,12 +7,12 @@ import ProgressPlugin from 'progress-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, distFolder, vendorFolder, chunkFolder, vendorSourceMap, hmrPath } = context
+    const { vendors, mods, sourceFolder, distFolder, vendorFolder, chunkFolder, vendorSourceMap, hmrPath, strict } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {};
     let htmls = [];
-    let baseConfig = configFactory({ ...constants, HOT: true }, profile)
+    let baseConfig = configFactory({ ...constants, HOT: true }, strict, profile)
 
     /*build vendors*/
     let dllRefs = []

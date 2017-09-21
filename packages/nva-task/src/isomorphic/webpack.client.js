@@ -8,13 +8,13 @@ import { bundleTime } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    let { vendors, mods, sourceFolder, chunkFolder, vendorFolder, vendorSourceMap } = context
+    let { vendors, mods, sourceFolder, chunkFolder, vendorFolder, vendorSourceMap, strict } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {}
     let htmls = []
     let transforms = []
-    let baseConfig = configFactory({ ...constants, HOT: false }, profile)
+    let baseConfig = configFactory({ ...constants, HOT: false }, strict, profile)
 
     /** add vendors reference*/
     let dllRefs = []

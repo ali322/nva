@@ -10,13 +10,13 @@ import { config as configFactory } from 'nva-core'
 import { relativeURL, bundleTime } from '../lib/helper'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, distFolder, staticFolder, chunkFolder, vendorSourceMap } = context
+    const { vendors, mods, sourceFolder, distFolder, staticFolder, chunkFolder, vendorSourceMap, strict } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {}
     let htmls = []
     let transforms = []
-    let baseConfig = configFactory({ ...constants, HOT: false }, profile)
+    let baseConfig = configFactory({ ...constants, HOT: false }, strict, profile)
 
     /** build vendors*/
     let dllRefs = []

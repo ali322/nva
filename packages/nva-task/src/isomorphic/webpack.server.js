@@ -4,8 +4,8 @@ import ProgressPlugin from 'progress-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    const { serverFolder, distFolder, sourceFolder, serverEntry } = context
-    let baseConfig = configFactory({ ...constants, HOT: false }, profile)
+    const { serverFolder, distFolder, sourceFolder, serverEntry, strict } = context
+    let baseConfig = configFactory({ ...constants, HOT: false }, strict, profile)
     let externals = Object.keys(require(resolve('package.json')).dependencies)
 
     return {

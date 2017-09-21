@@ -7,9 +7,9 @@ import { relativeURL } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
 export default function(context, constants, profile) {
-    const { mods, serverFolder, distFolder, bundleFolder, sourceFolder } = context
+    const { mods, serverFolder, distFolder, bundleFolder, sourceFolder, strict } = context
     let entry = {}
-    let baseConfig = configFactory(constants, profile)
+    let baseConfig = configFactory(constants, strict, profile)
     let externals = Object.keys(require(resolve('package.json')).dependencies)
 
     /** build modules */

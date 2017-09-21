@@ -8,13 +8,13 @@ import { config as configFactory } from 'nva-core'
 import { serverHost } from '../lib'
 
 export default function(context, constants, profile) {
-    const { vendors, mods, sourceFolder, vendorFolder, vendorSourceMap, hmrPath, port } = context
+    const { vendors, mods, sourceFolder, vendorFolder, vendorSourceMap, hmrPath, port, strict } = context
     const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
     /** build variables*/
     let entry = {};
     let htmls = [];
     let devServerHost = serverHost(port)
-    let baseConfig = configFactory({ ...constants, HOT: true }, profile)
+    let baseConfig = configFactory({ ...constants, HOT: true }, strict, profile)
 
     /** add vendors reference*/
     let dllRefs = []

@@ -4,11 +4,11 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import loadersFactory from './loaders'
 import { happypackPlugin } from '../lib'
 
-export default function(constants, profile = false) {
+export default function(constants, strict = false, profile = false) {
     let config = {
         profile,
         module: {
-            rules: loadersFactory(constants),
+            rules: loadersFactory(constants, strict)
         },
         resolve: {
             extensions: [".js", ".json", ".es6", ".jsx", ".styl", ".css", ".less", '.scss'],

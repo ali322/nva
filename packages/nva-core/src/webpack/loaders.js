@@ -3,7 +3,7 @@ import { cssLoaders, postcssOptions, vueStyleLoaders } from '../lib'
 
 const nodeModulesDir = path.resolve('node_modules')
 
-export default function(constants) {
+export default function(constants, strict) {
     const { FONT_OUTPUT, IMAGE_OUTPUT, IMAGE_PREFIX, FONT_PREFIX, HOT } = constants
     let urlLoaderOptions = {
         limit: 2500
@@ -105,5 +105,16 @@ export default function(constants) {
         }
     }]
 
+    if (strict) {
+        loaders.unshift({
+            test: /\.(js|jsx|vue)$/,
+            exclude: [nodeModulesDir],
+            enforce: 'pre',
+            loader: require.resolve('eslint-loader'),
+            options:{
+                cache: true
+            }
+        })
+    }
     return loaders
 }
