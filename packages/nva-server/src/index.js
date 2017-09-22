@@ -17,7 +17,7 @@ function extname(val) {
 }
 
 export default (options) => {
-    let { path = '', asset = '', mock = '', rewrites = false, cors = false, log = true, proxy } = options
+    let { path = '', asset = '', rewrites = false, cors = false, log = true, proxy, mock = {} } = options
     let app = connect()
 
     app.use(methodOverride())
@@ -98,6 +98,11 @@ export default (options) => {
             }
         })
     }
+
+    app.use(function(req, res) {
+        res.statusCode = 404
+        res.end('not found')
+    })
 
     app.use(function(err, req, res, next) {
         res.statusCode = 500

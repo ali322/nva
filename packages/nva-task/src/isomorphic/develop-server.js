@@ -1,4 +1,4 @@
-import browserSync from 'browser-sync'
+import BrowserSync from 'browser-sync'
 import nodemon from './nodemon'
 import { join } from 'path'
 import createApp from 'nva-server'
@@ -14,6 +14,7 @@ export default function(context, constants) {
     return function(options) {
         startWatcher()
 
+        let browserSync = BrowserSync.create()
         const port = options.port || 7000
         const proxyPort = context.port || 3000
 
@@ -50,7 +51,21 @@ export default function(context, constants) {
         let app = createApp({
             log: false,
             cors: true,
-            mock
+            mock: {
+                path: mock,
+                onChange(path) {
+                    console.log(`file ${path} changed`)
+                    browserSync.reload({ stream: false })
+                },
+                onAdd(path) {
+                    console.log(`file ${path} added`)
+                    browserSync.reload({ stream: false })
+                },
+                onRemove(path) {
+                    console.log(`file ${path} removed`)
+                    browserSync.reload({ stream: false })
+                },
+            }
         })
         let middleware = [app]
         let hotUpdateConfig = hotUpdateConfigFactory({ ...context, port }, constants, options.profile)
@@ -69,7 +84,12 @@ export default function(context, constants) {
             }
         }, options.profile))
 
-        let bs = browserSync({
+        process.once('SIGINT', () => {
+            browserSync.exit()
+            process.exit(0)
+        })
+
+        browserSync.init({
             proxy: {
                 target: "http://localhost:" + proxyPort,
                 middleware
@@ -91,10 +111,6 @@ export default function(context, constants) {
             }
         }, function() {
             // console.log('🚀  develop server is started at %d', proxyPort);
-        })
-
-        bs.emitter.on("browser:reload", function() {
-            // console.log("🌎  develop server reload");
         })
     }
 }

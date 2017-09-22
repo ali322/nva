@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.3.135",
+  "version": "0.3.136",
   "description": "frontend static server",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -47,6 +47,7 @@
     "glob": "^7.1.2",
     "http-proxy-middleware": "^0.17.4",
     "json-schema-faker": "^0.4.0",
+    "lodash": "^4.17.4",
     "method-override": "^2.3.9",
     "morgan": "^1.8.1",
     "opn": "^5.0.0",

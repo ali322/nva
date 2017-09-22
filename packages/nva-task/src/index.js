@@ -35,7 +35,7 @@ export default function(options = {}) {
     }
 
     function startWatcher() {
-        watch([projConfPath, modConfPath, vendorConfPath, mockPath])
+        watch([projConfPath, modConfPath, vendorConfPath])
     }
 
     let context = {
