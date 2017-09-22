@@ -2,7 +2,7 @@ import jsf from 'json-schema-faker'
 import { resolve, relative } from 'path'
 import glob from 'glob'
 import chokidar from 'chokidar'
-import { find, groupBy, values, reduce, isFunction, indexOf } from 'lodash'
+import { find, groupBy, values, reduce, isFunction, indexOf, isRegExp, isString } from 'lodash'
 
 export default function(app, conf) {
     jsf.extend('faker', function() {
@@ -53,7 +53,14 @@ export default function(app, conf) {
             mocks = groupBy(mocks, 'filename')
         }
         app.use(function(req, res, next) {
-            let rule = find(reduce(values(mocks), (sum, v) => sum.concat(v), []), { url: req.url })
+            let rule = find(reduce(values(mocks), (sum, v) => sum.concat(v), []), v => {
+                if (isRegExp(v.url)) {
+                    return v.url.test(req.url)
+                } else if (isString(v.url)) {
+                    return v.url === req.url
+                }
+                return false
+            })
             if (rule && req.method.toLowerCase() === rule.method) {
                 if (indexOf(['get', 'post', 'put', 'delete', 'head', 'patch'], rule.method) === -1) {
                     throw new Error('unsupported method')
