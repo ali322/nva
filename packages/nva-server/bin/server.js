@@ -41,7 +41,7 @@ let options = {
     path,
     port,
     asset,
-    mock,
+    mock: { path: mock },
     rewrites,
     cors,
     log
