@@ -15,8 +15,8 @@ export default function(app, conf) {
         if (conf.path) {
             watcher = chokidar.watch(conf.path.split(','), { depth: 5 })
             watcher.on('change', path => {
-                delete require.cache[path]
-                let rules = require(path)
+                delete require.cache[resolve(path)]
+                let rules = require(resolve(path))
                 mocks[path] = rules.map(v => {
                     v.filename = path
                     return v
@@ -25,7 +25,7 @@ export default function(app, conf) {
             })
             watcher.on('add', path => {
                 if (mocks[path] === undefined) {
-                    let rules = require(path)
+                    let rules = require(resolve(path))
                     mocks[path] = rules.map(v => {
                         v.filename = path
                         return v

@@ -8,7 +8,7 @@ import hotUpdateConfigFactory from './webpack.hot-update'
 
 
 export default function(context, constants) {
-    const { runningMessage, serverFolder, viewFolder, beforeDev, mock, afterDev, hooks, startWatcher } = context
+    const { runningMessage, serverFolder, distFolder, sourceFolder, viewFolder, beforeDev, mock, afterDev, hooks, startWatcher } = context
     const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
     let cnt = 0
     return function(options) {

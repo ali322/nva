@@ -99,11 +99,6 @@ export default (options) => {
         })
     }
 
-    app.use(function(req, res) {
-        res.statusCode = 404
-        res.end('not found')
-    })
-
     app.use(function(err, req, res, next) {
         res.statusCode = 500
         res.end(err.message)
