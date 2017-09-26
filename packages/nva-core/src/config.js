@@ -2,7 +2,7 @@ import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import loadersFactory from './loaders'
-import { happypackPlugin } from '../lib'
+import { happypackPlugin } from './lib'
 
 export default function(constants, strict = false, profile = false) {
     let config = {

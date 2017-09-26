@@ -1,5 +1,5 @@
 import path from 'path'
-import { cssLoaders, postcssOptions, vueStyleLoaders } from '../lib'
+import { cssLoaders, postcssOptions, vueStyleLoaders } from './lib'
 
 const nodeModulesDir = path.resolve('node_modules')
 
