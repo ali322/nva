@@ -92,8 +92,7 @@ export default function(context, constants) {
                     logLevel: "silent"
                 }, function() {
                     console.log(`${emojis('rocket')}  develop server started at ${port}`)
-
-                    let url = spa ? '/' : '/index'
+                    let url = spa ? '/' : '/index/'
                     url = `http://localhost:${port}${url}`
                     setTimeout(() => openBrowser(options.browser, url), 5000)
                 })

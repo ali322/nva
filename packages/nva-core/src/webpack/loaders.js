@@ -110,7 +110,7 @@ export default function(constants, strict) {
             test: /\.(js|jsx|vue)$/,
             exclude: [nodeModulesDir],
             enforce: 'pre',
-            loader: require.resolve('eslint-loader'),
+            loader: 'eslint-loader',
             options:{
                 cache: true
             }
