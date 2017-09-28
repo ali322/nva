@@ -108,7 +108,7 @@ export default function(constants, strict) {
     if (strict) {
         loaders.unshift({
             test: /\.(js|jsx|vue)$/,
-            exclude: [nodeModulesDir],
+            exclude: /node_modules/,
             enforce: 'pre',
             loader: 'eslint-loader',
             options:{
