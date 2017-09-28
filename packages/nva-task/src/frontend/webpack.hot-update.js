@@ -64,7 +64,7 @@ export default function(context, constants, profile) {
             chunkFilename: join(chunkFolder, "[id].chunk.js"),
             publicPath: hmrPath
         },
-        bail: true,
+        // bail: true,
         // context: __dirname,
         resolveLoader: {
             modules: ['node_modules', resolve("node_modules")]
