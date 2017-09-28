@@ -45,16 +45,7 @@ export default function (constants, strict) {
           }
     }
   ]
-  if (!HOT) {
-    imageLoaders.push({
-      loader: require.resolve("image-webpack-loader"),
-      options: {
-        bypassOnDebug: true
-        // optimizationLevel: 7,
-        // interlaced: false
-      }
-    })
-  }
+
   let vueLoaderOptions = {
     postcss: postcssOptions(constants).plugins(),
     loaders: {

@@ -1,6 +1,6 @@
 {
   "name": "nva-core",
-  "version": "0.3.152",
+  "version": "0.3.153",
   "description": "nva core module",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-core",
   "main": "dist/index.js",
@@ -41,7 +41,6 @@
     "file-loader": "^0.11.2",
     "happypack": "^3.0.3",
     "html-loader": "^0.5.1",
-    "image-webpack-loader": "^3.4.2",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
     "loader-utils": "^1.1.0",
