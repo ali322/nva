@@ -10,7 +10,7 @@ program.parse(process.argv)
 
 let profile = program.profile
 
-checkVersion(checkPKG.bind(null, function() {
-    let tasks = require('nva-task')(context)
-    tasks.build({ profile })
+checkVersion(checkPKG.bind(null, () => {
+  let tasks = require('nva-task')(context)
+  tasks.build({ profile })
 }, context.proj.autocheck))

@@ -1,3 +1,3 @@
 module.exports = {
-    tasks:require('nva-task')
+  tasks: require('nva-task')
 }

@@ -1,5 +1,3 @@
-import config from './config.js'
+import config from "./config.js"
 
-export {
-    config
-}
+export { config }

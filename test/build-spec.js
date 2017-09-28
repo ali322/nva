@@ -1,31 +1,32 @@
-let setup = require('./fixture').setup
-let execa = require('execa')
-let path = require('path')
-let expect = require('chai').expect
+let execa = require("execa")
+let path = require("path")
+let expect = require("chai").expect
 
 describe.skip("build project test's", function() {
-    let cli = path.join(__dirname, '..', 'bin', 'nva.js')
-    let cwd = process.cwd()
-    this.timeout(100000)
+  let cli = path.join(__dirname, "..", "bin", "nva.js")
+  let cwd = process.cwd()
+  this.timeout(100000)
 
-    describe('source', function() {
-        let result
-        before(function(done) {
-            process.chdir(path.join(__dirname, '..', 'temp', 'mock-project', 'test'))
-            execa('node', [cli, 'build']).then(function(res) {
-                result = res
-                done()
-            }).catch(function(err) {
-                console.error(err)
-                done()
-            })
+  describe("source", function() {
+    let result
+    before(function(done) {
+      process.chdir(path.join(__dirname, "..", "temp", "mock-project", "test"))
+      execa("node", [cli, "build"])
+        .then(function(res) {
+          result = res
+          done()
         })
-        it('should success', function(done) {
-            expect(result.stdout).to.have.string('build success')
-            done()
-        })
-        after(function() {
-            process.chdir(cwd)
+        .catch(function(err) {
+          console.error(err)
+          done()
         })
     })
+    it("should success", function(done) {
+      expect(result.stdout).to.have.string("build success")
+      done()
+    })
+    after(function() {
+      process.chdir(cwd)
+    })
+  })
 })

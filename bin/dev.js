@@ -14,13 +14,13 @@ let browser = program.browser
 let profile = program.profile
 
 let dev = () => {
-    let tasks = require('nva-task')(context)
-    tasks.dev({ port, browser, profile })
+  let tasks = require('nva-task')(context)
+  tasks.dev({ port, browser, profile })
 }
 let started = parseInt(process.env.started)
 
 if (started === 0) {
-    checkVersion(checkPKG.bind(null, dev, context.proj.autocheck))
+  checkVersion(checkPKG.bind(null, dev, context.proj.autocheck))
 } else {
-    dev()
+  dev()
 }

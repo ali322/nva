@@ -1,17 +1,14 @@
 {
-    "root": true,
-    "env": {
-        "node": true
-    },
-    "parserOptions": {
-        "sourceType": "module"
-    },
-    "extends": "standard",
-    "rules": {
-        "indent": ["error", 4],
-        "eol-last": "off",
-        "space-before-function-paren": "off",
-        "import/no-dynamic-require": "off",
-        "standard/no-callback-literal": "off"
-    }
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": "standard",
+  "rules": {
+    "eol-last": "off",
+    "import/no-dynamic-require": "off"
+  }
 }

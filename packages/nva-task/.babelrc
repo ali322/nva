@@ -1,8 +1,8 @@
 {
-    "presets":["env"],
-    "plugins":[
-        "transform-object-rest-spread",
-        "transform-export-extensions",
-        "transform-runtime"
-    ]
+  "presets": ["env"],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-export-extensions",
+    "transform-runtime"
+  ]
 }
