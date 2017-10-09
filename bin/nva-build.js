@@ -5,7 +5,7 @@ let context = require('../lib/context')()
 let checkVersion = require('../lib/check-version')
 let checkPKG = require('../lib/check-pkg')
 
-program.option('-p, --profile', 'enable profile mode', false)
+program.option('-P, --profile', 'enable profile mode', false)
 program.parse(process.argv)
 
 let profile = program.profile

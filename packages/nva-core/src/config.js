@@ -54,6 +54,7 @@ export default function (constants, strict = false, profile = false) {
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         reportFilename: 'bundle-analyzer-report.html',
+        openAnalyzer: false,
         logLevel: 'info'
       })
     )
@@ -72,7 +73,7 @@ export default function (constants, strict = false, profile = false) {
       }
     : {
         // devtool: "#cheap-module-source-map",
-        devtool: false,
+        devtool: profile ? '#cheap-module-source-map' : false,
         plugins: [
           ...plugins,
           new webpack.DefinePlugin({
