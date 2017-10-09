@@ -1,10 +1,10 @@
-import BrowserSync from "browser-sync"
-import nodemon from "./nodemon"
-import { join } from "path"
-import createApp from "nva-server"
-import { mergeConfig, openBrowser } from "../lib"
-import middlewareFactory from "../lib/middleware"
-import hotUpdateConfigFactory from "./webpack.hot-update"
+import BrowserSync from 'browser-sync'
+import nodemon from './nodemon'
+import { join } from 'path'
+import createApp from 'nva-server'
+import { mergeConfig, openBrowser } from '../lib'
+import middlewareFactory from '../lib/middleware'
+import hotUpdateConfigFactory from './webpack.hot-update'
 
 export default function (context, constants) {
   const {
@@ -17,7 +17,7 @@ export default function (context, constants) {
     hooks,
     startWatcher
   } = context
-  const RUNNING_REGXP = new RegExp(runningMessage || "server is running")
+  const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
   let cnt = 0
   return function (options) {
     startWatcher()
@@ -28,17 +28,17 @@ export default function (context, constants) {
 
     nodemon({
       // delay: "200ms",
-      script: "app.js",
+      script: 'app.js',
       execMap: {
-        js: "babel-node"
+        js: 'babel-node'
       },
       verbose: false,
       stdout: false,
       // ignore: ["*"],
-      watch: [serverFolder, "app.js"],
-      ext: "js html json es6 jsx"
-    }).on("readable", function () {
-      this.stdout.on("data", chunk => {
+      watch: [serverFolder, 'app.js'],
+      ext: 'js html json es6 jsx'
+    }).on('readable', function () {
+      this.stdout.on('data', chunk => {
         if (RUNNING_REGXP.test(chunk.toString())) {
           ++cnt
           if (cnt === 1) {
@@ -79,23 +79,23 @@ export default function (context, constants) {
       constants,
       options.profile
     )
-    if (typeof hooks.beforeDev === "function") {
+    if (typeof hooks.beforeDev === 'function') {
       hotUpdateConfig = mergeConfig(
         hotUpdateConfig,
         hooks.beforeDev(hotUpdateConfig)
       )
     }
-    if (typeof beforeDev === "function") {
+    if (typeof beforeDev === 'function') {
       hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
     }
     middleware = middleware.concat(
       middlewareFactory(
         hotUpdateConfig,
         () => {
-          if (typeof hooks.afterDev === "function") {
+          if (typeof hooks.afterDev === 'function') {
             hooks.afterDev()
           }
-          if (typeof afterDev === "function") {
+          if (typeof afterDev === 'function') {
             afterDev()
           }
         },
@@ -103,7 +103,7 @@ export default function (context, constants) {
       )
     )
 
-    process.once("SIGINT", () => {
+    process.once('SIGINT', () => {
       browserSync.exit()
       process.exit(0)
     })
@@ -111,26 +111,26 @@ export default function (context, constants) {
     browserSync.init(
       {
         proxy: {
-          target: "http://localhost:" + proxyPort,
+          target: 'http://localhost:' + proxyPort,
           middleware
         },
         port,
-        files: join(viewFolder, "*.html"),
+        files: join(viewFolder, '*.html'),
         online: false,
-        logLevel: "silent",
+        logLevel: 'silent',
         notify: true,
         open: false,
         // reloadOnRestart:true,
         // browser: "google chrome",
         socket: {
-          clientPath: "/bs"
+          clientPath: '/bs'
         },
         scriptPath: function (path) {
           path = path.replace(
             /browser-sync-client(\.\d+)+/,
-            "browser-sync-client"
+            'browser-sync-client'
           )
-          return "http://localhost:" + port + path
+          return 'http://localhost:' + port + path
         }
       },
       function () {

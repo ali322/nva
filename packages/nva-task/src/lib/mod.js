@@ -1,15 +1,15 @@
-import { forEach, zipObject, fill, isString } from "lodash"
-import { resolve, join } from "path"
-import { error, relativeURL } from "./helper"
-import { existsSync, copySync, ensureFileSync, removeSync } from "fs-extra"
+import { forEach, zipObject, fill, isString } from 'lodash'
+import { resolve, join } from 'path'
+import { error, relativeURL } from './helper'
+import { existsSync, copySync, ensureFileSync, removeSync } from 'fs-extra'
 
 export function addMod (names, answers, template, context) {
   const { mods, addMods } = context
-  names = names.split(",")
+  names = names.split(',')
 
   forEach(names, name => {
     if (Object.keys(mods).indexOf(name) > -1) {
-      error("name existed!")
+      error('name existed!')
     }
     let { input } = initMod(answers, name, context)
     let from = template && mods[template] ? mods[template].input : {}
@@ -27,7 +27,7 @@ export function addMod (names, answers, template, context) {
 
 export function removeMod (names, context) {
   const { mods, removeMods, sourceFolder } = context
-  names = names.split(",")
+  names = names.split(',')
   forEach(names, name => {
     let to = mods[name] && mods[name].input
     if (!to) {

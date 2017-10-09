@@ -1,7 +1,7 @@
-import path from "path"
-import { cssLoaders, postcssOptions, vueStyleLoaders } from "./lib"
+import path from 'path'
+import { cssLoaders, postcssOptions, vueStyleLoaders } from './lib'
 
-const nodeModulesDir = path.resolve("node_modules")
+const nodeModulesDir = path.resolve('node_modules')
 
 export default function (constants, strict) {
   const {
@@ -18,7 +18,7 @@ export default function (constants, strict) {
     urlLoaderOptions = {
       ...urlLoaderOptions,
       publicPath: function (url) {
-        let prefix = ""
+        let prefix = ''
         if (/\.(jpg|png|bmp|gif)$/.test(url)) {
           prefix = IMAGE_PREFIX
         } else if (
@@ -26,17 +26,19 @@ export default function (constants, strict) {
         ) {
           prefix = FONT_PREFIX
         }
-        return path.posix.join(prefix, url)
+        return typeof prefix === 'function'
+          ? prefix(url)
+          : path.posix.join(prefix, path.basename(url))
       },
-      hash: "sha512",
-      digest: "hex",
-      name: "[hash:8].[ext]"
+      hash: 'sha512',
+      digest: 'hex',
+      name: '[hash:8].[ext]'
     }
   }
 
   let imageLoaders = [
     {
-      loader: require.resolve("url-loader"),
+      loader: require.resolve('url-loader'),
       options: HOT
         ? urlLoaderOptions
         : {
@@ -50,14 +52,14 @@ export default function (constants, strict) {
     postcss: postcssOptions(constants).plugins(),
     loaders: {
       css: vueStyleLoaders(constants),
-      less: vueStyleLoaders(constants, "less"),
-      stylus: vueStyleLoaders(constants, "stylus"),
+      less: vueStyleLoaders(constants, 'less'),
+      stylus: vueStyleLoaders(constants, 'stylus'),
       scss: vueStyleLoaders(constants, {
-        loader: "sass-loader",
+        loader: 'sass-loader',
         options: { sourceMap: true }
       }),
       sass: vueStyleLoaders(constants, {
-        loader: "sass-loader",
+        loader: 'sass-loader',
         options: { indentedSyntax: true, sourceMap: true }
       })
     }
@@ -67,38 +69,38 @@ export default function (constants, strict) {
     {
       test: /\.(tpl|html)/,
       exclude: [nodeModulesDir],
-      loader: require.resolve("html-loader")
+      loader: require.resolve('html-loader')
     },
     {
       test: /\.vue/,
       exclude: [nodeModulesDir],
-      loader: "vue-loader",
+      loader: 'vue-loader',
       options: vueLoaderOptions
     },
     {
       test: /\.(es6|js|jsx)$/,
       exclude: /node_modules/,
       // exclude: [nodeModulesDir],
-      loader: require.resolve("happypack/loader"),
-      options: { id: "js" }
+      loader: require.resolve('happypack/loader'),
+      options: { id: 'js' }
     },
     {
       test: /\.less/,
       exclude: [nodeModulesDir],
-      use: cssLoaders(constants, "less")
+      use: cssLoaders(constants, 'less')
     },
     {
       test: /\.scss/,
       exclude: [nodeModulesDir],
       use: cssLoaders(constants, {
-        loader: "sass-loader",
+        loader: 'sass-loader',
         options: { sourceMap: true }
       })
     },
     {
       test: /\.styl/,
       exclude: [nodeModulesDir],
-      use: cssLoaders(constants, "stylus")
+      use: cssLoaders(constants, 'stylus')
     },
     {
       test: /\.css/,
@@ -111,18 +113,18 @@ export default function (constants, strict) {
     },
     {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: require.resolve("url-loader"),
+      loader: require.resolve('url-loader'),
       options: HOT
         ? urlLoaderOptions
         : {
             ...urlLoaderOptions,
             outputPath: FONT_OUTPUT,
-            mimetype: "application/font-woff"
+            mimetype: 'application/font-woff'
           }
     },
     {
       test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: require.resolve("url-loader"),
+      loader: require.resolve('url-loader'),
       options: HOT
         ? urlLoaderOptions
         : {
@@ -136,8 +138,8 @@ export default function (constants, strict) {
     loaders.unshift({
       test: /\.(js|jsx|vue)$/,
       exclude: /node_modules/,
-      enforce: "pre",
-      loader: "eslint-loader",
+      enforce: 'pre',
+      loader: 'eslint-loader',
       options: {
         cache: true
       }

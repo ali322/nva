@@ -1,16 +1,16 @@
-import { join, resolve, sep, posix } from "path"
-import { forEach, isString } from "lodash"
-import webpack from "webpack"
-import chalk from "chalk"
-import del from "del"
-import { addMod, removeMod } from "../lib/mod"
-import { vendorManifest, mergeConfig, checkVendor } from "../lib"
-import { callback } from "../lib/helper"
-import vendorFactory from "../lib/vendor"
-import serverConfigFactory from "./webpack.server"
-import clientConfigFactory from "./webpack.client"
-import bundleConfigFactory from "./webpack.bundle"
-import developServer from "./develop-server"
+import { join, resolve, sep, posix } from 'path'
+import { forEach, isString } from 'lodash'
+import webpack from 'webpack'
+import chalk from 'chalk'
+import del from 'del'
+import { addMod, removeMod } from '../lib/mod'
+import { vendorManifest, mergeConfig, checkVendor } from '../lib'
+import { callback } from '../lib/helper'
+import vendorFactory from '../lib/vendor'
+import serverConfigFactory from './webpack.server'
+import clientConfigFactory from './webpack.client'
+import bundleConfigFactory from './webpack.bundle'
+import developServer from './develop-server'
 
 module.exports = context => {
   let {
@@ -49,7 +49,7 @@ module.exports = context => {
       stats = stats.toJson()
       stats.errors.forEach(err => console.error(err))
       stats.warnings.forEach(err => console.warn(err))
-      console.log(chalk.magenta("server side bundle is now VALID."))
+      console.log(chalk.magenta('server side bundle is now VALID.'))
     }
     if (constants.HOT) {
       bundleCompiler.watch({}, cb)
@@ -59,12 +59,12 @@ module.exports = context => {
   }
 
   const constants = {
-    CSS_OUTPUT: join("[name]", "[name]-[hash:8].css"),
+    CSS_OUTPUT: join('[name]', '[name]-[hash:8].css'),
     OUTPUT_PATH: resolve(distFolder, sourceFolder),
     IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
     FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-    IMAGE_PREFIX: imagePrefix || posix.join("..", assetFolder, imageFolder),
-    FONT_PREFIX: fontPrefix || posix.join("..", assetFolder, fontFolder),
+    IMAGE_PREFIX: imagePrefix || posix.join('..', assetFolder, imageFolder),
+    FONT_PREFIX: fontPrefix || posix.join('..', assetFolder, fontFolder),
     VENDOR_OUTPUT: resolve(distFolder, sourceFolder, vendorFolder),
     MANIFEST_PATH: join(distFolder, sourceFolder, vendorFolder),
     CACHE_PATH: cachePath
@@ -88,13 +88,13 @@ module.exports = context => {
 
       let serverConfig = serverConfigFactory(context, constants, profile)
       let clientConfig = clientConfigFactory(context, constants, profile)
-      if (typeof hooks.beforeBuild === "function") {
+      if (typeof hooks.beforeBuild === 'function') {
         clientConfig = mergeConfig(
           clientConfig,
           hooks.beforeBuild(clientConfig)
         )
       }
-      if (typeof beforeBuild === "function") {
+      if (typeof beforeBuild === 'function') {
         clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
       }
       del.sync(join(distFolder, serverFolder))
@@ -112,24 +112,24 @@ module.exports = context => {
       createBundle({ ...constants, HOT: false }, profile)
       let compiler = webpack([clientConfig, serverConfig])
       compiler.run(function (err, stats) {
-        if (typeof hooks.afterBuild === "function") {
+        if (typeof hooks.afterBuild === 'function') {
           hooks.afterBuild(err, stats)
         }
-        if (typeof afterBuild === "function") {
+        if (typeof afterBuild === 'function') {
           afterBuild(err, stats)
         }
-        callback("Build success!", err, stats) // eslint-disable-line
+        callback('Build success!', err, stats) // eslint-disable-line
       })
     },
     vendor (next) {
       let vendorConfig = vendorFactory(context, constants)
-      if (typeof hooks.beforeVendor === "function") {
+      if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,
           hooks.beforeVendor(vendorConfig)
         )
       }
-      if (typeof beforeVendor === "function") {
+      if (typeof beforeVendor === 'function') {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
       del.sync(constants.VENDOR_OUTPUT)
@@ -140,13 +140,13 @@ module.exports = context => {
           vendors,
           join(constants.VENDOR_OUTPUT, vendorSourceMap)
         )
-        if (typeof hooks.afterVendor === "function") {
+        if (typeof hooks.afterVendor === 'function') {
           hooks.afterVendor(err, stats)
         }
-        if (typeof afterVendor === "function") {
+        if (typeof afterVendor === 'function') {
           afterVendor(err, stats)
         }
-        callback("Build vendor success!", err, stats) // eslint-disable-line
+        callback('Build vendor success!', err, stats) // eslint-disable-line
         if (next) next()
       })
     },

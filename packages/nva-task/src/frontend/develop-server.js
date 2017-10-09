@@ -1,11 +1,11 @@
-import { join } from "path"
-import { isString } from "lodash"
-import middlewareFactory from "../lib/middleware"
-import { error, checkPort, emojis } from "../lib/helper"
-import { mergeConfig, openBrowser } from "../lib/"
-import hotUpdateConfig from "./webpack.hot-update"
-import BrowserSync from "browser-sync"
-import createApp from "nva-server"
+import { join } from 'path'
+import { isString } from 'lodash'
+import middlewareFactory from '../lib/middleware'
+import { error, checkPort, emojis } from '../lib/helper'
+import { mergeConfig, openBrowser } from '../lib/'
+import hotUpdateConfig from './webpack.hot-update'
+import BrowserSync from 'browser-sync'
+import createApp from 'nva-server'
 
 export default function (context, constants) {
   const {
@@ -32,19 +32,19 @@ export default function (context, constants) {
       constants,
       options.profile
     )
-    if (typeof hooks.beforeDev === "function") {
+    if (typeof hooks.beforeDev === 'function') {
       config = mergeConfig(config, hooks.beforeDev(config))
     }
-    if (typeof beforeDev === "function") {
+    if (typeof beforeDev === 'function') {
       config = mergeConfig(config, beforeDev(config))
     }
     const middlewares = middlewareFactory(
       config,
       () => {
-        if (typeof hooks.afterDev === "function") {
+        if (typeof hooks.afterDev === 'function') {
           hooks.afterDev()
         }
-        if (typeof afterDev === "function") {
+        if (typeof afterDev === 'function') {
           afterDev()
         }
       },
@@ -56,7 +56,7 @@ export default function (context, constants) {
         ? [
             {
               from: /\/(\S+)?$/,
-              to: "/index.html"
+              to: '/index.html'
             }
           ]
         : false
@@ -87,21 +87,21 @@ export default function (context, constants) {
       favicon
     })
 
-    process.once("SIGINT", () => {
+    process.once('SIGINT', () => {
       browserSync.exit()
       process.exit(0)
     })
 
     checkPort(port, available => {
       if (!available) {
-        error("port is not avaiilable")
+        error('port is not avaiilable')
       } else {
         browserSync.init(
           {
             port,
             // server: spa ? false : [sourceFolder, distFolder],
             middleware: middlewares.concat([app]),
-            files: [join(sourceFolder, "**", "*.html")],
+            files: [join(sourceFolder, '**', '*.html')],
             online: false,
             notify: true,
             open: false,
@@ -115,13 +115,13 @@ export default function (context, constants) {
             },
             logFileChanges: true,
             logConnections: false,
-            logLevel: "silent"
+            logLevel: 'silent'
           },
           function () {
             console.log(
-              `${emojis("rocket")}  develop server started at ${port}`
+              `${emojis('rocket')}  develop server started at ${port}`
             )
-            let url = spa ? "/" : "/index/"
+            let url = spa ? '/' : '/index/'
             url = `http://localhost:${port}${url}`
             setTimeout(() => openBrowser(options.browser, url), 5000)
           }

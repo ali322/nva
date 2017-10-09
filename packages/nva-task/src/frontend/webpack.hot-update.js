@@ -1,10 +1,10 @@
-import { DllReferencePlugin } from "webpack"
-import { join, resolve, posix } from "path"
-import { forEach, isPlainObject } from "lodash"
-import InjectHtmlPlugin from "inject-html-webpack-plugin"
-import TidyErrorsPlugin from "tidy-errors-webpack-plugin"
-import ProgressPlugin from "progress-webpack-plugin"
-import { config as configFactory } from "nva-core"
+import { DllReferencePlugin } from 'webpack'
+import { join, resolve, posix } from 'path'
+import { forEach, isPlainObject } from 'lodash'
+import InjectHtmlPlugin from 'inject-html-webpack-plugin'
+import TidyErrorsPlugin from 'tidy-errors-webpack-plugin'
+import ProgressPlugin from 'progress-webpack-plugin'
+import { config as configFactory } from 'nva-core'
 
 export default function (context, constants, profile) {
   const {
@@ -29,8 +29,8 @@ export default function (context, constants, profile) {
   let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
   let sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
-    for (let key in vendors["js"]) {
-      let manifestPath = resolve(VENDOR_OUTPUT, key + "-manifest.json")
+    for (let key in vendors['js']) {
+      let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
       let manifest = require(manifestPath)
       dllRefs.push(
         new DllReferencePlugin({
@@ -44,7 +44,7 @@ export default function (context, constants, profile) {
   /** build modules */
   forEach(mods, (mod, name) => {
     entry[name] = [
-      require.resolve("webpack-hot-middleware/client"),
+      require.resolve('webpack-hot-middleware/client'),
       mod.input.js
     ].concat(mod.input.css ? [mod.input.css] : [])
 
@@ -88,17 +88,17 @@ export default function (context, constants, profile) {
     profile,
     output: {
       path: OUTPUT_PATH,
-      filename: join("[name]", "[name].js"),
-      chunkFilename: join(chunkFolder, "[id].chunk.js"),
+      filename: join('[name]', '[name].js'),
+      chunkFilename: join(chunkFolder, '[id].chunk.js'),
       publicPath: hmrPath
     },
     // bail: true,
     // context: __dirname,
     resolveLoader: {
-      modules: ["node_modules", resolve("node_modules")]
+      modules: ['node_modules', resolve('node_modules')]
     },
     resolve: {
-      modules: [sourceFolder, resolve("node_modules"), "node_modules"]
+      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     plugins: [
       ...baseConfig.plugins,

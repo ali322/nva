@@ -6,18 +6,18 @@ import {
   forEach,
   startsWith,
   every
-} from "lodash"
-import merge from "webpack-merge"
-import { dirname, basename, resolve } from "path"
+} from 'lodash'
+import merge from 'webpack-merge'
+import { dirname, basename, resolve } from 'path'
 import {
   existsSync,
   outputFileSync,
   outputJsonSync,
   readJsonSync
-} from "fs-extra"
-import chalk from "chalk"
-import opn from "opn"
-import { lanIP } from "./helper"
+} from 'fs-extra'
+import chalk from 'chalk'
+import opn from 'opn'
+import { lanIP } from './helper'
 
 export function serverHost (port) {
   const ip = lanIP()
@@ -29,16 +29,16 @@ export function mergeConfig (config, value) {
   if (Array.isArray(config)) {
     return config.map(v => {
       return merge.strategy({
-        plugins: "replace",
-        entry: "replace",
-        "module.rules": "replace"
+        plugins: 'replace',
+        entry: 'replace',
+        'module.rules': 'replace'
       })(v, ...webpackConfig)
     })
   }
   return merge.strategy({
-    plugins: "replace",
-    entry: "replace",
-    "module.rules": "replace"
+    plugins: 'replace',
+    entry: 'replace',
+    'module.rules': 'replace'
   })(config, ...webpackConfig)
 }
 
@@ -59,7 +59,9 @@ export function checkVendor (vendors, target) {
     if (!existsSync(resolve(target))) return false
     let sourcemap = readJsonSync(resolve(target))
     /* check meta */
-    if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) === false) { return false }
+    if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) === false) {
+      return false
+    }
 
     /* check version */
     let version = sourcemap.version
@@ -102,12 +104,12 @@ function vendorVersion (meta) {
   let version = {},
     metas = []
   const mapper = mod =>
-    startsWith(mod, "@")
+    startsWith(mod, '@')
       ? mod
-          .split("/")
+          .split('/')
           .slice(0, 1)
-          .join("/")
-      : mod.split("/")[0]
+          .join('/')
+      : mod.split('/')[0]
   if (meta.js) {
     forEach(meta.js, v => {
       metas = metas.concat(v)
@@ -125,17 +127,17 @@ function vendorVersion (meta) {
 }
 
 function modVersion (mod) {
-  const pkg = readJsonSync(resolve("node_modules", mod, "package.json"))
+  const pkg = readJsonSync(resolve('node_modules', mod, 'package.json'))
   return pkg && pkg.version
 }
 
 export function openBrowser (target, url) {
   let opts = { wait: false }
-  if (target !== "none") {
-    if (target !== "default") {
-      opts.app = target.split(",")
+  if (target !== 'none') {
+    if (target !== 'default') {
+      opts.app = target.split(',')
     }
     let opener = opn(url, opts)
-    opener.catch(err => console.log(chalk.red("canot open in browser"), err))
+    opener.catch(err => console.log(chalk.red('canot open in browser'), err))
   }
 }

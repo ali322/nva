@@ -1,11 +1,11 @@
-import webpack from "webpack"
-import { join, resolve, sep, extname } from "path"
-import { forEach, isPlainObject } from "lodash"
-import InjectHtmlPlugin from "inject-html-webpack-plugin"
-import ProgressPlugin from "progress-webpack-plugin"
-import ChunkTransformPlugin from "chunk-transform-webpack-plugin"
-import { bundleTime } from "../lib/helper"
-import { config as configFactory } from "nva-core"
+import webpack from 'webpack'
+import { join, resolve, sep, extname } from 'path'
+import { forEach, isPlainObject } from 'lodash'
+import InjectHtmlPlugin from 'inject-html-webpack-plugin'
+import ProgressPlugin from 'progress-webpack-plugin'
+import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
+import { bundleTime } from '../lib/helper'
+import { config as configFactory } from 'nva-core'
 
 export default function (context, constants, profile) {
   let {
@@ -30,8 +30,8 @@ export default function (context, constants, profile) {
   let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
   let sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
-    for (let key in vendors["js"]) {
-      let manifestPath = resolve(VENDOR_OUTPUT, key + "-manifest.json")
+    for (let key in vendors['js']) {
+      let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
       let manifest = require(manifestPath)
       dllRefs.push(
         new webpack.DllReferencePlugin({
@@ -52,7 +52,7 @@ export default function (context, constants, profile) {
         chunks: [name],
         test: /\.(js|css)$/,
         filename: file =>
-          extname(file) === ".js"
+          extname(file) === '.js'
             ? mod.output.js || file
             : mod.output.css || file
       })
@@ -75,14 +75,14 @@ export default function (context, constants, profile) {
         more,
         customInject: [
           {
-            start: "<!-- start:bundle-time -->",
-            end: "<!-- end:bundle-time -->",
+            start: '<!-- start:bundle-time -->',
+            end: '<!-- end:bundle-time -->',
             content: `<meta name="bundleTime" content="${bundleTime()}"/>`
           },
           {
-            start: "<!-- start:browser-sync -->",
-            end: "<!-- end:browser-sync -->",
-            content: ""
+            start: '<!-- start:browser-sync -->',
+            end: '<!-- end:browser-sync -->',
+            content: ''
           }
         ]
       })
@@ -94,15 +94,15 @@ export default function (context, constants, profile) {
     entry,
     output: {
       path: OUTPUT_PATH,
-      filename: join("[name]", "[name]-[hash:8].js"),
-      chunkFilename: join(chunkFolder, "[id]-[hash:8].chunk.js")
+      filename: join('[name]', '[name]-[hash:8].js'),
+      chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
     },
     // context: __dirname,
     resolveLoader: {
-      modules: [resolve("node_modules"), "node_modules"]
+      modules: [resolve('node_modules'), 'node_modules']
     },
     resolve: {
-      modules: [sourceFolder, resolve("node_modules"), "node_modules"]
+      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     plugins: [
       ...baseConfig.plugins.slice(1),

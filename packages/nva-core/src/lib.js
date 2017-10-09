@@ -1,7 +1,7 @@
-import HappyPack from "happypack"
-import os from "os"
-import autoPrefixer from "autoprefixer"
-import ExtractTextPlugin from "extract-text-webpack-plugin"
+import HappyPack from 'happypack'
+import os from 'os'
+import autoPrefixer from 'autoprefixer'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
 export function happypackPlugin (id, loaders, tempDir) {
   const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
@@ -28,36 +28,36 @@ export function vueStyleLoaders (constants, preprocessor) {
   if (!HOT) {
     return ExtractTextPlugin.extract({
       use: loaders,
-      fallback: "vue-style-loader"
+      fallback: 'vue-style-loader'
     })
   }
-  return ["vue-style-loader"].concat(loaders)
+  return ['vue-style-loader'].concat(loaders)
 }
 
-export function cssLoaders (constants, preprocessor = "") {
+export function cssLoaders (constants, preprocessor = '') {
   let { HOT = false } = constants
   let loaders = [
-    { loader: require.resolve("style-loader") },
-    { loader: require.resolve("css-loader"), options: { minimize: !HOT } },
+    { loader: require.resolve('style-loader') },
+    { loader: require.resolve('css-loader'), options: { minimize: !HOT } },
     {
-      loader: require.resolve("postcss-loader"),
+      loader: require.resolve('postcss-loader'),
       options: postcssOptions(constants)
     },
-    { loader: require.resolve("resolve-url-loader"), options: { debug: false } }
+    { loader: require.resolve('resolve-url-loader'), options: { debug: false } }
   ]
   if (preprocessor) {
-    if (typeof preprocessor === "string") {
+    if (typeof preprocessor === 'string') {
       loaders = loaders.concat({
         loader: require.resolve(`${preprocessor}-loader`),
         options: { sourceMap: true }
       })
-    } else if (typeof preprocessor === "object") {
+    } else if (typeof preprocessor === 'object') {
       loaders = loaders.concat({
         ...preprocessor,
         loader: require.resolve(preprocessor.loader)
       })
     } else {
-      throw new Error("invalid preprocessor")
+      throw new Error('invalid preprocessor')
     }
   }
   if (!HOT) {

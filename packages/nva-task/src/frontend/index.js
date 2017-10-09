@@ -1,13 +1,13 @@
-import webpack from "webpack"
-import del from "del"
-import { forEach, isString } from "lodash"
-import { join, resolve, sep, posix } from "path"
-import { addMod, removeMod } from "../lib/mod"
-import { vendorManifest, mergeConfig, checkVendor } from "../lib"
-import { callback } from "../lib/helper"
-import vendorFactory from "../lib/vendor"
-import releaseConfigFactory from "./webpack.production"
-import developServer from "./develop-server"
+import webpack from 'webpack'
+import del from 'del'
+import { forEach, isString } from 'lodash'
+import { join, resolve, sep, posix } from 'path'
+import { addMod, removeMod } from '../lib/mod'
+import { vendorManifest, mergeConfig, checkVendor } from '../lib'
+import { callback } from '../lib/helper'
+import vendorFactory from '../lib/vendor'
+import releaseConfigFactory from './webpack.production'
+import developServer from './develop-server'
 
 module.exports = context => {
   let {
@@ -31,12 +31,12 @@ module.exports = context => {
   } = context
 
   const constants = {
-    CSS_OUTPUT: join("[name]", "[name]-[hash:8].css"),
+    CSS_OUTPUT: join('[name]', '[name]-[hash:8].css'),
     OUTPUT_PATH: resolve(distFolder),
     IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
     FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-    IMAGE_PREFIX: imagePrefix || posix.join("..", assetFolder, imageFolder),
-    FONT_PREFIX: fontPrefix || posix.join("..", assetFolder, fontFolder),
+    IMAGE_PREFIX: imagePrefix || posix.join('..', assetFolder, imageFolder),
+    FONT_PREFIX: fontPrefix || posix.join('..', assetFolder, fontFolder),
     VENDOR_OUTPUT: join(distFolder, vendorFolder),
     MANIFEST_PATH: join(distFolder, vendorFolder),
     CACHE_PATH: cachePath
@@ -58,13 +58,13 @@ module.exports = context => {
         return
       }
       let releaseConfig = releaseConfigFactory(context, constants, profile)
-      if (typeof hooks.beforeBuild === "function") {
+      if (typeof hooks.beforeBuild === 'function') {
         releaseConfig = mergeConfig(
           releaseConfig,
           hooks.beforeBuild(releaseConfig)
         )
       }
-      if (typeof beforeBuild === "function") {
+      if (typeof beforeBuild === 'function') {
         releaseConfig = mergeConfig(releaseConfig, beforeBuild(releaseConfig))
       }
       /** clean build assets */
@@ -80,24 +80,24 @@ module.exports = context => {
 
       let compiler = webpack(releaseConfig)
       compiler.run(function (err, stats) {
-        if (typeof hooks.afterBuild === "function") {
+        if (typeof hooks.afterBuild === 'function') {
           hooks.afterBuild(err, stats)
         }
-        if (typeof afterBuild === "function") {
+        if (typeof afterBuild === 'function') {
           afterBuild(err, stats)
         }
-        callback("Build success!", err, stats) // eslint-disable-line
+        callback('Build success!', err, stats) // eslint-disable-line
       })
     },
     vendor (next) {
       let vendorConfig = vendorFactory(context, constants)
-      if (typeof hooks.beforeVendor === "function") {
+      if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,
           hooks.beforeVendor(vendorConfig)
         )
       }
-      if (typeof beforeVendor === "function") {
+      if (typeof beforeVendor === 'function') {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
       del.sync(constants.VENDOR_OUTPUT)
@@ -108,13 +108,13 @@ module.exports = context => {
           vendors,
           join(constants.VENDOR_OUTPUT, vendorSourceMap)
         )
-        if (typeof hooks.afterVendor === "function") {
+        if (typeof hooks.afterVendor === 'function') {
           hooks.afterVendor(err, stats)
         }
-        if (typeof afterVendor === "function") {
+        if (typeof afterVendor === 'function') {
           afterVendor(err, stats)
         }
-        callback("Build vendor success!", err, stats) // eslint-disable-line
+        callback('Build vendor success!', err, stats) // eslint-disable-line
         if (next) next()
       })
     },

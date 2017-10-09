@@ -1,11 +1,11 @@
-import webpack from "webpack"
-import { resolve, posix } from "path"
-import { forEach, isPlainObject } from "lodash"
-import InjectHtmlPlugin from "inject-html-webpack-plugin"
-import ProgressPlugin from "progress-webpack-plugin"
-import TidyErrorsPlugin from "tidy-errors-webpack-plugin"
-import { config as configFactory } from "nva-core"
-import { serverHost } from "../lib"
+import webpack from 'webpack'
+import { resolve, posix } from 'path'
+import { forEach, isPlainObject } from 'lodash'
+import InjectHtmlPlugin from 'inject-html-webpack-plugin'
+import ProgressPlugin from 'progress-webpack-plugin'
+import TidyErrorsPlugin from 'tidy-errors-webpack-plugin'
+import { config as configFactory } from 'nva-core'
+import { serverHost } from '../lib'
 
 export default function (context, constants, profile) {
   const {
@@ -30,8 +30,8 @@ export default function (context, constants, profile) {
   let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
   let sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
-    for (let key in vendors["js"]) {
-      let manifestPath = resolve(VENDOR_OUTPUT, key + "-manifest.json")
+    for (let key in vendors['js']) {
+      let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
       let manifest = require(manifestPath)
       dllRefs.push(
         new webpack.DllReferencePlugin({
@@ -45,10 +45,10 @@ export default function (context, constants, profile) {
   /** build modules */
   forEach(mods, (mod, name) => {
     entry[name] = [
-      require.resolve("webpack-hot-middleware/client") +
-        "?path=" +
+      require.resolve('webpack-hot-middleware/client') +
+        '?path=' +
         devServerHost +
-        "/__webpack_hmr",
+        '/__webpack_hmr',
       mod.input.js
     ].concat(mod.input.css ? [mod.input.css] : [])
     let chunks = [name]
@@ -74,8 +74,8 @@ export default function (context, constants, profile) {
         more,
         customInject: [
           {
-            start: "<!-- start:browser-sync -->",
-            end: "<!-- end:browser-sync -->",
+            start: '<!-- start:browser-sync -->',
+            end: '<!-- end:browser-sync -->',
             content:
               '<script src="' +
               devServerHost +
@@ -91,16 +91,16 @@ export default function (context, constants, profile) {
     entry,
     output: {
       path: OUTPUT_PATH,
-      filename: "[name].js",
-      chunkFilename: "[id].chunk.js",
+      filename: '[name].js',
+      chunkFilename: '[id].chunk.js',
       publicPath: devServerHost + hmrPath
     },
     // context: __dirname,
     resolveLoader: {
-      modules: [resolve("node_modules"), "node_modules"]
+      modules: [resolve('node_modules'), 'node_modules']
     },
     resolve: {
-      modules: [sourceFolder, resolve("node_modules"), "node_modules"]
+      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     plugins: [
       ...baseConfig.plugins.slice(1),

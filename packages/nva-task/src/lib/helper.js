@@ -1,16 +1,16 @@
-import os from "os"
-import path from "path"
-import fs from "fs-extra"
-import chalk from "chalk"
-import net from "net"
-import emoji from "node-emoji"
+import os from 'os'
+import path from 'path'
+import fs from 'fs-extra'
+import chalk from 'chalk'
+import net from 'net'
+import emoji from 'node-emoji'
 
 export function lanIP () {
   let interfaces = os.networkInterfaces()
-  let IPv4 = "127.0.0.1"
+  let IPv4 = '127.0.0.1'
   for (let key in interfaces) {
     interfaces[key].forEach(function (details) {
-      if (details.family === "IPv4" && /^en\d{1}$/.test(key) === true) {
+      if (details.family === 'IPv4' && /^en\d{1}$/.test(key) === true) {
         IPv4 = details.address
       }
     })
@@ -19,12 +19,12 @@ export function lanIP () {
 }
 
 export function current () {
-  return new Date().toString().split(" ")[4]
+  return new Date().toString().split(' ')[4]
 }
 
 export function checkPort (port, next) {
   let server = net.createServer(function (socket) {
-    socket.write("Echo server\r\n")
+    socket.write('Echo server\r\n')
     socket.pipe(socket)
   })
 
@@ -32,7 +32,7 @@ export function checkPort (port, next) {
     server.close()
     next(true)
   })
-  server.on("error", () => {
+  server.on('error', () => {
     next(false)
   })
 }
@@ -44,11 +44,11 @@ export function bundleTime () {
   const date = dateObj.getDate()
   const hour = dateObj.getHours()
   const minute = dateObj.getMinutes()
-  return "" + year + month + date + hour + minute
+  return '' + year + month + date + hour + minute
 }
 
 export function relativeURL (from, to) {
-  const _url = path.relative(from, path.dirname(to)) || "."
+  const _url = path.relative(from, path.dirname(to)) || '.'
   return _url + path.sep + path.basename(to)
 }
 
@@ -73,10 +73,10 @@ export function error (msg) {
 }
 
 export function emojis (key) {
-  if (os.platform() === "darwin") {
+  if (os.platform() === 'darwin') {
     return emoji.get(key)
   } else {
-    return ">"
+    return '>'
   }
 }
 
@@ -92,5 +92,5 @@ export function callback (info, err, stats) {
       colors: true
     })
   )
-  console.log(emojis(":ok_hand:") + "  " + info)
+  console.log(emojis(':ok_hand:') + '  ' + info)
 }

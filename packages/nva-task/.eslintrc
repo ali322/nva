@@ -5,7 +5,6 @@
   },
   "extends": "standard",
   "rules": {
-    "quotes": "off",
     "one-var-declaration-per-line": "off",
     "one-var": "off",
     "indent": "off",
