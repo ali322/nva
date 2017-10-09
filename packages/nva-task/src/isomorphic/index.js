@@ -51,7 +51,7 @@ module.exports = context => {
       stats.warnings.forEach(err => console.warn(err))
       console.log(chalk.magenta('server side bundle is now VALID.'))
     }
-    if (constants.HOT) {
+    if (constants.DEV) {
       bundleCompiler.watch({}, cb)
     } else {
       bundleCompiler.run(cb)
@@ -109,7 +109,7 @@ module.exports = context => {
       })
       del.sync(join(distFolder, chunkFolder))
 
-      createBundle({ ...constants, HOT: false }, profile)
+      createBundle({ ...constants, DEV: false }, profile)
       let compiler = webpack([clientConfig, serverConfig])
       compiler.run(function (err, stats) {
         if (typeof hooks.afterBuild === 'function') {
@@ -151,7 +151,7 @@ module.exports = context => {
       })
     },
     dev (options) {
-      createBundle({ ...constants, HOT: true }, options.profile)
+      createBundle({ ...constants, DEV: true }, options.profile)
       const runDev = developServer(context, constants)
       if (
         checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))

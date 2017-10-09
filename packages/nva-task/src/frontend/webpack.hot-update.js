@@ -22,7 +22,7 @@ export default function (context, constants, profile) {
   /** build variables */
   let entry = {}
   let htmls = []
-  let baseConfig = configFactory({ ...constants, HOT: true }, strict, profile)
+  let baseConfig = configFactory({ ...constants, DEV: true }, strict, profile)
 
   /* build vendors */
   let dllRefs = []

@@ -26,7 +26,7 @@ export default function (context, constants, profile) {
   let entry = {}
   let htmls = []
   let transforms = []
-  let baseConfig = configFactory({ ...constants, HOT: false }, strict, profile)
+  let baseConfig = configFactory(constants, strict, profile)
 
   /** build vendors */
   let dllRefs = []

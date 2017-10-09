@@ -23,7 +23,7 @@ export default function (context, constants, profile) {
   let entry = {}
   let htmls = []
   let devServerHost = serverHost(port)
-  let baseConfig = configFactory({ ...constants, HOT: true }, strict, profile)
+  let baseConfig = configFactory({ ...constants, DEV: true }, strict, profile)
 
   /** add vendors reference */
   let dllRefs = []

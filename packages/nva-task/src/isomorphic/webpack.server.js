@@ -11,7 +11,7 @@ export default function (context, constants, profile) {
     serverEntry,
     strict
   } = context
-  let baseConfig = configFactory({ ...constants, HOT: false }, strict, profile)
+  let baseConfig = configFactory(constants, strict, profile)
   let externals = Object.keys(require(resolve('package.json')).dependencies)
 
   return {

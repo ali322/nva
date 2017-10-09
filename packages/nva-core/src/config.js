@@ -5,6 +5,7 @@ import loadersFactory from './loaders'
 import { happypackPlugin } from './lib'
 
 export default function (constants, strict = false, profile = false) {
+  constants.DEV = constants.DEV || false
   let config = {
     profile,
     module: {
@@ -60,7 +61,7 @@ export default function (constants, strict = false, profile = false) {
     )
   }
 
-  let restConfig = constants.HOT
+  let restConfig = constants.DEV
     ? {
         devtool: '#cheap-source-map',
         watch: true,

@@ -9,12 +9,12 @@ export default function (constants, strict) {
     IMAGE_OUTPUT,
     IMAGE_PREFIX,
     FONT_PREFIX,
-    HOT
+    DEV
   } = constants
   let urlLoaderOptions = {
     limit: 2500
   }
-  if (!HOT) {
+  if (!DEV) {
     urlLoaderOptions = {
       ...urlLoaderOptions,
       publicPath: function (url) {
@@ -39,7 +39,7 @@ export default function (constants, strict) {
   let imageLoaders = [
     {
       loader: require.resolve('url-loader'),
-      options: HOT
+      options: DEV
         ? urlLoaderOptions
         : {
             ...urlLoaderOptions,
@@ -114,7 +114,7 @@ export default function (constants, strict) {
     {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: require.resolve('url-loader'),
-      options: HOT
+      options: DEV
         ? urlLoaderOptions
         : {
             ...urlLoaderOptions,
@@ -125,7 +125,7 @@ export default function (constants, strict) {
     {
       test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: require.resolve('url-loader'),
-      options: HOT
+      options: DEV
         ? urlLoaderOptions
         : {
             ...urlLoaderOptions,

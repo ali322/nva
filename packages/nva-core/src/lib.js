@@ -14,7 +14,7 @@ export function happypackPlugin (id, loaders, tempDir) {
   })
 }
 
-export const postcssOptions = ({ HOT, IMAGE_OUTPUT }) => ({
+export const postcssOptions = () => ({
   plugins: function () {
     let plugins = [autoPrefixer()]
     return plugins
@@ -22,10 +22,9 @@ export const postcssOptions = ({ HOT, IMAGE_OUTPUT }) => ({
 })
 
 export function vueStyleLoaders (constants, preprocessor) {
-  let { HOT = false } = constants
-  let loaders = cssLoaders({ ...constants, HOT: true }, preprocessor)
+  let loaders = cssLoaders({ ...constants, DEV: true }, preprocessor)
   loaders = loaders.filter((v, i) => i > 0 && i !== 2)
-  if (!HOT) {
+  if (!constants.DEV) {
     return ExtractTextPlugin.extract({
       use: loaders,
       fallback: 'vue-style-loader'
@@ -35,10 +34,9 @@ export function vueStyleLoaders (constants, preprocessor) {
 }
 
 export function cssLoaders (constants, preprocessor = '') {
-  let { HOT = false } = constants
   let loaders = [
     { loader: require.resolve('style-loader') },
-    { loader: require.resolve('css-loader'), options: { minimize: !HOT } },
+    { loader: require.resolve('css-loader'), options: { minimize: !constants.DEV } },
     {
       loader: require.resolve('postcss-loader'),
       options: postcssOptions(constants)
@@ -60,7 +58,7 @@ export function cssLoaders (constants, preprocessor = '') {
       throw new Error('invalid preprocessor')
     }
   }
-  if (!HOT) {
+  if (!constants.DEV) {
     return ExtractTextPlugin.extract({
       use: loaders.slice(1),
       fallback: loaders[0]

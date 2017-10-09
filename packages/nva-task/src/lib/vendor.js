@@ -8,7 +8,7 @@ import { config as configFactory } from 'nva-core'
 export default function (context, constants) {
   const { vendors, sourceFolder, vendorFolder } = context
   const { VENDOR_OUTPUT, MANIFEST_PATH, OUTPUT_PATH } = constants
-  const baseConfig = configFactory({ ...constants, HOT: false })
+  const baseConfig = configFactory(constants)
 
   let entryJS = {},
     entryCSS = {},
