@@ -49,7 +49,10 @@ export default function (constants, strict) {
   ]
 
   let vueLoaderOptions = {
-    postcss: postcssOptions(constants).plugins(),
+    postcss: {
+        plugins: postcssOptions(constants).plugins,
+        options: {sourceMap: 'inline'}
+    },
     loaders: {
       css: vueStyleLoaders(constants),
       less: vueStyleLoaders(constants, 'less'),

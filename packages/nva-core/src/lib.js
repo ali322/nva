@@ -15,10 +15,8 @@ export function happypackPlugin (id, loaders, tempDir) {
 }
 
 export const postcssOptions = () => ({
-  plugins: function () {
-    let plugins = [autoPrefixer()]
-    return plugins
-  }
+  plugins: [autoPrefixer()],
+  sourceMap: 'inline'
 })
 
 export function vueStyleLoaders (constants, preprocessor) {
