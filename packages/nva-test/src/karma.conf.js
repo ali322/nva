@@ -15,6 +15,7 @@ let reportPath = resolve("test", "unit", "coverage")
 sourcePath = customize.sourcePath || sourcePath
 entry = customize.entry || entry
 reportPath = customize.reportPath || reportPath
+let browsers = customize.browsers || ['jsdom']
 
 let webpackConfig = require("./webpack.test")({ sourcePath })
 
@@ -43,7 +44,10 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ["jsdom"],
+    browsers,
+    phantomjsLauncher: {
+      exitOnResourceError: true
+    },
     concurrency: Infinity,
     captureTimeout: 60000,
     browserDisconnectTimeout: 10000,
