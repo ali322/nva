@@ -13,11 +13,14 @@ module.exports = (function (settings) {
   settings.globals_path = join(__dirname, 'global.js')
   settings.selenium = {
     start_process: true,
-    server_path: require('selenium-server').path,
+    server_path: require(resolve('node_modules', 'selenium-server')).path,
     host: '127.0.0.1',
     port: 6666,
     cli_args: {
-      'webdriver.chrome.driver': require('chromedriver').path
+      'webdriver.chrome.driver': require(resolve(
+        'node_modules',
+        'chromedriver'
+      )).path
     }
   }
 

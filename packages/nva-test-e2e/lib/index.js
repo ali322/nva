@@ -18,7 +18,7 @@ module.exports = function (runner, conf, browser = 'chrome') {
     opts = opts.concat(['--customize', resolve(conf)])
   }
 
-  opts = opts.concat(['--config', join(__dirname, 'nightwatch.conf.js')])
+  opts = opts.concat(['--config', join(__dirname, 'conf.js')])
   if (['chrome'].indexOf(browser) === -1) {
     throw new Error('unsupported browser')
   }

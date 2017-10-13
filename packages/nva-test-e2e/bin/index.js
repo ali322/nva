@@ -1,11 +1,11 @@
 #! /usr/bin/env node
 
 var program = require('commander')
-var test = require('../src/')
+var test = require('../lib/')
 let version = require('../package.json').version
 
 program.version(version)
-program.option('-r, --runner <runner>', 'how to start project')
+program.option('-s, --server <server>', 'how to start project')
 program.option('-c, --config <config>', 'customize config')
 program.option(
   '    --browser <browser>',
@@ -15,8 +15,8 @@ program.option(
 
 program.parse(process.argv)
 
-let runner = program.runner
+let server = program.server
 let config = program.config
 let browser = program.browser
 
-test(runner, config, browser)
+test(server, config, browser)
