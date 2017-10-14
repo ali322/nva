@@ -2,8 +2,6 @@ let exec = require('execa')
 let { existsSync } = require('fs')
 let { resolve, join } = require('path')
 
-const nodeModules = join(__dirname, '..', 'node_modules')
-
 module.exports = function (runner, conf, browser = 'chrome') {
   process.env.NODE_ENV = 'testing'
   let server
@@ -24,7 +22,7 @@ module.exports = function (runner, conf, browser = 'chrome') {
   }
   opts = opts.concat(['--env', browser])
 
-  let instance = exec(join(nodeModules, '.bin', 'nightwatch'), opts, {
+  let instance = exec(join('node_modules', '.bin', 'nightwatch'), opts, {
     stdio: 'inherit'
   })
   instance.on('exit', code => {
