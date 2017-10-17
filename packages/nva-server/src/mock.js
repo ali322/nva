@@ -1,6 +1,7 @@
 import jsf from "json-schema-faker"
 import { resolve, relative } from "path"
 import glob from "glob"
+import chalk from "chalk"
 import chokidar from "chokidar"
 import {
   find,
@@ -25,7 +26,12 @@ export default function (app, conf) {
       watcher = chokidar.watch(conf.path.split(","), { depth: 5 })
       watcher.on("change", path => {
         delete require.cache[resolve(path)]
-        let rules = require(resolve(path))
+        let rules = []
+        try {
+          rules = require(resolve(path))
+        } catch (e) {
+          console.log(chalk.red("mock config invalid"))
+        }
         mocks[path] = rules.map(v => {
           v.filename = path
           return v
@@ -36,7 +42,12 @@ export default function (app, conf) {
       })
       watcher.on("add", path => {
         if (mocks[path] === undefined) {
-          let rules = require(resolve(path))
+          let rules = []
+          try {
+            rules = require(resolve(path))
+          } catch (e) {
+            console.log(chalk.red("mock config invalid"))
+          }
           mocks[path] = rules.map(v => {
             v.filename = path
             return v
@@ -99,7 +110,7 @@ export default function (app, conf) {
       }
     })
   } catch (err) {
-    throw new Error("mock config invalid")
+    console.log(chalk.red("mock config invalid"))
   }
 
   return app
