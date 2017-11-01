@@ -19,6 +19,7 @@ module.exports = context => {
     fontFolder,
     imagePrefix,
     fontPrefix,
+    postcss,
     beforeBuild,
     afterBuild,
     beforeVendor,
@@ -39,7 +40,8 @@ module.exports = context => {
     FONT_PREFIX: fontPrefix || posix.join('..', assetFolder, fontFolder),
     VENDOR_OUTPUT: join(distFolder, vendorFolder),
     MANIFEST_PATH: join(distFolder, vendorFolder),
-    CACHE_PATH: cachePath
+    CACHE_PATH: cachePath,
+    POSTCSS: postcss
   }
 
   const tasks = {
