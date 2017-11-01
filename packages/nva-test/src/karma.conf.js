@@ -26,7 +26,7 @@ preprocessors[entry] = ["webpack", "sourcemap"]
 module.exports = function (config) {
   let opts = {
     basePath: "",
-    frameworks: ["mocha", "sinon-chai"],
+    frameworks: ["mocha", "sinon-chai"].concat(browsers.includes('PhantomJS') ? ['phantomjs-shim'] : []),
     files: [entry],
     exclude: [],
     preprocessors,

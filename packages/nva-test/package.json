@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.3.167",
+  "version": "0.3.168",
   "description": "frontend test toolkit",
   "main": "src/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
@@ -51,5 +51,8 @@
     "webpack": "^2.6.1",
     "webpack-merge": "^4.1.0",
     "yargs": "^7.1.0"
+  },
+  "devDependencies": {
+    "karma-phantomjs-shim": "^1.5.0"
   }
 }
