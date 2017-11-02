@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.3.170",
+  "version": "0.3.171",
   "description": "frontend static server",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -35,6 +35,7 @@
     "babel-preset-env": "^1.2.2",
     "cross-env": "^3.2.4",
     "eslint-cli": "^1.1.0",
+    "pretty-error": "^2.1.1",
     "rimraf": "^2.6.1"
   },
   "dependencies": {

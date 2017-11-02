@@ -3,6 +3,8 @@ import { resolve, relative } from "path"
 import glob from "glob"
 import chalk from "chalk"
 import chokidar from "chokidar"
+import { pe } from "./lib"
+
 import {
   find,
   groupBy,
@@ -23,6 +25,19 @@ export default function (app, conf) {
     let mocks = [],
       watcher
     if (conf.path) {
+      conf.path.split(",").forEach(v => {
+        let files = glob.sync(v)
+        files.forEach(file => {
+          let rules = require(resolve(file))
+          rules = rules.map(v => {
+            v.filename = resolve(file)
+            return v
+          })
+          mocks = mocks.concat(Array.isArray(rules) ? rules : [])
+        })
+      })
+      mocks = groupBy(mocks, "filename")
+
       watcher = chokidar.watch(conf.path.split(","), { depth: 5 })
       watcher.on("change", path => {
         delete require.cache[resolve(path)]
@@ -30,7 +45,7 @@ export default function (app, conf) {
         try {
           rules = require(resolve(path))
         } catch (e) {
-          console.log(chalk.red("mock config invalid"))
+          console.log(pe.render(e))
         }
         mocks[path] = rules.map(v => {
           v.filename = path
@@ -46,7 +61,7 @@ export default function (app, conf) {
           try {
             rules = require(resolve(path))
           } catch (e) {
-            console.log(chalk.red("mock config invalid"))
+            console.log(pe.render(e))
           }
           mocks[path] = rules.map(v => {
             v.filename = path
@@ -62,18 +77,6 @@ export default function (app, conf) {
             conf.onRemove(relative(process.cwd(), path))
         }
       })
-      conf.path.split(",").forEach(v => {
-        let files = glob.sync(v)
-        files.forEach(file => {
-          let rules = require(resolve(file))
-          rules = rules.map(v => {
-            v.filename = resolve(file)
-            return v
-          })
-          mocks = mocks.concat(Array.isArray(rules) ? rules : [])
-        })
-      })
-      mocks = groupBy(mocks, "filename")
     }
     app.use(function (req, res, next) {
       let rule = find(
@@ -94,7 +97,7 @@ export default function (app, conf) {
             rule.method
           ) === -1
         ) {
-          throw new Error("unsupported method")
+          console.log(chalk.red("unsupported method"))
         }
         res.statusCode = 200
         res.setHeader("content-type", "application/json;charset=utf-8")
@@ -110,7 +113,7 @@ export default function (app, conf) {
       }
     })
   } catch (err) {
-    console.log(chalk.red("mock config invalid"))
+    console.log(pe.render(err))
   }
 
   return app
