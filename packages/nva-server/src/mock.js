@@ -3,7 +3,7 @@ import { resolve, relative } from "path"
 import glob from "glob"
 import chalk from "chalk"
 import chokidar from "chokidar"
-import { pe } from "./lib"
+import { prettyError } from "./lib"
 
 import {
   find,
@@ -45,7 +45,7 @@ export default function (app, conf) {
         try {
           rules = require(resolve(path))
         } catch (e) {
-          console.log(pe.render(e))
+          console.log(prettyError(e))
         }
         mocks[path] = rules.map(v => {
           v.filename = path
@@ -61,7 +61,7 @@ export default function (app, conf) {
           try {
             rules = require(resolve(path))
           } catch (e) {
-            console.log(pe.render(e))
+            console.log(prettyError(e))
           }
           mocks[path] = rules.map(v => {
             v.filename = path
@@ -113,7 +113,7 @@ export default function (app, conf) {
       }
     })
   } catch (err) {
-    console.log(pe.render(err))
+    console.log(prettyError(err))
   }
 
   return app

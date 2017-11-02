@@ -8,4 +8,6 @@ pe.appendStyle({
     }
 })
 
-export { pe }
+export function prettyError (e) {
+    return pe.render(e)
+}
