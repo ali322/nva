@@ -77,3 +77,6 @@ then choose your own preferred fake data generator, like `mockJS`
         return mockJS.mock({...})
     }
 }]
+```
+
+[Back to Index](./index.md)
