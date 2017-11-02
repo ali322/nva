@@ -4,7 +4,7 @@ title: NVA
 ---
 [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url] [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-[中文](./index.md)
+[English](../index.md)
 
 ## nva是什么?
 

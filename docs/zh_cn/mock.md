@@ -81,4 +81,4 @@ module.exports = [{
 }]
 ```
 
-[返回首页](./zh_cn/index.md)
+[返回首页](./index.md)

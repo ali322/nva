@@ -85,4 +85,4 @@ nva test -r path/to/server.js -c path/to/config.js
 | -r or —-runner |   无    |    应用测试服务器    |
 | —-browser |   phantom.js    |    测试浏览器    |
 
-[返回首页](./zh_cn/index.md)
+[返回首页](./index.md)
