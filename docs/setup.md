@@ -3,7 +3,7 @@ layout: page
 title: Setup
 ---
 
-## Config
+## Setup
 
 The purpose of nva is provide easy and painless way so that users can get started with actual app code as fast as possible,Howerver,nva need some configure to work in order
 all config files alive in `.nva` directory of project

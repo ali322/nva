@@ -3,6 +3,8 @@ layout: page
 title: Mock
 ---
 
+## Mock
+
 all mock api config files list on the `.nva/mock`, support `.json`, `.js` settings file
 
 ```js
