@@ -4,6 +4,8 @@ title: NVA
 ---
 [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url] [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
+[中文](./zh_cn/index.md)
+
 ## Install
 
 Prerequisites: [Node.js](https://nodejs.org/en/) (>=4.x, LTS preferred), npm version 3+ and [Git](https://git-scm.com)
@@ -44,6 +46,23 @@ nva build
 
 build project to dist,prepare for deploy
 
+## Supported Template
+
+#### [frontend boilerplate](https://github.com/ali322/frontend-boilerplate) 
+
+- multiple pages project with react + redux 
+- single page project with react + redux + react-router
+- multiple pages project with vue + vuex
+- single page project with vue + vuex + vue-router 
+
+#### [isomorphic boilerplate](https://github.com/ali322/isomorphic-boilerplate)
+
+koa@2+react or koa@2+vue,server side render
+
+- multiple pages project with react + redux + koa@2
+- single page project with react + redux + react-router + koa@2
+- multiple pages project with vue + vuex + koa@2
+- single page project with vue + vuex + vue-router + koa@2
 
 ## Documentation
 
