@@ -14,16 +14,16 @@ export function happypackPlugin (id, loaders, tempDir) {
   })
 }
 
-export const postcssOptions = (constants) => ({
+export const postcssOptions = (context) => ({
   plugins: [autoPrefixer({browsers: ['last 2 versions']})],
   sourceMap: 'inline',
-  ...(constants.POSTCSS || {})
+  ...(context.postcss || {})
 })
 
-export function vueStyleLoaders (constants, preprocessor) {
-  let loaders = cssLoaders({ ...constants, DEV: true }, preprocessor)
+export function vueStyleLoaders (context, preprocessor) {
+  let loaders = cssLoaders({ ...context, isDev: true }, preprocessor)
   loaders = loaders.filter((v, i) => i > 0 && i !== 2)
-  if (!constants.DEV) {
+  if (!context.isDev) {
     return ExtractTextPlugin.extract({
       use: loaders,
       fallback: 'vue-style-loader'
@@ -32,13 +32,13 @@ export function vueStyleLoaders (constants, preprocessor) {
   return ['vue-style-loader'].concat(loaders)
 }
 
-export function cssLoaders (constants, preprocessor = '') {
+export function cssLoaders (context, preprocessor = '') {
   let loaders = [
     { loader: require.resolve('style-loader') },
-    { loader: require.resolve('css-loader'), options: { minimize: !constants.DEV } },
+    { loader: require.resolve('css-loader'), options: { minimize: !context.isDev } },
     {
       loader: require.resolve('postcss-loader'),
-      options: postcssOptions(constants)
+      options: postcssOptions(context)
     },
     { loader: require.resolve('resolve-url-loader'), options: { debug: false } }
   ]
@@ -57,7 +57,7 @@ export function cssLoaders (constants, preprocessor = '') {
       throw new Error('invalid preprocessor')
     }
   }
-  if (!constants.DEV) {
+  if (!context.isDev) {
     return ExtractTextPlugin.extract({
       use: loaders.slice(1),
       fallback: loaders[0]

@@ -1,15 +1,15 @@
 import webpack from 'webpack'
+import { join } from 'path'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import loadersFactory from './loaders'
 import { happypackPlugin } from './lib'
 
-export default function (constants, strict = false, profile = false) {
-  constants.DEV = constants.DEV || false
+export default function (context, profile = false) {
   let config = {
     profile,
     module: {
-      rules: loadersFactory(constants, strict)
+      rules: loadersFactory(context)
     },
     resolve: {
       extensions: [
@@ -25,7 +25,9 @@ export default function (constants, strict = false, profile = false) {
     }
   }
 
-  const happypackTempDir = constants.CACHE_PATH || '.happypack'
+  const happypackTempDir = context.compilerCache
+    ? join(context.compilerCache, 'happypack')
+    : '.happypack'
 
   const happypackPlugins = [
     happypackPlugin(
@@ -61,7 +63,7 @@ export default function (constants, strict = false, profile = false) {
     )
   }
 
-  let restConfig = constants.DEV
+  let restConfig = context.isDev
     ? {
         devtool: '#cheap-source-map',
         watch: true,
@@ -87,7 +89,7 @@ export default function (constants, strict = false, profile = false) {
               comments: false
             }
           }),
-          new ExtractTextPlugin({ filename: constants.CSS_OUTPUT })
+          new ExtractTextPlugin({ filename: context.output.cssPath })
         ]
       }
   return { ...config, ...restConfig }

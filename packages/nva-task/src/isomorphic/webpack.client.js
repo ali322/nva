@@ -7,7 +7,7 @@ import ChunkTransformPlugin from 'chunk-transform-webpack-plugin'
 import { bundleTime } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
-export default function (context, constants, profile) {
+export default function (context, profile) {
   let {
     vendors,
     mods,
@@ -15,23 +15,22 @@ export default function (context, constants, profile) {
     chunkFolder,
     vendorFolder,
     vendorSourceMap,
-    strict
+    output
   } = context
-  const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
   /** build variables */
   let entry = {}
   let htmls = []
   let transforms = []
-  let baseConfig = configFactory(constants, strict, profile)
+  let baseConfig = configFactory(context, profile)
 
   /** add vendors reference */
   let dllRefs = []
 
-  let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
+  let sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
   let sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
+      let manifestPath = resolve(output.vendorPath, key + '-manifest.json')
       let manifest = require(manifestPath)
       dllRefs.push(
         new webpack.DllReferencePlugin({
@@ -93,7 +92,7 @@ export default function (context, constants, profile) {
     ...baseConfig,
     entry,
     output: {
-      path: OUTPUT_PATH,
+      path: output.path,
       filename: join('[name]', '[name]-[hash:8].js'),
       chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
     },

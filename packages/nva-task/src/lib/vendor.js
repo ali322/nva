@@ -5,10 +5,9 @@ import ProgressPlugin from 'progress-webpack-plugin'
 import { isEmpty, isPlainObject } from 'lodash'
 import { config as configFactory } from 'nva-core'
 
-export default function (context, constants) {
-  const { vendors, sourceFolder, vendorFolder } = context
-  const { VENDOR_OUTPUT, MANIFEST_PATH, OUTPUT_PATH } = constants
-  const baseConfig = configFactory(constants)
+export default function (context) {
+  const { vendors, sourceFolder, vendorFolder,output } = context
+  const baseConfig = configFactory(context)
 
   let entryJS = {},
     entryCSS = {},
@@ -30,7 +29,7 @@ export default function (context, constants) {
     name: 'js',
     entry: entryJS,
     output: {
-      path: resolve(VENDOR_OUTPUT),
+      path: resolve(output.vendorPath),
       filename: '[name]-[hash:8].js',
       library: '[name]_[hash]'
     },
@@ -43,7 +42,7 @@ export default function (context, constants) {
       new ProgressPlugin(true, { identifier: 'vendor:js' }),
       new DllPlugin({
         name: '[name]_[hash]',
-        path: resolve(MANIFEST_PATH, '[name]-manifest.json'),
+        path: resolve(output.vendorPath, '[name]-manifest.json'),
         context: __dirname
       })
     ]
@@ -58,7 +57,7 @@ export default function (context, constants) {
       modules: [sourceFolder, 'node_modules', resolve('node_modules')]
     },
     output: {
-      path: OUTPUT_PATH
+      path: output.path
     },
     plugins: [
       ...baseConfig.plugins.slice(1),

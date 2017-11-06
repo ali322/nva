@@ -6,17 +6,16 @@ import { existsSync } from 'fs'
 import { relativeURL } from '../lib/helper'
 import { config as configFactory } from 'nva-core'
 
-export default function (context, constants, profile) {
+export default function (context, profile) {
   const {
     mods,
     serverFolder,
     distFolder,
     bundleFolder,
-    sourceFolder,
-    strict
+    sourceFolder
   } = context
   let entry = {}
-  let baseConfig = configFactory(constants, strict, profile)
+  let baseConfig = configFactory(context, profile)
   let externals = Object.keys(require(resolve('package.json')).dependencies)
 
   /** build modules */

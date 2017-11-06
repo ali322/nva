@@ -3,28 +3,22 @@ import { cssLoaders, postcssOptions, vueStyleLoaders } from './lib'
 
 const nodeModulesDir = path.resolve('node_modules')
 
-export default function (constants, strict) {
-  const {
-    FONT_OUTPUT,
-    IMAGE_OUTPUT,
-    IMAGE_PREFIX,
-    FONT_PREFIX,
-    DEV
-  } = constants
+export default function (context) {
+  const { output, imagePrefix, fontPrefix, isDev, strict } = context
   let urlLoaderOptions = {
     limit: 2500
   }
-  if (!DEV) {
+  if (!isDev) {
     urlLoaderOptions = {
       ...urlLoaderOptions,
       publicPath: function (url) {
         let prefix = ''
-        if (/\.(jpg|png|bmp|gif)$/.test(url)) {
-          prefix = IMAGE_PREFIX
+        if (/\.(jpg|jpeg|png|bmp|gif)$/.test(url)) {
+          prefix = imagePrefix
         } else if (
           /\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)
         ) {
-          prefix = FONT_PREFIX
+          prefix = fontPrefix
         }
         return typeof prefix === 'function'
           ? prefix(url)
@@ -36,32 +30,20 @@ export default function (constants, strict) {
     }
   }
 
-  let imageLoaders = [
-    {
-      loader: require.resolve('url-loader'),
-      options: DEV
-        ? urlLoaderOptions
-        : {
-            ...urlLoaderOptions,
-            outputPath: IMAGE_OUTPUT
-          }
-    }
-  ]
-
   let vueLoaderOptions = {
     postcss: {
-        plugins: postcssOptions(constants).plugins,
-        options: {sourceMap: 'inline'}
+      plugins: postcssOptions(context).plugins,
+      options: { sourceMap: 'inline' }
     },
     loaders: {
-      css: vueStyleLoaders(constants),
-      less: vueStyleLoaders(constants, 'less'),
-      stylus: vueStyleLoaders(constants, 'stylus'),
-      scss: vueStyleLoaders(constants, {
+      css: vueStyleLoaders(context),
+      less: vueStyleLoaders(context, 'less'),
+      stylus: vueStyleLoaders(context, 'stylus'),
+      scss: vueStyleLoaders(context, {
         loader: 'sass-loader',
         options: { sourceMap: true }
       }),
-      sass: vueStyleLoaders(constants, {
+      sass: vueStyleLoaders(context, {
         loader: 'sass-loader',
         options: { indentedSyntax: true, sourceMap: true }
       })
@@ -90,12 +72,12 @@ export default function (constants, strict) {
     {
       test: /\.less/,
       exclude: [nodeModulesDir],
-      use: cssLoaders(constants, 'less')
+      use: cssLoaders(context, 'less')
     },
     {
       test: /\.scss/,
       exclude: [nodeModulesDir],
-      use: cssLoaders(constants, {
+      use: cssLoaders(context, {
         loader: 'sass-loader',
         options: { sourceMap: true }
       })
@@ -103,36 +85,42 @@ export default function (constants, strict) {
     {
       test: /\.styl/,
       exclude: [nodeModulesDir],
-      use: cssLoaders(constants, 'stylus')
+      use: cssLoaders(context, 'stylus')
     },
     {
       test: /\.css/,
-      use: cssLoaders(constants)
+      use: cssLoaders(context)
     },
     {
-      test: /\.(png|jpg|gif|bmp)$/,
+      test: /\.(png|jpg|jpeg|gif|bmp)$/,
       exclude: [nodeModulesDir],
-      use: imageLoaders
+      loader: require.resolve('url-loader'),
+      options: isDev
+        ? urlLoaderOptions
+        : {
+            ...urlLoaderOptions,
+            outputPath: output.imagePath
+          }
     },
     {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: require.resolve('url-loader'),
-      options: DEV
+      options: isDev
         ? urlLoaderOptions
         : {
             ...urlLoaderOptions,
-            outputPath: FONT_OUTPUT,
+            outputPath: output.fontPath,
             mimetype: 'application/font-woff'
           }
     },
     {
       test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: require.resolve('url-loader'),
-      options: DEV
+      options: isDev
         ? urlLoaderOptions
         : {
             ...urlLoaderOptions,
-            outputPath: FONT_OUTPUT
+            outputPath: output.fontPath
           }
     }
   ]

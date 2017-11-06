@@ -1,12 +1,45 @@
 import { omit, mapValues } from 'lodash'
-import { join } from 'path'
+import { join, posix, resolve, sep } from 'path'
 import { initMod } from './mod'
+
+function mixin (proj) {
+  let {
+    isSSR,
+    namespace,
+    output,
+    distFolder,
+    sourceFolder,
+    vendorFolder,
+    assetFolder,
+    imageFolder,
+    fontFolder,
+  } = proj
+  return {
+    imagePrefix: posix.join('..', assetFolder, imageFolder),
+    fontPrefix: posix.join('..', assetFolder, fontFolder),
+    compilerCache: join(`.${namespace}`, 'temp'),
+    output: {
+      path: isSSR ? resolve(distFolder, sourceFolder) : resolve(distFolder),
+      cssPath: join('[name]', '[name]-[hash:8].css'),
+      imagePath: join(assetFolder, imageFolder, sep),
+      fontPath: join(assetFolder, fontFolder, sep),
+      vendorPath: isSSR
+        ? join(distFolder, sourceFolder, vendorFolder)
+        : join(distFolder, vendorFolder),
+      ...output
+    }
+  }
+}
 
 export default function (context) {
   const { proj, mods, namespace } = context
-  const isIsomorphic = proj.type === 'isomorphic'
+  const isSSR = proj.type === 'isomorphic'
 
-  let _proj = {
+  let projContext = {
+    isDev: false,
+    strict: false,
+    profile: false,
+    isSSR,
     sourceFolder: 'src',
     jsExt: '.js',
     cssExt: '.css',
@@ -22,16 +55,15 @@ export default function (context) {
     fontFolder: 'font',
     imageFolder: 'image',
     outputPrefix: '',
-    fontPrefix: '',
-    imagePrefix: '',
 
     hmrPath: '/hmr/',
+    output: {},
     cachePath: join(`.${namespace}`, 'temp', 'happypack')
   }
 
-  if (isIsomorphic) {
-    _proj = {
-      ..._proj,
+  if (isSSR) {
+    projContext = {
+      ...projContext,
       moduleFolder: 'module',
       bundleFolder: 'bundle',
       serverFolder: 'server',
@@ -41,18 +73,22 @@ export default function (context) {
     }
   }
 
-  _proj = { ..._proj, ...proj }
+  projContext = {
+    ...projContext,
+    ...mixin(projContext),
+    ...proj
+  }
 
-  let _mods = mapValues(mods, (mod, name) => {
+  let modsContext = mapValues(mods, (mod, name) => {
     return {
       ...mod,
-      ...initMod(mod, name, _proj)
+      ...initMod(mod, name, projContext)
     }
   })
 
   return {
     ...omit(context, ['mods', 'proj']),
-    mods: _mods,
-    ..._proj
+    mods: modsContext,
+    ...projContext
   }
 }

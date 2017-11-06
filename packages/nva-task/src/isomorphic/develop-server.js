@@ -6,7 +6,7 @@ import { mergeConfig, openBrowser } from '../lib'
 import middlewareFactory from '../lib/middleware'
 import hotUpdateConfigFactory from './webpack.hot-update'
 
-export default function (context, constants) {
+export default function (context) {
   const {
     runningMessage,
     serverFolder,
@@ -76,7 +76,6 @@ export default function (context, constants) {
     let middleware = [app]
     let hotUpdateConfig = hotUpdateConfigFactory(
       { ...context, port },
-      constants,
       options.profile
     )
     if (typeof hooks.beforeDev === 'function') {

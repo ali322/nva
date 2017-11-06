@@ -6,7 +6,7 @@ import TidyErrorsPlugin from 'tidy-errors-webpack-plugin'
 import ProgressPlugin from 'progress-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 
-export default function (context, constants, profile) {
+export default function (context, profile) {
   const {
     vendors,
     mods,
@@ -16,21 +16,20 @@ export default function (context, constants, profile) {
     chunkFolder,
     vendorSourceMap,
     hmrPath,
-    strict
+    output
   } = context
-  const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
   /** build variables */
   let entry = {}
   let htmls = []
-  let baseConfig = configFactory({ ...constants, DEV: true }, strict, profile)
+  let baseConfig = configFactory({ ...context, isDev: true }, profile)
 
   /* build vendors */
   let dllRefs = []
-  let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
+  let sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
   let sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
+      let manifestPath = resolve(output.vendorPath, key + '-manifest.json')
       let manifest = require(manifestPath)
       dllRefs.push(
         new DllReferencePlugin({
@@ -87,7 +86,7 @@ export default function (context, constants, profile) {
     entry,
     profile,
     output: {
-      path: OUTPUT_PATH,
+      path: output.path,
       filename: join('[name]', '[name].js'),
       chunkFilename: join(chunkFolder, '[id].chunk.js'),
       publicPath: hmrPath

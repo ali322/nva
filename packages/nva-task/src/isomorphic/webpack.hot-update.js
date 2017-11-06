@@ -7,7 +7,7 @@ import TidyErrorsPlugin from 'tidy-errors-webpack-plugin'
 import { config as configFactory } from 'nva-core'
 import { serverHost } from '../lib'
 
-export default function (context, constants, profile) {
+export default function (context, profile) {
   const {
     vendors,
     mods,
@@ -16,22 +16,21 @@ export default function (context, constants, profile) {
     vendorSourceMap,
     hmrPath,
     port,
-    strict
+    output
   } = context
-  const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
   /** build variables */
   let entry = {}
   let htmls = []
   let devServerHost = serverHost(port)
-  let baseConfig = configFactory({ ...constants, DEV: true }, strict, profile)
+  let baseConfig = configFactory({ ...context, isDev: true }, profile)
 
   /** add vendors reference */
   let dllRefs = []
-  let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
+  let sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
   let sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
+      let manifestPath = resolve(output.vendorPath, key + '-manifest.json')
       let manifest = require(manifestPath)
       dllRefs.push(
         new webpack.DllReferencePlugin({
@@ -90,7 +89,7 @@ export default function (context, constants, profile) {
     ...baseConfig,
     entry,
     output: {
-      path: OUTPUT_PATH,
+      path: output.path,
       filename: '[name].js',
       chunkFilename: '[id].chunk.js',
       publicPath: devServerHost + hmrPath

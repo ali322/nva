@@ -7,7 +7,7 @@ import hotUpdateConfig from './webpack.hot-update'
 import BrowserSync from 'browser-sync'
 import createApp from 'nva-server'
 
-export default function (context, constants) {
+export default function (context) {
   const {
     spa,
     sourceFolder,
@@ -29,7 +29,6 @@ export default function (context, constants) {
     const port = options.port || 3000
     let config = hotUpdateConfig(
       { ...context, port },
-      constants,
       options.profile
     )
     if (typeof hooks.beforeDev === 'function') {

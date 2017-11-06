@@ -14,18 +14,12 @@ import developServer from './develop-server'
 
 module.exports = context => {
   let {
+    output,
     serverFolder,
     distFolder,
     chunkFolder,
     sourceFolder,
-    vendorFolder,
     bundleFolder,
-    assetFolder,
-    imageFolder,
-    fontFolder,
-    imagePrefix,
-    fontPrefix,
-    postcss,
     beforeBuild,
     afterBuild,
     beforeVendor,
@@ -33,12 +27,11 @@ module.exports = context => {
     hooks,
     mods,
     vendors,
-    vendorSourceMap,
-    cachePath
+    vendorSourceMap
   } = context
 
-  function createBundle (constants, profile) {
-    let bundleConfig = bundleConfigFactory(context, constants, profile)
+  function createBundle (context, profile) {
+    let bundleConfig = bundleConfigFactory(context, profile)
     del.sync(join(serverFolder, bundleFolder))
     if (Object.keys(bundleConfig.entry).length === 0) {
       return
@@ -52,24 +45,11 @@ module.exports = context => {
       stats.warnings.forEach(err => console.warn(err))
       console.log(chalk.magenta('server side bundle is now VALID.'))
     }
-    if (constants.DEV) {
+    if (context.isDev) {
       bundleCompiler.watch({}, cb)
     } else {
       bundleCompiler.run(cb)
     }
-  }
-
-  const constants = {
-    CSS_OUTPUT: join('[name]', '[name]-[hash:8].css'),
-    OUTPUT_PATH: resolve(distFolder, sourceFolder),
-    IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
-    FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-    IMAGE_PREFIX: imagePrefix || posix.join('..', assetFolder, imageFolder),
-    FONT_PREFIX: fontPrefix || posix.join('..', assetFolder, fontFolder),
-    VENDOR_OUTPUT: resolve(distFolder, sourceFolder, vendorFolder),
-    MANIFEST_PATH: join(distFolder, sourceFolder, vendorFolder),
-    CACHE_PATH: cachePath,
-    POSTCSS: postcss
   }
 
   const tasks = {
@@ -81,15 +61,15 @@ module.exports = context => {
     },
     build ({ profile }) {
       if (
-        checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) ===
+        checkVendor(vendors, join(context.vendorPath, vendorSourceMap)) ===
         false
       ) {
         tasks.vendor(tasks.build.bind(null, { profile }))
         return
       }
 
-      let serverConfig = serverConfigFactory(context, constants, profile)
-      let clientConfig = clientConfigFactory(context, constants, profile)
+      let serverConfig = serverConfigFactory(context, profile)
+      let clientConfig = clientConfigFactory(context, profile)
       if (typeof hooks.beforeBuild === 'function') {
         clientConfig = mergeConfig(
           clientConfig,
@@ -111,7 +91,7 @@ module.exports = context => {
       })
       del.sync(join(distFolder, chunkFolder))
 
-      createBundle({ ...constants, DEV: false }, profile)
+      createBundle({ ...context, isDev: false }, profile)
       let compiler = webpack([clientConfig, serverConfig])
       compiler.run(function (err, stats) {
         if (typeof hooks.afterBuild === 'function') {
@@ -124,7 +104,7 @@ module.exports = context => {
       })
     },
     vendor (next) {
-      let vendorConfig = vendorFactory(context, constants)
+      let vendorConfig = vendorFactory(context)
       if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,
@@ -134,13 +114,13 @@ module.exports = context => {
       if (typeof beforeVendor === 'function') {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
-      del.sync(constants.VENDOR_OUTPUT)
+      del.sync(output.vendorPath)
       let compiler = webpack(vendorConfig)
       compiler.run(function (err, stats) {
         vendorManifest(
           stats,
           vendors,
-          join(constants.VENDOR_OUTPUT, vendorSourceMap)
+          join(output.vendorPath, vendorSourceMap)
         )
         if (typeof hooks.afterVendor === 'function') {
           hooks.afterVendor(err, stats)
@@ -153,10 +133,10 @@ module.exports = context => {
       })
     },
     dev (options) {
-      createBundle({ ...constants, DEV: true }, options.profile)
-      const runDev = developServer(context, constants)
+      createBundle({ ...context, isDev: true }, options.profile)
+      const runDev = developServer(context)
       if (
-        checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))
+        checkVendor(vendors, join(context.vendorPath, vendorSourceMap))
       ) {
         runDev(options)
       } else {

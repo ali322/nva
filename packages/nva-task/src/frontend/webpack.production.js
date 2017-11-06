@@ -9,7 +9,7 @@ import { existsSync } from 'fs-extra'
 import { config as configFactory } from 'nva-core'
 import { relativeURL, bundleTime } from '../lib/helper'
 
-export default function (context, constants, profile) {
+export default function (context, profile) {
   const {
     vendors,
     mods,
@@ -19,22 +19,21 @@ export default function (context, constants, profile) {
     staticFolder,
     chunkFolder,
     vendorSourceMap,
-    strict
+    output
   } = context
-  const { VENDOR_OUTPUT, OUTPUT_PATH } = constants
   /** build variables */
   let entry = {}
   let htmls = []
   let transforms = []
-  let baseConfig = configFactory(constants, strict, profile)
+  let baseConfig = configFactory(context, profile)
 
   /** build vendors */
   let dllRefs = []
-  let sourcemapPath = resolve(VENDOR_OUTPUT, vendorSourceMap)
+  let sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
   let sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      let manifestPath = resolve(VENDOR_OUTPUT, key + '-manifest.json')
+      let manifestPath = resolve(output.vendorPath, key + '-manifest.json')
       let manifest = require(manifestPath)
       dllRefs.push(
         new DllReferencePlugin({
@@ -64,7 +63,7 @@ export default function (context, constants, profile) {
     const htmlOutput = mod.output.html
     if (mod.vendor) {
       if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-        let originalURL = join(VENDOR_OUTPUT, sourcemap.js[mod.vendor.js])
+        let originalURL = join(output.vendorPath, sourcemap.js[mod.vendor.js])
         more.js = [
           isFunction(outputPrefix)
             ? outputPrefix(originalURL)
@@ -72,7 +71,7 @@ export default function (context, constants, profile) {
         ]
       }
       if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-        let originalURL = join(VENDOR_OUTPUT, sourcemap.css[mod.vendor.css])
+        let originalURL = join(output.vendorPath, sourcemap.css[mod.vendor.css])
         more.css = [
           isFunction(outputPrefix)
             ? outputPrefix(originalURL)
@@ -106,7 +105,7 @@ export default function (context, constants, profile) {
     ...baseConfig,
     entry,
     output: {
-      path: OUTPUT_PATH,
+      path: output.path,
       filename: join('[name]', '[name]-[hash:8].js'),
       chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
     },
@@ -128,7 +127,7 @@ export default function (context, constants, profile) {
         ? new CopyPlugin([
             {
               from: resolve(staticFolder),
-              to: join(OUTPUT_PATH, staticFolder),
+              to: join(output.path, staticFolder),
               ignore: ['.*']
             }
           ])

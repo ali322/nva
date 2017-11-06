@@ -1,7 +1,7 @@
 import webpack from 'webpack'
 import del from 'del'
 import { forEach, isString } from 'lodash'
-import { join, resolve, sep, posix } from 'path'
+import { join } from 'path'
 import { addMod, removeMod } from '../lib/mod'
 import { vendorManifest, mergeConfig, checkVendor } from '../lib'
 import { callback } from '../lib/helper'
@@ -13,13 +13,7 @@ module.exports = context => {
   let {
     distFolder,
     chunkFolder,
-    vendorFolder,
-    assetFolder,
-    imageFolder,
-    fontFolder,
-    imagePrefix,
-    fontPrefix,
-    postcss,
+    output,
     beforeBuild,
     afterBuild,
     beforeVendor,
@@ -28,21 +22,7 @@ module.exports = context => {
     mods,
     vendors,
     vendorSourceMap,
-    cachePath
   } = context
-
-  const constants = {
-    CSS_OUTPUT: join('[name]', '[name]-[hash:8].css'),
-    OUTPUT_PATH: resolve(distFolder),
-    IMAGE_OUTPUT: join(assetFolder, imageFolder, sep),
-    FONT_OUTPUT: join(assetFolder, fontFolder, sep),
-    IMAGE_PREFIX: imagePrefix || posix.join('..', assetFolder, imageFolder),
-    FONT_PREFIX: fontPrefix || posix.join('..', assetFolder, fontFolder),
-    VENDOR_OUTPUT: join(distFolder, vendorFolder),
-    MANIFEST_PATH: join(distFolder, vendorFolder),
-    CACHE_PATH: cachePath,
-    POSTCSS: postcss
-  }
 
   const tasks = {
     addMod (names, answers, template) {
@@ -53,13 +33,13 @@ module.exports = context => {
     },
     build ({ profile }) {
       if (
-        checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap)) ===
+        checkVendor(vendors, join(output.vendorPath, vendorSourceMap)) ===
         false
       ) {
         tasks.vendor(tasks.build.bind(null, { profile }))
         return
       }
-      let releaseConfig = releaseConfigFactory(context, constants, profile)
+      let releaseConfig = releaseConfigFactory(context, profile)
       if (typeof hooks.beforeBuild === 'function') {
         releaseConfig = mergeConfig(
           releaseConfig,
@@ -92,7 +72,7 @@ module.exports = context => {
       })
     },
     vendor (next) {
-      let vendorConfig = vendorFactory(context, constants)
+      let vendorConfig = vendorFactory(context)
       if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,
@@ -102,13 +82,13 @@ module.exports = context => {
       if (typeof beforeVendor === 'function') {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
-      del.sync(constants.VENDOR_OUTPUT)
+      del.sync(output.vendorPath)
       var compiler = webpack(vendorConfig)
       compiler.run(function (err, stats) {
         vendorManifest(
           stats,
           vendors,
-          join(constants.VENDOR_OUTPUT, vendorSourceMap)
+          join(output.vendorPath, vendorSourceMap)
         )
         if (typeof hooks.afterVendor === 'function') {
           hooks.afterVendor(err, stats)
@@ -121,9 +101,9 @@ module.exports = context => {
       })
     },
     dev (options) {
-      const runDev = developServer(context, constants)
+      const runDev = developServer(context)
       if (
-        checkVendor(vendors, join(constants.VENDOR_OUTPUT, vendorSourceMap))
+        checkVendor(vendors, join(output.vendorPath, vendorSourceMap))
       ) {
         runDev(options)
       } else {
