@@ -3,7 +3,7 @@ nva
 
 [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url] [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-yet another efficient and painless scaffold for frontend and isomorphic project
+efficient and painless scaffold for frontend and isomorphic project
 
 
 ## Documentation

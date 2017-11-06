@@ -5,19 +5,17 @@ import { initMod } from './mod'
 function mixin (proj) {
   let {
     isSSR,
-    namespace,
     output,
     distFolder,
     sourceFolder,
     vendorFolder,
     assetFolder,
     imageFolder,
-    fontFolder,
+    fontFolder
   } = proj
   return {
     imagePrefix: posix.join('..', assetFolder, imageFolder),
     fontPrefix: posix.join('..', assetFolder, fontFolder),
-    compilerCache: join(`.${namespace}`, 'temp'),
     output: {
       path: isSSR ? resolve(distFolder, sourceFolder) : resolve(distFolder),
       cssPath: join('[name]', '[name]-[hash:8].css'),
@@ -58,7 +56,7 @@ export default function (context) {
 
     hmrPath: '/hmr/',
     output: {},
-    cachePath: join(`.${namespace}`, 'temp', 'happypack')
+    compilerCache: join(`.${namespace}`, 'temp')
   }
 
   if (isSSR) {
