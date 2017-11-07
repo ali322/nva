@@ -16,7 +16,7 @@ program
   .command('*')
   .action(function (cmd) {
     if (
-      ['init', 'list', 'bundle', 'dev', 'build', 'vendor'].indexOf(cmd) === -1
+      ['init', 'list', 'bundle', 'dev', 'build', 'vendor', 'use'].indexOf(cmd) === -1
     ) {
       console.log('unsupported nva command')
       process.exit(1)

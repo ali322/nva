@@ -15,7 +15,7 @@ let lib = require('../lib')
 program.usage('[project]')
 program.option('-r, --repo [value]', 'choose specified repo')
 program.option('--no-install', 'do not execute npm install')
-program.option('--mirror [value]', 'supported npm mirror: taobao, offical')
+program.option('--yarn', 'use yarn instead of npm')
 
 program.on('--help', function () {
   console.log(`
@@ -38,7 +38,7 @@ if (!program.args.length) {
 
 let repo = program.repo
 let noInstall = program.noInstall
-let mirror = program.mirror
+let useYarn = program.yarn
 
 let projectName = program.args[0]
 let projectPath = path.resolve(projectName)
@@ -58,7 +58,7 @@ if (repo) {
 }
 
 function generate (answers) {
-  generator(projectName, projectPath, answers, repo, !noInstall, mirror)
+  generator(projectName, projectPath, answers, repo, !noInstall, useYarn)
 }
 
 if (fs.existsSync(projectPath)) {
