@@ -4,7 +4,7 @@ import { cssLoaders, postcssOptions, vueStyleLoaders } from './lib'
 const nodeModulesDir = path.resolve('node_modules')
 
 export default function (context) {
-  const { output, imagePrefix, fontPrefix, isDev, strict } = context
+  const { output = {}, imagePrefix, fontPrefix, isDev, strict } = context
   let urlLoaderOptions = {
     limit: 2500
   }
