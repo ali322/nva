@@ -61,7 +61,7 @@ module.exports = context => {
     },
     build ({ profile }) {
       if (
-        checkVendor(vendors, join(context.vendorPath, vendorSourceMap)) ===
+        checkVendor(vendors, join(output.vendorPath, vendorSourceMap)) ===
         false
       ) {
         tasks.vendor(tasks.build.bind(null, { profile }))
@@ -136,7 +136,7 @@ module.exports = context => {
       createBundle({ ...context, isDev: true }, options.profile)
       const runDev = developServer(context)
       if (
-        checkVendor(vendors, join(context.vendorPath, vendorSourceMap))
+        checkVendor(vendors, join(output.vendorPath, vendorSourceMap))
       ) {
         runDev(options)
       } else {
