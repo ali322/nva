@@ -3,7 +3,7 @@
 let program = require('commander')
 let { switchMirror } = require('../lib/')
 
-program.option('-m, --mirror [value]', 'which mirror do you preferred?')
+program.usage('[mirror]')
 program.option('--yarn', 'use yarn instead of npm')
 
 program.on('--help', function () {
@@ -14,7 +14,11 @@ program.on('--help', function () {
 
 program.parse(process.argv)
 
-let useYarn = program.yarn
-let mirror = program.mirror
+let mirror = program.args[0]
 
-switchMirror(mirror, useYarn)
+if (mirror === '[object Object]') {
+  program.help()
+} else {
+  let useYarn = program.yarn
+  switchMirror(mirror, useYarn)
+}

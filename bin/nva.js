@@ -13,6 +13,7 @@ program
   .command('dev', 'start dev server')
   .command('build', 'build source')
   .command('vendor', 'build vendor libraries')
+  .command('use', 'switch npm or yarn mirror')
   .command('*')
   .action(function (cmd) {
     if (
