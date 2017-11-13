@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.3.189",
+  "version": "0.3.190",
   "description": "frontend static server",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -40,7 +40,7 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "chalk": "^1.1.3",
-    "pretty-error": "^2.1.1",
+    "chokidar": "^1.7.0",
     "commander": "^2.9.0",
     "compression": "^1.6.2",
     "connect": "^3.6.0",
@@ -52,6 +52,7 @@
     "method-override": "^2.3.9",
     "morgan": "^1.8.1",
     "opn": "^5.0.0",
+    "pretty-error": "^2.1.1",
     "serve-favicon": "^2.4.2",
     "serve-static": "^1.12.1"
   }
