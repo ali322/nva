@@ -82,6 +82,11 @@ export default function (context, profile = false) {
           new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production')
           }),
+          new webpack.HashedModuleIdsPlugin({
+            hashFunction: 'sha256',
+            hashDigest: 'hex',
+            hashDigestLength: 10
+          }),
           new webpack.optimize.UglifyJsPlugin({
             comments: false,
             sourceMap: false,
