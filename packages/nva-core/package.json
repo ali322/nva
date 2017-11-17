@@ -1,6 +1,6 @@
 {
   "name": "nva-core",
-  "version": "0.3.192",
+  "version": "0.3.200",
   "description": "nva core module",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-core",
   "main": "dist/index.js",
@@ -8,6 +8,7 @@
   "files": [
     "dist",
     "es",
+    "script",
     "src"
   ],
   "scripts": {
@@ -44,10 +45,10 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
     "loader-utils": "^1.1.0",
-    "node-sass": "4.5.3",
     "postcss-loader": "^2.0.6",
     "resolve-url-loader": "^2.1.0",
     "sass-loader": "6.0.6",
+    "node-sass": "4.5.3",
     "style-loader": "^0.18.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
