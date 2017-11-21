@@ -18,6 +18,12 @@ nva是一个基于webpack,提供灵活配置的前端项目脚手架工具,既�
 npm install nva -g
 ```
 
+使用镜像解决 node-sass 编译安装问题
+
+```bash
+npm i -g ipu-cli --sass-binary-site=http://npm.taobao.org/mirrors/node-sass/
+```
+
 ## 快速开始
 
 1. 初始化项目
