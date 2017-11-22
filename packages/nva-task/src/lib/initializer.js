@@ -55,8 +55,7 @@ export default function (context) {
     outputPrefix: '',
 
     hmrPath: '/hmr/',
-    output: {},
-    compilerCache: join(`.${namespace}`, 'temp')
+    output: {}
   }
 
   if (isSSR) {

@@ -30,7 +30,7 @@ export default function (context) {
       // delay: "200ms",
       script: 'app.js',
       execMap: {
-        js: 'babel-node'
+        js: join(__dirname, '..', '..', 'node_modules', '.bin', 'babel-node')
       },
       verbose: false,
       stdout: false,

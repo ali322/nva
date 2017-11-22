@@ -36,6 +36,7 @@ export default function (context) {
       options: { sourceMap: 'inline' }
     },
     loaders: {
+      js: require.resolve('happypack/loader') + '?id=js',
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
       stylus: vueStyleLoaders(context, 'stylus'),

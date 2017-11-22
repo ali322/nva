@@ -3,11 +3,10 @@ import os from 'os'
 import autoPrefixer from 'autoprefixer'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
-export function happypackPlugin (id, loaders, tempDir) {
+export function happypackPlugin (id, loaders) {
   const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
   return new HappyPack({
     id,
-    tempDir,
     verbose: false,
     threadPool: compilerThreadPool,
     loaders

@@ -89,6 +89,7 @@ export function callback (info, err, stats) {
     stats.toString({
       version: false,
       chunks: false,
+      modules: false,
       colors: true
     })
   )

@@ -25,10 +25,6 @@ export default function (context, profile = false) {
     }
   }
 
-  const happypackTempDir = context.compilerCache
-    ? join(context.compilerCache, 'happypack')
-    : '.happypack'
-
   const happypackPlugins = [
     happypackPlugin(
       'js',
@@ -37,8 +33,7 @@ export default function (context, profile = false) {
           loader: require.resolve('babel-loader'),
           options: { cacheDirectory: true }
         }
-      ],
-      happypackTempDir
+      ]
     )
   ]
 
