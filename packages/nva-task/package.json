@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.3.212",
+  "version": "0.3.222",
   "description": "tasks for nva",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -40,11 +40,11 @@
     "lodash": "^4.17.4",
     "node-emoji": "^1.8.1",
     "nodemon": "^1.11.0",
-    "nva-core": "0.3.212",
-    "nva-server": "0.3.212",
+    "nva-core": "0.3.222",
+    "nva-server": "0.3.222",
     "opn": "^5.0.0",
     "portfinder": "^1.0.13",
-    "progress-webpack-plugin": "0.0.12",
+    "progress-webpack-plugin": "0.0.13",
     "tidy-errors-webpack-plugin": "0.0.1",
     "webpack": "^3.8.1",
     "webpack-dev-middleware": "^1.10.1",
@@ -60,8 +60,12 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.4.0",
     "cross-env": "^3.1.4",
-    "eslint": "^3.15.0",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "rimraf": "^2.5.4"
   }
 }

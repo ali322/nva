@@ -1,6 +1,6 @@
 import BrowserSync from 'browser-sync'
 import nodemon from './nodemon'
-import { join } from 'path'
+import { join, dirname } from 'path'
 import createApp from 'nva-server'
 import { mergeConfig, openBrowser } from '../lib'
 import middlewareFactory from '../lib/middleware'
@@ -30,7 +30,7 @@ export default function (context) {
       // delay: "200ms",
       script: 'app.js',
       execMap: {
-        js: join(__dirname, '..', '..', 'node_modules', '.bin', 'babel-node')
+        js: join(dirname(require.resolve('babel-cli')), '..', '.bin', 'babel-node')
       },
       verbose: false,
       stdout: false,

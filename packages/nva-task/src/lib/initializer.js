@@ -30,7 +30,7 @@ function mixin (proj) {
 }
 
 export default function (context) {
-  const { proj, mods, namespace } = context
+  const { proj, mods } = context
   const isSSR = proj.type === 'isomorphic'
 
   let projContext = {

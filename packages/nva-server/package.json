@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.3.212",
+  "version": "0.3.222",
   "description": "frontend static server",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -34,7 +34,13 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.2.2",
     "cross-env": "^3.2.4",
+    "eslint": "^4.11.0",
     "eslint-cli": "^1.1.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "rimraf": "^2.6.1"
   },
   "dependencies": {
