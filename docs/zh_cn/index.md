@@ -21,7 +21,7 @@ npm install nva -g
 使用镜像解决 node-sass 编译安装问题
 
 ```bash
-npm i -g ipu-cli --sass-binary-site=http://npm.taobao.org/mirrors/node-sass/
+npm i -g nva --sass-binary-site=http://npm.taobao.org/mirrors/node-sass/
 ```
 
 ## 快速开始
