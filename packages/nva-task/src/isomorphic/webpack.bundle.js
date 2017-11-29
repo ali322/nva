@@ -1,5 +1,6 @@
 import { IgnorePlugin } from 'webpack'
 import ProgressPlugin from 'progress-webpack-plugin'
+import nodeExternals from 'webpack-node-externals'
 import { resolve, join } from 'path'
 import { forEach } from 'lodash'
 import { existsSync } from 'fs'
@@ -16,7 +17,8 @@ export default function (context, profile) {
   } = context
   let entry = {}
   let baseConfig = configFactory(context, profile)
-  let externals = Object.keys(require(resolve('package.json')).dependencies)
+//   let externals = Object.keys(require(resolve('package.json')).dependencies)
+  let externals = nodeExternals({whitelist: /\.css$/})
 
   /** build modules */
   forEach(mods, (mod, name) => {

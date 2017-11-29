@@ -1,5 +1,4 @@
 import webpack from 'webpack'
-import { join } from 'path'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import loadersFactory from './loaders'

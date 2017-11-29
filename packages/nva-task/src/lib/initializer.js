@@ -65,7 +65,7 @@ export default function (context) {
       bundleFolder: 'bundle',
       serverFolder: 'server',
       serverEntry: 'bootstrap.js',
-      viewFolder: 'view',
+      viewFolder: join('server', 'view'),
       sourceFolder: 'client'
     }
   }
