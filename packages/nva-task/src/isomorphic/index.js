@@ -1,4 +1,4 @@
-import { join, resolve, sep, posix } from 'path'
+import { join } from 'path'
 import { forEach, isString } from 'lodash'
 import webpack from 'webpack'
 import chalk from 'chalk'
@@ -22,6 +22,8 @@ module.exports = context => {
     bundleFolder,
     beforeBuild,
     afterBuild,
+    beforeServerBuild,
+    afterServerBuild,
     beforeVendor,
     afterVendor,
     hooks,
@@ -75,9 +77,14 @@ module.exports = context => {
           clientConfig,
           hooks.beforeBuild(clientConfig)
         )
+        serverConfig = mergeConfig(
+            serverConfig,
+            hooks.beforeServerBuild(serverConfig)
+        )
       }
       if (typeof beforeBuild === 'function') {
         clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
+        serverConfig = mergeConfig(serverConfig, beforeServerBuild(serverConfig))
       }
       del.sync(join(distFolder, serverFolder))
       /** clean dist */
@@ -94,6 +101,12 @@ module.exports = context => {
       createBundle({ ...context, isDev: false }, profile)
       let compiler = webpack([clientConfig, serverConfig])
       compiler.run(function (err, stats) {
+        if (typeof hooks.afterServerBuild === 'function') {
+          hooks.afterServerBuild(err, stats)
+        }
+        if (typeof afterServerBuild === 'function') {
+          afterServerBuild(err, stats)
+        }
         if (typeof hooks.afterBuild === 'function') {
           hooks.afterBuild(err, stats)
         }
