@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 let program = require("commander")
-let test = require("../src/")
+let test = require("../lib/")
 let version = require("../package.json").version
 
 program.version(version)

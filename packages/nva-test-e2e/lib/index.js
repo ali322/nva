@@ -1,37 +1,60 @@
-let exec = require('execa')
 let { existsSync } = require('fs')
-let { resolve, join } = require('path')
+let { resolve } = require('path')
+let createTestCafe = require('testcafe')
+let chalk = require('chalk')
+let ip = require('internal-ip')
+let qrcode = require('qrcode-terminal')
 
-module.exports = function (runner, conf, browser = 'chrome') {
-  process.env.NODE_ENV = 'testing'
-  let server
+module.exports = function (server, conf, port, browsers = ['chrome']) {
+  if (existsSync(resolve(server)) === false) {
+    console.log(chalk.red('server invalid'))
+    process.exit(1)
+  }
+
   try {
-    server = require(resolve(runner))
-  } catch (err) {
-    throw err
-  }
-  let opts = []
-
-  if (conf && existsSync(resolve(conf))) {
-    opts = opts.concat(['--customize', resolve(conf)])
+    conf = require(resolve(conf))
+  } catch (e) {
+    console.log(chalk.red('config invalid'))
+    process.exit(1)
   }
 
-  opts = opts.concat(['--config', join(__dirname, 'conf.js')])
-  if (['chrome'].indexOf(browser) === -1) {
-    throw new Error('unsupported browser')
+  let exec = runner => {
+    runner = runner
+      .startApp(`node ${resolve(server)}`, 3000)
+      .src(conf.spec || [])
+      .browsers(browsers)
+
+    if (typeof conf.process === 'function') {
+      runner = conf.process(runner)
+    }
+
+    runner
+      .run()
+      .then(cnt => {
+        tc.close()
+      })
+      .catch(err => {
+        console.log(err)
+        tc.close()
+      })
   }
-  opts = opts.concat(['--env', browser])
 
-  let instance = exec(join('node_modules', '.bin', 'nightwatch'), opts, {
-    stdio: 'inherit'
-  })
-  instance.on('exit', code => {
-    server.close()
-    process.exit(code)
-  })
-
-  instance.on('error', err => {
-    server.close()
-    throw err
-  })
+  let tc = null
+  let runner = null
+  createTestCafe(ip.v4.sync(), port)
+    .then(testCafe => {
+      tc = testCafe
+      runner = testCafe.createRunner()
+      exec(runner)
+      return tc.createBrowserConnection()
+    })
+    .then(remoteConnection => {
+      console.log(chalk.yellow('scan qrcode below to test on remote device'))
+      qrcode.generate(remoteConnection.url, { small: true })
+      console.log('')
+      //   console.log(remoteConnection.url)
+      remoteConnection.once('ready', () => {
+        exec(runner)
+      })
+    })
 }

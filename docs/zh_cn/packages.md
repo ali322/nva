@@ -53,13 +53,15 @@ nva-server -p 5000 -P src
 
 #### nva-test
 
-基于 karma + mocha 的单元测试服务
+基于 karma + webpack + mocha 的单元测试服务
 
 运行测试
 
 ```bash
-nva test
+nva-test
 ```
+
+支持的浏览器测试环境: jsdom, chrome, ie
 
 命令行参数
 
@@ -67,14 +69,25 @@ nva test
 | :----------: | :----: | :----------: |
 | -c or —-config |   无    |   测试配置    |
 
+配置描述
+
+```javascript
+{
+    entry: 'path/to/test-entry.js',
+    sourcePath: 'path/to/source',
+    reportPath: 'path/to/coverage',
+    ...restOfKarmaConfig
+}
+```
+
 #### nva-test-e2e
 
-基于 nightwatch 的e2e测试服务
+端到端测试服务
 
 运行测试
 
 ```bash
-nva test -r path/to/server.js -c path/to/config.js
+nva-test-e2e -r path/to/server.js -c path/to/config.js
 ```
 
 命令行参数
@@ -82,7 +95,7 @@ nva test -r path/to/server.js -c path/to/config.js
 |     参数名      |  默认   |     描述     |
 | :----------: | :----: | :----------: |
 | -c or —-config |   无    |    测试配置    |
-| -r or —-runner |   无    |    应用测试服务器    |
+| -s or —-server |   无    |    应用测试服务器    |
 | —-browser |   phantom.js    |    测试浏览器    |
 
 [返回首页](./index.md)

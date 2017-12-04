@@ -58,8 +58,9 @@ frontend test toolkit based on karma + mocha
 run test
 
 ```bash
-nva test
+nva-test
 ```
+supported browsers: json, chrome, ie
 
 cli options
 
@@ -67,14 +68,25 @@ cli options
 | :----------: | :----: | :----------: |
 | -c or —-config |   none    |    test config    |
 
+config describle
+
+```javascript
+{
+    entry: 'path/to/test-entry.js',
+    sourcePath: 'path/to/source',
+    reportPath: 'path/to/coverage',
+    ...restOfKarmaConfig
+}
+```
+
 #### nva-test-e2e
 
-frontend e2e test toolkit based on nightwatch
+frontend e2e test toolkit
 
 run test
 
 ```bash
-nva test -r path/to/server.js -c path/to/config.js
+nva-test-e2e -r path/to/server.js -c path/to/config.js
 ```
 
 cli options
