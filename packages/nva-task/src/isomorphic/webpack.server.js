@@ -16,7 +16,7 @@ export default function (context, profile) {
   return {
     ...baseConfig,
     name: 'server',
-    entry: ['babel-polyfill', resolve(serverFolder, serverEntry)],
+    entry: [resolve(serverFolder, serverEntry)],
     target: 'node',
     node: {
       __dirname: true,
@@ -36,7 +36,7 @@ export default function (context, profile) {
     },
     externals,
     plugins: [
-      ...baseConfig.plugins.slice(1),
+      ...baseConfig.plugins,
       new ProgressPlugin(true, { identifier: 'server' }),
       new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/),
       new webpack.BannerPlugin({

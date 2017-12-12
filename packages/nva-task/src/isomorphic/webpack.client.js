@@ -104,7 +104,7 @@ export default function (context, profile) {
       modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     plugins: [
-      ...baseConfig.plugins.slice(1),
+      ...baseConfig.plugins,
       new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
       ...transforms,
       ...dllRefs,

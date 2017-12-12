@@ -3,89 +3,96 @@ import { join, posix, resolve, sep } from 'path'
 import { initMod } from './mod'
 
 function mixin (proj) {
-  let {
-    isSSR,
-    output,
-    distFolder,
-    sourceFolder,
-    vendorFolder,
-    assetFolder,
-    imageFolder,
-    fontFolder
-  } = proj
-  return {
-    imagePrefix: posix.join('..', assetFolder, imageFolder),
-    fontPrefix: posix.join('..', assetFolder, fontFolder),
-    output: {
-      path: isSSR ? resolve(distFolder, sourceFolder) : resolve(distFolder),
-      cssPath: join('[name]', '[name]-[hash:8].css'),
-      imagePath: join(assetFolder, imageFolder, sep),
-      fontPath: join(assetFolder, fontFolder, sep),
-      vendorPath: isSSR
-        ? join(distFolder, sourceFolder, vendorFolder)
-        : join(distFolder, vendorFolder),
-      ...output
+    let {
+        isSSR,
+        output,
+        distFolder,
+        sourceFolder,
+        vendorFolder,
+        vendorDevFolder,
+        assetFolder,
+        imageFolder,
+        fontFolder
+    } = proj
+    return {
+        imagePrefix: posix.join('..', assetFolder, imageFolder),
+        fontPrefix: posix.join('..', assetFolder, fontFolder),
+        output: {
+            path: isSSR
+                ? resolve(distFolder, sourceFolder)
+                : resolve(distFolder),
+            cssPath: join('[name]', '[name]-[hash:8].css'),
+            imagePath: join(assetFolder, imageFolder, sep),
+            fontPath: join(assetFolder, fontFolder, sep),
+            vendorPath: isSSR
+                ? join(distFolder, sourceFolder, vendorFolder)
+                : join(distFolder, vendorFolder),
+            vendorDevPath: isSSR
+                ? join(distFolder, sourceFolder, vendorDevFolder)
+                : join(distFolder, vendorDevFolder),
+            ...output
+        }
     }
-  }
 }
 
 export default function (context) {
-  const { proj, mods } = context
-  const isSSR = proj.type === 'isomorphic'
+    const { proj, mods } = context
+    const isSSR = proj.type === 'isomorphic'
 
-  let projContext = {
-    isDev: false,
-    strict: false,
-    profile: false,
-    isSSR,
-    sourceFolder: 'src',
-    jsExt: '.js',
-    cssExt: '.css',
-    htmlExt: '.html',
-    buildFolder: 'build',
-    distFolder: 'dist',
-    chunkFolder: 'chunk',
-    vendorFolder: 'vendor',
-    vendorSourceMap: 'sourcemap.json',
+    let projContext = {
+        isDev: false,
+        strict: false,
+        profile: false,
+        isSSR,
+        sourceFolder: 'src',
+        jsExt: '.js',
+        cssExt: '.css',
+        htmlExt: '.html',
+        buildFolder: 'build',
+        distFolder: 'dist',
+        chunkFolder: 'chunk',
+        vendorFolder: 'vendor',
+        vendorDevFolder: 'vendor-dev',
+        vendorSourceMap: 'sourcemap.json',
 
-    staticFolder: 'static',
-    assetFolder: 'asset',
-    fontFolder: 'font',
-    imageFolder: 'image',
-    outputPrefix: '',
+        staticFolder: 'static',
+        assetFolder: 'asset',
+        fontFolder: 'font',
+        imageFolder: 'image',
+        outputPrefix: '',
 
-    hmrPath: '/hmr/',
-    output: {}
-  }
+        hmrPath: '/hmr/',
+        output: {}
+    }
 
-  if (isSSR) {
+    if (isSSR) {
+        projContext = {
+            ...projContext,
+            moduleFolder: 'module',
+            bundleFolder: 'bundle',
+            serverFolder: 'server',
+            serverEntry: 'bootstrap.js',
+            viewFolder: join('server', 'view'),
+            sourceFolder: 'client'
+        }
+    }
+
     projContext = {
-      ...projContext,
-      moduleFolder: 'module',
-      bundleFolder: 'bundle',
-      serverFolder: 'server',
-      serverEntry: 'bootstrap.js',
-      viewFolder: join('server', 'view'),
-      sourceFolder: 'client'
+        ...projContext,
+        ...mixin(projContext),
+        ...proj
     }
-  }
 
-  projContext = {
-    ...projContext,
-    ...mixin(projContext),
-    ...proj
-  }
+    let modsContext = mapValues(mods, (mod, name) => {
+        return {
+            ...mod,
+            ...initMod(mod, name, projContext)
+        }
+    })
 
-  let modsContext = mapValues(mods, (mod, name) => {
     return {
-      ...mod,
-      ...initMod(mod, name, projContext)
+        ...omit(context, ['mods', 'proj']),
+        mods: modsContext,
+        ...projContext
     }
-  })
-
-  return {
-    ...omit(context, ['mods', 'proj']),
-    mods: modsContext,
-    ...projContext
-  }
 }

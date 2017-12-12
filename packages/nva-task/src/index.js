@@ -5,6 +5,7 @@ import { watch as watching } from 'chokidar'
 import { checkFile, checkDir, error } from './lib/helper'
 import initializer from './lib/initializer'
 import { writeModConf } from './lib'
+import prettyError from './lib/pretty-error'
 
 export default function (options = {}) {
   const { rootPath } = options
@@ -22,11 +23,15 @@ export default function (options = {}) {
   modConfPath = proj.modConfPath || modConfPath
   vendorConfPath = proj.vendorConfPath || vendorConfPath
   mockPath = proj.mockPath || mockPath
-  const mods = loadConf(modConfPath, () => error('module config is invalid'))
-  const vendors = loadConf(vendorConfPath, () =>
+  const mods = loadConf(modConfPath, (e) => {
+    prettyError(e)
+    error('module config is invalid')
+  })
+  const vendors = loadConf(vendorConfPath, (e) =>{
+    prettyError(e)
     error('vendor config is invalid')
-  )
-  const mock = loadMock(mockPath, () => error('mock config is invalid'))
+  })
+  const mock = loadMock(mockPath)
 
   function addMods (more) {
     writeModConf(modConfPath, { ...mods, ...more })

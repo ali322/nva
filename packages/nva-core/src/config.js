@@ -37,12 +37,6 @@ export default function (context, profile = false) {
   ]
 
   let plugins = [
-    new webpack.LoaderOptionsPlugin({
-      options: {
-        context: __dirname
-      }
-    }),
-    new webpack.NoEmitOnErrorsPlugin(),
     ...happypackPlugins
   ]
 
@@ -64,7 +58,6 @@ export default function (context, profile = false) {
         performance: { hints: false },
         plugins: [
           ...plugins,
-          new webpack.NoEmitOnErrorsPlugin(),
           new webpack.HotModuleReplacementPlugin()
         ]
       }
@@ -73,6 +66,7 @@ export default function (context, profile = false) {
         devtool: profile ? '#cheap-module-source-map' : false,
         plugins: [
           ...plugins,
+          new webpack.NoEmitOnErrorsPlugin(),
           new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production')
           }),
