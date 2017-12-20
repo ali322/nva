@@ -12,7 +12,6 @@ export default function (context, profile) {
         mods,
         sourceFolder,
         distFolder,
-        vendorFolder,
         chunkFolder,
         vendorDevFolder,
         vendorSourceMap,
