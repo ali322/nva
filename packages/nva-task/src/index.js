@@ -24,12 +24,12 @@ export default function (options = {}) {
   vendorConfPath = proj.vendorConfPath || vendorConfPath
   mockPath = proj.mockPath || mockPath
   const mods = loadConf(modConfPath, (e) => {
-    prettyError(e)
-    error('module config is invalid')
-  })
-  const vendors = loadConf(vendorConfPath, (e) =>{
-    prettyError(e)
-    error('vendor config is invalid')
+      error('module config is invalid')
+      console.log(prettyError(e))
+    })
+    const vendors = loadConf(vendorConfPath, (e) =>{
+      error('vendor config is invalid')
+      console.log(prettyError(e))
   })
   const mock = loadMock(mockPath)
 
