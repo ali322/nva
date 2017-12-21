@@ -48,8 +48,8 @@ export function bundleTime () {
 }
 
 export function relativeURL (from, to) {
-    const _url = path.relative(from, path.dirname(to)) || '.'
-    return _url + path.sep + path.basename(to)
+    const url = path.relative(from, path.dirname(to)) || '.'
+    return url + path.posix.sep + path.basename(to)
 }
 
 export function checkFile (target) {
