@@ -1,5 +1,6 @@
 import jsf from "json-schema-faker"
 import { resolve, relative } from "path"
+import { parse } from 'url'
 import glob from "glob"
 import chalk from "chalk"
 import chokidar from "chokidar"
@@ -47,6 +48,10 @@ export default function (app, conf) {
         } catch (e) {
           console.log(prettyError(e))
         }
+        if (Array.isArray(rules) === false) {
+          console.log(chalk.red('mock config must return array'))
+          return
+        }
         mocks[path] = rules.map(v => {
           v.filename = path
           return v
@@ -62,6 +67,10 @@ export default function (app, conf) {
             rules = require(resolve(path))
           } catch (e) {
             console.log(prettyError(e))
+          }
+          if (Array.isArray(rules) === false) {
+            console.log(chalk.red('mock config must return array'))
+            return
           }
           mocks[path] = rules.map(v => {
             v.filename = path
@@ -82,10 +91,11 @@ export default function (app, conf) {
       let rule = find(
         reduce(values(mocks), (sum, v) => sum.concat(v), []),
         v => {
+          let reqPath = parse(req.url).pathname
           if (isRegExp(v.url)) {
-            return v.url.test(req.url)
+            return v.url.test(reqPath)
           } else if (isString(v.url)) {
-            return v.url === req.url
+            return v.url === reqPath
           }
           return false
         }
