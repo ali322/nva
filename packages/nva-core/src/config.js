@@ -53,7 +53,7 @@ export default function (context, profile = false) {
 
   let restConfig = context.isDev
     ? {
-        devtool: '#cheap-source-map',
+        devtool: '#eval-source-map',
         watch: true,
         performance: { hints: false },
         plugins: [
@@ -63,7 +63,7 @@ export default function (context, profile = false) {
       }
     : {
         // devtool: "#cheap-module-source-map",
-        devtool: profile ? '#cheap-module-source-map' : false,
+        devtool: profile ? '#eval-source-map' : false,
         plugins: [
           ...plugins,
           new webpack.NoEmitOnErrorsPlugin(),
