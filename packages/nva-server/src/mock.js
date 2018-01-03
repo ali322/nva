@@ -124,7 +124,7 @@ export default function (app, conf) {
             let response = rule.response
             if (rule.type === "jsf") {
                 response = jsf(response)
-            } else if (rule.type === "func") {
+            } else if (typeof response === 'function') {
                 response = response(req)
             }
             res.end(JSON.stringify(response))
