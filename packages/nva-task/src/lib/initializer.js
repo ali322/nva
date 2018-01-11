@@ -56,6 +56,7 @@ export default function (context) {
         vendorSourceMap: 'sourcemap.json',
 
         staticFolder: 'static',
+        staticPrefix: '',
         assetFolder: 'asset',
         fontFolder: 'font',
         imageFolder: 'image',
