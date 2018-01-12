@@ -152,17 +152,17 @@ export default function (context, profile) {
                 rules: {
                     '.js': content =>
                         content.replace(
-                            RegExp(`\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+)`),
+                            RegExp(`\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+)`,'gi'),
                             `${staticPrefix}/${staticFolder}$1`
                         ),
                     '.css': content =>
                         content.replace(
-                            RegExp(`(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`),
+                            RegExp(`(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`,'gi'),
                             `$1${staticPrefix}/${staticFolder}$2`
                         ),
                     '.html': content =>
                         content.replace(
-                            RegExp(`([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`),
+                            RegExp(`([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,'gi'),
                             `$1${staticPrefix}/${staticFolder}$2`
                         )
                 }
