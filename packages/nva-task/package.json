@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.3.247",
+  "version": "0.3.248",
   "description": "tasks for nva",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
@@ -41,8 +41,8 @@
     "lodash": "^4.17.4",
     "node-emoji": "^1.8.1",
     "nodemon": "^1.11.0",
-    "nva-core": "0.3.247",
-    "nva-server": "0.3.247",
+    "nva-core": "0.3.248",
+    "nva-server": "0.3.248",
     "opn": "^5.0.0",
     "portfinder": "^1.0.13",
     "pretty-error": "^2.1.1",

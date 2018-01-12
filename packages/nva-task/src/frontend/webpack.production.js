@@ -152,7 +152,7 @@ export default function (context, profile) {
                 rules: {
                     '.js': content =>
                         content.replace(
-                            RegExp(`\\/${staticFolder}(\\/\\s+\\.[A-Za-z]+)`,'gi'),
+                            RegExp(`\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,'gi'),
                             `${staticPrefix}/${staticFolder}$1`
                         ),
                     '.css': content =>
