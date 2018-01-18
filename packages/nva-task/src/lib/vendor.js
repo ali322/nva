@@ -34,7 +34,7 @@ export default function (context) {
 
     const jsConfig = {
         ...baseConfig,
-        devtool: false,
+        // devtool: false,
         name: 'js',
         entry: entryJS,
         output: {
