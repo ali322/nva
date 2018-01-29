@@ -1,4 +1,3 @@
 templates:
   frontend: ali322/frontend-boilerplate
-  isomorphic: ali322/isomorphic-boilerplate
-  react-native: ali322/react-native-boilerplate
+  isomorphic: ali322/ssr-boilerplate
