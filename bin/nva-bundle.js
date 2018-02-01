@@ -62,18 +62,18 @@ if (program.delete) {
       tasks.removeMod(moduleName)
       process.exit(1)
     })
+} else {
+  lib.ask(questions, 'yes', function (answers) {
+    answers = omit(answers, 'yes')
+
+    forEach(questions, function (q) {
+      if (get(answers, q.name) === '') {
+        answers = omit(answers, q.name)
+      }
+    })
+    answers = omitBy(answers, function (v) {
+      return isEmpty(v)
+    })
+    tasks.addMod(moduleName, answers, program.template)
+  })
 }
-
-lib.ask(questions, 'yes', function (answers) {
-  answers = omit(answers, 'yes')
-
-  forEach(questions, function (q) {
-    if (get(answers, q.name) === '') {
-      answers = omit(answers, q.name)
-    }
-  })
-  answers = omitBy(answers, function (v) {
-    return isEmpty(v)
-  })
-  tasks.addMod(moduleName, answers, program.template)
-})
