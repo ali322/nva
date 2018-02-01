@@ -1,43 +1,26 @@
 {
   "name": "nva-core",
-  "version": "0.3.251",
+  "version": "0.4.1",
   "description": "nva core module",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-core",
-  "main": "dist/index.js",
-  "jsnext:main": "es/index.js",
+  "main": "lib/index.js",
   "files": [
-    "dist",
-    "es",
-    "script",
-    "src"
+    "lib"
   ],
   "scripts": {
-    "clean": "rimraf dist es",
-    "build": "npm run build:commonjs && npm run build:es",
-    "prepublish": "npm run clean && npm run build",
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel --plugins add-module-exports src --out-dir dist",
-    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "alichen",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.24.0",
-    "babel-eslint": "^7.2.3",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-env": "^1.2.1",
-    "cross-env": "^3.2.3",
     "eslint": "^4.11.0",
     "eslint-cli": "^1.1.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "rimraf": "^2.6.1"
+    "eslint-plugin-standard": "^3.0.1"
   },
   "dependencies": {
     "ajv": "^5.4.0",
@@ -52,6 +35,7 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
     "loader-utils": "^1.1.0",
+    "lodash": "^4.17.4",
     "node-sass": "4.5.3",
     "postcss-loader": "^2.0.6",
     "resolve-url-loader": "^2.1.0",

@@ -17,19 +17,18 @@ npm install nva-core --save
 ```javascript
 import config from 'nva-core'
 
-const buildConfig = config(constants)
+const buildConfig = config(context)
 ```
 
-build constants should contain followings
+build context should contain followings
 
-- `HAPPYPACK_TEMP_DIR`  happypack compiler cache directory,by default `./.happpack`
-- `CSS_OUTPUT`          where to output css
-- `ASSET_FONT_OUTPUT`   where to output font
-- `ASSET_IMAGE_OUTPUT`  where to output image
-- `SPRITE_OUTPUT`       where to output background sprite image
-- `IMAGE_PREFIX`        prefix of image public path
-- `FONT_PREFIX`         prefix of font public path 
-- `HOT`                 is in development mode?
+- `output.cssPath`      where to output css
+- `output.fontPath`     where to output font
+- `output.imagePath`    where to output image
+- `imagePrefix`         prefix of image public path
+- `fontPrefix`          prefix of font public path 
+- `strict`              is strict mode?
+- `isDev`               is in development mode?
 
 ### License
 

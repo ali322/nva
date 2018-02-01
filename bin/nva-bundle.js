@@ -2,6 +2,7 @@
 
 let program = require('commander')
 let chalk = require('chalk')
+let inquirer = require('inquirer')
 let omit = require('lodash/omit')
 let get = require('lodash/get')
 let forEach = require('lodash/forEach')
@@ -49,8 +50,18 @@ if (moduleName === '[object Object]') {
 }
 
 if (program.delete) {
-  tasks.removeMod(moduleName)
-  process.exit(1)
+  inquirer
+    .prompt([
+      {
+        type: 'confirm',
+        name: 'yes',
+        message: `are you sure to delete bundle '${moduleName}'?`
+      }
+    ])
+    .then(function (answer) {
+      tasks.removeMod(moduleName)
+      process.exit(1)
+    })
 }
 
 lib.ask(questions, 'yes', function (answers) {
