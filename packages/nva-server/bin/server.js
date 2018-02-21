@@ -63,7 +63,7 @@ let server = app.listen(options.port, function (err) {
   console.log(`🌎  nva-server started at %d`, options.port)
 })
 
-function openBrowser (target, url) {
+function openBrowser(target, url) {
   let opts = { wait: false }
   if (target !== "none") {
     if (target !== "default") {
@@ -80,7 +80,7 @@ server.on("close", function () {
   console.log("bye! nva-server closed")
 })
 
-function stopServer () {
+function stopServer() {
   server.close()
   process.nextTick(function () {
     process.exit(0)

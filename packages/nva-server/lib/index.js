@@ -6,13 +6,13 @@ let favicon = require('serve-favicon')
 let proxyMiddleware = require('http-proxy-middleware')
 let morgan = require('morgan')
 let compression = require('compression')
-let {join, resolve, parse, posix} = require('path')
+let { join, resolve, parse, posix } = require('path')
 let url = require('url')
 let historyAPIFallback = require('connect-history-api-fallback')
 let assign = require('lodash/assign')
 let mockFactory = require('./mock')
 
-function extname (val) {
+function extname(val) {
   let parsed = url.parse(val)
   return parse(parsed.pathname).ext
 }
@@ -34,11 +34,11 @@ module.exports = options => {
   if (proxy) {
     Array.isArray(proxy)
       ? proxy.forEach(v =>
-          app.use(proxyMiddleware(v.url, assign({},v.options,{ logLevel: "silent" })))
-        )
+        app.use(proxyMiddleware(v.url, assign({}, v.options, { logLevel: "silent" })))
+      )
       : app.use(
-          proxyMiddleware(proxy.url, assign({},proxy.options,{ logLevel: "silent" }))
-        )
+        proxyMiddleware(proxy.url, assign({}, proxy.options, { logLevel: "silent" }))
+      )
   }
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: false }))
@@ -73,7 +73,7 @@ module.exports = options => {
     })
   }
 
-  function applyAsset (assetPath, fallthrough = true) {
+  function applyAsset(assetPath, fallthrough = true) {
     app.use(assetPath === "." ? "" : `/${assetPath}`, function (req, res, next) {
       if (extname(req.url) !== ".html") {
         serveStatic(resolve(assetPath), {
