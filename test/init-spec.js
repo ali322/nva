@@ -4,7 +4,7 @@ let path = require("path")
 let constants = require("./fixture").constants
 
 describe("init", function() {
-  this.timeout(100000)
+  // this.timeout(100000)
 
   it("generate correctly project", function() {
     expect(fs.existsSync(constants.projectPath)).to.true

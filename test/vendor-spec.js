@@ -5,7 +5,7 @@ let expect = require("chai").expect
 describe("build project test's", function() {
   let cli = path.join(__dirname, "..", "bin", "nva.js")
   let cwd = process.cwd()
-  this.timeout(10000)
+  // this.timeout(10000)
 
   describe("vendor", function() {
     let result
