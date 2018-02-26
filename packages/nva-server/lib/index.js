@@ -19,8 +19,8 @@ function extname(val) {
 
 module.exports = options => {
   let {
-    path = "",
-    asset = "",
+    path = '',
+    asset = '',
     rewrites = false,
     cors = false,
     log = true,
@@ -34,23 +34,23 @@ module.exports = options => {
   if (proxy) {
     Array.isArray(proxy)
       ? proxy.forEach(v =>
-        app.use(proxyMiddleware(v.url, assign({}, v.options, { logLevel: "silent" })))
+        app.use(proxyMiddleware(v.url, assign({}, v.options, { logLevel: 'silent' })))
       )
       : app.use(
-        proxyMiddleware(proxy.url, assign({}, proxy.options, { logLevel: "silent" }))
+        proxyMiddleware(proxy.url, assign({}, proxy.options, { logLevel: 'silent' }))
       )
   }
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: false }))
   if (log) {
-    app.use(morgan("dev"))
+    app.use(morgan('dev'))
   }
   app.use(compression())
 
   if (options.favicon) {
     app.use(favicon(options.favicon))
   } else {
-    app.use(favicon(join(__dirname, "..", "asset", "nva-server.ico")))
+    app.use(favicon(join(__dirname, '..', 'asset', 'nva-server.ico')))
   }
 
   if (mock) {
@@ -59,23 +59,23 @@ module.exports = options => {
 
   if (cors) {
     app.use(function (req, res, next) {
-      res.setHeader("Access-Control-Allow-Origin", "*")
+      res.setHeader('Access-Control-Allow-Origin', '*')
       res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET,PUT,POST,DELETE,OPTIONS"
+        'Access-Control-Allow-Methods',
+        'GET,PUT,POST,DELETE,OPTIONS'
       )
       res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept, x-csrf-token, origin"
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization, Content-Length, X-Requested-With, Accept, x-csrf-token, origin'
       )
-      if (req.method === "OPTIONS") return res.end()
+      if (req.method === 'OPTIONS') return res.end()
       next()
     })
   }
 
   function applyAsset(assetPath, fallthrough = true) {
-    app.use(assetPath === "." ? "" : `/${assetPath}`, function (req, res, next) {
-      if (extname(req.url) !== ".html") {
+    app.use(assetPath === '.' ? '' : `/${assetPath}`, function (req, res, next) {
+      if (extname(req.url) !== '.html') {
         serveStatic(resolve(assetPath), {
           fallthrough
         })(req, res, next)
@@ -94,7 +94,7 @@ module.exports = options => {
   if (rewrites) {
     if (Array.isArray(rewrites)) {
       app.use(historyAPIFallback({ rewrites }))
-    } else if (typeof rewrites === "string") {
+    } else if (typeof rewrites === 'string') {
       app.use(
         historyAPIFallback({
           rewrites: [
@@ -117,7 +117,7 @@ module.exports = options => {
   if (path) {
     app.use(function (req, res, next) {
       let ext = extname(req.url)
-      if (ext === ".html" || req.url.endsWith(posix.sep)) {
+      if (ext === '.html' || req.url.endsWith(posix.sep)) {
         serveStatic(resolve(path), {
           fallthrough: false
         })(req, res, next)

@@ -104,7 +104,7 @@ module.exports = function (context, profile) {
       modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     plugins: baseConfig.plugins.concat([
-      new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
+      new ProgressPlugin(true, { onProgress: context.onBuildProgress })
     ]).concat(transforms, dllRefs, htmls)
   })
 }

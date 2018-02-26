@@ -78,7 +78,7 @@ module.exports = context => {
       })
     },
     vendor(isDev, next) {
-      let vendorConfig = vendorFactory(merge(context,{ isDev }))
+      let vendorConfig = vendorFactory(merge(context, { isDev }))
       if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,

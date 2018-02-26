@@ -64,8 +64,8 @@ exports.checkVendor = (vendors, target) => {
 
     /* check output */
     let output = sourcemap.output || {}
-    let jsChecked = true,
-      cssChecked = true
+    let jsChecked = true
+    let cssChecked = true
     const vendorOutput = dirname(target)
     if (isPlainObject(vendors.js) && isPlainObject(output.js)) {
       jsChecked = every(
@@ -94,8 +94,8 @@ exports.vendorManifest = (stats, meta, target) => {
 }
 
 function vendorVersion(meta) {
-  let version = {},
-    metas = []
+  let version = {}
+  let metas = []
   const mapper = mod =>
     startsWith(mod, '@')
       ? mod

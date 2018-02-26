@@ -4,8 +4,8 @@ let { emojis } = require('../common/helper')
 let { relative } = require('path')
 
 module.exports = function (options) {
-  let script = nodemon(options),
-    started = false
+  let script = nodemon(options)
+  let started = false
 
   let exitHanlder = function (options) {
     if (options.exit) script.emit('exit')

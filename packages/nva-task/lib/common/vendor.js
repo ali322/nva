@@ -18,10 +18,10 @@ module.exports = function (context) {
     } = context
   const baseConfig = configFactory(context)
 
-  let entryJS = {},
-    entryCSS = {},
-    cssChunks = [],
-    vendorConfig = []
+  let entryJS = {}
+  let entryCSS = {}
+  let cssChunks = []
+  let vendorConfig = []
   if (isPlainObject(vendors['js'])) {
     for (let key in vendors['js']) {
       entryJS[key] = vendors['js'][key]

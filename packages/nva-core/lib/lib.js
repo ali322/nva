@@ -17,7 +17,7 @@ exports.happypackPlugin = (id, loaders) => {
 exports.postcssOptions = context => {
   return assign({}, {
     plugins: [autoPrefixer({ browsers: ['last 2 versions'] })],
-    sourceMap: 'inline',
+    sourceMap: 'inline'
   }, context.postcss || {})
 }
 
