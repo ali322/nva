@@ -15,7 +15,7 @@ let useYarn = program.yarn
 let silent = program.silent
 
 let build = () => {
-  let tasks = require('nva-task')(context)
+  let tasks = require('../packages/nva-task/lib')(context)
   tasks.build({ profile })
 }
 

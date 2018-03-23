@@ -76,9 +76,9 @@ exports.checkVendor = (vendors, target) => {
       )
     }
     if (isPlainObject(vendors.css) && isPlainObject(output.css)) {
-      cssChecked = every(Object.keys(vendors.js), v =>
-        existsSync(resolve(vendorOutput, output.css[v]))
-      )
+      cssChecked = every(Object.keys(vendors.js), v =>{
+        return existsSync(resolve(vendorOutput, output.css[v]))
+      })
     }
     return jsChecked && cssChecked && localModChecked
   }

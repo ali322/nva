@@ -1,13 +1,15 @@
-let { resolve, join, basename } = require('path')
+let { resolve, join, basename, extname } = require('path')
 let { DllPlugin } = require('webpack')
-let ChunkTransformPlugin = require('chunk-transform-webpack-plugin')
 let ProgressPlugin = require('progress-webpack-plugin')
+let ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+let fromPairs = require('lodash/fromPairs')
+let map = require('lodash/map')
 let isEmpty = require('lodash/isEmpty')
 let isPlainObject = require('lodash/isPlainObject')
 let { merge } = require('../common/helper')
-let { config: configFactory } = require('nva-core')
+let { config: configFactory } = require('../../../nva-core/lib')
 
-module.exports = function (context) {
+module.exports = function(context) {
   const {
     vendors,
     sourceFolder,
@@ -15,7 +17,7 @@ module.exports = function (context) {
     vendorDevFolder,
     output,
     isDev
-    } = context
+  } = context
   const baseConfig = configFactory(context)
 
   let entryJS = {}
@@ -63,9 +65,17 @@ module.exports = function (context) {
     vendorConfig.push(jsConfig)
   }
 
-  const baseCSSConfig = configFactory(merge(context, {
-    isDev: false
-  }))
+  const baseCSSConfig = configFactory(
+    merge(context, {
+      output: merge(output, {
+        cssPath: join(
+          isDev ? vendorDevFolder : vendorFolder,
+          '[name]-[hash:8].css'
+        )
+      }),
+      isDev: false
+    })
+  )
   const cssConfig = merge(baseCSSConfig, {
     name: 'css',
     entry: entryCSS,
@@ -77,15 +87,12 @@ module.exports = function (context) {
     },
     plugins: baseCSSConfig.plugins.concat([
       new ProgressPlugin(true, { identifier: 'vendor:css' }),
-      new ChunkTransformPlugin({
-        chunks: cssChunks,
-        test: /\.css$/,
-        filename: function (filename) {
-          return join(
-            isDev ? vendorDevFolder : vendorFolder,
-            basename(filename)
-          )
-        }
+      new ChunkAssetPlugin({
+        chunks: fromPairs(
+          map(cssChunks, chunk => {
+            return [chunk, files => files.filter(v => extname(v) !== '.js')]
+          })
+        )
       })
     ])
   })

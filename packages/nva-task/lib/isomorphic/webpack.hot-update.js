@@ -7,7 +7,7 @@ let ProgressPlugin = require('progress-webpack-plugin')
 let TidyErrorsPlugin = require('tidy-errors-webpack-plugin')
 let { serverHost } = require('../common')
 let { merge } = require('../common/helper')
-let { config: configFactory } = require('nva-core')
+let { config: configFactory } = require('../../../nva-core/lib')
 
 module.exports = function (context, profile) {
   const {

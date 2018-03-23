@@ -1,17 +1,39 @@
 let path = require('path')
-let { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
 let assign = require('lodash/assign')
+let ThreadLoader = require('thread-loader')
+let os = require('os')
+let { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
 
 const nodeModulesDir = path.resolve('node_modules')
 
 module.exports = context => {
   const { output = {}, imagePrefix, fontPrefix, isDev, strict } = context
+
+  let threadLoaderOptions = {
+    workers: os.cpus().length,
+    poolTimeout: isDev ? Infinity : 2000
+  }
+  ThreadLoader.warmup(threadLoaderOptions, [
+    'babel-loader',
+    // 'vue-loader',
+    'sass-loader',
+    'less-loader',
+    'stylus-loader',
+    'resolve-url-loader',
+    'postcss-loader',
+    'css-loader'
+  ])
+  let threadLoader = {
+    loader: require.resolve('thread-loader'),
+    options: threadLoaderOptions
+  }
+
   let urlLoaderOptions = {
     limit: 2500
   }
   if (!isDev) {
     urlLoaderOptions = assign({}, urlLoaderOptions, {
-      publicPath: function (url) {
+      publicPath: function(url) {
         let prefix = ''
         if (/\.(jpg|jpeg|png|bmp|gif)$/.test(url)) {
           prefix = imagePrefix
@@ -36,18 +58,23 @@ module.exports = context => {
       options: { sourceMap: 'inline' }
     },
     loaders: {
-      js: require.resolve('happypack/loader') + '?id=js',
-      css: vueStyleLoaders(context),
-      less: vueStyleLoaders(context, 'less'),
-      stylus: vueStyleLoaders(context, 'stylus'),
-      scss: vueStyleLoaders(context, {
-        loader: 'sass-loader',
-        options: { sourceMap: true }
-      }),
-      sass: vueStyleLoaders(context, {
-        loader: 'sass-loader',
-        options: { indentedSyntax: true, sourceMap: true }
-      })
+      js: [threadLoader, { loader: require.resolve('babel-loader') }],
+      // js: require.resolve('happypack/loader') + '?id=js',
+      css: [threadLoader].concat(vueStyleLoaders(context)),
+      less: [threadLoader].concat(vueStyleLoaders(context, 'less')),
+      stylus: [threadLoader].concat(vueStyleLoaders(context, 'stylus')),
+      scss: [threadLoader].concat(
+        vueStyleLoaders(context, {
+          loader: 'sass-loader',
+          options: { sourceMap: true }
+        })
+      ),
+      sass: [threadLoader].concat(
+        vueStyleLoaders(context, {
+          loader: 'sass-loader',
+          options: { indentedSyntax: true, sourceMap: true }
+        })
+      )
     }
   }
 
@@ -60,15 +87,27 @@ module.exports = context => {
     {
       test: /\.vue/,
       exclude: [nodeModulesDir],
-      loader: 'vue-loader',
-      options: vueLoaderOptions
+      use: [
+        {
+          loader: require.resolve('thread-loader'),
+          options: threadLoaderOptions
+        },
+        { loader: 'vue-loader', options: vueLoaderOptions }
+      ]
     },
     {
       test: /\.(es6|js|jsx)$/,
       exclude: /node_modules/,
-      // exclude: [nodeModulesDir],
-      loader: require.resolve('happypack/loader'),
-      options: { id: 'js' }
+      use: [
+        {
+          loader: require.resolve('thread-loader'),
+          options: threadLoaderOptions
+        },
+        { loader: require.resolve('babel-loader') }
+      ]
+      // loader: 'babel-loader'
+      // loader: require.resolve('happypack/loader'),
+      // options: { id: 'js' }
     },
     {
       test: /\.less/,

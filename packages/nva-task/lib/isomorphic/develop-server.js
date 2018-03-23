@@ -1,7 +1,7 @@
 let BrowserSync = require('browser-sync')
 let nodemon = require('./nodemon')
 let { join, dirname } = require('path')
-let createApp = require('nva-server')
+let createApp = require('../../../nva-server/lib')
 let { mergeConfig, openBrowser } = require('../common')
 let { merge } = require('../common/helper')
 let middlewareFactory = require('../common/middleware')

@@ -1,7 +1,7 @@
 let webpack = require('webpack')
 let { resolve } = require('path')
 let ProgressPlugin = require('progress-webpack-plugin')
-let { config: configFactory } = require('nva-core')
+let { config: configFactory } = require('../../../nva-core/lib')
 let { merge } = require('../common/helper')
 
 module.exports = function (context, profile) {

@@ -4,9 +4,9 @@ let forEach = require('lodash/forEach')
 let isPlainObject = require('lodash/isPlainObject')
 let InjectHtmlPlugin = require('inject-html-webpack-plugin')
 let ProgressPlugin = require('progress-webpack-plugin')
-let ChunkTransformPlugin = require('chunk-transform-webpack-plugin')
+let ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
 let { bundleTime, merge } = require('../common/helper')
-let { config: configFactory } = require('nva-core')
+let { config: configFactory } = require('../../../nva-core/lib')
 
 module.exports = function (context, profile) {
   let {
@@ -21,7 +21,7 @@ module.exports = function (context, profile) {
   /** build variables */
   let entry = {}
   let htmls = []
-  let transforms = []
+  let transforms = {}
   let baseConfig = configFactory(context, profile)
 
   /** add vendors reference */
@@ -47,16 +47,10 @@ module.exports = function (context, profile) {
     entry[name] = [mod.input.js].concat(mod.input.css ? [mod.input.css] : [])
     let chunks = [name]
 
-    transforms.push(
-      new ChunkTransformPlugin({
-        chunks: [name],
-        test: /\.(js|css)$/,
-        filename: file =>
-          extname(file) === '.js'
-            ? mod.output.js || file
-            : mod.output.css || file
-      })
-    )
+    transforms[name] = files => files.map(file=>{
+      let outputFile = mod.output[extname(file).replace('.','')]
+      return outputFile || file
+    })
 
     let more = { js: [], css: [] }
     if (mod.vendor) {
@@ -105,6 +99,9 @@ module.exports = function (context, profile) {
     },
     plugins: baseConfig.plugins.concat([
       new ProgressPlugin(true, { onProgress: context.onBuildProgress })
-    ]).concat(transforms, dllRefs, htmls)
+      new ChunkAssetPlugin({
+        chunks: transforms
+      })
+    ]).concat(dllRefs, htmls)
   })
 }

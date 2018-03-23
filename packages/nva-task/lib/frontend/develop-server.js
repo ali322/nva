@@ -5,7 +5,7 @@ let { error, checkPort, emojis, merge } = require('../common/helper')
 let { mergeConfig, openBrowser } = require('../common')
 let hotUpdateConfig = require('./webpack.hot-update')
 let BrowserSync = require('browser-sync')
-let createApp = require('nva-server')
+let createApp = require('../../../nva-server/lib')
 
 module.exports = (context) => {
   const {

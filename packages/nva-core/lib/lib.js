@@ -2,7 +2,7 @@ let HappyPack = require('happypack')
 let os = require('os')
 let assign = require('lodash/assign')
 let autoPrefixer = require('autoprefixer')
-let ExtractTextPlugin = require('extract-text-webpack-plugin')
+let MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
 exports.happypackPlugin = (id, loaders) => {
   const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
@@ -24,13 +24,7 @@ exports.postcssOptions = context => {
 exports.vueStyleLoaders = (context, preprocessor) => {
   let loaders = exports.cssLoaders(assign({}, context, { isDev: true }), preprocessor)
   loaders = loaders.filter((v, i) => i > 0 && i !== 2)
-  if (!context.isDev) {
-    return ExtractTextPlugin.extract({
-      use: loaders,
-      fallback: 'vue-style-loader'
-    })
-  }
-  return ['vue-style-loader'].concat(loaders)
+  return context.isDev ? ['vue-style-loader'].concat(loaders) :[MiniCSSExtractPlugin.loader].concat(loaders)
 }
 
 exports.cssLoaders = (context, preprocessor = '') => {
@@ -58,10 +52,7 @@ exports.cssLoaders = (context, preprocessor = '') => {
     }
   }
   if (!context.isDev) {
-    return ExtractTextPlugin.extract({
-      use: loaders.slice(1),
-      fallback: loaders[0]
-    })
+    return [MiniCSSExtractPlugin.loader].concat(loaders.slice(1))
   }
   return loaders
 }
