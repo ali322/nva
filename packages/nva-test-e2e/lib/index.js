@@ -6,7 +6,7 @@ let ip = require('internal-ip')
 let qrcode = require('qrcode-terminal')
 
 module.exports = function (server, conf, port, browsers = ['chrome']) {
-  if (existsSync(resolve(server)) === false) {
+  if (server && existsSync(resolve(server)) === false) {
     console.log(chalk.red('server invalid'))
     process.exit(1)
   }
@@ -19,8 +19,10 @@ module.exports = function (server, conf, port, browsers = ['chrome']) {
   }
 
   let exec = runner => {
+    if(server) {
+      runner = runner.startApp(`node ${resolve(server)}`, 3000)
+    }
     runner = runner
-      .startApp(`node ${resolve(server)}`, 3000)
       .src(conf.spec || [])
       .browsers(browsers)
 
