@@ -5,7 +5,7 @@ let { error, checkPort, emojis, merge } = require('../common/helper')
 let { mergeConfig, openBrowser } = require('../common')
 let hotUpdateConfig = require('./webpack.hot-update')
 let BrowserSync = require('browser-sync')
-let createApp = require('../../../nva-server/lib')
+let createApp = require('nva-server')
 
 module.exports = (context) => {
   const {
@@ -26,17 +26,35 @@ module.exports = (context) => {
     startWatcher()
 
     let browserSync = BrowserSync.create()
+    process.once('SIGINT', () => {
+      browserSync.exit()
+      process.exit(0)
+    })
     const port = options.port || 3000
     let config = hotUpdateConfig(
       merge(context, { port }),
       options.profile
     )
+
+    // apply before hooks
     if (typeof hooks.beforeDev === 'function') {
       config = mergeConfig(config, hooks.beforeDev(config))
     }
     if (typeof beforeDev === 'function') {
       config = mergeConfig(config, beforeDev(config))
     }
+
+    // open browser when first build finished
+    let opened = 0
+    let openBrowserAfterDev = () => {
+      let url = spa ? '/' : '/index/'
+      url = `http://localhost:${port}${url}`
+      openBrowser(options.browser, url)
+      console.log(
+        `${emojis('rocket')}  develop server started at ${port}`
+      )
+    }
+
     const middlewares = middlewareFactory(
       config,
       () => {
@@ -45,6 +63,10 @@ module.exports = (context) => {
         }
         if (typeof afterDev === 'function') {
           afterDev()
+        }
+        if (opened === 0 ){
+          opened += 1
+          openBrowserAfterDev()
         }
       },
       options.profile
@@ -86,11 +108,6 @@ module.exports = (context) => {
       favicon
     })
 
-    process.once('SIGINT', () => {
-      browserSync.exit()
-      process.exit(0)
-    })
-
     checkPort(port, available => {
       if (!available) {
         error('port is not avaiilable')
@@ -116,14 +133,7 @@ module.exports = (context) => {
             logConnections: false,
             logLevel: 'silent'
           },
-          function () {
-            console.log(
-              `${emojis('rocket')}  develop server started at ${port}`
-            )
-            let url = spa ? '/' : '/index/'
-            url = `http://localhost:${port}${url}`
-            setTimeout(() => openBrowser(options.browser, url), 5000)
-          }
+          function () {}
         )
       }
     })

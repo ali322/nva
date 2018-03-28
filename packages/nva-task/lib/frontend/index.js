@@ -5,14 +5,14 @@ let isString = require('lodash/isString')
 let { join } = require('path')
 let { addMod, removeMod } = require('../common/mod')
 let { vendorManifest, mergeConfig, checkVendor } = require('../common')
-let { callback, merge } = require('../common/helper')
+let { merge } = require('../common/helper')
 let vendorFactory = require('../common/vendor')
 let releaseConfigFactory = require('./webpack.production')
 let developServer = require('./develop-server')
 
 module.exports = context => {
   let {
-        distFolder,
+    distFolder,
     chunkFolder,
     output,
     beforeBuild,
@@ -68,13 +68,16 @@ module.exports = context => {
 
       let compiler = webpack(releaseConfig)
       compiler.run(function (err, stats) {
+        if (err) {
+          console.error(err)
+          return
+        }
         if (typeof hooks.afterBuild === 'function') {
           hooks.afterBuild(err, stats)
         }
         if (typeof afterBuild === 'function') {
           afterBuild(err, stats)
         }
-        callback('Build success!', err, stats) // eslint-disable-line
       })
     },
     vendor(isDev, next) {
@@ -94,6 +97,10 @@ module.exports = context => {
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
       var compiler = webpack(vendorConfig)
       compiler.run(function (err, stats) {
+        if(err) {
+          console.error(err)
+          return
+        }
         vendorManifest(
           stats,
           vendors,
@@ -108,7 +115,6 @@ module.exports = context => {
         if (typeof afterVendor === 'function') {
           afterVendor(err, stats)
         }
-        callback('Build vendor success!', err, stats) // eslint-disable-line
         if (next) next()
       })
     },

@@ -8,8 +8,9 @@ let ProgressPlugin = require('progress-webpack-plugin')
 let ContentReplacePlugin = require('content-replace-webpack-plugin')
 let CopyPlugin = require('copy-webpack-plugin')
 let ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 let { existsSync } = require('fs-extra')
-let { config: configFactory } = require('../../../nva-core/lib')
+let { config: configFactory } = require('nva-core')
 let { relativeURL, bundleTime, merge } = require('../common/helper')
 
 module.exports = (context, profile) => {
@@ -152,7 +153,8 @@ module.exports = (context, profile) => {
                   `$1${staticPrefix}/${staticFolder}$2`
                 )
           }
-        })
+        }),
+        new TidyStatsPlugin()
       ],
         dllRefs,
         htmls

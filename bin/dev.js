@@ -18,7 +18,7 @@ let useYarn = program.yarn
 let silent = program.silent
 
 let dev = () => {
-  let tasks = require('../packages/nva-task/lib')(context)
+  let tasks = require('nva-task')(context)
   tasks.dev({ port, browser, profile })
 }
 let started = parseInt(process.env.started)

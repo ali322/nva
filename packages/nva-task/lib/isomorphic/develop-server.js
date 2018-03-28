@@ -1,16 +1,19 @@
 let BrowserSync = require('browser-sync')
 let nodemon = require('./nodemon')
 let { join, dirname } = require('path')
-let createApp = require('../../../nva-server/lib')
+let createApp = require('nva-server')
 let { mergeConfig, openBrowser } = require('../common')
 let { merge } = require('../common/helper')
 let middlewareFactory = require('../common/middleware')
 let hotUpdateConfigFactory = require('./webpack.hot-update')
+let bus = require('./event-bus')
 
-module.exports = function (context) {
+module.exports = function(context) {
   const {
     runningMessage,
     serverFolder,
+    serverCompile,
+    serverEntry,
     viewFolder,
     distFolder,
     beforeDev,
@@ -18,50 +21,70 @@ module.exports = function (context) {
     afterDev,
     hooks,
     startWatcher
-    } = context
+  } = context
   const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
-  let cnt = 0
-  return function (options) {
+  return function(options) {
     startWatcher()
 
     let browserSync = BrowserSync.create()
+    process.once('SIGINT', () => {
+      browserSync.exit()
+      process.exit(0)
+    })
     const port = options.port || 7000
     const proxyPort = context.port || 3000
 
-    nodemon({
-      // delay: "200ms",
-      script: 'app.js',
-      execMap: {
-        js: join(
-          dirname(require.resolve('babel-cli')),
-          '..',
-          '.bin',
-          'babel-node'
-        )
-      },
-      verbose: false,
-      stdout: false,
-      // ignore: ["*"],
-      watch: [serverFolder, join(distFolder, serverFolder), 'app.js'],
-      ext: 'js html json es6 jsx'
-    }).on('readable', function () {
-      this.stdout.on('data', chunk => {
-        if (RUNNING_REGXP.test(chunk.toString())) {
-          ++cnt
-          if (cnt === 1) {
-            let url = `http://localhost:${proxyPort}`
-            setTimeout(
-              () => openBrowser(options.browser, url),
-              1000
-            )
+    let opened = 0
+    let openBrowserAfterDev = () => {
+      let url = `http://localhost:${proxyPort}`
+      openBrowser(options.browser, url)
+    }
+
+    let startNode = () => {
+      nodemon({
+        // delay: "200ms",
+        script: serverEntry,
+        execMap: serverCompile
+          ? {
+            js: join(
+                dirname(require.resolve('babel-cli')),
+                '..',
+                '.bin',
+                'babel-node'
+              )
           }
-          browserSync.reload({
-            stream: false
-          })
-        }
+          : {},
+        verbose: false,
+        stdout: false,
+        // ignore: ["*"],
+        watch: [serverFolder, serverEntry, join(distFolder, serverFolder)],
+        ext: 'js html json es6'
+      }).on('readable', function() {
+        this.stdout.on('data', chunk => {
+          if (RUNNING_REGXP.test(chunk.toString())) {
+            if (opened === 0) {
+              opened += 1
+              openBrowserAfterDev()
+            }
+            browserSync.reload({
+              stream: false
+            })
+          }
+        })
+        this.stdout.pipe(process.stdout)
+        this.stderr.pipe(process.stderr)
       })
-      this.stdout.pipe(process.stdout)
-      this.stderr.pipe(process.stderr)
+    }
+
+    let clientBuildFinished = false
+    let serverBuildFinished = false
+    bus.once('server-build-finished', () => {
+      serverBuildFinished = true
+      clientBuildFinished && startNode()
+    })
+    bus.once('client-build-finished', () => {
+      clientBuildFinished = true
+      serverBuildFinished && startNode()
     })
 
     let app = createApp({
@@ -95,10 +118,7 @@ module.exports = function (context) {
       )
     }
     if (typeof beforeDev === 'function') {
-      hotUpdateConfig = mergeConfig(
-        hotUpdateConfig,
-        beforeDev(hotUpdateConfig)
-      )
+      hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
     }
     middleware = middleware.concat(
       middlewareFactory(
@@ -110,15 +130,11 @@ module.exports = function (context) {
           if (typeof afterDev === 'function') {
             afterDev()
           }
+          bus.emit('client-build-finished')
         },
         options.profile
       )
     )
-
-    process.once('SIGINT', () => {
-      browserSync.exit()
-      process.exit(0)
-    })
 
     browserSync.init(
       {
@@ -137,7 +153,7 @@ module.exports = function (context) {
         socket: {
           clientPath: '/bs'
         },
-        scriptPath: function (path) {
+        scriptPath: function(path) {
           path = path.replace(
             /browser-sync-client(\.\d+)+/,
             'browser-sync-client'
@@ -145,7 +161,7 @@ module.exports = function (context) {
           return 'http://localhost:' + port + path
         }
       },
-      function () {
+      function() {
         // console.log('🚀  develop server is started at %d', proxyPort);
       }
     )

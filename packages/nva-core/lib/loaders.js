@@ -13,16 +13,16 @@ module.exports = context => {
     workers: os.cpus().length,
     poolTimeout: isDev ? Infinity : 2000
   }
-  ThreadLoader.warmup(threadLoaderOptions, [
-    'babel-loader',
-    // 'vue-loader',
-    'sass-loader',
-    'less-loader',
-    'stylus-loader',
-    'resolve-url-loader',
-    'postcss-loader',
-    'css-loader'
-  ])
+  // ThreadLoader.warmup(threadLoaderOptions, [
+  //   'babel-loader',
+  //   // 'vue-loader',
+  //   'sass-loader',
+  //   'less-loader',
+  //   'stylus-loader',
+  //   'resolve-url-loader',
+  //   'postcss-loader',
+  //   'css-loader'
+  // ])
   let threadLoader = {
     loader: require.resolve('thread-loader'),
     options: threadLoaderOptions
@@ -58,23 +58,19 @@ module.exports = context => {
       options: { sourceMap: 'inline' }
     },
     loaders: {
-      js: [threadLoader, { loader: require.resolve('babel-loader') }],
-      // js: require.resolve('happypack/loader') + '?id=js',
-      css: [threadLoader].concat(vueStyleLoaders(context)),
-      less: [threadLoader].concat(vueStyleLoaders(context, 'less')),
-      stylus: [threadLoader].concat(vueStyleLoaders(context, 'stylus')),
-      scss: [threadLoader].concat(
-        vueStyleLoaders(context, {
-          loader: 'sass-loader',
-          options: { sourceMap: true }
-        })
-      ),
-      sass: [threadLoader].concat(
-        vueStyleLoaders(context, {
-          loader: 'sass-loader',
-          options: { indentedSyntax: true, sourceMap: true }
-        })
-      )
+      // js: [{ loader: require.resolve('babel-loader') }],
+      js: require.resolve('happypack/loader') + '?id=js',
+      css: vueStyleLoaders(context),
+      less: vueStyleLoaders(context, 'less'),
+      stylus: vueStyleLoaders(context, 'stylus'),
+      scss: vueStyleLoaders(context, {
+        loader: 'sass-loader',
+        options: { sourceMap: true }
+      }),
+      sass: vueStyleLoaders(context, {
+        loader: 'sass-loader',
+        options: { indentedSyntax: true, sourceMap: true }
+      })
     }
   }
 
@@ -87,27 +83,21 @@ module.exports = context => {
     {
       test: /\.vue/,
       exclude: [nodeModulesDir],
-      use: [
-        {
-          loader: require.resolve('thread-loader'),
-          options: threadLoaderOptions
-        },
-        { loader: 'vue-loader', options: vueLoaderOptions }
-      ]
+      loader: 'vue-loader',
+      options: vueLoaderOptions
     },
     {
       test: /\.(es6|js|jsx)$/,
       exclude: /node_modules/,
-      use: [
-        {
-          loader: require.resolve('thread-loader'),
-          options: threadLoaderOptions
-        },
-        { loader: require.resolve('babel-loader') }
-      ]
-      // loader: 'babel-loader'
-      // loader: require.resolve('happypack/loader'),
-      // options: { id: 'js' }
+      // use: [
+        // {
+        //   loader: require.resolve('thread-loader'),
+        //   options: threadLoaderOptions
+        // },
+        // { loader: require.resolve('babel-loader') }
+      // ]
+      loader: require.resolve('happypack/loader'),
+      options: { id: 'js' }
     },
     {
       test: /\.less/,

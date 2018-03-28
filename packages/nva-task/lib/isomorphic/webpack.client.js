@@ -5,8 +5,9 @@ let isPlainObject = require('lodash/isPlainObject')
 let InjectHtmlPlugin = require('inject-html-webpack-plugin')
 let ProgressPlugin = require('progress-webpack-plugin')
 let ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 let { bundleTime, merge } = require('../common/helper')
-let { config: configFactory } = require('../../../nva-core/lib')
+let { config: configFactory } = require('nva-core')
 
 module.exports = function (context, profile) {
   let {
@@ -98,10 +99,11 @@ module.exports = function (context, profile) {
       modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     plugins: baseConfig.plugins.concat([
-      new ProgressPlugin(true, { onProgress: context.onBuildProgress })
+      new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
       new ChunkAssetPlugin({
         chunks: transforms
-      })
+      }),
+      new TidyStatsPlugin()
     ]).concat(dllRefs, htmls)
   })
 }

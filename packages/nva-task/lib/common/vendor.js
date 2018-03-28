@@ -2,12 +2,13 @@ let { resolve, join, basename, extname } = require('path')
 let { DllPlugin } = require('webpack')
 let ProgressPlugin = require('progress-webpack-plugin')
 let ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 let fromPairs = require('lodash/fromPairs')
 let map = require('lodash/map')
 let isEmpty = require('lodash/isEmpty')
 let isPlainObject = require('lodash/isPlainObject')
 let { merge } = require('../common/helper')
-let { config: configFactory } = require('../../../nva-core/lib')
+let { config: configFactory } = require('nva-core')
 
 module.exports = function(context) {
   const {
@@ -57,7 +58,8 @@ module.exports = function(context) {
           '[name]-manifest.json'
         ),
         context: __dirname
-      })
+      }),
+      new TidyStatsPlugin({ identifier: 'vendor:js' })
     ])
   })
 
@@ -93,7 +95,8 @@ module.exports = function(context) {
             return [chunk, files => files.filter(v => extname(v) !== '.js')]
           })
         )
-      })
+      }),
+      new TidyStatsPlugin({ identifier: 'vendor:css' })
     ])
   })
 

@@ -72,7 +72,9 @@ module.exports = context => {
       moduleFolder: 'module',
       bundleFolder: 'bundle',
       serverFolder: 'server',
-      serverEntry: 'bootstrap.js',
+      serverEntry: 'app.js',
+      serverCompile: false,
+      serverCompileEntry: 'bootstrap.js',
       viewFolder: join('server', 'view'),
       sourceFolder: 'client'
     })

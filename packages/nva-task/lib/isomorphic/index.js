@@ -6,18 +6,19 @@ let chalk = require('chalk')
 let del = require('del')
 let { addMod, removeMod } = require('../common/mod')
 let { vendorManifest, mergeConfig, checkVendor } = require('../common')
-let { callback, merge } = require('../common/helper')
+let { merge } = require('../common/helper')
 let vendorFactory = require('../common/vendor')
 let serverConfigFactory = require('./webpack.server')
 let clientConfigFactory = require('./webpack.client')
 let bundleConfigFactory = require('./webpack.bundle')
 let developServer = require('./develop-server')
+let bus = require('./event-bus')
 
 module.exports = context => {
   let {
     output,
     serverFolder,
-    serverEntry,
+    serverCompile,
     distFolder,
     chunkFolder,
     sourceFolder,
@@ -48,6 +49,7 @@ module.exports = context => {
       stats.errors.forEach(err => console.error(err))
       stats.warnings.forEach(err => console.warn(err))
       console.log(chalk.magenta('server side bundle is now VALID.'))
+      bus.emit('server-build-finished')
     }
     if (context.isDev) {
       bundleCompiler.watch({}, cb)
@@ -87,7 +89,7 @@ module.exports = context => {
           beforeBuild(clientConfig)
         )
       }
-      let serverConfig = serverEntry
+      let serverConfig = serverCompile
         ? serverConfigFactory(context, profile)
         : null
       if (typeof hooks.beforeServerBuild === 'function') {
@@ -116,9 +118,13 @@ module.exports = context => {
 
       createBundle(merge(context, { isDev: false }), profile)
       let compiler = webpack(
-        serverEntry ? [clientConfig, serverConfig] : clientConfig
+        serverCompile ? [clientConfig, serverConfig] : clientConfig
       )
       compiler.run(function (err, stats) {
+        if(err) {
+          console.error(err)
+          return
+        }
         if (typeof hooks.afterServerBuild === 'function') {
           hooks.afterServerBuild(err, stats)
         }
@@ -131,7 +137,6 @@ module.exports = context => {
         if (typeof afterBuild === 'function') {
           afterBuild(err, stats)
         }
-        callback('Build success!', err, stats) // eslint-disable-line
       })
     },
     vendor(isDev, next) {
@@ -151,6 +156,10 @@ module.exports = context => {
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
       let compiler = webpack(vendorConfig)
       compiler.run(function (err, stats) {
+        if(err){
+          console.error(err)
+          return
+        }
         vendorManifest(
           stats,
           vendors,
@@ -165,7 +174,6 @@ module.exports = context => {
         if (typeof afterVendor === 'function') {
           afterVendor(err, stats)
         }
-        callback('Build vendor success!', err, stats) // eslint-disable-line
         if (next) next()
       })
     },

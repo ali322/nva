@@ -1,20 +1,15 @@
 let { IgnorePlugin } = require('webpack')
 let ProgressPlugin = require('progress-webpack-plugin')
+let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 let nodeExternals = require('webpack-node-externals')
 let { resolve, join } = require('path')
 let forEach = require('lodash/forEach')
 let { existsSync } = require('fs')
 let { relativeURL, merge } = require('../common/helper')
-let { config: configFactory } = require('../../../nva-core/lib')
+let { config: configFactory } = require('nva-core')
 
-module.exports = function (context, profile) {
-  const {
-    mods,
-    serverFolder,
-    distFolder,
-    bundleFolder,
-    sourceFolder
-  } = context
+module.exports = function(context, profile) {
+  const { mods, serverFolder, distFolder, bundleFolder, sourceFolder } = context
   let entry = {}
   let baseConfig = configFactory(context, profile)
   //   let externals = Object.keys(require(resolve('package.json')).dependencies)
@@ -48,9 +43,12 @@ module.exports = function (context, profile) {
       modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     externals,
-    plugins: baseConfig.plugins.slice(0, -1).concat([
-      new ProgressPlugin(true, { identifier: 'bundle' }),
-      new IgnorePlugin(/\.(css|less|scss|styl)$/)
-    ])
+    plugins: baseConfig.plugins
+      .slice(0, -1)
+      .concat([
+        new ProgressPlugin(true, { identifier: 'bundle' }),
+        new TidyStatsPlugin({ identifier: 'bundle' }),
+        new IgnorePlugin(/\.(css|less|scss|styl)$/)
+      ])
   })
 }

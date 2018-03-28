@@ -3,9 +3,9 @@ let { join, resolve, posix } = require('path')
 let forEach = require('lodash/forEach')
 let isPlainObject = require('lodash/isPlainObject')
 let InjectHtmlPlugin = require('inject-html-webpack-plugin')
-let TidyErrorsPlugin = require('tidy-errors-webpack-plugin')
+let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 let ProgressPlugin = require('progress-webpack-plugin')
-let { config: configFactory } = require('../../../nva-core/lib')
+let { config: configFactory } = require('nva-core')
 let { merge } = require('../common/helper')
 
 module.exports = function (context, profile) {
@@ -109,7 +109,7 @@ module.exports = function (context, profile) {
     },
     plugins: baseConfig.plugins.concat(dllRefs, htmls, [
       new ProgressPlugin(true, { onProgress: context.onDevProgress }),
-      new TidyErrorsPlugin({ clearConsole: false, errorsOnly: true })
+      new TidyStatsPlugin({ignoreAssets: true})
     ])
   })
 }

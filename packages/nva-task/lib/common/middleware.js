@@ -4,7 +4,11 @@ let webpackHotMiddleware = require('webpack-hot-middleware')
 
 module.exports = (config, done, profile) => {
   let bundler = webpack(config)
-  bundler.plugin('done', done)
+  if (bundler.hooks) {
+    bundler.hooks.done.tap('NvaDev', done)
+  } else {
+    bundler.plugin('done', done)
+  }
   return [
     webpackDevMiddleware(bundler, {
       publicPath: config.output.publicPath,
@@ -12,14 +16,13 @@ module.exports = (config, done, profile) => {
         colors: true
       },
       hot: true,
-      noInfo: !profile,
+      logLevel: profile ? 'info' : 'silent',
       lazy: false,
       watchOptions: {
         aggregateTimeout: 300,
         poll: true,
         ignored: [/node_modules/]
-      },
-      quiet: !profile
+      }
     }),
     webpackHotMiddleware(bundler, { log: false })
   ]

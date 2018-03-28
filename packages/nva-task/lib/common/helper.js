@@ -89,19 +89,3 @@ exports.emojis = (key) => {
     return '>'
   }
 }
-
-exports.callback = (info, err, stats) => {
-  if (err || stats.hasErrors()) {
-    console.log(chalk.red(err, stats))
-    return
-  }
-  console.log(
-    stats.toString({
-      version: false,
-      chunks: false,
-      modules: false,
-      colors: true
-    })
-  )
-  console.log(exports.emojis(':ok_hand:') + '  ' + info)
-}

@@ -12,7 +12,7 @@ let context = require('../lib/context')()
 let lib = require('../lib')
 let config = require('../lib/config')
 let questions = config.questions('bundle')
-let tasks = require('../packages/nva-task/lib')(context)
+let tasks = require('nva-task')(context)
 
 program.usage('[name]')
 program.option('-d, --delete', 'delete action flag')

@@ -26,15 +26,15 @@ module.exports = (context, profile = false) => {
   }
 
   const happypackPlugins = [
-    // happypackPlugin(
-    //   'js',
-    //   [
-    //     {
-    //       loader: require.resolve('babel-loader'),
-    //       options: { cacheDirectory: true }
-    //     }
-    //   ]
-    // )
+    happypackPlugin(
+      'js',
+      [
+        {
+          loader: require.resolve('babel-loader'),
+          options: { cacheDirectory: true }
+        }
+      ]
+    )
   ]
 
   let plugins = [].concat(happypackPlugins)

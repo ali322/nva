@@ -18,12 +18,13 @@ function mergeOpts (defaults, opts) {
   let sourcePath = resolve("src")
   let entry = resolve("test", "unit", "fixture", "setup.js")
   let reportPath = resolve("test", "unit", "coverage")
+  entry = opts.entry || entry
 
   let preprocessors = {}
   preprocessors[entry] = ["webpack", "sourcemap"]
 
   let options = assign({}, defaults, {
-    files: [opts.entry ? opts.entry : entry],
+    files: [entry],
     preprocessors,
     browsers: opts.browsers ? opts.browsers : ["jsdom"],
     coverageIstanbulReporter: {
