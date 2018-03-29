@@ -42,7 +42,7 @@ module.exports = (context, options) => {
   let openBrowserAfterDev = () => {
     let url = spa ? '/' : '/index/'
     url = `http://localhost:${port}${url}`
-    // openBrowser(options.browser, url)
+    openBrowser(options.browser, url)
     console.log(`${emojis('rocket')}  develop server started at ${port}`)
   }
 
