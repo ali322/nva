@@ -22,7 +22,7 @@ describe.skip("build project test's", function() {
         })
     })
     it("should success", function(done) {
-      expect(result.stdout).to.have.string("build success")
+      expect(result.stdout).to.have.string("Build success")
       done()
     })
     after(function() {
