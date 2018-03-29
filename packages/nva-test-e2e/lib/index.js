@@ -5,12 +5,7 @@ let chalk = require('chalk')
 let ip = require('internal-ip')
 let qrcode = require('qrcode-terminal')
 
-module.exports = function (server, conf, port, browsers = ['chrome']) {
-  if (server && existsSync(resolve(server)) === false) {
-    console.log(chalk.red('server invalid'))
-    process.exit(1)
-  }
-
+module.exports = function (conf, port, browsers = ['chrome']) {
   try {
     conf = require(resolve(conf))
   } catch (e) {
@@ -19,16 +14,13 @@ module.exports = function (server, conf, port, browsers = ['chrome']) {
   }
 
   let exec = runner => {
-    if(server) {
-      runner = runner.startApp(`node ${resolve(server)}`, 3000)
+    if (typeof conf.process === 'function') {
+      runner = conf.process(runner)
     }
     runner = runner
       .src(conf.spec || [])
       .browsers(browsers)
 
-    if (typeof conf.process === 'function') {
-      runner = conf.process(runner)
-    }
 
     runner
       .run()

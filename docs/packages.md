@@ -86,7 +86,7 @@ frontend e2e test toolkit
 run test
 
 ```bash
-nva-test-e2e -r path/to/server.js -c path/to/config.js
+nva-test-e2e -c path/to/config.js
 ```
 
 cli options
@@ -94,7 +94,15 @@ cli options
 |     param      |  default   |     description     |
 | :----------: | :----: | :----------: |
 | -c or —-config |   none    |    test config    |
-| -s or —-server |   none    |    app test server    |
 | —-browser |   phantom.js    |    test on which browser    |
+
+config describle
+
+```javascript
+{
+    spec: ['path/to/spec.js'],
+    process: runner => runner.startApp('node path/to/server.js', 3000)
+}
+```
 
 [Back to Index](./index.md)

@@ -19,6 +19,8 @@ function mergeOpts (defaults, opts) {
   let entry = resolve("test", "unit", "fixture", "setup.js")
   let reportPath = resolve("test", "unit", "coverage")
   entry = opts.entry || entry
+  sourcePath = opts.sourcePath || sourcePath
+  reportPath = opts.reportPath || reportPath
 
   let preprocessors = {}
   preprocessors[entry] = ["webpack", "sourcemap"]

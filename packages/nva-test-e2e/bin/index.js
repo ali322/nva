@@ -5,7 +5,6 @@ var test = require('../lib/')
 let version = require('../package.json').version
 
 program.version(version)
-program.option('-s, --server <server>', 'how to start project')
 program.option('-c, --config <config>', 'customize config')
 program.option('-p, --port <port>', 'customize port', 9876)
 program.option(
@@ -21,4 +20,4 @@ let config = program.config
 let port = program.port
 let browser = program.browser
 
-test(server, config, port, browser)
+test(config, port, browser)

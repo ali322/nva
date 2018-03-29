@@ -87,7 +87,7 @@ nva-test
 运行测试
 
 ```bash
-nva-test-e2e -r path/to/server.js -c path/to/config.js
+nva-test-e2e -c path/to/config.js
 ```
 
 命令行参数
@@ -95,7 +95,15 @@ nva-test-e2e -r path/to/server.js -c path/to/config.js
 |     参数名      |  默认   |     描述     |
 | :----------: | :----: | :----------: |
 | -c or —-config |   无    |    测试配置    |
-| -s or —-server |   无    |    应用测试服务器    |
-| —-browser |   phantom.js    |    测试浏览器    |
+| —-browser |   chrome    |    测试浏览器    |
+
+配置文件描述
+
+```javascript
+{
+    spec: ['path/to/spec.js'],
+    process: runner => runner.startApp('node path/to/server.js', 3000)
+}
+```
 
 [返回首页](./index.md)
