@@ -56,7 +56,8 @@ module.exports = (options = {}) => {
     hooks
   }
 
-  return exports.init(context)
+  context = exports.init(context)
+  return context
 }
 
 exports.init = context => {

@@ -6,9 +6,6 @@ let { join } = require('path')
 let { addMod, removeMod } = require('../common/mod')
 let { vendorManifest, mergeConfig, checkVendor } = require('../common')
 let { merge } = require('../common/helper')
-let vendorFactory = require('../common/vendor')
-let releaseConfigFactory = require('./webpack.production')
-let developServer = require('./develop-server')
 
 module.exports = context => {
   let {
@@ -23,7 +20,7 @@ module.exports = context => {
     mods,
     vendors,
     vendorSourceMap
-    } = context
+  } = context
 
   const tasks = {
     addMod(names, answers, template) {
@@ -34,15 +31,12 @@ module.exports = context => {
     },
     build({ profile }) {
       if (
-        checkVendor(
-          vendors,
-          join(output.vendorPath, vendorSourceMap)
-        ) === false
+        checkVendor(vendors, join(output.vendorPath, vendorSourceMap)) === false
       ) {
         tasks.vendor(false, tasks.build.bind(null, { profile }))
         return
       }
-      let releaseConfig = releaseConfigFactory(context, profile)
+      let releaseConfig = require('./webpack.production')(context, profile)
       if (typeof hooks.beforeBuild === 'function') {
         releaseConfig = mergeConfig(
           releaseConfig,
@@ -50,10 +44,7 @@ module.exports = context => {
         )
       }
       if (typeof beforeBuild === 'function') {
-        releaseConfig = mergeConfig(
-          releaseConfig,
-          beforeBuild(releaseConfig)
-        )
+        releaseConfig = mergeConfig(releaseConfig, beforeBuild(releaseConfig))
       }
       /** clean build assets */
       forEach(mods, (mod, name) => {
@@ -67,7 +58,7 @@ module.exports = context => {
       del.sync(join(distFolder, chunkFolder))
 
       let compiler = webpack(releaseConfig)
-      compiler.run(function (err, stats) {
+      compiler.run(function(err, stats) {
         if (err) {
           console.error(err)
           return
@@ -81,7 +72,7 @@ module.exports = context => {
       })
     },
     vendor(isDev, next) {
-      let vendorConfig = vendorFactory(merge(context, { isDev }))
+      let vendorConfig = require('../common/vendor')(merge(context, { isDev }))
       if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,
@@ -89,15 +80,12 @@ module.exports = context => {
         )
       }
       if (typeof beforeVendor === 'function') {
-        vendorConfig = mergeConfig(
-          vendorConfig,
-          beforeVendor(vendorConfig)
-        )
+        vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
       var compiler = webpack(vendorConfig)
-      compiler.run(function (err, stats) {
-        if(err) {
+      compiler.run(function(err, stats) {
+        if (err) {
           console.error(err)
           return
         }
@@ -119,16 +107,11 @@ module.exports = context => {
       })
     },
     dev(options) {
-      const runDev = developServer(context)
-      if (
-        checkVendor(
-          vendors,
-          join(output.vendorDevPath, vendorSourceMap)
-        )
-      ) {
-        runDev(options)
+      let developServer = require('./develop-server')
+      if (checkVendor(vendors, join(output.vendorDevPath, vendorSourceMap))) {
+        developServer(context, options)
       } else {
-        tasks.vendor(true, runDev.bind(null, options))
+        tasks.vendor(true, developServer.bind(null, context, options))
       }
     }
   }

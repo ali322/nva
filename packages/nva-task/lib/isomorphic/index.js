@@ -7,11 +7,6 @@ let del = require('del')
 let { addMod, removeMod } = require('../common/mod')
 let { vendorManifest, mergeConfig, checkVendor } = require('../common')
 let { merge } = require('../common/helper')
-let vendorFactory = require('../common/vendor')
-let serverConfigFactory = require('./webpack.server')
-let clientConfigFactory = require('./webpack.client')
-let bundleConfigFactory = require('./webpack.bundle')
-let developServer = require('./develop-server')
 let bus = require('./event-bus')
 
 module.exports = context => {
@@ -36,7 +31,7 @@ module.exports = context => {
     } = context
 
   function createBundle(context, profile) {
-    let bundleConfig = bundleConfigFactory(context, profile)
+    let bundleConfig = require('./webpack.bundle')(context, profile)
     del.sync(join(serverFolder, bundleFolder))
     if (Object.keys(bundleConfig.entry).length === 0) {
       return
@@ -76,7 +71,7 @@ module.exports = context => {
         return
       }
 
-      let clientConfig = clientConfigFactory(context, profile)
+      let clientConfig = require('./webpack.client')(context, profile)
       if (typeof hooks.beforeBuild === 'function') {
         clientConfig = mergeConfig(
           clientConfig,
@@ -90,7 +85,7 @@ module.exports = context => {
         )
       }
       let serverConfig = serverCompile
-        ? serverConfigFactory(context, profile)
+        ? require('./webpack.server')(context, profile)
         : null
       if (typeof hooks.beforeServerBuild === 'function') {
         serverConfig = mergeConfig(
@@ -140,7 +135,7 @@ module.exports = context => {
       })
     },
     vendor(isDev, next) {
-      let vendorConfig = vendorFactory(merge(context, { isDev }))
+      let vendorConfig = require('../common/vendor')(merge(context, { isDev }))
       if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,
@@ -178,17 +173,17 @@ module.exports = context => {
       })
     },
     dev(options) {
+      let developServer = require('./develop-server')
       createBundle(merge(context, { isDev: true }), options.profile)
-      const runDev = developServer(context)
       if (
         checkVendor(
           vendors,
           join(output.vendorDevPath, vendorSourceMap)
         )
       ) {
-        runDev(options)
+        developServer(context, options)
       } else {
-        tasks.vendor(true, runDev.bind(null, options))
+        tasks.vendor(true, developServer.bind(null, context, options))
       }
     }
   }
