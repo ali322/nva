@@ -28,7 +28,7 @@ module.exports = context => {
     mods,
     vendors,
     vendorSourceMap
-    } = context
+  } = context
 
   function createBundle(context, profile) {
     let bundleConfig = require('./webpack.bundle')(context, profile)
@@ -62,10 +62,7 @@ module.exports = context => {
     },
     build({ profile }) {
       if (
-        checkVendor(
-          vendors,
-          join(output.vendorPath, vendorSourceMap)
-        ) === false
+        checkVendor(vendors, join(output.vendorPath, vendorSourceMap)) === false
       ) {
         tasks.vendor(false, tasks.build.bind(null, { profile }))
         return
@@ -79,10 +76,7 @@ module.exports = context => {
         )
       }
       if (typeof beforeBuild === 'function') {
-        clientConfig = mergeConfig(
-          clientConfig,
-          beforeBuild(clientConfig)
-        )
+        clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
       }
       let serverConfig = serverCompile
         ? require('./webpack.server')(context, profile)
@@ -115,8 +109,8 @@ module.exports = context => {
       let compiler = webpack(
         serverCompile ? [clientConfig, serverConfig] : clientConfig
       )
-      compiler.run(function (err, stats) {
-        if(err) {
+      compiler.run(function(err, stats) {
+        if (err) {
           console.error(err)
           return
         }
@@ -143,15 +137,12 @@ module.exports = context => {
         )
       }
       if (typeof beforeVendor === 'function') {
-        vendorConfig = mergeConfig(
-          vendorConfig,
-          beforeVendor(vendorConfig)
-        )
+        vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
       let compiler = webpack(vendorConfig)
-      compiler.run(function (err, stats) {
-        if(err){
+      compiler.run(function(err, stats) {
+        if (err) {
           console.error(err)
           return
         }
@@ -175,12 +166,7 @@ module.exports = context => {
     dev(options) {
       let developServer = require('./develop-server')
       createBundle(merge(context, { isDev: true }), options.profile)
-      if (
-        checkVendor(
-          vendors,
-          join(output.vendorDevPath, vendorSourceMap)
-        )
-      ) {
+      if (checkVendor(vendors, join(output.vendorDevPath, vendorSourceMap))) {
         developServer(context, options)
       } else {
         tasks.vendor(true, developServer.bind(null, context, options))

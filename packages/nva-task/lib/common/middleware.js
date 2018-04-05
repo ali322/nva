@@ -5,9 +5,11 @@ let webpackHotMiddleware = require('webpack-hot-middleware')
 module.exports = (config, done, profile) => {
   let bundler = webpack(config)
   if (bundler.hooks) {
-    bundler.hooks.done.tap('NvaDev', done)
+    bundler.hooks.done.tap('NvaDev', stats => done(null, stats))
+    bundler.hooks.failed.tap('NvaDev', err => done(err, null))
   } else {
-    bundler.plugin('done', done)
+    bundler.plugin('done', stats => done(null, stats))
+    bundler.plugin('failed', err => done(err, null))
   }
   return [
     webpackDevMiddleware(bundler, {

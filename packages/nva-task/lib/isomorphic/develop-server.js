@@ -119,12 +119,12 @@ module.exports = function(context, options) {
   middleware = middleware.concat(
     require('../common/middleware')(
       hotUpdateConfig,
-      () => {
+      (err, stats) => {
         if (typeof hooks.afterDev === 'function') {
-          hooks.afterDev()
+          hooks.afterDev(err, stats)
         }
         if (typeof afterDev === 'function') {
-          afterDev()
+          afterDev(err, stats)
         }
         bus.emit('client-build-finished')
       },

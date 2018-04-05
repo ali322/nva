@@ -27,11 +27,17 @@ module.exports = (context, options) => {
     process.exit(0)
   })
   const port = options.port || 3000
-  let hotUpdateConfig = require('./webpack.hot-update')(merge(context, { port }), options.profile)
+  let hotUpdateConfig = require('./webpack.hot-update')(
+    merge(context, { port }),
+    options.profile
+  )
 
   // apply before hooks
   if (typeof hooks.beforeDev === 'function') {
-    hotUpdateConfig = mergeConfig(hotUpdateConfig, hooks.beforeDev(hotUpdateConfig))
+    hotUpdateConfig = mergeConfig(
+      hotUpdateConfig,
+      hooks.beforeDev(hotUpdateConfig)
+    )
   }
   if (typeof beforeDev === 'function') {
     hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
@@ -48,12 +54,12 @@ module.exports = (context, options) => {
 
   const middlewares = require('../common/middleware')(
     hotUpdateConfig,
-    () => {
+    (err, stats) => {
       if (typeof hooks.afterDev === 'function') {
-        hooks.afterDev()
+        hooks.afterDev(err, stats)
       }
       if (typeof afterDev === 'function') {
-        afterDev()
+        afterDev(err, stats)
       }
       if (opened === 0) {
         opened += 1
