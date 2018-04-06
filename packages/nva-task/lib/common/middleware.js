@@ -4,7 +4,8 @@ let webpackHotMiddleware = require('webpack-hot-middleware')
 
 module.exports = (config, done, profile) => {
   let bundler = webpack(config)
-  bundler.plugin('done', done)
+  bundler.plugin('done', stats => done(null, stats))
+  bundler.plugin('failed', err => done(err, null))
   return [
     webpackDevMiddleware(bundler, {
       publicPath: config.output.publicPath,
