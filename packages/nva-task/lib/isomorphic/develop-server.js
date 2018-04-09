@@ -31,6 +31,7 @@ module.exports = function(context, options) {
   const proxyPort = context.port || 3000
 
   let opened = 0
+  let devRun = 0
   let openBrowserAfterDev = () => {
     let url = `http://localhost:${proxyPort}`
     openBrowser(options.browser, url)
@@ -105,11 +106,14 @@ module.exports = function(context, options) {
     middlewareFactory(
       hotUpdateConfig,
       (err, stats) => {
-        if (typeof hooks.afterDev === 'function') {
-          hooks.afterDev(err, stats)
-        }
-        if (typeof afterDev === 'function') {
-          afterDev(err, stats)
+        if (devRun === 0) {
+          devRun += 1
+          if (typeof hooks.afterDev === 'function') {
+            hooks.afterDev(err, stats)
+          }
+          if (typeof afterDev === 'function') {
+            afterDev(err, stats)
+          }
         }
       },
       options.profile
