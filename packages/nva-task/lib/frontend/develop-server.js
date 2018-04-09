@@ -111,6 +111,7 @@ module.exports = (context, options) => {
           files: [join(sourceFolder, '**', '*.html')],
           online: false,
           notify: true,
+          reloadOnRestart: true,
           open: false,
           watchOptions: {
             debounceDelay: 1000

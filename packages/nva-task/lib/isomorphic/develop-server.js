@@ -128,7 +128,7 @@ module.exports = function(context, options) {
       logLevel: 'silent',
       notify: true,
       open: false,
-      // reloadOnRestart:true,
+      reloadOnRestart: true,
       // browser: "google chrome",
       socket: {
         clientPath: '/bs'
