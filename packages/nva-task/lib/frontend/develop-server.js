@@ -55,14 +55,14 @@ module.exports = (context, options) => {
   const middlewares = require('../common/middleware')(
     hotUpdateConfig,
     (err, stats) => {
-      if (typeof hooks.afterDev === 'function') {
-        hooks.afterDev(err, stats)
-      }
-      if (typeof afterDev === 'function') {
-        afterDev(err, stats)
-      }
       if (opened === 0) {
         opened += 1
+        if (typeof hooks.afterDev === 'function') {
+          hooks.afterDev(err, stats)
+        }
+        if (typeof afterDev === 'function') {
+          afterDev(err, stats)
+        }
         openBrowserAfterDev()
       }
     },

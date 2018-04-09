@@ -1,7 +1,5 @@
 let path = require('path')
 let assign = require('lodash/assign')
-let ThreadLoader = require('thread-loader')
-let os = require('os')
 let { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
 
 const nodeModulesDir = path.resolve('node_modules')
@@ -9,10 +7,10 @@ const nodeModulesDir = path.resolve('node_modules')
 module.exports = context => {
   const { output = {}, imagePrefix, fontPrefix, isDev, strict } = context
 
-  let threadLoaderOptions = {
-    workers: os.cpus().length,
-    poolTimeout: isDev ? Infinity : 2000
-  }
+  // let threadLoaderOptions = {
+  //   workers: os.cpus().length,
+  //   poolTimeout: isDev ? Infinity : 2000
+  // }
   // ThreadLoader.warmup(threadLoaderOptions, [
   //   'babel-loader',
   //   // 'vue-loader',
@@ -23,10 +21,10 @@ module.exports = context => {
   //   'postcss-loader',
   //   'css-loader'
   // ])
-  let threadLoader = {
-    loader: require.resolve('thread-loader'),
-    options: threadLoaderOptions
-  }
+  // let threadLoader = {
+  //   loader: require.resolve('thread-loader'),
+  //   options: threadLoaderOptions
+  // }
 
   let urlLoaderOptions = {
     limit: 2500
@@ -90,11 +88,11 @@ module.exports = context => {
       test: /\.(es6|js|jsx)$/,
       exclude: /node_modules/,
       // use: [
-        // {
-        //   loader: require.resolve('thread-loader'),
-        //   options: threadLoaderOptions
-        // },
-        // { loader: require.resolve('babel-loader') }
+      // {
+      //   loader: require.resolve('thread-loader'),
+      //   options: threadLoaderOptions
+      // },
+      // { loader: require.resolve('babel-loader') }
       // ]
       loader: require.resolve('happypack/loader'),
       options: { id: 'js' }
@@ -159,6 +157,7 @@ module.exports = context => {
       enforce: 'pre',
       loader: 'eslint-loader',
       options: {
+        emitWarning: true,
         cache: true
       }
     })

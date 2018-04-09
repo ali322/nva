@@ -58,10 +58,7 @@ module.exports = function(context, options) {
     }).on('readable', function() {
       this.stdout.on('data', chunk => {
         if (RUNNING_REGXP.test(chunk.toString())) {
-          if (opened === 0) {
-            opened += 1
-            openBrowserAfterDev()
-          }
+          openBrowserAfterDev()
           browserSync.reload({
             stream: false
           })
@@ -120,13 +117,16 @@ module.exports = function(context, options) {
     require('../common/middleware')(
       hotUpdateConfig,
       (err, stats) => {
-        if (typeof hooks.afterDev === 'function') {
-          hooks.afterDev(err, stats)
+        if (opened === 0) {
+          opened += 1
+          if (typeof hooks.afterDev === 'function') {
+            hooks.afterDev(err, stats)
+          }
+          if (typeof afterDev === 'function') {
+            afterDev(err, stats)
+          }
+          bus.emit('client-build-finished')
         }
-        if (typeof afterDev === 'function') {
-          afterDev(err, stats)
-        }
-        bus.emit('client-build-finished')
       },
       options.profile
     )
