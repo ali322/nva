@@ -130,6 +130,7 @@ module.exports = context => {
       enforce: 'pre',
       loader: 'eslint-loader',
       options: {
+        emitWarning: true,
         cache: true
       }
     })
