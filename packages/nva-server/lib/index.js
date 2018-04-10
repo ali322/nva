@@ -1,24 +1,24 @@
-let connect = require('connect')
-let bodyParser = require('body-parser')
-let methodOverride = require('method-override')
-let serveStatic = require('serve-static')
-let favicon = require('serve-favicon')
-let proxyMiddleware = require('http-proxy-middleware')
-let morgan = require('morgan')
-let compression = require('compression')
-let { join, resolve, parse, posix } = require('path')
-let url = require('url')
-let historyAPIFallback = require('connect-history-api-fallback')
-let assign = require('lodash/assign')
-let mockFactory = require('./mock')
+const connect = require('connect')
+const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
+const serveStatic = require('serve-static')
+const favicon = require('serve-favicon')
+const proxyMiddleware = require('http-proxy-middleware')
+const morgan = require('morgan')
+const compression = require('compression')
+const { join, resolve, parse, posix } = require('path')
+const url = require('url')
+const historyAPIFallback = require('connect-history-api-fallback')
+const assign = require('lodash/assign')
+const mockFactory = require('./mock')
 
 function extname(val) {
-  let parsed = url.parse(val)
+  const parsed = url.parse(val)
   return parse(parsed.pathname).ext
 }
 
 module.exports = options => {
-  let {
+  const {
     path = '',
     asset = '',
     rewrites = false,

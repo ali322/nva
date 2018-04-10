@@ -1,8 +1,8 @@
-let HappyPack = require('happypack')
-let os = require('os')
-let assign = require('lodash/assign')
-let autoPrefixer = require('autoprefixer')
-let MiniCSSExtractPlugin = require('mini-css-extract-plugin')
+const HappyPack = require('happypack')
+const os = require('os')
+const assign = require('lodash/assign')
+const autoPrefixer = require('autoprefixer')
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
 exports.happypackPlugin = (id, loaders) => {
   const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
@@ -67,13 +67,6 @@ exports.cssLoaders = (context, preprocessor = '') => {
       throw new Error('invalid preprocessor')
     }
   }
-  // loaders.unshift({
-  //   loader: require.resolve('thread-loader'),
-  //   options: {
-  //     workers: os.cpus().length,
-  //     poolTimeout: context.isDev ? Infinity : 2000
-  //   }
-  // })
   if (!context.isDev) {
     return [MiniCSSExtractPlugin.loader].concat(loaders.slice(1))
   }

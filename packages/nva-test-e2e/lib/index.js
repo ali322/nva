@@ -1,26 +1,25 @@
-let { existsSync } = require('fs')
-let { resolve } = require('path')
-let createTestCafe = require('testcafe')
-let chalk = require('chalk')
-let ip = require('internal-ip')
-let qrcode = require('qrcode-terminal')
+const { resolve } = require('path')
+const createTestCafe = require('testcafe')
+const chalk = require('chalk')
+const ip = require('internal-ip')
+const qrcode = require('qrcode-terminal')
 
-module.exports = function (conf, port, browsers = ['chrome']) {
+module.exports = function (confPath, port, browsers = ['chrome']) {
+  let conf = {}
   try {
-    conf = require(resolve(conf))
+    conf = require(resolve(confPath))
   } catch (e) {
     console.log(chalk.red('config invalid'))
     process.exit(1)
   }
 
-  let exec = runner => {
+  let tc = null
+  let runner = null
+  const exec = runner => {
     if (typeof conf.process === 'function') {
       runner = conf.process(runner)
     }
-    runner = runner
-      .src(conf.spec || [])
-      .browsers(browsers)
-
+    runner = runner.src(conf.spec || []).browsers(browsers)
 
     runner
       .run()
@@ -33,8 +32,6 @@ module.exports = function (conf, port, browsers = ['chrome']) {
       })
   }
 
-  let tc = null
-  let runner = null
   createTestCafe(ip.v4.sync(), port)
     .then(testCafe => {
       tc = testCafe

@@ -1,30 +1,11 @@
-let path = require('path')
-let assign = require('lodash/assign')
-let { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
+const path = require('path')
+const assign = require('lodash/assign')
+const { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
 
 const nodeModulesDir = path.resolve('node_modules')
 
 module.exports = context => {
   const { output = {}, imagePrefix, fontPrefix, isDev, strict } = context
-
-  // let threadLoaderOptions = {
-  //   workers: os.cpus().length,
-  //   poolTimeout: isDev ? Infinity : 2000
-  // }
-  // ThreadLoader.warmup(threadLoaderOptions, [
-  //   'babel-loader',
-  //   // 'vue-loader',
-  //   'sass-loader',
-  //   'less-loader',
-  //   'stylus-loader',
-  //   'resolve-url-loader',
-  //   'postcss-loader',
-  //   'css-loader'
-  // ])
-  // let threadLoader = {
-  //   loader: require.resolve('thread-loader'),
-  //   options: threadLoaderOptions
-  // }
 
   let urlLoaderOptions = {
     limit: 2500
@@ -50,13 +31,12 @@ module.exports = context => {
     })
   }
 
-  let vueLoaderOptions = {
+  const vueLoaderOptions = {
     postcss: {
       plugins: postcssOptions(context).plugins,
       options: { sourceMap: 'inline' }
     },
     loaders: {
-      // js: [{ loader: require.resolve('babel-loader') }],
       js: require.resolve('happypack/loader') + '?id=js',
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
@@ -87,13 +67,6 @@ module.exports = context => {
     {
       test: /\.(es6|js|jsx)$/,
       exclude: /node_modules/,
-      // use: [
-      // {
-      //   loader: require.resolve('thread-loader'),
-      //   options: threadLoaderOptions
-      // },
-      // { loader: require.resolve('babel-loader') }
-      // ]
       loader: require.resolve('happypack/loader'),
       options: { id: 'js' }
     },

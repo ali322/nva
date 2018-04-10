@@ -1,14 +1,14 @@
-let webpack = require('webpack')
-let { resolve } = require('path')
-let ProgressPlugin = require('progress-webpack-plugin')
-let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-let { config: configFactory } = require('nva-core')
-let { merge } = require('../common/helper')
+const webpack = require('webpack')
+const { resolve } = require('path')
+const ProgressPlugin = require('progress-webpack-plugin')
+const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
+const { config: configFactory } = require('../../../nva-core/lib')
+const { merge } = require('../common/helper')
 
 module.exports = function(context, profile) {
   const { serverFolder, distFolder, sourceFolder, serverCompileEntry } = context
-  let baseConfig = configFactory(context, profile)
-  let externals = Object.keys(require(resolve('package.json')).dependencies)
+  const baseConfig = configFactory(context, profile)
+  const externals = Object.keys(require(resolve('package.json')).dependencies)
 
   return merge(baseConfig, {
     name: 'server',

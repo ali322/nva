@@ -1,12 +1,12 @@
-let webpack = require('webpack')
-let MiniCSSExtractPlugin = require('mini-css-extract-plugin')
-let { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-let loadersFactory = require('./loaders')
-let { happypackPlugin } = require('./lib')
-let assign = require('lodash/assign')
+const webpack = require('webpack')
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const loadersFactory = require('./loaders')
+const { happypackPlugin } = require('./lib')
+const assign = require('lodash/assign')
 
 module.exports = (context, profile = false) => {
-  let config = {
+  const config = {
     profile,
     module: {
       rules: loadersFactory(context)
@@ -50,7 +50,7 @@ module.exports = (context, profile = false) => {
     )
   }
 
-  let restConfig = context.isDev
+  const restConfig = context.isDev
     ? {
       devtool: '#eval-source-map',
       watch: true,

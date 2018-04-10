@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
-let program = require('commander')
-let { switchMirror } = require('../lib/')
+const program = require('commander')
+const { switchMirror } = require('../lib/')
 
 program.usage('[mirror]')
 program.option('--yarn', 'use yarn instead of npm')
@@ -14,11 +14,11 @@ program.on('--help', function () {
 
 program.parse(process.argv)
 
-let mirror = program.args[0]
+const mirror = program.args[0]
 
 if (mirror === '[object Object]') {
   program.help()
 } else {
-  let useYarn = program.yarn
+  const useYarn = program.yarn
   switchMirror(mirror, useYarn)
 }

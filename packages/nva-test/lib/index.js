@@ -1,5 +1,5 @@
-let { join } = require("path")
-let karma = require("karma")
+const { join } = require("path")
+const karma = require("karma")
 
 module.exports = function (autowatch) {
   new karma.Server({

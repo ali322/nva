@@ -1,8 +1,8 @@
-let { resolve } = require("path")
-let argv = require("yargs").argv
-let { assign, omit } = require("lodash")
-let merge = require("webpack-merge")
-let chalk = require("chalk")
+const { resolve } = require("path")
+const argv = require("yargs").argv
+const { assign, omit } = require("lodash")
+const merge = require("webpack-merge")
+const chalk = require("chalk")
 
 let conf = argv.c || argv.config
 if (conf) {
@@ -51,7 +51,7 @@ function mergeOpts (defaults, opts) {
 
 /* eslint-disable func-names */
 module.exports = function (config) {
-  let defaults = {
+  const defaults = {
     basePath: "",
     frameworks: ["mocha", "sinon-chai"],
     exclude: [],

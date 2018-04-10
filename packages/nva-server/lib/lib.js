@@ -1,7 +1,7 @@
-let PrettyError = require('pretty-error')
-let forEach = require('lodash/forEach')
+const PrettyError = require('pretty-error')
+const forEach = require('lodash/forEach')
 
-let pe = new PrettyError()
+const pe = new PrettyError()
 
 pe.appendStyle({
   'pretty-error > trace': {

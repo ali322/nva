@@ -1,10 +1,10 @@
-let nodemon = require('nodemon')
-let chalk = require('chalk')
-let { emojis } = require('../common/helper')
-let { relative } = require('path')
+const nodemon = require('nodemon')
+const chalk = require('chalk')
+const { emojis } = require('../common/helper')
+const { relative } = require('path')
 
 module.exports = function (options) {
-  let script = nodemon(options)
+  const script = nodemon(options)
   let started = false
 
   let exitHanlder = function (options) {

@@ -1,23 +1,23 @@
-let { resolve } = require("path")
+const { resolve } = require("path")
 
-let cssLoaders = [
+const cssLoaders = [
   "vue-style-loader",
   require.resolve("css-loader"),
   require.resolve("resolve-url-loader")
 ]
-let lessLoaders = cssLoaders.concat([
+const lessLoaders = cssLoaders.concat([
   { loader: require.resolve("less-loader"), options: { sourceMap: true } }
 ])
-let sassLoaders = cssLoaders.concat([
+const sassLoaders = cssLoaders.concat([
   {
     loader: require.resolve("sass-loader"),
     options: { indentedSyntax: true, sourceMap: true }
   }
 ])
-let scssLoaders = cssLoaders.concat([
+const scssLoaders = cssLoaders.concat([
   { loader: require.resolve("sass-loader"), options: { sourceMap: true } }
 ])
-let stylusLoaders = cssLoaders.concat([
+const stylusLoaders = cssLoaders.concat([
   { loader: require.resolve("stylus-loader"), options: { sourceMap: true } }
 ])
 

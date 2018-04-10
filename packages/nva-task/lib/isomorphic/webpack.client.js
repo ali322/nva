@@ -1,16 +1,16 @@
-let webpack = require('webpack')
-let { join, resolve, sep, extname } = require('path')
-let forEach = require('lodash/forEach')
-let isPlainObject = require('lodash/isPlainObject')
-let InjectHtmlPlugin = require('inject-html-webpack-plugin')
-let ProgressPlugin = require('progress-webpack-plugin')
-let ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
-let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-let { bundleTime, merge } = require('../common/helper')
-let { config: configFactory } = require('nva-core')
+const webpack = require('webpack')
+const { join, resolve, sep, extname } = require('path')
+const forEach = require('lodash/forEach')
+const isPlainObject = require('lodash/isPlainObject')
+const InjectHtmlPlugin = require('inject-html-webpack-plugin')
+const ProgressPlugin = require('progress-webpack-plugin')
+const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
+const { bundleTime, merge } = require('../common/helper')
+const { config: configFactory } = require('../../../nva-core/lib')
 
-module.exports = function (context, profile) {
-  let {
+module.exports = function(context, profile) {
+  const {
     vendors,
     mods,
     sourceFolder,
@@ -23,13 +23,13 @@ module.exports = function (context, profile) {
   let entry = {}
   let htmls = []
   let transforms = {}
-  let baseConfig = configFactory(context, profile)
+  const baseConfig = configFactory(context, profile)
 
   /** add vendors reference */
   let dllRefs = []
 
-  let sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
-  let sourcemap = require(sourcemapPath).output
+  const sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
+  const sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
       let manifestPath = resolve(output.vendorPath, key + '-manifest.json')
@@ -48,10 +48,11 @@ module.exports = function (context, profile) {
     entry[name] = [mod.input.js].concat(mod.input.css ? [mod.input.css] : [])
     let chunks = [name]
 
-    transforms[name] = files => files.map(file=>{
-      let outputFile = mod.output[extname(file).replace('.','')]
-      return outputFile || file
-    })
+    transforms[name] = files =>
+      files.map(file => {
+        let outputFile = mod.output[extname(file).replace('.', '')]
+        return outputFile || file
+      })
 
     let more = { js: [], css: [] }
     if (mod.vendor) {
@@ -98,12 +99,14 @@ module.exports = function (context, profile) {
     resolve: {
       modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
-    plugins: baseConfig.plugins.concat([
-      new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
-      new ChunkAssetPlugin({
-        chunks: transforms
-      }),
-      new TidyStatsPlugin()
-    ]).concat(dllRefs, htmls)
+    plugins: baseConfig.plugins
+      .concat([
+        new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
+        new ChunkAssetPlugin({
+          chunks: transforms
+        }),
+        new TidyStatsPlugin()
+      ])
+      .concat(dllRefs, htmls)
   })
 }

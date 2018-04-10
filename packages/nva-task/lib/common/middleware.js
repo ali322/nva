@@ -1,9 +1,9 @@
-let webpack = require('webpack')
-let webpackDevMiddleware = require('webpack-dev-middleware')
-let webpackHotMiddleware = require('webpack-hot-middleware')
+const webpack = require('webpack')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
 
 module.exports = (config, done, profile) => {
-  let bundler = webpack(config)
+  const bundler = webpack(config)
   if (bundler.hooks) {
     bundler.hooks.done.tap('NvaDev', stats => done(null, stats))
     bundler.hooks.failed.tap('NvaDev', err => done(err, null))

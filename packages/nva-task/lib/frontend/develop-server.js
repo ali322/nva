@@ -1,8 +1,8 @@
-let { join } = require('path')
-let isString = require('lodash/isString')
-let BrowserSync = require('browser-sync')
-let { error, checkPort, emojis, merge } = require('../common/helper')
-let { mergeConfig, openBrowser } = require('../common')
+const { join } = require('path')
+const isString = require('lodash/isString')
+const BrowserSync = require('browser-sync')
+const { error, checkPort, emojis, merge } = require('../common/helper')
+const { mergeConfig, openBrowser } = require('../common')
 
 module.exports = (context, options) => {
   const {
@@ -21,7 +21,7 @@ module.exports = (context, options) => {
 
   startWatcher()
 
-  let browserSync = BrowserSync.create()
+  const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {
     browserSync.exit()
     process.exit(0)
@@ -81,7 +81,7 @@ module.exports = (context, options) => {
   if (isString(spa) || Array.isArray(spa)) {
     rewrites = spa
   }
-  const app = require('nva-server')({
+  const app = require('../../../nva-server/lib')({
     asset: [distFolder, staticFolder],
     path: sourceFolder,
     proxy,

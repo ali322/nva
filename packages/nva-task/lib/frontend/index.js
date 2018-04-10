@@ -1,14 +1,14 @@
-let webpack = require('webpack')
-let del = require('del')
-let forEach = require('lodash/forEach')
-let isString = require('lodash/isString')
-let { join } = require('path')
-let { addMod, removeMod } = require('../common/mod')
-let { vendorManifest, mergeConfig, checkVendor } = require('../common')
-let { merge } = require('../common/helper')
+const webpack = require('webpack')
+const del = require('del')
+const forEach = require('lodash/forEach')
+const isString = require('lodash/isString')
+const { join } = require('path')
+const { addMod, removeMod } = require('../common/mod')
+const { vendorManifest, mergeConfig, checkVendor } = require('../common')
+const { merge } = require('../common/helper')
 
 module.exports = context => {
-  let {
+  const {
     distFolder,
     chunkFolder,
     output,
@@ -57,7 +57,7 @@ module.exports = context => {
       })
       del.sync(join(distFolder, chunkFolder))
 
-      let compiler = webpack(releaseConfig)
+      const compiler = webpack(releaseConfig)
       compiler.run(function(err, stats) {
         if (err) {
           console.error(err)
@@ -83,7 +83,7 @@ module.exports = context => {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
-      var compiler = webpack(vendorConfig)
+      const compiler = webpack(vendorConfig)
       compiler.run(function(err, stats) {
         if (err) {
           console.error(err)
@@ -107,7 +107,7 @@ module.exports = context => {
       })
     },
     dev(options) {
-      let developServer = require('./develop-server')
+      const developServer = require('./develop-server')
       if (checkVendor(vendors, join(output.vendorDevPath, vendorSourceMap))) {
         developServer(context, options)
       } else {

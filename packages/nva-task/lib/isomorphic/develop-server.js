@@ -1,9 +1,9 @@
-let BrowserSync = require('browser-sync')
-let nodemon = require('./nodemon')
-let { join, dirname } = require('path')
-let { mergeConfig, openBrowser } = require('../common')
-let { merge } = require('../common/helper')
-let bus = require('./event-bus')
+const BrowserSync = require('browser-sync')
+const nodemon = require('./nodemon')
+const { join, dirname } = require('path')
+const { mergeConfig, openBrowser } = require('../common')
+const { merge } = require('../common/helper')
+const bus = require('./event-bus')
 
 module.exports = function(context, options) {
   const {
@@ -22,7 +22,7 @@ module.exports = function(context, options) {
   const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
   startWatcher()
 
-  let browserSync = BrowserSync.create()
+  const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {
     browserSync.exit()
     process.exit(0)
@@ -36,7 +36,7 @@ module.exports = function(context, options) {
     openBrowser(options.browser, url)
   }
 
-  let startNode = () => {
+  const startNode = () => {
     nodemon({
       // delay: "200ms",
       script: serverEntry,
@@ -80,7 +80,7 @@ module.exports = function(context, options) {
     serverBuildFinished && startNode()
   })
 
-  let app = require('nva-server')({
+  const app = require('../../../nva-server/lib')({
     log: false,
     cors: true,
     mock: {

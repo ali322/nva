@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
-var program = require('commander')
-var test = require('../lib/')
-let version = require('../package.json').version
+const program = require('commander')
+const test = require('../lib/')
+const version = require('../package.json').version
 
 program.version(version)
 program.option('-c, --config <config>', 'customize config')
@@ -15,9 +15,8 @@ program.option(
 
 program.parse(process.argv)
 
-let server = program.server
-let config = program.config
-let port = program.port
-let browser = program.browser
+const config = program.config
+const port = program.port
+const browser = program.browser
 
 test(config, port, browser)

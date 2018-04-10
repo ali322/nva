@@ -1,17 +1,17 @@
-let webpack = require('webpack')
-let { resolve, posix } = require('path')
-let forEach = require('lodash/forEach')
-let isPlainObject = require('lodash/isPlainObject')
-let InjectHtmlPlugin = require('inject-html-webpack-plugin')
-let ProgressPlugin = require('progress-webpack-plugin')
-let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-let { serverHost } = require('../common')
-let { merge } = require('../common/helper')
-let { config: configFactory } = require('nva-core')
+const webpack = require('webpack')
+const { resolve, posix } = require('path')
+const forEach = require('lodash/forEach')
+const isPlainObject = require('lodash/isPlainObject')
+const InjectHtmlPlugin = require('inject-html-webpack-plugin')
+const ProgressPlugin = require('progress-webpack-plugin')
+const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
+const { serverHost } = require('../common')
+const { merge } = require('../common/helper')
+const { config: configFactory } = require('../../../nva-core/lib')
 
 module.exports = function (context, profile) {
   const {
-        vendors,
+    vendors,
     mods,
     sourceFolder,
     vendorDevFolder,
@@ -23,20 +23,20 @@ module.exports = function (context, profile) {
   /** build variables */
   let entry = {}
   let htmls = []
-  let devServerHost = serverHost(port)
-  let baseConfig = configFactory(merge(context, { isDev: true }), profile)
+  const devServerHost = serverHost(port)
+  const baseConfig = configFactory(merge(context, { isDev: true }), profile)
 
   /** add vendors reference */
   let dllRefs = []
-  let sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
-  let sourcemap = require(sourcemapPath).output
+  const sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
+  const sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      let manifestPath = resolve(
+      const manifestPath = resolve(
         output.vendorDevPath,
         key + '-manifest.json'
       )
-      let manifest = require(manifestPath)
+      const manifest = require(manifestPath)
       dllRefs.push(
         new webpack.DllReferencePlugin({
           context: resolve(sourceFolder),

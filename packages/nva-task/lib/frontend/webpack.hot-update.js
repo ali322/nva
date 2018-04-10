@@ -1,12 +1,12 @@
-let { DllReferencePlugin } = require('webpack')
-let { join, resolve, posix } = require('path')
-let forEach = require('lodash/forEach')
-let isPlainObject = require('lodash/isPlainObject')
-let InjectHtmlPlugin = require('inject-html-webpack-plugin')
-let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-let ProgressPlugin = require('progress-webpack-plugin')
-let { config: configFactory } = require('nva-core')
-let { merge } = require('../common/helper')
+const { DllReferencePlugin } = require('webpack')
+const { join, resolve, posix } = require('path')
+const forEach = require('lodash/forEach')
+const isPlainObject = require('lodash/isPlainObject')
+const InjectHtmlPlugin = require('inject-html-webpack-plugin')
+const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
+const ProgressPlugin = require('progress-webpack-plugin')
+const { config: configFactory } = require('../../../nva-core/lib')
+const { merge } = require('../common/helper')
 
 module.exports = function (context, profile) {
   const {
@@ -23,12 +23,12 @@ module.exports = function (context, profile) {
   /** build variables */
   let entry = {}
   let htmls = []
-  let baseConfig = configFactory(merge(context, { isDev: true }), profile)
+  const baseConfig = configFactory(merge(context, { isDev: true }), profile)
 
   /* build vendors */
   let dllRefs = []
-  let sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
-  let sourcemap = require(sourcemapPath).output
+  const sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
+  const sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
       let manifestPath = resolve(

@@ -1,16 +1,16 @@
 #! /usr/bin/env node
 
-let program = require('commander')
-let chalk = require('chalk')
-let path = require('path')
-let fs = require('fs')
-let reject = require('lodash/reject')
-let inquirer = require('inquirer')
-let rm = require('rimraf').sync
+const program = require('commander')
+const chalk = require('chalk')
+const path = require('path')
+const fs = require('fs')
+const reject = require('lodash/reject')
+const inquirer = require('inquirer')
+const rm = require('rimraf').sync
 
-let config = require('../lib/config')
-let generator = require('../lib/generator')
-let lib = require('../lib')
+const config = require('../lib/config')
+const generator = require('../lib/generator')
+const { ask } = require('../lib')
 
 program.usage('[project]')
 program.option('-r, --repo [value]', 'choose specified repo')
@@ -36,12 +36,12 @@ if (!program.args.length) {
   program.help()
 }
 
-let repo = program.repo
-let noInstall = program.noInstall
-let useYarn = program.yarn
+const repo = program.repo
+const noInstall = program.noInstall
+const useYarn = program.yarn
 
-let projectName = program.args[0]
-let projectPath = path.resolve(projectName)
+const projectName = program.args[0]
+const projectPath = path.resolve(projectName)
 
 if (projectName === '[object Object]') {
   console.log(chalk.red('name required!'))
@@ -73,9 +73,9 @@ if (fs.existsSync(projectPath)) {
     .then(function (answer) {
       if (answer.yes) {
         rm(projectPath)
-        lib.ask(questions, 'yes', generate)
+        ask(questions, 'yes', generate)
       }
     })
 } else {
-  lib.ask(questions, 'yes', generate)
+  ask(questions, 'yes', generate)
 }

@@ -1,13 +1,13 @@
-let os = require('os')
-let path = require('path')
-let fs = require('fs-extra')
-let chalk = require('chalk')
-let net = require('net')
-let emoji = require('node-emoji')
-let assign = require('lodash/assign')
+const os = require('os')
+const path = require('path')
+const fs = require('fs-extra')
+const chalk = require('chalk')
+const net = require('net')
+const emoji = require('node-emoji')
+const assign = require('lodash/assign')
 
 exports.lanIP = () => {
-  let interfaces = os.networkInterfaces()
+  const interfaces = os.networkInterfaces()
   let IPv4 = '127.0.0.1'
   for (let key in interfaces) {
     interfaces[key].forEach(function (details) {
@@ -24,7 +24,7 @@ exports.current = () => {
 }
 
 exports.checkPort = (port, next) => {
-  let server = net.createServer(function (socket) {
+  const server = net.createServer(function (socket) {
     socket.write('Echo server\r\n')
     socket.pipe(socket)
   })

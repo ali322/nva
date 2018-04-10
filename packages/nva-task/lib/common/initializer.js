@@ -1,11 +1,11 @@
-let omit = require('lodash/omit')
-let mapValues = require('lodash/mapValues')
-let { merge } = require('./helper')
-let { join, posix, resolve, sep } = require('path')
-let { initMod } = require('./mod')
+const omit = require('lodash/omit')
+const mapValues = require('lodash/mapValues')
+const { merge } = require('./helper')
+const { join, posix, resolve, sep } = require('path')
+const { initMod } = require('./mod')
 
 function mixin(proj) {
-  let {
+  const {
     isSSR,
     output,
     distFolder,

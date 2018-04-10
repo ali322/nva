@@ -1,17 +1,17 @@
-let { DllReferencePlugin } = require('webpack')
-let { join, resolve, dirname, extname } = require('path')
-let forEach = require('lodash/forEach')
-let isPlainObject = require('lodash/isPlainObject')
-let isFunction = require('lodash/isFunction')
-let InjectHtmlPlugin = require('inject-html-webpack-plugin')
-let ProgressPlugin = require('progress-webpack-plugin')
-let ContentReplacePlugin = require('content-replace-webpack-plugin')
-let CopyPlugin = require('copy-webpack-plugin')
-let ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
-let TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-let { existsSync } = require('fs-extra')
-let { config: configFactory } = require('nva-core')
-let { relativeURL, bundleTime, merge } = require('../common/helper')
+const { DllReferencePlugin } = require('webpack')
+const { join, resolve, dirname, extname } = require('path')
+const forEach = require('lodash/forEach')
+const isPlainObject = require('lodash/isPlainObject')
+const isFunction = require('lodash/isFunction')
+const InjectHtmlPlugin = require('inject-html-webpack-plugin')
+const ProgressPlugin = require('progress-webpack-plugin')
+const ContentReplacePlugin = require('content-replace-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
+const { existsSync } = require('fs-extra')
+const { config: configFactory } = require('../../../nva-core/lib')
+const { relativeURL, bundleTime, merge } = require('../common/helper')
 
 module.exports = (context, profile) => {
   const {
@@ -31,12 +31,12 @@ module.exports = (context, profile) => {
   let htmls = []
   let transforms = {}
   let contentExternals = []
-  let baseConfig = configFactory(context, profile)
+  const baseConfig = configFactory(context, profile)
 
   /** build vendors */
   let dllRefs = []
-  let sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
-  let sourcemap = require(sourcemapPath).output
+  const sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
+  const sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
       let manifestPath = resolve(output.vendorPath, key + '-manifest.json')

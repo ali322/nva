@@ -1,20 +1,24 @@
-let compact = require('lodash/compact')
-let mapValues = require('lodash/mapValues')
-let isEqual = require('lodash/isEqual')
-let isPlainObject = require('lodash/isPlainObject')
-let forEach = require('lodash/forEach')
-let startsWith = require('lodash/startsWith')
-let every = require('lodash/every')
-let merge = require('webpack-merge')
-let { dirname, basename, resolve } = require('path')
-let { existsSync, outputFileSync, outputJsonSync, readJsonSync } = require('fs-extra')
-let chalk = require('chalk')
-let opn = require('opn')
-let { lanIP } = require('./helper')
+const compact = require('lodash/compact')
+const mapValues = require('lodash/mapValues')
+const isEqual = require('lodash/isEqual')
+const isPlainObject = require('lodash/isPlainObject')
+const forEach = require('lodash/forEach')
+const startsWith = require('lodash/startsWith')
+const every = require('lodash/every')
+const merge = require('webpack-merge')
+const { dirname, basename, resolve } = require('path')
+const {
+  existsSync,
+  outputFileSync,
+  outputJsonSync,
+  readJsonSync
+} = require('fs-extra')
+const chalk = require('chalk')
+const opn = require('opn')
+const { lanIP } = require('./helper')
 
 exports.serverHost = port => {
-  const ip = lanIP()
-  return `http://${ip}:${port}`
+  return `http://${lanIP()}:${port}`
 }
 
 exports.mergeConfig = (config, value) => {
@@ -50,20 +54,20 @@ exports.checkVendor = (vendors, target) => {
     (vendors.css && isPlainObject(vendors.css))
   ) {
     if (!existsSync(resolve(target))) return false
-    let sourcemap = readJsonSync(resolve(target))
+    const sourcemap = readJsonSync(resolve(target))
     /* check meta */
     if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) === false) {
       return false
     }
 
     /* check version */
-    let version = sourcemap.version
-    let localModChecked = every(version, (ver, mod) =>
+    const version = sourcemap.version
+    const localModChecked = every(version, (ver, mod) =>
       isEqual(ver, modVersion(mod))
     )
 
     /* check output */
-    let output = sourcemap.output || {}
+    const output = sourcemap.output || {}
     let jsChecked = true
     let cssChecked = true
     const vendorOutput = dirname(target)
@@ -76,7 +80,7 @@ exports.checkVendor = (vendors, target) => {
       )
     }
     if (isPlainObject(vendors.css) && isPlainObject(output.css)) {
-      cssChecked = every(Object.keys(vendors.js), v =>{
+      cssChecked = every(Object.keys(vendors.js), v => {
         return existsSync(resolve(vendorOutput, output.css[v]))
       })
     }
@@ -99,9 +103,9 @@ function vendorVersion(meta) {
   const mapper = mod =>
     startsWith(mod, '@')
       ? mod
-        .split('/')
-        .slice(0, 1)
-        .join('/')
+          .split('/')
+          .slice(0, 1)
+          .join('/')
       : mod.split('/')[0]
   if (meta.js) {
     forEach(meta.js, v => {

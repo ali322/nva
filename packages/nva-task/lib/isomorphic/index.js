@@ -1,16 +1,16 @@
-let { join } = require('path')
-let forEach = require('lodash/forEach')
-let isString = require('lodash/isString')
-let webpack = require('webpack')
-let chalk = require('chalk')
-let del = require('del')
-let { addMod, removeMod } = require('../common/mod')
-let { vendorManifest, mergeConfig, checkVendor } = require('../common')
-let { merge } = require('../common/helper')
-let bus = require('./event-bus')
+const { join } = require('path')
+const forEach = require('lodash/forEach')
+const isString = require('lodash/isString')
+const webpack = require('webpack')
+const chalk = require('chalk')
+const del = require('del')
+const { addMod, removeMod } = require('../common/mod')
+const { vendorManifest, mergeConfig, checkVendor } = require('../common')
+const { merge } = require('../common/helper')
+const bus = require('./event-bus')
 
 module.exports = context => {
-  let {
+  const {
     output,
     serverFolder,
     serverCompile,
@@ -31,12 +31,12 @@ module.exports = context => {
   } = context
 
   function createBundle(context, profile) {
-    let bundleConfig = require('./webpack.bundle')(context, profile)
+    const bundleConfig = require('./webpack.bundle')(context, profile)
     del.sync(join(serverFolder, bundleFolder))
     if (Object.keys(bundleConfig.entry).length === 0) {
       return
     }
-    let bundleCompiler = webpack(bundleConfig)
+    const bundleCompiler = webpack(bundleConfig)
 
     function cb(err, stats) {
       if (err) throw err
@@ -106,7 +106,7 @@ module.exports = context => {
       del.sync(join(distFolder, chunkFolder))
 
       createBundle(merge(context, { isDev: false }), profile)
-      let compiler = webpack(
+      const compiler = webpack(
         serverCompile ? [clientConfig, serverConfig] : clientConfig
       )
       compiler.run(function(err, stats) {
@@ -140,7 +140,7 @@ module.exports = context => {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
-      let compiler = webpack(vendorConfig)
+      const compiler = webpack(vendorConfig)
       compiler.run(function(err, stats) {
         if (err) {
           console.error(err)
@@ -164,7 +164,7 @@ module.exports = context => {
       })
     },
     dev(options) {
-      let developServer = require('./develop-server')
+      const developServer = require('./develop-server')
       createBundle(merge(context, { isDev: true }), options.profile)
       if (checkVendor(vendors, join(output.vendorDevPath, vendorSourceMap))) {
         developServer(context, options)

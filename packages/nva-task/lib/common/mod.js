@@ -1,10 +1,10 @@
-let forEach = require('lodash/forEach')
-let zipObject = require('lodash/zipObject')
-let fill = require('lodash/fill')
-let isString = require('lodash/isString')
-let {resolve, join} = require('path')
-let { error, relativeURL, merge } = require('./helper')
-let { existsSync, copySync, ensureFileSync, removeSync } = require('fs-extra')
+const forEach = require('lodash/forEach')
+const zipObject = require('lodash/zipObject')
+const fill = require('lodash/fill')
+const isString = require('lodash/isString')
+const {resolve, join} = require('path')
+const { error, relativeURL, merge } = require('./helper')
+const { existsSync, copySync, ensureFileSync, removeSync } = require('fs-extra')
 
 exports.addMod = (names, answers, template, context) => {
   const { mods, addMods } = context
@@ -14,7 +14,7 @@ exports.addMod = (names, answers, template, context) => {
     if (Object.keys(mods).indexOf(name) > -1) {
       error('name existed!')
     }
-    let { input } = exports.initMod(answers, name, context)
+    const { input } = exports.initMod(answers, name, context)
     let from = template && mods[template] ? mods[template].input : {}
     let to = input
     forEach(to, (v, k) => {
