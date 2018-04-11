@@ -54,7 +54,7 @@ if (config) {
   }
 }
 
-const app = require('../dist')(options)
+const app = require('../lib')(options)
 
 let server = app.listen(options.port, function(err) {
   if (err) console.log(err)

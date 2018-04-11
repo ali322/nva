@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.5.25",
+  "version": "0.5.26",
   "description": "frontend static server",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-server",
