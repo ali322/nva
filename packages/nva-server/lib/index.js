@@ -19,9 +19,9 @@ function extname(val) {
 
 module.exports = options => {
   const {
-    path = '',
-    asset = '',
-    rewrites = false,
+    path = '.',
+    asset = '.',
+    rewrites = '/index.html',
     cors = false,
     log = true,
     proxy,
@@ -34,10 +34,18 @@ module.exports = options => {
   if (proxy) {
     Array.isArray(proxy)
       ? proxy.forEach(v =>
-        app.use(proxyMiddleware(v.url, assign({}, v.options, { logLevel: 'silent' })))
+        app.use(
+          proxyMiddleware(
+            v.url,
+            assign({}, v.options, { logLevel: 'silent' })
+          )
+        )
       )
       : app.use(
-        proxyMiddleware(proxy.url, assign({}, proxy.options, { logLevel: 'silent' }))
+        proxyMiddleware(
+          proxy.url,
+          assign({}, proxy.options, { logLevel: 'silent' })
+        )
       )
   }
   app.use(bodyParser.json())
@@ -58,7 +66,7 @@ module.exports = options => {
   }
 
   if (cors) {
-    app.use(function (req, res, next) {
+    app.use(function(req, res, next) {
       res.setHeader('Access-Control-Allow-Origin', '*')
       res.setHeader(
         'Access-Control-Allow-Methods',
@@ -74,15 +82,18 @@ module.exports = options => {
   }
 
   function applyAsset(assetPath, fallthrough = true) {
-    app.use(assetPath === '.' ? '' : `/${assetPath}`, function (req, res, next) {
-      if (extname(req.url) !== '.html') {
-        serveStatic(resolve(assetPath), {
-          fallthrough
-        })(req, res, next)
-      } else {
-        next()
+    app.use(
+      assetPath === '.' || assetPath === './' ? '' : `/${assetPath}`,
+      function(req, res, next) {
+        if (extname(req.url) !== '.html') {
+          serveStatic(resolve(assetPath), {
+            fallthrough
+          })(req, res, next)
+        } else {
+          next()
+        }
       }
-    })
+    )
   }
 
   if (asset) {
@@ -115,7 +126,7 @@ module.exports = options => {
   }
 
   if (path) {
-    app.use(function (req, res, next) {
+    app.use(function(req, res, next) {
       let ext = extname(req.url)
       if (ext === '.html' || req.url.endsWith(posix.sep)) {
         serveStatic(resolve(path), {
@@ -127,7 +138,7 @@ module.exports = options => {
     })
   }
 
-  app.use(function (err, req, res, next) {
+  app.use(function(err, req, res, next) {
     res.statusCode = 500
     res.end(err.message)
   })

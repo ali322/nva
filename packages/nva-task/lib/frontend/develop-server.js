@@ -81,7 +81,7 @@ module.exports = (context, options) => {
   if (isString(spa) || Array.isArray(spa)) {
     rewrites = spa
   }
-  const app = require('../../../nva-server/lib')({
+  const app = require('nva-server')({
     asset: [distFolder, staticFolder],
     path: sourceFolder,
     proxy,

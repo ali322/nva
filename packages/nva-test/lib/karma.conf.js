@@ -1,64 +1,68 @@
-const { resolve } = require("path")
-const argv = require("yargs").argv
-const { assign, omit } = require("lodash")
-const merge = require("webpack-merge")
-const chalk = require("chalk")
+const { resolve } = require('path')
+const { existsSync } = require('fs')
+const argv = require('yargs').argv
+const { assign, omit } = require('lodash')
+const merge = require('webpack-merge')
+const chalk = require('chalk')
 
-let conf = argv.c || argv.config
-if (conf) {
+const autowatch = argv.w || argv.watch
+const confPath = argv.c || argv.config
+let conf = {
+  entry: resolve('test', 'unit', 'fixture', 'setup.js'),
+  reportPath: resolve('test', 'unit', 'coverage'),
+  browsers: ['jsdom'],
+  webpack: null
+}
+if (confPath || existsSync(confPath)) {
+  let config
   try {
-    conf = require(resolve(conf))
+    config = require(resolve(confPath))
+    conf = assign({}, conf, config)
   } catch (e) {
-    console.log(chalk.red("config invalid"))
+    console.log(chalk.red('config invalid'))
     process.exit(1)
   }
 }
 
-function mergeOpts (defaults, opts) {
-  let sourcePath = resolve("src")
-  let entry = resolve("test", "unit", "fixture", "setup.js")
-  let reportPath = resolve("test", "unit", "coverage")
-  entry = opts.entry || entry
-  sourcePath = opts.sourcePath || sourcePath
-  reportPath = opts.reportPath || reportPath
-
+function mergeOpts(defaults, opts) {
+  const { entry, reportPath, browsers, webpack } = opts
   let preprocessors = {}
-  preprocessors[entry] = ["webpack", "sourcemap"]
+  preprocessors[entry] = ['webpack', 'sourcemap']
 
   let options = assign({}, defaults, {
     files: [entry],
     preprocessors,
-    browsers: opts.browsers ? opts.browsers : ["jsdom"],
+    browsers,
     coverageIstanbulReporter: {
       dir: reportPath,
       fixWebpackSourcePaths: true,
-      reports: ["html", "lcovonly", "text-summary"]
+      reports: ['html', 'lcovonly', 'text-summary']
     }
   })
 
-  options.webpack = require("./webpack.test")({ sourcePath })
-  if (opts.webpack) {
+  options.webpack = require('./webpack.test')({ autowatch })
+  if (webpack) {
     options.webpack = merge.strategy({
-      plugins: "replace",
-      entry: "replace",
-      "module.rules": "replace"
-    })(options.webpack, opts.webpack)
+      plugins: 'replace',
+      entry: 'replace',
+      'module.rules': 'replace'
+    })(options.webpack, webpack)
   }
 
-  let restOpts = omit(opts, ["entry", "reportPath", "webpack"])
+  let restOpts = omit(opts, ['entry', 'reportPath', 'webpack', 'browsers'])
   return assign({}, options, restOpts)
 }
 
 /* eslint-disable func-names */
-module.exports = function (config) {
+module.exports = function(config) {
   const defaults = {
-    basePath: "",
-    frameworks: ["mocha", "sinon-chai"],
+    basePath: '',
+    frameworks: ['mocha', 'sinon-chai'],
     exclude: [],
     webpackMiddleware: {
-      stats: "errors-only"
+      stats: 'errors-only'
     },
-    reporters: ["spec", "coverage-istanbul"],
+    reporters: ['spec', 'coverage-istanbul'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

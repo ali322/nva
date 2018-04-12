@@ -8,7 +8,7 @@ const map = require('lodash/map')
 const isEmpty = require('lodash/isEmpty')
 const isPlainObject = require('lodash/isPlainObject')
 const { merge } = require('../common/helper')
-const { config: configFactory } = require('../../../nva-core/lib')
+const { config: configFactory } = require('nva-core')
 
 module.exports = function(context) {
   const {

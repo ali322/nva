@@ -7,7 +7,7 @@ const ProgressPlugin = require('progress-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 const { serverHost } = require('../common')
 const { merge } = require('../common/helper')
-const { config: configFactory } = require('../../../nva-core/lib')
+const { config: configFactory } = require('nva-core')
 
 module.exports = function (context, profile) {
   const {

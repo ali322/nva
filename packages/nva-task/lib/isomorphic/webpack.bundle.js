@@ -6,7 +6,7 @@ const { resolve, join } = require('path')
 const forEach = require('lodash/forEach')
 const { existsSync } = require('fs')
 const { relativeURL, merge } = require('../common/helper')
-const { config: configFactory } = require('../../../nva-core/lib')
+const { config: configFactory } = require('nva-core')
 
 module.exports = function(context, profile) {
   const { mods, serverFolder, distFolder, bundleFolder, sourceFolder } = context

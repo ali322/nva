@@ -1,16 +1,24 @@
 const { resolve } = require('path')
 const createTestCafe = require('testcafe')
 const chalk = require('chalk')
+const { flatMap } = require('lodash')
+const glob = require('glob')
 const ip = require('internal-ip')
 const qrcode = require('qrcode-terminal')
 
 module.exports = function (confPath, port, browsers = ['chrome']) {
   let conf = {}
+  let specs = []
   try {
     conf = require(resolve(confPath))
   } catch (e) {
     console.log(chalk.red('config invalid'))
     process.exit(1)
+  }
+  if (Array.isArray(conf.spec)) {
+    specs = flatMap(conf.spec, v => {
+      return glob.sync(v)
+    })
   }
 
   let tc = null
@@ -19,7 +27,7 @@ module.exports = function (confPath, port, browsers = ['chrome']) {
     if (typeof conf.process === 'function') {
       runner = conf.process(runner)
     }
-    runner = runner.src(conf.spec || []).browsers(browsers)
+    runner = runner.src(specs).browsers(browsers)
 
     runner
       .run()

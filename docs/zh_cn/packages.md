@@ -74,7 +74,6 @@ nva-test
 ```javascript
 {
     entry: 'path/to/test-entry.js',
-    sourcePath: 'path/to/source',
     reportPath: 'path/to/coverage',
     ...restOfKarmaConfig
 }
