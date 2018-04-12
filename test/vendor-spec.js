@@ -22,7 +22,7 @@ describe("build project test's", function() {
         })
     })
     it("should success", function(done) {
-      expect(result.stdout).to.have.string("Build vendor success")
+      expect(result.stdout).to.have.string("Build vendor:js success")
       done()
     })
     after(function() {
