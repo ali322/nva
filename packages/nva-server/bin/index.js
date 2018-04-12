@@ -9,16 +9,15 @@ const version = require('../package.json').version
 program
   .version(version)
   .option('-v, --version')
-  .option('-c, --config <config>', 'server config path')
+  .option('-c, --content <content>', 'serve content path')
   .option('-p, --port [port]', 'listening port', 3000)
   .option('-m, --mock <mock>', 'mock config')
-  .option('-P, --path <path>', 'serve page path')
-  .option('-A, --asset <asset>', 'serve static asset')
-  .option('    --rewrites', 'enable rewrites request to index.html')
-  .option('-C, --cors', 'allows cross origin access serving')
-  .option('-L, --log', 'enable log of request')
   .option('-b, --browser [browser]', 'which browser to open', 'default')
-  .option('-i, --index [index]', 'index url', '/')
+  .option('-i, --index [index]', 'started url', '/')
+  .option('--config <config>', 'server config path')
+  .option('--rewrites', 'enable rewrites request to index.html')
+  .option('--cors', 'allows cross origin access serving')
+  .option('--log', 'enable log of request')
 
 program.parse(process.argv)
 
@@ -30,15 +29,13 @@ const rewrites = program.rewrites
 const cors = program.cors
 const log = program.log
 const mock = program.mock
-const path = program.path
-const asset = program.asset
+const content = program.content
 
 let options = {
   browser,
   index,
-  path,
   port,
-  asset,
+  content,
   mock: { path: mock },
   rewrites,
   cors,

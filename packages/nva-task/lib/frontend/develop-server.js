@@ -8,8 +8,6 @@ module.exports = (context, options) => {
   const {
     spa,
     sourceFolder,
-    distFolder,
-    staticFolder,
     mock,
     beforeDev,
     afterDev,
@@ -82,8 +80,7 @@ module.exports = (context, options) => {
     rewrites = spa
   }
   const app = require('nva-server')({
-    asset: [distFolder, staticFolder],
-    path: sourceFolder,
+    content: sourceFolder,
     proxy,
     log: false,
     rewrites,

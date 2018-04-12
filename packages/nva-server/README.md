@@ -15,19 +15,21 @@ npm install nva-server --save
 
 
 ```bash
-nva-server -p 5000 -P src
+nva-server -p 5000 -c src
 ```
 
 cli options
 
-- `-c` or `--config` server config
+- `-v` or `--version` package version
 - `-p` or `--port`  server listen port
-- `-P` or `--path` serve htmls path
-- `-m` or `--mock-conf` mock api configs path
-- `-A` or `--asset` serve assets path
-- `-L` or `--log`   enable log of request
+- `-c` or `--content` serve content path
+- `-m` or `--mock` mock api configs file path
+- `-b` or `--browser` which browser to open
+- `-i` or `--index` started url
+- `--config` server config
+- `--log`   enable log of request
 - `--rewrites`  enable rewrites request to index.html
-- `-C` or `--cors` allows cross origin access serving
+- `--cors` allows cross origin access serving
 
 ### License
 

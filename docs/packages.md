@@ -48,7 +48,7 @@ console.log('==> server stared at %d',3000)
 alsoo can run it in cli,more options refer to [nva-task](https://github.com/ali322/nva/blob/master/packages/nva-server/README.md)
 
 ```bash
-nva-server -p 5000 -P src
+nva-server -p 5000 -c src
 ```
 
 #### nva-test

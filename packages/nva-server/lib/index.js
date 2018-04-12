@@ -6,22 +6,15 @@ const favicon = require('serve-favicon')
 const proxyMiddleware = require('http-proxy-middleware')
 const morgan = require('morgan')
 const compression = require('compression')
-const { join, resolve, parse, posix } = require('path')
-const url = require('url')
+const { join, resolve } = require('path')
 const historyAPIFallback = require('connect-history-api-fallback')
 const assign = require('lodash/assign')
 const mockFactory = require('./mock')
 
-function extname(val) {
-  const parsed = url.parse(val)
-  return parse(parsed.pathname).ext
-}
-
 module.exports = options => {
   const {
-    path = '.',
-    asset = '.',
-    rewrites = '/index.html',
+    content = false,
+    rewrites = false,
     cors = false,
     log = true,
     proxy,
@@ -81,26 +74,11 @@ module.exports = options => {
     })
   }
 
-  function applyAsset(assetPath, fallthrough = true) {
-    app.use(
-      assetPath === '.' || assetPath === './' ? '' : `/${assetPath}`,
-      function(req, res, next) {
-        if (extname(req.url) !== '.html') {
-          serveStatic(resolve(assetPath), {
-            fallthrough
-          })(req, res, next)
-        } else {
-          next()
-        }
-      }
-    )
-  }
-
-  if (asset) {
-    Array.isArray(asset)
-      ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1))
-      : applyAsset(asset, false)
-  }
+  app.use(
+    serveStatic(process.cwd(), {
+      fallthrough: true
+    })
+  )
 
   if (rewrites) {
     if (Array.isArray(rewrites)) {
@@ -119,23 +97,19 @@ module.exports = options => {
     } else {
       app.use(
         historyAPIFallback({
+          disableDotRule: true,
           verbose: false
         })
       )
     }
   }
 
-  if (path) {
-    app.use(function(req, res, next) {
-      let ext = extname(req.url)
-      if (ext === '.html' || req.url.endsWith(posix.sep)) {
-        serveStatic(resolve(path), {
-          fallthrough: false
-        })(req, res, next)
-      } else {
-        next()
-      }
-    })
+  if (content) {
+    app.use(
+      serveStatic(resolve(content), {
+        fallthrough: true
+      })
+    )
   }
 
   app.use(function(err, req, res, next) {

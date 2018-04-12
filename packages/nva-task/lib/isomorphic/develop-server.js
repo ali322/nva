@@ -81,9 +81,6 @@ module.exports = function(context, options) {
   })
 
   const app = require('nva-server')({
-    path: false,
-    asset: false,
-    rewrites: false,
     log: false,
     cors: true,
     mock: {
