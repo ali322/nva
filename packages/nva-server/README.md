@@ -23,6 +23,7 @@ cli options
 - `-v` or `--version` package version
 - `-p` or `--port`  server listen port
 - `-c` or `--content` serve content path
+- `-a` or `--asset` serve asset path,if not set then content value by default
 - `-m` or `--mock` mock api configs file path
 - `-b` or `--browser` which browser to open
 - `-i` or `--index` started url

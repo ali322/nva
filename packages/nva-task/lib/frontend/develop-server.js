@@ -82,6 +82,7 @@ module.exports = (context, options) => {
   }
   const app = require('nva-server')({
     content: sourceFolder,
+    asset: '.',
     proxy,
     log: false,
     rewrites,

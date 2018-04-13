@@ -20,6 +20,7 @@ function extname(val) {
 module.exports = options => {
   const {
     content = false,
+    asset = false,
     rewrites = false,
     cors = false,
     log = true,
@@ -80,16 +81,26 @@ module.exports = options => {
     })
   }
 
-  app.use((req, res, next) => {
-    let ext = extname(req.url)
-    if (ext === '' || ext === '.html') {
-      next()
-    } else {
-      serveStatic(process.cwd(), {
-        fallthrough: true
-      })(req, res, next)
-    }
-  })
+  function applyAsset(assetPath, fallthrough = true) {
+    app.use(function(req, res, next) {
+      let ext = extname(req.url)
+      if (ext === '' || ext === '.html') {
+        next()
+      } else {
+        serveStatic(resolve(assetPath), {
+          fallthrough
+        })(req, res, next)
+      }
+    })
+  }
+
+  if (asset) {
+    Array.isArray(asset)
+      ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1))
+      : applyAsset(asset, false)
+  } else {
+    applyAsset(content, false)
+  }
 
   if (rewrites) {
     if (Array.isArray(rewrites)) {
@@ -118,7 +129,7 @@ module.exports = options => {
   if (content) {
     app.use(
       serveStatic(resolve(content), {
-        fallthrough: true
+        fallthrough: false
       })
     )
   }

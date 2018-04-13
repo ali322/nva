@@ -3,6 +3,7 @@
 const program = require('commander')
 const chalk = require('chalk')
 const opn = require('opn')
+const assign = require('lodash/assign')
 const join = require('path').join
 const version = require('../package.json').version
 
@@ -10,6 +11,10 @@ program
   .version(version)
   .option('-v, --version')
   .option('-c, --content <content>', 'serve content path')
+  .option(
+    '-a, --asset <asset>',
+    'serve asset path,if not set then content value by default'
+  )
   .option('--host [host]', 'listening host', 'localhost')
   .option('-p, --port [port]', 'listening port', 3000)
   .option('-m, --mock <mock>', 'mock config')
@@ -32,6 +37,7 @@ const cors = program.cors
 const log = program.log
 const mock = program.mock
 const content = program.content
+const asset = program.asset
 
 let options = {
   browser,
@@ -39,6 +45,7 @@ let options = {
   hostname,
   port,
   content,
+  asset,
   mock: { path: mock },
   rewrites,
   cors,
@@ -47,7 +54,7 @@ let options = {
 
 if (config) {
   try {
-    options = require(join(process.cwd(), config))
+    options = assign({}, require(join(process.cwd(), config)), options)
   } catch (err) {
     console.log(chalk.red('config invalid'))
     process.exit(1)
@@ -79,6 +86,7 @@ function openBrowser(target, url) {
 }
 
 server.on('close', function() {
+  console.log('')
   console.log('bye! nva-server closed')
 })
 
