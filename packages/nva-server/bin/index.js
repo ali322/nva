@@ -10,7 +10,7 @@ const version = require('../package.json').version
 program
   .version(version)
   .option('-v, --version')
-  .option('-c, --content <content>', 'serve content path')
+  .option('-c, --content <content>', 'serve content path', '.')
   .option(
     '-a, --asset <asset>',
     'serve asset path,if not set then content value by default'
