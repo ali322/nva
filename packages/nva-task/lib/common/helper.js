@@ -10,7 +10,7 @@ exports.lanIP = () => {
   const interfaces = os.networkInterfaces()
   let IPv4 = '127.0.0.1'
   for (let key in interfaces) {
-    interfaces[key].forEach(function (details) {
+    interfaces[key].forEach(function(details) {
       if (details.family === 'IPv4' && /^en\d{1}$/.test(key) === true) {
         IPv4 = details.address
       }
@@ -23,13 +23,13 @@ exports.current = () => {
   return new Date().toString().split(' ')[4]
 }
 
-exports.checkPort = (port, next) => {
-  const server = net.createServer(function (socket) {
+exports.checkPort = (port, hostname, next) => {
+  const server = net.createServer(function(socket) {
     socket.write('Echo server\r\n')
     socket.pipe(socket)
   })
 
-  server.listen(port, () => {
+  server.listen(port, hostname, () => {
     server.close()
     next(true)
   })
@@ -53,7 +53,7 @@ exports.relativeURL = (from, to) => {
   return url + path.posix.sep + path.basename(to)
 }
 
-exports.checkFile = (target) => {
+exports.checkFile = target => {
   let stats
   try {
     stats = fs.statSync(path.resolve(target))
@@ -63,7 +63,7 @@ exports.checkFile = (target) => {
   return stats.isFile()
 }
 
-exports.checkDir = (target) => {
+exports.checkDir = target => {
   let stats
   try {
     stats = fs.statSync(path.resolve(target))
@@ -73,7 +73,7 @@ exports.checkDir = (target) => {
   return stats.isDirectory()
 }
 
-exports.error = (msg) => {
+exports.error = msg => {
   console.log(chalk.red(msg))
   process.exit(1)
 }
@@ -82,7 +82,7 @@ exports.merge = (target, ...args) => {
   return assign({}, target, ...args)
 }
 
-exports.emojis = (key) => {
+exports.emojis = key => {
   if (os.platform() === 'darwin') {
     return emoji.get(key)
   } else {

@@ -3,11 +3,12 @@ const chalk = require('chalk')
 const { emojis } = require('../common/helper')
 const { relative } = require('path')
 
-module.exports = function (options) {
+module.exports = function(options) {
   const script = nodemon(options)
   let started = false
+  let cnt = 0
 
-  let exitHanlder = function (options) {
+  let exitHanlder = function(options) {
     if (options.exit) script.emit('exit')
     if (options.quit) process.exit(0)
   }
@@ -15,15 +16,20 @@ module.exports = function (options) {
   process.once('exit', exitHanlder.bind(null, { exit: true }))
   process.once('SIGINT', exitHanlder.bind(null, { quit: true }))
 
-  script.on('restart', function (files) {
+  script.on('restart', function(files) {
+    // ignore first file change
+    if (cnt === 0) {
+      cnt += 1
+      return
+    }
     console.log(`${emojis('rocket')}  ` + chalk.yellow('server restarting...'))
-    files.forEach(function (file) {
+    files.forEach(function(file) {
       file = relative(process.cwd(), file)
       console.log(chalk.yellow(`file ${file} changed`))
     })
   })
 
-  script.on('start', function () {
+  script.on('start', function() {
     if (!started) {
       return
     }

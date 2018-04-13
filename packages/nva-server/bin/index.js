@@ -10,6 +10,7 @@ program
   .version(version)
   .option('-v, --version')
   .option('-c, --content <content>', 'serve content path')
+  .option('--host [host]', 'listening host', 'localhost')
   .option('-p, --port [port]', 'listening port', 3000)
   .option('-m, --mock <mock>', 'mock config')
   .option('-b, --browser [browser]', 'which browser to open', 'default')
@@ -24,6 +25,7 @@ program.parse(process.argv)
 const browser = program.browser
 const index = program.index
 const config = program.config
+const hostname = program.host
 const port = program.port
 const rewrites = program.rewrites
 const cors = program.cors
@@ -34,6 +36,7 @@ const content = program.content
 let options = {
   browser,
   index,
+  hostname,
   port,
   content,
   mock: { path: mock },
@@ -53,10 +56,13 @@ if (config) {
 
 const app = require('../lib')(options)
 
-let server = app.listen(options.port, function(err) {
+let server = app.listen(options.port, options.hostname, function(err) {
   if (err) console.log(err)
-  openBrowser(browser, 'http://localhost:' + options.port + index)
-  console.log(`🌎  nva-server started at %d`, options.port)
+  openBrowser(
+    options.browser,
+    `http://${options.hostname}:${options.port}${options.index}`
+  )
+  console.log(`🌎  nva-server started at ${options.hostname}:${options.port}`)
 })
 
 function openBrowser(target, url) {

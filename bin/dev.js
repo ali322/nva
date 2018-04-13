@@ -3,7 +3,8 @@ const context = require('../lib/context')()
 const checkVersion = require('../lib/check-version')
 const checkPKG = require('../lib/check-pkg')
 
-program.option('-p, --port [value]', 'dev server listen port')
+program.option('--host [host]', 'dev server listen hostname', 'localhost')
+program.option('-p, --port [value]', 'dev server listen port', 3000)
 program.option('-b, --browser [browser]', 'which browser to open', 'default')
 program.option('-P, --profile', 'enable profile mode', false)
 program.option('--yarn', 'use yarn instead of npm')
@@ -11,6 +12,7 @@ program.option('--silent', 'ignore update check')
 
 program.parse(process.argv)
 
+const hostname = program.host
 const port = program.port
 const browser = program.browser
 const profile = program.profile
@@ -19,7 +21,7 @@ const silent = program.silent
 
 const dev = () => {
   let tasks = require('nva-task')(context)
-  tasks.dev({ port, browser, profile })
+  tasks.dev({ hostname, port, browser, profile })
 }
 const started = parseInt(process.env.started)
 

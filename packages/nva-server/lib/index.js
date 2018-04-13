@@ -5,11 +5,17 @@ const serveStatic = require('serve-static')
 const favicon = require('serve-favicon')
 const proxyMiddleware = require('http-proxy-middleware')
 const morgan = require('morgan')
+const url = require('url')
 const compression = require('compression')
-const { join, resolve } = require('path')
+const { join, resolve, parse } = require('path')
 const historyAPIFallback = require('connect-history-api-fallback')
 const assign = require('lodash/assign')
 const mockFactory = require('./mock')
+
+function extname(val) {
+  let parsed = url.parse(val)
+  return parse(parsed.pathname).ext
+}
 
 module.exports = options => {
   const {
@@ -74,11 +80,16 @@ module.exports = options => {
     })
   }
 
-  app.use(
-    serveStatic(process.cwd(), {
-      fallthrough: true
-    })
-  )
+  app.use((req, res, next) => {
+    let ext = extname(req.url)
+    if (ext === '' || ext === '.html') {
+      next()
+    } else {
+      serveStatic(process.cwd(), {
+        fallthrough: true
+      })(req, res, next)
+    }
+  })
 
   if (rewrites) {
     if (Array.isArray(rewrites)) {

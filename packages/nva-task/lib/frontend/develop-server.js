@@ -1,7 +1,7 @@
 const { join } = require('path')
 const isString = require('lodash/isString')
 const BrowserSync = require('browser-sync')
-const { error, checkPort, emojis, merge } = require('../common/helper')
+const { error, checkPort, emojis } = require('../common/helper')
 const { mergeConfig, openBrowser } = require('../common')
 
 module.exports = (context, options) => {
@@ -24,9 +24,10 @@ module.exports = (context, options) => {
     browserSync.exit()
     process.exit(0)
   })
-  const port = options.port || 3000
+  const hostname = options.hostname
+  const port = options.port
   let hotUpdateConfig = require('./webpack.hot-update')(
-    merge(context, { port }),
+    context,
     options.profile
   )
 
@@ -45,9 +46,9 @@ module.exports = (context, options) => {
   let opened = 0
   let openBrowserAfterDev = () => {
     let url = spa ? '/' : '/index/'
-    url = `http://localhost:${port}${url}`
+    url = `http://${hostname}:${port}${url}`
     openBrowser(options.browser, url)
-    console.log(`${emojis('rocket')}  develop server started at ${port}`)
+    console.log(`${emojis('rocket')}  develop server started at ${hostname}:${port}`)
   }
 
   const middlewares = require('../common/middleware')(
@@ -102,7 +103,7 @@ module.exports = (context, options) => {
     favicon
   })
 
-  checkPort(port, available => {
+  checkPort(port, hostname, available => {
     if (!available) {
       error('port is not avaiilable')
     } else {
@@ -115,6 +116,7 @@ module.exports = (context, options) => {
           online: false,
           notify: true,
           open: false,
+          reloadOnRestart: true,
           watchOptions: {
             debounceDelay: 1000
           },

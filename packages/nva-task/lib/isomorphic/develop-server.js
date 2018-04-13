@@ -11,8 +11,6 @@ module.exports = function(context, options) {
     serverFolder,
     serverCompile,
     serverEntry,
-    viewFolder,
-    distFolder,
     beforeDev,
     mock,
     afterDev,
@@ -27,12 +25,15 @@ module.exports = function(context, options) {
     browserSync.exit()
     process.exit(0)
   })
-  const port = options.port || 7000
-  const proxyPort = context.port || 3000
+  const clientPort = context.clientPort || 7000
+  const port = context.port || 3000
+  const hostname = context.hostname || 'localhost'
+  const protocol = context.protocol || 'http'
 
   let opened = 0
+  let started = 0
   let openBrowserAfterDev = () => {
-    let url = `http://localhost:${proxyPort}`
+    let url = `${protocol}://${hostname}:${port}`
     openBrowser(options.browser, url)
   }
 
@@ -53,12 +54,15 @@ module.exports = function(context, options) {
       verbose: false,
       stdout: false,
       // ignore: ["*"],
-      watch: [serverFolder, serverEntry, join(distFolder, serverFolder)],
+      watch: [serverFolder, serverEntry],
       ext: 'js html json es6'
     }).on('readable', function() {
       this.stdout.on('data', chunk => {
         if (RUNNING_REGXP.test(chunk.toString())) {
-          openBrowserAfterDev()
+          if (started === 0) {
+            started += 1
+            openBrowserAfterDev()
+          }
           browserSync.reload({
             stream: false
           })
@@ -69,15 +73,8 @@ module.exports = function(context, options) {
     })
   }
 
-  let clientBuildFinished = false
-  let serverBuildFinished = false
   bus.once('server-build-finished', () => {
-    serverBuildFinished = true
-    clientBuildFinished && startNode()
-  })
-  bus.once('client-build-finished', () => {
-    clientBuildFinished = true
-    serverBuildFinished && startNode()
+    startNode()
   })
 
   const app = require('nva-server')({
@@ -101,7 +98,7 @@ module.exports = function(context, options) {
   })
   let middleware = [app]
   let hotUpdateConfig = require('./webpack.hot-update')(
-    merge(context, { port }),
+    merge(context, { port: clientPort }),
     options.profile
   )
   if (typeof hooks.beforeDev === 'function') {
@@ -125,7 +122,6 @@ module.exports = function(context, options) {
           if (typeof afterDev === 'function') {
             afterDev(err, stats)
           }
-          bus.emit('client-build-finished')
         }
       },
       options.profile
@@ -135,26 +131,19 @@ module.exports = function(context, options) {
   browserSync.init(
     {
       proxy: {
-        target: 'http://localhost:' + proxyPort,
+        target: `${protocol}://${hostname}:${port}`,
         middleware
       },
-      port,
-      files: join(viewFolder, '*.html'),
+      port: clientPort,
+      // files: join(viewFolder, '*.html'),
       online: false,
       logLevel: 'silent',
       notify: true,
       open: false,
-      // reloadOnRestart:true,
+      reloadOnRestart: true,
       // browser: "google chrome",
       socket: {
         clientPath: '/bs'
-      },
-      scriptPath: function(path) {
-        path = path.replace(
-          /browser-sync-client(\.\d+)+/,
-          'browser-sync-client'
-        )
-        return 'http://localhost:' + port + path
       }
     },
     function() {
