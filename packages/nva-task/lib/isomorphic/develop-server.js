@@ -13,10 +13,14 @@ module.exports = function(context, options) {
     serverEntry,
     beforeDev,
     mock,
+    clientPort,
     afterDev,
     hooks,
     startWatcher
   } = context
+
+  const { protocol, hostname, port, browser, profile } = options
+
   const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
   startWatcher()
 
@@ -25,16 +29,12 @@ module.exports = function(context, options) {
     browserSync.exit()
     process.exit(0)
   })
-  const clientPort = context.clientPort || 7000
-  const port = context.port || 3000
-  const hostname = context.hostname || 'localhost'
-  const protocol = context.protocol || 'http'
 
   let opened = 0
   let started = 0
   let openBrowserAfterDev = () => {
     let url = `${protocol}://${hostname}:${port}`
-    openBrowser(options.browser, url)
+    openBrowser(browser, url)
   }
 
   const startNode = () => {
@@ -77,7 +77,7 @@ module.exports = function(context, options) {
     startNode()
   })
 
-  const app = require('../../../nva-server/lib')({
+  const app = require('nva-server')({
     log: false,
     cors: true,
     mock: {
@@ -99,7 +99,7 @@ module.exports = function(context, options) {
   let middleware = [app]
   let hotUpdateConfig = require('./webpack.hot-update')(
     merge(context, { port: clientPort }),
-    options.profile
+    profile
   )
   if (typeof hooks.beforeDev === 'function') {
     hotUpdateConfig = mergeConfig(
@@ -124,7 +124,7 @@ module.exports = function(context, options) {
           }
         }
       },
-      options.profile
+      profile
     )
   )
 

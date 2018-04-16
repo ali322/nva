@@ -12,7 +12,7 @@ const context = require('../lib/context')()
 const lib = require('../lib')
 const config = require('../lib/config')
 const questions = config.questions('bundle')
-const tasks = require('../packages/nva-task/lib')(context)
+const tasks = require('nva-task')(context)
 
 program.usage('[name]')
 program.option('-d, --delete', 'delete action flag')

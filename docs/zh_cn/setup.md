@@ -41,6 +41,7 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
     "serverEntry" : "app.js" /* 服务端入口文件(仅限同构JS项目) */
     "serverCompile": false /* 是否编译服务端代码(仅限同构JS项目) */
     "serverCompileEntry": "bootstrap.js",    /* 服务端编译入口文件(仅限同构JS项目) */
+    "clientPort": 7000 /* 客户端开发服务监听端口(仅限同构JS项目) */
 }
 ```
 #### `module.json` 项目模块配置

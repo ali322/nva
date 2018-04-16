@@ -17,6 +17,8 @@ module.exports = (context, options) => {
     proxy
   } = context
 
+  const { protocol, hostname, port, browser, profile } = options
+
   startWatcher()
 
   const browserSync = BrowserSync.create()
@@ -24,12 +26,7 @@ module.exports = (context, options) => {
     browserSync.exit()
     process.exit(0)
   })
-  const hostname = options.hostname
-  const port = options.port
-  let hotUpdateConfig = require('./webpack.hot-update')(
-    context,
-    options.profile
-  )
+  let hotUpdateConfig = require('./webpack.hot-update')(context, profile)
 
   // apply before hooks
   if (typeof hooks.beforeDev === 'function') {
@@ -46,9 +43,13 @@ module.exports = (context, options) => {
   let opened = 0
   let openBrowserAfterDev = () => {
     let url = spa ? '/' : '/index/'
-    url = `http://${hostname}:${port}${url}`
-    openBrowser(options.browser, url)
-    console.log(`${emojis('rocket')}  develop server started at ${hostname}:${port}`)
+    url = `${protocol}://${hostname}:${port}${url}`
+    openBrowser(browser, url)
+    console.log(
+      `${emojis(
+        'rocket'
+      )}  develop server started at ${protocol}://${hostname}:${port}`
+    )
   }
 
   const middlewares = require('../common/middleware')(
@@ -65,7 +66,7 @@ module.exports = (context, options) => {
         openBrowserAfterDev()
       }
     },
-    options.profile
+    profile
   )
 
   let rewrites =
@@ -80,7 +81,7 @@ module.exports = (context, options) => {
   if (isString(spa) || Array.isArray(spa)) {
     rewrites = spa
   }
-  const app = require('../../../nva-server/lib')({
+  const app = require('nva-server')({
     content: sourceFolder,
     asset: '.',
     proxy,
@@ -110,6 +111,8 @@ module.exports = (context, options) => {
     } else {
       browserSync.init(
         {
+          https: protocol === 'https',
+          host: hostname !== 'localhost' ? hostname : null,
           port,
           // server: spa ? false : [sourceFolder, distFolder],
           middleware: middlewares.concat([app]),

@@ -21,6 +21,8 @@ nva-server -p 5000 -c src
 cli options
 
 - `-v` or `--version` package version
+- `--protocol` server listen protocol
+- `--host` server listen hostname
 - `-p` or `--port`  server listen port
 - `-c` or `--content` serve content path
 - `-a` or `--asset` serve asset path,if not set then content value by default
