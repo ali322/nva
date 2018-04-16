@@ -41,8 +41,8 @@ module.exports = (options = {}) => {
     writeModConf(modConfPath, omit(mods, keys))
   }
 
-  function startWatcher() {
-    watch([projConfPath, modConfPath, vendorConfPath])
+  function startWatcher(other = []) {
+    watch([projConfPath, modConfPath, vendorConfPath].concat[other])
   }
 
   let context = {
@@ -76,7 +76,7 @@ function watch(files) {
   watcher.on('change', path => {
     path = relative(process.cwd(), path)
     console.log(chalk.yellow(`file ${path} changed`))
-    console.log(chalk.yellow(`develop server restarting...`))
+    console.log(chalk.yellow(`server restarting...`))
     watcher.close()
     process.send('RESTART')
   })

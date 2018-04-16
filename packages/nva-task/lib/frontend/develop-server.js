@@ -1,4 +1,4 @@
-let { join } = require('path')
+let { join, resolve } = require('path')
 let isString = require('lodash/isString')
 let middlewareFactory = require('../common/middleware')
 let { error, checkPort, emojis, merge } = require('../common/helper')
@@ -19,10 +19,16 @@ module.exports = (context, options) => {
     hooks,
     startWatcher,
     favicon,
-    proxy
+    proxy,
+    strict
   } = context
 
-  startWatcher()
+  let rcs = ['.babelrc']
+  if (strict) {
+    rcs = rcs.concat(['.eslintrc', '.eslint.*'])
+  }
+  rcs = rcs.map(rc => resolve(rc))
+  startWatcher(rcs)
 
   let browserSync = BrowserSync.create()
   process.once('SIGINT', () => {
@@ -44,7 +50,7 @@ module.exports = (context, options) => {
     let url = spa ? '/' : '/index/'
     url = `http://localhost:${port}${url}`
     openBrowser(options.browser, url)
-    console.log(`${emojis('rocket')}  develop server started at ${port}`)
+    console.log(`${emojis('rocket')}  server started at ${port}`)
   }
   const middlewares = middlewareFactory(
     config,
