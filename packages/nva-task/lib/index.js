@@ -23,11 +23,11 @@ module.exports = (options = {}) => {
   modConfPath = proj.modConfPath || modConfPath
   vendorConfPath = proj.vendorConfPath || vendorConfPath
   mockPath = proj.mockPath || mockPath
-  const mods = loadConf(modConfPath, (e) => {
+  const mods = loadConf(modConfPath, e => {
     error('module config is invalid')
     console.log(prettyError(e))
   })
-  const vendors = loadConf(vendorConfPath, (e) => {
+  const vendors = loadConf(vendorConfPath, e => {
     error('vendor config is invalid')
     console.log(prettyError(e))
   })
@@ -41,8 +41,13 @@ module.exports = (options = {}) => {
     writeModConf(modConfPath, omit(mods, keys))
   }
 
-  function startWatcher() {
-    watch([projConfPath, modConfPath, vendorConfPath])
+  function startWatcher(strict) {
+    let rcs = ['.babelrc']
+    if (strict) {
+      rcs = rcs.concat(['.eslintrc', '.eslint.*'])
+    }
+    rcs = rcs.map(rc => resolve(rc))
+    watch([projConfPath, modConfPath, vendorConfPath].concat(rcs))
   }
 
   let context = {
@@ -75,7 +80,7 @@ function watch(files) {
   watcher.on('change', path => {
     path = relative(process.cwd(), path)
     console.log(chalk.yellow(`file ${path} changed`))
-    console.log(chalk.yellow(`develop server restarting...`))
+    console.log(chalk.yellow(`server restarting...`))
     watcher.close()
     process.send('RESTART')
   })

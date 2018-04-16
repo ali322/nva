@@ -14,12 +14,13 @@ module.exports = (context, options) => {
     hooks,
     startWatcher,
     favicon,
-    proxy
+    proxy,
+    strict
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
 
-  startWatcher()
+  startWatcher(strict)
 
   const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {

@@ -16,13 +16,14 @@ module.exports = function(context, options) {
     clientPort,
     afterDev,
     hooks,
-    startWatcher
+    startWatcher,
+    strict
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
 
   const RUNNING_REGXP = new RegExp(runningMessage || 'server running at')
-  startWatcher()
+  startWatcher(strict)
 
   const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {
