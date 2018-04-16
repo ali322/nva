@@ -21,7 +21,7 @@ module.exports = function(context, options) {
 
   const { protocol, hostname, port, browser, profile } = options
 
-  const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
+  const RUNNING_REGXP = new RegExp(runningMessage || 'server running at')
   startWatcher()
 
   const browserSync = BrowserSync.create()

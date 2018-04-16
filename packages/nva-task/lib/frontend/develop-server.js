@@ -48,7 +48,7 @@ module.exports = (context, options) => {
     console.log(
       `${emojis(
         'rocket'
-      )}  develop server started at ${protocol}://${hostname}:${port}`
+      )}  server running at ${protocol}://${hostname}:${port}`
     )
   }
 
