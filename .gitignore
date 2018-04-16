@@ -4,5 +4,7 @@ npm-debug.log
 packages/**/node_modules/
 packages/**/dist/
 packages/**/es/
+packages/*/package-lock.json
+package-lock.json
 script
 temp

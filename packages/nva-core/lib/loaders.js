@@ -131,7 +131,7 @@ module.exports = context => {
       loader: 'eslint-loader',
       options: {
         emitWarning: true,
-        cache: true
+        cache: false
       }
     })
   }
