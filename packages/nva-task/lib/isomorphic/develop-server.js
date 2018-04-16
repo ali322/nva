@@ -77,7 +77,7 @@ module.exports = function(context, options) {
     startNode()
   })
 
-  const app = require('nva-server')({
+  const app = require('../../../nva-server/lib')({
     log: false,
     cors: true,
     mock: {

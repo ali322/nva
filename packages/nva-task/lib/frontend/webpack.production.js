@@ -10,7 +10,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 const { existsSync } = require('fs-extra')
-const { config: configFactory } = require('nva-core')
+const { config: configFactory } = require('../../../nva-core/lib')
 const { relativeURL, bundleTime, merge } = require('../common/helper')
 
 module.exports = (context, profile) => {

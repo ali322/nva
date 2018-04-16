@@ -5,7 +5,7 @@ const isPlainObject = require('lodash/isPlainObject')
 const InjectHtmlPlugin = require('inject-html-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 const ProgressPlugin = require('progress-webpack-plugin')
-const { config: configFactory } = require('nva-core')
+const { config: configFactory } = require('../../../nva-core/lib')
 const { merge } = require('../common/helper')
 
 module.exports = function (context, profile) {

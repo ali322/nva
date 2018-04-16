@@ -41,6 +41,12 @@ cd my-project
 nva dev -p 3000
 ```
 
+可使用 `silent` 参数跳过更新检测
+
+```bash
+nva dev --silent
+```
+
 使用 `nva dev` 启动开发服务器,启动完毕后会打开用户默认浏览器
 
 3. 测试
@@ -62,6 +68,12 @@ nva-test-e2e -r path/ro/server.js -c path/to/config.js
 
 ```bash
 nva build
+```
+
+可使用 `silent` 参数跳过更新检测
+
+```bash
+nva build --silent
 ```
 
 完成源码的编译压缩,静态资源合并压缩,路径处理,html注入,构建版本号处理等等
