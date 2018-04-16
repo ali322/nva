@@ -17,10 +17,11 @@ module.exports = function(context, options) {
     mock,
     afterDev,
     hooks,
-    startWatcher
+    startWatcher,
+    strict
   } = context
   const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
-  startWatcher()
+  startWatcher(strict)
 
   let browserSync = BrowserSync.create()
   process.once('SIGINT', () => {

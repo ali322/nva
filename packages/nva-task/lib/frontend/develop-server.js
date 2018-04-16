@@ -1,4 +1,4 @@
-let { join, resolve } = require('path')
+let { join } = require('path')
 let isString = require('lodash/isString')
 let middlewareFactory = require('../common/middleware')
 let { error, checkPort, emojis, merge } = require('../common/helper')
@@ -23,12 +23,7 @@ module.exports = (context, options) => {
     strict
   } = context
 
-  let rcs = ['.babelrc']
-  if (strict) {
-    rcs = rcs.concat(['.eslintrc', '.eslint.*'])
-  }
-  rcs = rcs.map(rc => resolve(rc))
-  startWatcher(rcs)
+  startWatcher(strict)
 
   let browserSync = BrowserSync.create()
   process.once('SIGINT', () => {

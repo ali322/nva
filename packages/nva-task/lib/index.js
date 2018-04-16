@@ -41,8 +41,13 @@ module.exports = (options = {}) => {
     writeModConf(modConfPath, omit(mods, keys))
   }
 
-  function startWatcher(other = []) {
-    watch([projConfPath, modConfPath, vendorConfPath].concat[other])
+  function startWatcher(strict) {
+    let rcs = ['.babelrc']
+    if (strict) {
+      rcs = rcs.concat(['.eslintrc', '.eslint.*'])
+    }
+    rcs = rcs.map(rc => resolve(rc))
+    watch([projConfPath, modConfPath, vendorConfPath].concat(rcs))
   }
 
   let context = {
