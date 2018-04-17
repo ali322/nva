@@ -2,7 +2,6 @@ const { join } = require('path')
 const forEach = require('lodash/forEach')
 const isString = require('lodash/isString')
 const webpack = require('webpack')
-const chalk = require('chalk')
 const del = require('del')
 const { addMod, removeMod } = require('../common/mod')
 const { vendorManifest, mergeConfig, checkVendor } = require('../common')
@@ -43,7 +42,7 @@ module.exports = context => {
       stats = stats.toJson()
       stats.errors.forEach(err => console.error(err))
       stats.warnings.forEach(err => console.warn(err))
-      console.log(chalk.magenta('server side bundle is now VALID.'))
+      // console.log(chalk.magenta('server side bundle is now VALID.'))
       bus.emit('server-build-finished')
     }
     if (context.isDev) {

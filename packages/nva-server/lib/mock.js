@@ -3,6 +3,7 @@ const { resolve, relative } = require('path')
 const { parse } = require('url')
 const glob = require('glob')
 const chalk = require('chalk')
+const connect = require('connect')
 const chokidar = require('chokidar')
 const { prettyError, isEq } = require('./lib')
 const forEach = require('lodash/forEach')
@@ -17,7 +18,9 @@ const isRegExp = require('lodash/isRegExp')
 const isString = require('lodash/isString')
 const isPlainObject = require('lodash/isPlainObject')
 
-module.exports = (app, conf) => {
+module.exports = conf => {
+  const app = connect()
+
   jsf.extend('faker', function() {
     return require('faker/locale/en_US')
   })

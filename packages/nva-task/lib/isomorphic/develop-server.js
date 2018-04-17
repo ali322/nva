@@ -22,7 +22,7 @@ module.exports = function(context, options) {
 
   const { protocol, hostname, port, browser, profile } = options
 
-  const RUNNING_REGXP = new RegExp(runningMessage || 'server running at')
+  const RUNNING_REGXP = new RegExp(runningMessage || 'server is running at')
   startWatcher(strict)
 
   const browserSync = BrowserSync.create()
@@ -40,7 +40,8 @@ module.exports = function(context, options) {
 
   const startNode = () => {
     nodemon({
-      // delay: "200ms",
+      restartable: 'rs',
+      delay: '200ms',
       script: serverEntry,
       execMap: serverCompile
         ? {
@@ -52,9 +53,9 @@ module.exports = function(context, options) {
             )
         }
         : {},
-      verbose: false,
+      verbose: true,
       stdout: false,
-      // ignore: ["*"],
+      legacyWatch: true,
       watch: [serverFolder, serverEntry],
       ext: 'js html json es6'
     }).on('readable', function() {
@@ -62,6 +63,7 @@ module.exports = function(context, options) {
         if (RUNNING_REGXP.test(chunk.toString())) {
           if (started === 0) {
             started += 1
+            this.started = started
             openBrowserAfterDev()
           }
           browserSync.reload({
@@ -78,23 +80,16 @@ module.exports = function(context, options) {
     startNode()
   })
 
-  const app = require('nva-server')({
-    log: false,
-    cors: true,
-    mock: {
-      path: mock,
-      onChange(path) {
-        console.log(`file ${path} changed`)
-        browserSync.reload({ stream: false })
-      },
-      onAdd(path) {
-        console.log(`file ${path} added`)
-        browserSync.reload({ stream: false })
-      },
-      onRemove(path) {
-        console.log(`file ${path} removed`)
-        browserSync.reload({ stream: false })
-      }
+  const app = require('nva-server').mock({
+    path: mock,
+    onChange(path) {
+      browserSync.reload({ stream: false })
+    },
+    onAdd(path) {
+      browserSync.reload({ stream: false })
+    },
+    onRemove(path) {
+      browserSync.reload({ stream: false })
     }
   })
   let middleware = [app]
@@ -136,6 +131,7 @@ module.exports = function(context, options) {
         middleware
       },
       port: clientPort,
+      cors: true,
       // files: join(viewFolder, '*.html'),
       online: false,
       logLevel: 'silent',

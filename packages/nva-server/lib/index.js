@@ -10,14 +10,14 @@ const compression = require('compression')
 const { join, resolve, parse } = require('path')
 const historyAPIFallback = require('connect-history-api-fallback')
 const assign = require('lodash/assign')
-const mockFactory = require('./mock')
+const mockMiddleware = require('./mock')
 
 function extname(val) {
   let parsed = url.parse(val)
   return parse(parsed.pathname).ext
 }
 
-module.exports = options => {
+const createServer = options => {
   const {
     content = false,
     asset = false,
@@ -62,7 +62,7 @@ module.exports = options => {
   }
 
   if (mock) {
-    app = mockFactory(app, mock)
+    app.use(mockMiddleware(mock))
   }
 
   if (cors) {
@@ -98,7 +98,7 @@ module.exports = options => {
     Array.isArray(asset)
       ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1))
       : applyAsset(asset, false)
-  } else {
+  } else if (content) {
     applyAsset(content, false)
   }
 
@@ -141,3 +141,7 @@ module.exports = options => {
 
   return app
 }
+
+createServer.mock = mockMiddleware
+
+module.exports = createServer

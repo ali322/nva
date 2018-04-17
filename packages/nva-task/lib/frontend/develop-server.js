@@ -91,15 +91,12 @@ module.exports = (context, options) => {
     mock: {
       path: mock,
       onChange(path) {
-        console.log(`file ${path} changed`)
         browserSync.reload({ stream: false })
       },
       onAdd(path) {
-        console.log(`file ${path} added`)
         browserSync.reload({ stream: false })
       },
       onRemove(path) {
-        console.log(`file ${path} removed`)
         browserSync.reload({ stream: false })
       }
     },
