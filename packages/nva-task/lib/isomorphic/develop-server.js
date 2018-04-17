@@ -63,7 +63,6 @@ module.exports = function(context, options) {
         if (RUNNING_REGXP.test(chunk.toString())) {
           if (started === 0) {
             started += 1
-            this.started = started
             openBrowserAfterDev()
           }
           browserSync.reload({
@@ -76,8 +75,15 @@ module.exports = function(context, options) {
     })
   }
 
+  let clientBuildFinished = false
+  let serverBuildFinished = false
   bus.once('server-build-finished', () => {
-    startNode()
+    serverBuildFinished = true
+    clientBuildFinished && startNode()
+  })
+  bus.once('client-build-finished', () => {
+    clientBuildFinished = true
+    serverBuildFinished && startNode()
   })
 
   const app = require('nva-server').mock({
@@ -118,6 +124,7 @@ module.exports = function(context, options) {
           if (typeof afterDev === 'function') {
             afterDev(err, stats)
           }
+          bus.emit('client-build-finished')
         }
       },
       profile

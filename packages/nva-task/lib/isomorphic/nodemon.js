@@ -21,9 +21,6 @@ module.exports = function(options) {
       process.exit()
     })
     .on('restart', function(files) {
-      if (!this.started) {
-        return
-      }
       files.forEach(function(file) {
         file = relative(process.cwd(), file)
         console.log(chalk.yellow(`file ${file} changed`))
