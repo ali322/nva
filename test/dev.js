@@ -14,7 +14,7 @@ test.before(() => {
 })
 
 test.after(() => {
-    // rm('-rf', tmp)
+    rm('-rf', tmp)
 })
 
 function devMacro(t, branch) {
