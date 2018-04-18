@@ -45,12 +45,13 @@ module.exports = (context, options) => {
   let openBrowserAfterDev = () => {
     let url = spa ? '/' : '/index/'
     url = `${protocol}://${hostname}:${port}${url}`
-    openBrowser(browser, url)
     console.log(
       `${emojis(
         'rocket'
       )}  server running at ${protocol}://${hostname}:${port}`
     )
+    if (browser === 'none') return
+    openBrowser(browser, url)
   }
 
   const middlewares = require('../common/middleware')(
@@ -130,8 +131,7 @@ module.exports = (context, options) => {
           logFileChanges: true,
           logConnections: false,
           logLevel: 'silent'
-        },
-        function() {}
+        }
       )
     }
   })

@@ -34,6 +34,7 @@ module.exports = function(context, options) {
   let opened = 0
   let started = 0
   let openBrowserAfterDev = () => {
+    if (browser === 'none') return
     let url = `${protocol}://${hostname}:${port}`
     openBrowser(browser, url)
   }
