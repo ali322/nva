@@ -19,7 +19,7 @@ exports.devMacro = (t, branch) => {
         t.deepEqual(error.test(msg), false)
         if (finished.test(msg)) {
             child.kill()
-            t.end()
         }
+        t.end()
     })
 }
