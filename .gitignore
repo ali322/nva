@@ -4,11 +4,7 @@ npm-debug.log
 packages/**/node_modules/
 packages/**/dist/
 packages/**/es/
-<<<<<<< HEAD
-**/package-lock.json
-=======
 packages/**/package-lock.json
->>>>>>> prev
 script
 package-lock.json
-temp
+tmp

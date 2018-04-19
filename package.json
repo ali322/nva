@@ -13,7 +13,7 @@
     "test": "ava"
   },
   "ava": {
-    "files": "test/**/*.js",
+    "files": "test/spec/*.js",
     "failFast": true,
     "failWithoutAssertions": false
   },
