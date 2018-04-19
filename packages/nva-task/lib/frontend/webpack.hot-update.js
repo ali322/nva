@@ -8,7 +8,7 @@ const ProgressPlugin = require('progress-webpack-plugin')
 const { config: configFactory } = require('nva-core')
 const { merge } = require('../common/helper')
 
-module.exports = function (context, profile) {
+module.exports = function(context, profile) {
   const {
     vendors,
     mods,
@@ -19,7 +19,7 @@ module.exports = function (context, profile) {
     vendorSourceMap,
     hmrPath,
     output
-    } = context
+  } = context
   /** build variables */
   let entry = {}
   let htmls = []
@@ -31,10 +31,7 @@ module.exports = function (context, profile) {
   const sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      let manifestPath = resolve(
-        output.vendorDevPath,
-        key + '-manifest.json'
-      )
+      let manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
       let manifest = require(manifestPath)
       dllRefs.push(
         new DllReferencePlugin({
@@ -48,7 +45,7 @@ module.exports = function (context, profile) {
   /** build modules */
   forEach(mods, (mod, name) => {
     entry[name] = [
-      require.resolve('webpack-hot-middleware/client'),
+      require.resolve('webpack-hot-middleware/client') + '?reload=true',
       mod.input.js
     ].concat(mod.input.css ? [mod.input.css] : [])
 
@@ -65,11 +62,7 @@ module.exports = function (context, profile) {
           )
         ]
       }
-      if (
-        mod.vendor.css &&
-        sourcemap.css &&
-        sourcemap.css[mod.vendor.css]
-      ) {
+      if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
         more.css = [
           posix.join(
             posix.sep,
@@ -109,7 +102,7 @@ module.exports = function (context, profile) {
     },
     plugins: baseConfig.plugins.concat(dllRefs, htmls, [
       new ProgressPlugin(true, { onProgress: context.onDevProgress }),
-      new TidyStatsPlugin({ignoreAssets: true})
+      new TidyStatsPlugin({ ignoreAssets: true })
     ])
   })
 }

@@ -9,7 +9,7 @@ const { serverHost } = require('../common')
 const { merge } = require('../common/helper')
 const { config: configFactory } = require('nva-core')
 
-module.exports = function (context, profile) {
+module.exports = function(context, profile) {
   const {
     vendors,
     mods,
@@ -19,7 +19,7 @@ module.exports = function (context, profile) {
     hmrPath,
     port,
     output
-    } = context
+  } = context
   /** build variables */
   let entry = {}
   let htmls = []
@@ -32,10 +32,7 @@ module.exports = function (context, profile) {
   const sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      const manifestPath = resolve(
-        output.vendorDevPath,
-        key + '-manifest.json'
-      )
+      const manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
       const manifest = require(manifestPath)
       dllRefs.push(
         new webpack.DllReferencePlugin({
@@ -50,9 +47,7 @@ module.exports = function (context, profile) {
   forEach(mods, (mod, name) => {
     entry[name] = [
       require.resolve('webpack-hot-middleware/client') +
-      '?path=' +
-      devServerHost +
-      '/__webpack_hmr',
+        `?reload=true&path=${devServerHost}/__webpack_hmr`,
       mod.input.js
     ].concat(mod.input.css ? [mod.input.css] : [])
     let chunks = [name]
@@ -61,24 +56,12 @@ module.exports = function (context, profile) {
     if (mod.vendor) {
       if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
         more.js = [
-          posix.join(
-            posix.sep,
-            vendorDevFolder,
-            sourcemap.js[mod.vendor.js]
-          )
+          posix.join(posix.sep, vendorDevFolder, sourcemap.js[mod.vendor.js])
         ]
       }
-      if (
-        mod.vendor.css &&
-        sourcemap.css &&
-        sourcemap.css[mod.vendor.css]
-      ) {
+      if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
         more.css = [
-          posix.join(
-            posix.sep,
-            vendorDevFolder,
-            sourcemap.css[mod.vendor.css]
-          )
+          posix.join(posix.sep, vendorDevFolder, sourcemap.css[mod.vendor.css])
         ]
       }
     }
@@ -92,8 +75,7 @@ module.exports = function (context, profile) {
           {
             start: '<!-- start:browser-sync -->',
             end: '<!-- end:browser-sync -->',
-            content:
-              `<script src="${devServerHost}/bs/browser-sync-client.js"></script>`
+            content: `<script src="${devServerHost}/bs/browser-sync-client.js"></script>`
           }
         ]
       })
@@ -115,9 +97,11 @@ module.exports = function (context, profile) {
     resolve: {
       modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
-    plugins: baseConfig.plugins.concat([
-      new ProgressPlugin(true, { onProgress: context.onDevProgress }),
-      new TidyStatsPlugin({ignoreAssets: true})
-    ]).concat(dllRefs, htmls)
+    plugins: baseConfig.plugins
+      .concat([
+        new ProgressPlugin(true, { onProgress: context.onDevProgress }),
+        new TidyStatsPlugin({ ignoreAssets: true })
+      ])
+      .concat(dllRefs, htmls)
   })
 }
