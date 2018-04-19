@@ -1,7 +1,7 @@
 nva 
 ===
 
-[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url] [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][circleci-image]][circleci-url] [![MIT License][license-image]][license-url] [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 efficient and painless scaffold for frontend and isomorphic project
 
@@ -26,5 +26,5 @@ welcome to pull request and issues,help to improve `nva` better
 [npm-version-image]: http://img.shields.io/npm/v/nva.svg?style=flat
 [npm-downloads-image]: http://img.shields.io/npm/dm/nva.svg?style=flat
 
-[travis-url]: http://travis-ci.org/ali322/nva
-[travis-image]: http://img.shields.io/travis/ali322/nva.svg?style=flat
+[circleci-url]: https://circleci.com/gh/ali322/nva
+[circleci-image]: 	https://img.shields.io/circleci/project/github/ali322/nva.svg?style=flat
