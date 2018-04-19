@@ -1,32 +1,33 @@
-let { existsSync } = require('fs')
-let { resolve } = require('path')
-let createTestCafe = require('testcafe')
-let chalk = require('chalk')
-let ip = require('internal-ip')
-let qrcode = require('qrcode-terminal')
+const { resolve } = require('path')
+const createTestCafe = require('testcafe')
+const chalk = require('chalk')
+const { flatMap } = require('lodash')
+const glob = require('glob')
+const ip = require('internal-ip')
+const qrcode = require('qrcode-terminal')
 
-module.exports = function (server, conf, port, browsers = ['chrome']) {
-  if (existsSync(resolve(server)) === false) {
-    console.log(chalk.red('server invalid'))
-    process.exit(1)
-  }
-
+module.exports = function (confPath, port, browsers = ['chrome']) {
+  let conf = {}
+  let specs = []
   try {
-    conf = require(resolve(conf))
+    conf = require(resolve(confPath))
   } catch (e) {
     console.log(chalk.red('config invalid'))
     process.exit(1)
   }
+  if (Array.isArray(conf.spec)) {
+    specs = flatMap(conf.spec, v => {
+      return glob.sync(v)
+    })
+  }
 
-  let exec = runner => {
-    runner = runner
-      .startApp(`node ${resolve(server)}`, 3000)
-      .src(conf.spec || [])
-      .browsers(browsers)
-
+  let tc = null
+  let runner = null
+  const exec = runner => {
     if (typeof conf.process === 'function') {
       runner = conf.process(runner)
     }
+    runner = runner.src(specs).browsers(browsers)
 
     runner
       .run()
@@ -39,8 +40,6 @@ module.exports = function (server, conf, port, browsers = ['chrome']) {
       })
   }
 
-  let tc = null
-  let runner = null
   createTestCafe(ip.v4.sync(), port)
     .then(testCafe => {
       tc = testCafe

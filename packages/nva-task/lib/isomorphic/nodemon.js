@@ -1,13 +1,11 @@
-let nodemon = require('nodemon')
-let chalk = require('chalk')
-let { emojis } = require('../common/helper')
-let { relative } = require('path')
+const nodemon = require('nodemon')
+const chalk = require('chalk')
+const { relative } = require('path')
 
-module.exports = function (options) {
-  let script = nodemon(options)
-  let started = false
+module.exports = function(options) {
+  const script = nodemon(options)
 
-  let exitHanlder = function (options) {
+  let exitHanlder = function(options) {
     if (options.exit) script.emit('exit')
     if (options.quit) process.exit(0)
   }
@@ -15,20 +13,20 @@ module.exports = function (options) {
   process.once('exit', exitHanlder.bind(null, { exit: true }))
   process.once('SIGINT', exitHanlder.bind(null, { quit: true }))
 
-  script.on('restart', function (files) {
-    console.log(`${emojis('rocket')}  ` + chalk.yellow('server restarting...'))
-    files.forEach(function (file) {
-      file = relative(process.cwd(), file)
-      console.log(chalk.yellow(`file ${file} changed`))
+  script
+    .on('crash', function() {
+      console.log(chalk.red('server has crashed'))
     })
-  })
-
-  script.on('start', function () {
-    if (!started) {
-      return
-    }
-    started = true
-  })
+    .on('quit', function() {
+      process.exit()
+    })
+    .on('restart', function(files) {
+      files.forEach(function(file) {
+        file = relative(process.cwd(), file)
+        console.log(chalk.yellow(`file ${file} changed`))
+      })
+      console.log(chalk.yellow(`server restarting...`))
+    })
 
   return script
 }

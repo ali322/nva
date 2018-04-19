@@ -1,22 +1,18 @@
-let webpack = require('webpack')
-let { resolve } = require('path')
-let ProgressPlugin = require('progress-webpack-plugin')
-let { config: configFactory } = require('nva-core')
-let { merge } = require('../common/helper')
+const webpack = require('webpack')
+const { resolve } = require('path')
+const ProgressPlugin = require('progress-webpack-plugin')
+const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
+const { config: configFactory } = require('nva-core')
+const { merge } = require('../common/helper')
 
-module.exports = function (context, profile) {
-  const {
-    serverFolder,
-    distFolder,
-    sourceFolder,
-    serverEntry
-  } = context
-  let baseConfig = configFactory(context, profile)
-  let externals = Object.keys(require(resolve('package.json')).dependencies)
+module.exports = function(context, profile) {
+  const { serverFolder, distFolder, sourceFolder, serverCompileEntry } = context
+  const baseConfig = configFactory(context, profile)
+  const externals = Object.keys(require(resolve('package.json')).dependencies)
 
   return merge(baseConfig, {
     name: 'server',
-    entry: [resolve(serverFolder, serverEntry)],
+    entry: [resolve(serverFolder, serverCompileEntry)],
     target: 'node',
     node: {
       __dirname: true,
@@ -25,7 +21,7 @@ module.exports = function (context, profile) {
     devtool: 'sourcemap',
     output: {
       path: resolve(distFolder, serverFolder),
-      filename: serverEntry,
+      filename: serverCompileEntry,
       libraryTarget: 'commonjs2'
     },
     // context: __dirname,
@@ -38,6 +34,7 @@ module.exports = function (context, profile) {
     externals,
     plugins: baseConfig.plugins.concat([
       new ProgressPlugin(true, { identifier: 'server' }),
+      new TidyStatsPlugin({ identifier: 'server' }),
       new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/),
       new webpack.BannerPlugin({
         banner: 'require("source-map-support").install();',

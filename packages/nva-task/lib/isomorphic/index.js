@@ -1,23 +1,18 @@
-let { join } = require('path')
-let forEach = require('lodash/forEach')
-let isString = require('lodash/isString')
-let webpack = require('webpack')
-let chalk = require('chalk')
-let del = require('del')
-let { addMod, removeMod } = require('../common/mod')
-let { vendorManifest, mergeConfig, checkVendor } = require('../common')
-let { callback, merge } = require('../common/helper')
-let vendorFactory = require('../common/vendor')
-let serverConfigFactory = require('./webpack.server')
-let clientConfigFactory = require('./webpack.client')
-let bundleConfigFactory = require('./webpack.bundle')
-let developServer = require('./develop-server')
+const { join } = require('path')
+const forEach = require('lodash/forEach')
+const isString = require('lodash/isString')
+const webpack = require('webpack')
+const del = require('del')
+const { addMod, removeMod } = require('../common/mod')
+const { vendorManifest, mergeConfig, checkVendor } = require('../common')
+const { merge } = require('../common/helper')
+const bus = require('./event-bus')
 
 module.exports = context => {
-  let {
+  const {
     output,
     serverFolder,
-    serverEntry,
+    serverCompile,
     distFolder,
     chunkFolder,
     sourceFolder,
@@ -35,19 +30,20 @@ module.exports = context => {
   } = context
 
   function createBundle(context, profile) {
-    let bundleConfig = bundleConfigFactory(context, profile)
+    const bundleConfig = require('./webpack.bundle')(context, profile)
     del.sync(join(serverFolder, bundleFolder))
     if (Object.keys(bundleConfig.entry).length === 0) {
       return
     }
-    let bundleCompiler = webpack(bundleConfig)
+    const bundleCompiler = webpack(bundleConfig)
 
     function cb(err, stats) {
       if (err) throw err
       stats = stats.toJson()
       stats.errors.forEach(err => console.error(err))
       stats.warnings.forEach(err => console.warn(err))
-      console.log(chalk.magenta('server side bundle is now VALID.'))
+      // console.log(chalk.magenta('server side bundle is now VALID.'))
+      bus.emit('server-build-finished')
     }
     if (context.isDev) {
       bundleCompiler.watch({}, cb)
@@ -71,7 +67,7 @@ module.exports = context => {
         return
       }
 
-      let clientConfig = clientConfigFactory(context, profile)
+      let clientConfig = require('./webpack.client')(context, profile)
       if (typeof hooks.beforeBuild === 'function') {
         clientConfig = mergeConfig(
           clientConfig,
@@ -81,8 +77,8 @@ module.exports = context => {
       if (typeof beforeBuild === 'function') {
         clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
       }
-      let serverConfig = serverEntry
-        ? serverConfigFactory(context, profile)
+      let serverConfig = serverCompile
+        ? require('./webpack.server')(context, profile)
         : null
       if (typeof hooks.beforeServerBuild === 'function') {
         serverConfig = mergeConfig(
@@ -109,10 +105,14 @@ module.exports = context => {
       del.sync(join(distFolder, chunkFolder))
 
       createBundle(merge(context, { isDev: false }), profile)
-      let compiler = webpack(
-        serverEntry ? [clientConfig, serverConfig] : clientConfig
+      const compiler = webpack(
+        serverCompile ? [clientConfig, serverConfig] : clientConfig
       )
       compiler.run(function(err, stats) {
+        if (err) {
+          console.error(err)
+          return
+        }
         if (typeof hooks.afterServerBuild === 'function') {
           hooks.afterServerBuild(err, stats)
         }
@@ -125,11 +125,10 @@ module.exports = context => {
         if (typeof afterBuild === 'function') {
           afterBuild(err, stats)
         }
-        callback('Build success!', err, stats) // eslint-disable-line
       })
     },
     vendor(isDev, next) {
-      let vendorConfig = vendorFactory(merge(context, { isDev }))
+      let vendorConfig = require('../common/vendor')(merge(context, { isDev }))
       if (typeof hooks.beforeVendor === 'function') {
         vendorConfig = mergeConfig(
           vendorConfig,
@@ -140,8 +139,12 @@ module.exports = context => {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
-      let compiler = webpack(vendorConfig)
+      const compiler = webpack(vendorConfig)
       compiler.run(function(err, stats) {
+        if (err) {
+          console.error(err)
+          return
+        }
         vendorManifest(
           stats,
           vendors,
@@ -156,11 +159,11 @@ module.exports = context => {
         if (typeof afterVendor === 'function') {
           afterVendor(err, stats)
         }
-        callback('Build vendor success!', err, stats) // eslint-disable-line
         if (next) next()
       })
     },
     dev(options) {
+      const developServer = require('./develop-server')
       createBundle(merge(context, { isDev: true }), options.profile)
       if (checkVendor(vendors, join(output.vendorDevPath, vendorSourceMap))) {
         developServer(context, options)

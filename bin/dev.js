@@ -1,9 +1,11 @@
-let program = require('commander')
-let context = require('../lib/context')()
-let checkVersion = require('../lib/check-version')
-let checkPKG = require('../lib/check-pkg')
+const program = require('commander')
+const context = require('../lib/context')()
+const checkVersion = require('../lib/check-version')
+const checkPKG = require('../lib/check-pkg')
 
-program.option('-p, --port [value]', 'dev server listen port')
+program.option('--protocol [protocol]', 'dev server protocol', 'http')
+program.option('--host [host]', 'dev server listen hostname', 'localhost')
+program.option('-p, --port [value]', 'dev server listen port', 3000)
 program.option('-b, --browser [browser]', 'which browser to open', 'default')
 program.option('-P, --profile', 'enable profile mode', false)
 program.option('--yarn', 'use yarn instead of npm')
@@ -11,17 +13,19 @@ program.option('--silent', 'ignore update check')
 
 program.parse(process.argv)
 
-let port = program.port
-let browser = program.browser
-let profile = program.profile
-let useYarn = program.yarn
-let silent = program.silent
+const protocol = program.protocol
+const hostname = program.host
+const port = program.port
+const browser = program.browser
+const profile = program.profile
+const useYarn = program.yarn
+const silent = program.silent
 
-let dev = () => {
+const dev = () => {
   let tasks = require('nva-task')(context)
-  tasks.dev({ port, browser, profile })
+  tasks.dev({ protocol, hostname, port, browser, profile })
 }
-let started = parseInt(process.env.started)
+const started = parseInt(process.env.started)
 
 if (silent) {
   dev()

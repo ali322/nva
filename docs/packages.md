@@ -48,7 +48,7 @@ console.log('==> server stared at %d',3000)
 alsoo can run it in cli,more options refer to [nva-task](https://github.com/ali322/nva/blob/master/packages/nva-server/README.md)
 
 ```bash
-nva-server -p 5000 -P src
+nva-server -p 5000 -c src
 ```
 
 #### nva-test
@@ -73,7 +73,6 @@ config describle
 ```javascript
 {
     entry: 'path/to/test-entry.js',
-    sourcePath: 'path/to/source',
     reportPath: 'path/to/coverage',
     ...restOfKarmaConfig
 }
@@ -86,7 +85,7 @@ frontend e2e test toolkit
 run test
 
 ```bash
-nva-test-e2e -r path/to/server.js -c path/to/config.js
+nva-test-e2e -c path/to/config.js
 ```
 
 cli options
@@ -94,7 +93,15 @@ cli options
 |     param      |  default   |     description     |
 | :----------: | :----: | :----------: |
 | -c or —-config |   none    |    test config    |
-| -s or —-server |   none    |    app test server    |
 | —-browser |   phantom.js    |    test on which browser    |
+
+config describle
+
+```javascript
+{
+    spec: ['path/to/spec.js'],
+    process: runner => runner.startApp('node path/to/server.js', 3000)
+}
+```
 
 [Back to Index](./index.md)

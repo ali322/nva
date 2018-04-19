@@ -1,12 +1,12 @@
-let chalk = require('chalk')
-let config = require('../lib/config')
+const chalk = require('chalk')
+const config = require('../lib/config')
 
 console.log('')
 console.log('  Available Templates:')
 console.log('')
 
-for (var k in config.availableTemplates) {
-  var _template = config.availableTemplates[k]
-  console.log(`  - ${chalk.cyan(_template)}`)
+for (let k in config.availableTemplates) {
+  let template = config.availableTemplates[k]
+  console.log(`  - ${chalk.cyan(template)}`)
 }
 console.log('')

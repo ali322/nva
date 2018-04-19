@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-let program = require('commander')
-let version = require('../package.json').version
+const program = require('commander')
+const version = require('../package.json').version
 
 program
   .version(version)

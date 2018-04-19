@@ -1,12 +1,12 @@
-let webpack = require('webpack')
-let ExtractTextPlugin = require('extract-text-webpack-plugin')
-let { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-let loadersFactory = require('./loaders')
-let { happypackPlugin } = require('./lib')
-let assign = require('lodash/assign')
+const webpack = require('webpack')
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const loadersFactory = require('./loaders')
+const { happypackPlugin } = require('./lib')
+const assign = require('lodash/assign')
 
 module.exports = (context, profile = false) => {
-  let config = {
+  const config = {
     profile,
     module: {
       rules: loadersFactory(context)
@@ -50,11 +50,12 @@ module.exports = (context, profile = false) => {
     )
   }
 
-  let restConfig = context.isDev
+  const restConfig = context.isDev
     ? {
       devtool: '#eval-source-map',
       watch: true,
-      performance: { hints: false },
+      // performance: { hints: false },
+      mode: 'development',
       plugins: plugins.concat([
         new webpack.HotModuleReplacementPlugin()
       ])
@@ -62,24 +63,9 @@ module.exports = (context, profile = false) => {
     : {
       // devtool: "#cheap-module-source-map",
       devtool: profile ? '#eval-source-map' : false,
+      mode: 'production',
       plugins: plugins.concat([
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('production')
-        }),
-        new webpack.HashedModuleIdsPlugin({
-          hashFunction: 'sha256',
-          hashDigest: 'hex',
-          hashDigestLength: 10
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-          comments: false,
-          sourceMap: false,
-          output: {
-            comments: false
-          }
-        }),
-        new ExtractTextPlugin({ filename: context.output.cssPath })
+        new MiniCSSExtractPlugin({ filename: context.output.cssPath })
       ])
     }
   return assign({}, config, restConfig)

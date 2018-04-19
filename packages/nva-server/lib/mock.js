@@ -1,23 +1,28 @@
-let jsf = require('json-schema-faker')
-let { resolve, relative } = require('path')
-let { parse } = require('url')
-let glob = require('glob')
-let chalk = require('chalk')
-let chokidar = require('chokidar')
-let { prettyError, isEq } = require('./lib')
-let find = require('lodash/find')
-let trim = require('lodash/trim')
-let values = require('lodash/values')
-let reduce = require('lodash/reduce')
-let isFunction = require('lodash/isFunction')
-let indexOf = require('lodash/indexOf')
-let isRegExp = require('lodash/isRegExp')
-let isString = require('lodash/isString')
+const jsf = require('json-schema-faker')
+const { resolve, relative } = require('path')
+const { parse } = require('url')
+const glob = require('glob')
+const chalk = require('chalk')
+const connect = require('connect')
+const chokidar = require('chokidar')
+const { prettyError, isEq } = require('./lib')
+const forEach = require('lodash/forEach')
+const merge = require('lodash/merge')
+const find = require('lodash/find')
+const trim = require('lodash/trim')
+const values = require('lodash/values')
+const reduce = require('lodash/reduce')
+const isFunction = require('lodash/isFunction')
+const indexOf = require('lodash/indexOf')
+const isRegExp = require('lodash/isRegExp')
+const isString = require('lodash/isString')
+const isPlainObject = require('lodash/isPlainObject')
 
-module.exports = (app, conf) => {
-  jsf.extend('faker', function () {
-    let faker = require('faker/locale/en_US')
-    return faker
+module.exports = conf => {
+  const app = connect()
+
+  jsf.extend('faker', function() {
+    return require('faker/locale/en_US')
   })
   let mocks = {}
   let watcher
@@ -74,8 +79,7 @@ module.exports = (app, conf) => {
           v.filename = path
           return v
         })
-        isFunction(conf.onAdd) &&
-          conf.onAdd(relative(process.cwd(), path))
+        isFunction(conf.onAdd) && conf.onAdd(relative(process.cwd(), path))
       }
     })
     watcher.on('unlink', path => {
@@ -86,27 +90,24 @@ module.exports = (app, conf) => {
       }
     })
   }
-  app.use(function (req, res, next) {
-    let rule = find(
-      reduce(values(mocks), (sum, v) => sum.concat(v), []),
-      v => {
-        let reqPath = parse(req.url).pathname
-        if (isRegExp(v.url)) {
-          return v.url.test(reqPath)
-        } else if (isString(v.url)) {
-          return isEq(
-            trim(v.url, '/').split('/'),
-            trim(reqPath, '/').split('/'),
-            ':',
-            (target, match) => {
-              req.params = req.params || {}
-              req.params[target.replace(':', '')] = match
-            }
-          )
-        }
-        return false
+  app.use(function(req, res, next) {
+    let rule = find(reduce(values(mocks), (sum, v) => sum.concat(v), []), v => {
+      let reqPath = parse(req.url).pathname
+      if (isRegExp(v.url)) {
+        return v.url.test(reqPath)
+      } else if (isString(v.url)) {
+        return isEq(
+          trim(v.url, '/').split('/'),
+          trim(reqPath, '/').split('/'),
+          ':',
+          (target, match) => {
+            req.params = req.params || {}
+            req.params[target.replace(':', '')] = match
+          }
+        )
       }
-    )
+      return false
+    })
     if (rule && req.method.toLowerCase() === rule.method) {
       if (
         indexOf(
@@ -116,15 +117,31 @@ module.exports = (app, conf) => {
       ) {
         console.log(chalk.red('unsupported method'))
       }
-      res.statusCode = 200
-      res.setHeader('content-type', 'application/json;charset=utf-8')
+      let headers = {
+        'content-type': 'application/json;charset=utf-8'
+      }
+      headers = merge(
+        {},
+        headers,
+        isPlainObject(rule.headers) ? rule.headers : {}
+      )
+      forEach(headers, (v, k) => {
+        res.setHeader(k, v)
+      })
+      res.writeHead(rule.responseStatusCode || 200, {})
       let response = rule.response
       if (rule.type === 'jsf') {
         response = jsf(response)
       } else if (typeof response === 'function') {
         response = response(req)
       }
-      res.end(JSON.stringify(response))
+      if (rule.delay > 0) {
+        setTimeout(() => {
+          res.end(JSON.stringify(response))
+        }, rule.delay)
+      } else {
+        res.end(JSON.stringify(response))
+      }
     } else {
       next()
     }

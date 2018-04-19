@@ -1,18 +1,18 @@
 #! /usr/bin/env node
 
-let program = require('commander')
-let chalk = require('chalk')
-let inquirer = require('inquirer')
-let omit = require('lodash/omit')
-let get = require('lodash/get')
-let forEach = require('lodash/forEach')
-let omitBy = require('lodash/omitBy')
-let isEmpty = require('lodash/isEmpty')
-let context = require('../lib/context')()
-let lib = require('../lib')
-let config = require('../lib/config')
-let questions = config.questions('bundle')
-let tasks = require('nva-task')(context)
+const program = require('commander')
+const chalk = require('chalk')
+const inquirer = require('inquirer')
+const omit = require('lodash/omit')
+const get = require('lodash/get')
+const forEach = require('lodash/forEach')
+const omitBy = require('lodash/omitBy')
+const isEmpty = require('lodash/isEmpty')
+const context = require('../lib/context')()
+const lib = require('../lib')
+const config = require('../lib/config')
+const questions = config.questions('bundle')
+const tasks = require('nva-task')(context)
 
 program.usage('[name]')
 program.option('-d, --delete', 'delete action flag')
@@ -42,7 +42,7 @@ if (!program.args.length) {
   program.help()
 }
 
-let moduleName = program.args[0]
+const moduleName = program.args[0]
 if (moduleName === '[object Object]') {
   console.log(chalk.red('name required!'))
   program.help()

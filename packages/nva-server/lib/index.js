@@ -1,26 +1,26 @@
-let connect = require('connect')
-let bodyParser = require('body-parser')
-let methodOverride = require('method-override')
-let serveStatic = require('serve-static')
-let favicon = require('serve-favicon')
-let proxyMiddleware = require('http-proxy-middleware')
-let morgan = require('morgan')
-let compression = require('compression')
-let { join, resolve, parse, posix } = require('path')
-let url = require('url')
-let historyAPIFallback = require('connect-history-api-fallback')
-let assign = require('lodash/assign')
-let mockFactory = require('./mock')
+const connect = require('connect')
+const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
+const serveStatic = require('serve-static')
+const favicon = require('serve-favicon')
+const proxyMiddleware = require('http-proxy-middleware')
+const morgan = require('morgan')
+const url = require('url')
+const compression = require('compression')
+const { join, resolve, parse } = require('path')
+const historyAPIFallback = require('connect-history-api-fallback')
+const assign = require('lodash/assign')
+const mockMiddleware = require('./mock')
 
 function extname(val) {
   let parsed = url.parse(val)
   return parse(parsed.pathname).ext
 }
 
-module.exports = options => {
-  let {
-    path = '',
-    asset = '',
+const createServer = options => {
+  const {
+    content = false,
+    asset = false,
     rewrites = false,
     cors = false,
     log = true,
@@ -34,10 +34,18 @@ module.exports = options => {
   if (proxy) {
     Array.isArray(proxy)
       ? proxy.forEach(v =>
-        app.use(proxyMiddleware(v.url, assign({}, v.options, { logLevel: 'silent' })))
+        app.use(
+          proxyMiddleware(
+            v.url,
+            assign({}, v.options, { logLevel: 'silent' })
+          )
+        )
       )
       : app.use(
-        proxyMiddleware(proxy.url, assign({}, proxy.options, { logLevel: 'silent' }))
+        proxyMiddleware(
+          proxy.url,
+          assign({}, proxy.options, { logLevel: 'silent' })
+        )
       )
   }
   app.use(bodyParser.json())
@@ -54,11 +62,11 @@ module.exports = options => {
   }
 
   if (mock) {
-    app = mockFactory(app, mock)
+    app.use(mockMiddleware(mock))
   }
 
   if (cors) {
-    app.use(function (req, res, next) {
+    app.use(function(req, res, next) {
       res.setHeader('Access-Control-Allow-Origin', '*')
       res.setHeader(
         'Access-Control-Allow-Methods',
@@ -74,13 +82,14 @@ module.exports = options => {
   }
 
   function applyAsset(assetPath, fallthrough = true) {
-    app.use(assetPath === '.' ? '' : `/${assetPath}`, function (req, res, next) {
-      if (extname(req.url) !== '.html') {
+    app.use(function(req, res, next) {
+      let ext = extname(req.url)
+      if (ext === '' || ext === '.html') {
+        next()
+      } else {
         serveStatic(resolve(assetPath), {
           fallthrough
         })(req, res, next)
-      } else {
-        next()
       }
     })
   }
@@ -89,6 +98,8 @@ module.exports = options => {
     Array.isArray(asset)
       ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1))
       : applyAsset(asset, false)
+  } else if (content) {
+    applyAsset(content, false)
   }
 
   if (rewrites) {
@@ -108,29 +119,29 @@ module.exports = options => {
     } else {
       app.use(
         historyAPIFallback({
+          disableDotRule: true,
           verbose: false
         })
       )
     }
   }
 
-  if (path) {
-    app.use(function (req, res, next) {
-      let ext = extname(req.url)
-      if (ext === '.html' || req.url.endsWith(posix.sep)) {
-        serveStatic(resolve(path), {
-          fallthrough: false
-        })(req, res, next)
-      } else {
-        next()
-      }
-    })
+  if (content) {
+    app.use(
+      serveStatic(resolve(content), {
+        fallthrough: false
+      })
+    )
   }
 
-  app.use(function (err, req, res, next) {
+  app.use(function(err, req, res, next) {
     res.statusCode = 500
     res.end(err.message)
   })
 
   return app
 }
+
+createServer.mock = mockMiddleware
+
+module.exports = createServer

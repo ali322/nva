@@ -1,17 +1,18 @@
-let path = require('path')
-let { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
-let assign = require('lodash/assign')
+const path = require('path')
+const assign = require('lodash/assign')
+const { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
 
 const nodeModulesDir = path.resolve('node_modules')
 
 module.exports = context => {
   const { output = {}, imagePrefix, fontPrefix, isDev, strict } = context
+
   let urlLoaderOptions = {
     limit: 2500
   }
   if (!isDev) {
     urlLoaderOptions = assign({}, urlLoaderOptions, {
-      publicPath: function (url) {
+      publicPath: function(url) {
         let prefix = ''
         if (/\.(jpg|jpeg|png|bmp|gif)$/.test(url)) {
           prefix = imagePrefix
@@ -30,7 +31,7 @@ module.exports = context => {
     })
   }
 
-  let vueLoaderOptions = {
+  const vueLoaderOptions = {
     postcss: {
       plugins: postcssOptions(context).plugins,
       options: { sourceMap: 'inline' }
@@ -66,7 +67,6 @@ module.exports = context => {
     {
       test: /\.(es6|js|jsx)$/,
       exclude: /node_modules/,
-      // exclude: [nodeModulesDir],
       loader: require.resolve('happypack/loader'),
       options: { id: 'js' }
     },
@@ -130,8 +130,7 @@ module.exports = context => {
       enforce: 'pre',
       loader: 'eslint-loader',
       options: {
-        emitWarning: true,
-        cache: false
+        emitWarning: true
       }
     })
   }

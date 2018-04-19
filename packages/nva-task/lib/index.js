@@ -1,11 +1,11 @@
-let { resolve, join, relative } = require('path')
-let chalk = require('chalk')
-let omit = require('lodash/omit')
-let chokidar = require('chokidar')
-let { checkFile, checkDir, error, merge } = require('./common/helper')
-let initializer = require('./common/initializer')
-let { writeModConf } = require('./common')
-let prettyError = require('./common/pretty-error')
+const { resolve, join, relative } = require('path')
+const chalk = require('chalk')
+const omit = require('lodash/omit')
+const chokidar = require('chokidar')
+const { checkFile, checkDir, error, merge } = require('./common/helper')
+const initializer = require('./common/initializer')
+const { writeModConf } = require('./common')
+const prettyError = require('./common/pretty-error')
 
 module.exports = (options = {}) => {
   const { rootPath } = options
@@ -23,11 +23,11 @@ module.exports = (options = {}) => {
   modConfPath = proj.modConfPath || modConfPath
   vendorConfPath = proj.vendorConfPath || vendorConfPath
   mockPath = proj.mockPath || mockPath
-  const mods = loadConf(modConfPath, (e) => {
+  const mods = loadConf(modConfPath, e => {
     error('module config is invalid')
     console.log(prettyError(e))
   })
-  const vendors = loadConf(vendorConfPath, (e) => {
+  const vendors = loadConf(vendorConfPath, e => {
     error('vendor config is invalid')
     console.log(prettyError(e))
   })
@@ -61,17 +61,16 @@ module.exports = (options = {}) => {
     hooks
   }
 
-  return exports.init(context)
+  context = exports.init(context)
+  return context
 }
 
 exports.init = context => {
-  let { type } = context.proj
+  const { type } = context.proj
   if (['frontend', 'isomorphic'].indexOf(type) === -1) {
     error('unsupported type')
   }
-  context = initializer(context)
-  let tasks = require(`./${type}`)(context)
-  return tasks
+  return require(`./${type}`)(initializer(context))
 }
 
 function watch(files) {

@@ -15,7 +15,7 @@ npm install nva-test-e2e -g
 - run e2e test
 
     ```bash
-    nva-test-e2e -r test/e2e/server.js
+    nva-test-e2e -c test/e2e/config.js
     ```
 
 ### License

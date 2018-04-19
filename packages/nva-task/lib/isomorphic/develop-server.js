@@ -1,98 +1,108 @@
-let BrowserSync = require('browser-sync')
-let nodemon = require('./nodemon')
-let { join, dirname } = require('path')
-let createApp = require('nva-server')
-let { mergeConfig, openBrowser } = require('../common')
-let { merge } = require('../common/helper')
-let middlewareFactory = require('../common/middleware')
-let hotUpdateConfigFactory = require('./webpack.hot-update')
+const BrowserSync = require('browser-sync')
+const nodemon = require('./nodemon')
+const { join, dirname } = require('path')
+const { mergeConfig, openBrowser } = require('../common')
+const { merge } = require('../common/helper')
+const bus = require('./event-bus')
 
 module.exports = function(context, options) {
   const {
     runningMessage,
     serverFolder,
-    viewFolder,
-    distFolder,
+    serverCompile,
+    serverEntry,
     beforeDev,
     mock,
+    clientPort,
     afterDev,
     hooks,
     startWatcher,
     strict
   } = context
-  const RUNNING_REGXP = new RegExp(runningMessage || 'server is running')
+
+  const { protocol, hostname, port, browser, profile } = options
+
+  const RUNNING_REGXP = new RegExp(runningMessage || 'server is running at')
   startWatcher(strict)
 
-  let browserSync = BrowserSync.create()
+  const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {
     browserSync.exit()
     process.exit(0)
   })
-  const port = options.port || 7000
-  const proxyPort = context.port || 3000
 
   let opened = 0
-  let devRun = 0
+  let started = 0
   let openBrowserAfterDev = () => {
-    let url = `http://localhost:${proxyPort}`
-    openBrowser(options.browser, url)
+    if (browser === 'none') return
+    let url = `${protocol}://${hostname}:${port}`
+    openBrowser(browser, url)
   }
 
-  nodemon({
-    // delay: "200ms",
-    script: 'app.js',
-    execMap: {
-      js: join(
-        dirname(require.resolve('babel-cli')),
-        '..',
-        '.bin',
-        'babel-node'
-      )
-    },
-    verbose: false,
-    stdout: false,
-    // ignore: ["*"],
-    watch: [serverFolder, join(distFolder, serverFolder), 'app.js'],
-    ext: 'js html json es6 jsx'
-  }).on('readable', function() {
-    this.stdout.on('data', chunk => {
-      if (RUNNING_REGXP.test(chunk.toString())) {
-        if (opened === 0) {
-          opened += 1
-          openBrowserAfterDev()
+  const startNode = () => {
+    nodemon({
+      restartable: 'rs',
+      delay: '200ms',
+      script: serverEntry,
+      execMap: serverCompile
+        ? {
+          js: join(
+              dirname(require.resolve('babel-cli')),
+              '..',
+              '.bin',
+              'babel-node'
+            )
         }
-        browserSync.reload({
-          stream: false
-        })
-      }
+        : {},
+      verbose: true,
+      stdout: false,
+      legacyWatch: true,
+      watch: [serverFolder, serverEntry],
+      ext: 'js html json es6'
+    }).on('readable', function() {
+      this.stdout.on('data', chunk => {
+        if (RUNNING_REGXP.test(chunk.toString())) {
+          if (started === 0) {
+            started += 1
+            openBrowserAfterDev()
+          }
+          browserSync.reload({
+            stream: false
+          })
+        }
+      })
+      this.stdout.pipe(process.stdout)
+      this.stderr.pipe(process.stderr)
     })
-    this.stdout.pipe(process.stdout)
-    this.stderr.pipe(process.stderr)
+  }
+
+  let clientBuildFinished = false
+  let serverBuildFinished = false
+  bus.once('server-build-finished', () => {
+    serverBuildFinished = true
+    clientBuildFinished && startNode()
+  })
+  bus.once('client-build-finished', () => {
+    clientBuildFinished = true
+    serverBuildFinished && startNode()
   })
 
-  let app = createApp({
-    log: false,
-    cors: true,
-    mock: {
-      path: mock,
-      onChange(path) {
-        console.log(`file ${path} changed`)
-        browserSync.reload({ stream: false })
-      },
-      onAdd(path) {
-        console.log(`file ${path} added`)
-        browserSync.reload({ stream: false })
-      },
-      onRemove(path) {
-        console.log(`file ${path} removed`)
-        browserSync.reload({ stream: false })
-      }
+  const app = require('nva-server').mock({
+    path: mock,
+    onChange(path) {
+      browserSync.reload({ stream: false })
+    },
+    onAdd(path) {
+      browserSync.reload({ stream: false })
+    },
+    onRemove(path) {
+      browserSync.reload({ stream: false })
     }
   })
   let middleware = [app]
-  let hotUpdateConfig = hotUpdateConfigFactory(
-    merge(context, { port }),
-    options.profile
+  let hotUpdateConfig = require('./webpack.hot-update')(
+    merge(context, { port: clientPort }),
+    profile
   )
   if (typeof hooks.beforeDev === 'function') {
     hotUpdateConfig = mergeConfig(
@@ -104,31 +114,33 @@ module.exports = function(context, options) {
     hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
   }
   middleware = middleware.concat(
-    middlewareFactory(
+    require('../common/middleware')(
       hotUpdateConfig,
       (err, stats) => {
-        if (devRun === 0) {
-          devRun += 1
+        if (opened === 0) {
+          opened += 1
           if (typeof hooks.afterDev === 'function') {
             hooks.afterDev(err, stats)
           }
           if (typeof afterDev === 'function') {
             afterDev(err, stats)
           }
+          bus.emit('client-build-finished')
         }
       },
-      options.profile
+      profile
     )
   )
 
   browserSync.init(
     {
       proxy: {
-        target: 'http://localhost:' + proxyPort,
+        target: `${protocol}://${hostname}:${port}`,
         middleware
       },
-      port,
-      files: join(viewFolder, '*.html'),
+      port: clientPort,
+      cors: true,
+      // files: join(viewFolder, '*.html'),
       online: false,
       logLevel: 'silent',
       notify: true,
@@ -137,13 +149,6 @@ module.exports = function(context, options) {
       // browser: "google chrome",
       socket: {
         clientPath: '/bs'
-      },
-      scriptPath: function(path) {
-        path = path.replace(
-          /browser-sync-client(\.\d+)+/,
-          'browser-sync-client'
-        )
-        return 'http://localhost:' + port + path
       }
     },
     function() {

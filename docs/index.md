@@ -34,6 +34,7 @@ The shorthand repo notation is passed to download-git-repo so you can also use t
 
 ```bash
 nva dev
+nva dev --silent // ignore update checks
 nva dev -p <port>
 ```
 start develop server that [hot-module-replacement](http://webpack.github.io/docs/hot-module-replacement-with-webpack.html)(HMR) enabled,feel free get into your own business
@@ -42,6 +43,7 @@ start develop server that [hot-module-replacement](http://webpack.github.io/docs
 
 ```bash
 nva build
+nva build --silent // ignore update checks
 ```
 
 build project to dist,prepare for deploy

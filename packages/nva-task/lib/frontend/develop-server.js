@@ -1,18 +1,13 @@
-let { join } = require('path')
-let isString = require('lodash/isString')
-let middlewareFactory = require('../common/middleware')
-let { error, checkPort, emojis, merge } = require('../common/helper')
-let { mergeConfig, openBrowser } = require('../common')
-let hotUpdateConfig = require('./webpack.hot-update')
-let BrowserSync = require('browser-sync')
-let createApp = require('nva-server')
+const { join } = require('path')
+const isString = require('lodash/isString')
+const BrowserSync = require('browser-sync')
+const { error, checkPort, emojis } = require('../common/helper')
+const { mergeConfig, openBrowser } = require('../common')
 
 module.exports = (context, options) => {
   const {
     spa,
     sourceFolder,
-    distFolder,
-    staticFolder,
     mock,
     beforeDev,
     afterDev,
@@ -23,32 +18,44 @@ module.exports = (context, options) => {
     strict
   } = context
 
+  const { protocol, hostname, port, browser, profile } = options
+
   startWatcher(strict)
 
-  let browserSync = BrowserSync.create()
+  const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {
     browserSync.exit()
     process.exit(0)
   })
-  const port = options.port || 3000
-  let config = hotUpdateConfig(merge(context, { port }), options.profile)
+  let hotUpdateConfig = require('./webpack.hot-update')(context, profile)
+
+  // apply before hooks
   if (typeof hooks.beforeDev === 'function') {
-    config = mergeConfig(config, hooks.beforeDev(config))
+    hotUpdateConfig = mergeConfig(
+      hotUpdateConfig,
+      hooks.beforeDev(hotUpdateConfig)
+    )
   }
   if (typeof beforeDev === 'function') {
-    config = mergeConfig(config, beforeDev(config))
+    hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
   }
 
   // open browser when first build finished
   let opened = 0
   let openBrowserAfterDev = () => {
     let url = spa ? '/' : '/index/'
-    url = `http://localhost:${port}${url}`
-    openBrowser(options.browser, url)
-    console.log(`${emojis('rocket')}  server started at ${port}`)
+    url = `${protocol}://${hostname}:${port}${url}`
+    console.log(
+      `${emojis(
+        'rocket'
+      )}  server running at ${protocol}://${hostname}:${port}`
+    )
+    if (browser === 'none') return
+    openBrowser(browser, url)
   }
-  const middlewares = middlewareFactory(
-    config,
+
+  const middlewares = require('../common/middleware')(
+    hotUpdateConfig,
     (err, stats) => {
       if (opened === 0) {
         opened += 1
@@ -61,7 +68,7 @@ module.exports = (context, options) => {
         openBrowserAfterDev()
       }
     },
-    options.profile
+    profile
   )
 
   let rewrites =
@@ -76,44 +83,43 @@ module.exports = (context, options) => {
   if (isString(spa) || Array.isArray(spa)) {
     rewrites = spa
   }
-  const app = createApp({
-    asset: [distFolder, staticFolder],
-    path: sourceFolder,
+  const app = require('nva-server')({
+    content: sourceFolder,
+    asset: '.',
     proxy,
     log: false,
     rewrites,
     mock: {
       path: mock,
       onChange(path) {
-        console.log(`file ${path} changed`)
         browserSync.reload({ stream: false })
       },
       onAdd(path) {
-        console.log(`file ${path} added`)
         browserSync.reload({ stream: false })
       },
       onRemove(path) {
-        console.log(`file ${path} removed`)
         browserSync.reload({ stream: false })
       }
     },
     favicon
   })
 
-  checkPort(port, available => {
+  checkPort(port, hostname, available => {
     if (!available) {
       error('port is not avaiilable')
     } else {
       browserSync.init(
         {
+          https: protocol === 'https',
+          host: hostname !== 'localhost' ? hostname : null,
           port,
           // server: spa ? false : [sourceFolder, distFolder],
           middleware: middlewares.concat([app]),
           files: [join(sourceFolder, '**', '*.html')],
           online: false,
           notify: true,
-          reloadOnRestart: true,
           open: false,
+          reloadOnRestart: true,
           watchOptions: {
             debounceDelay: 1000
           },
@@ -125,8 +131,7 @@ module.exports = (context, options) => {
           logFileChanges: true,
           logConnections: false,
           logLevel: 'silent'
-        },
-        function() {}
+        }
       )
     }
   })

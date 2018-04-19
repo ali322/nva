@@ -1,13 +1,16 @@
-let { resolve, join, basename } = require('path')
-let { DllPlugin } = require('webpack')
-let ChunkTransformPlugin = require('chunk-transform-webpack-plugin')
-let ProgressPlugin = require('progress-webpack-plugin')
-let isEmpty = require('lodash/isEmpty')
-let isPlainObject = require('lodash/isPlainObject')
-let { merge } = require('../common/helper')
-let { config: configFactory } = require('nva-core')
+const { resolve, join, extname } = require('path')
+const { DllPlugin } = require('webpack')
+const ProgressPlugin = require('progress-webpack-plugin')
+const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
+const fromPairs = require('lodash/fromPairs')
+const map = require('lodash/map')
+const isEmpty = require('lodash/isEmpty')
+const isPlainObject = require('lodash/isPlainObject')
+const { merge } = require('../common/helper')
+const { config: configFactory } = require('nva-core')
 
-module.exports = function (context) {
+module.exports = function(context) {
   const {
     vendors,
     sourceFolder,
@@ -15,7 +18,7 @@ module.exports = function (context) {
     vendorDevFolder,
     output,
     isDev
-    } = context
+  } = context
   const baseConfig = configFactory(context)
 
   let entryJS = {}
@@ -55,7 +58,8 @@ module.exports = function (context) {
           '[name]-manifest.json'
         ),
         context: __dirname
-      })
+      }),
+      new TidyStatsPlugin({ identifier: 'vendor:js' })
     ])
   })
 
@@ -63,9 +67,17 @@ module.exports = function (context) {
     vendorConfig.push(jsConfig)
   }
 
-  const baseCSSConfig = configFactory(merge(context, {
-    isDev: false
-  }))
+  const baseCSSConfig = configFactory(
+    merge(context, {
+      output: merge(output, {
+        cssPath: join(
+          isDev ? vendorDevFolder : vendorFolder,
+          '[name]-[hash:8].css'
+        )
+      }),
+      isDev: false
+    })
+  )
   const cssConfig = merge(baseCSSConfig, {
     name: 'css',
     entry: entryCSS,
@@ -77,16 +89,14 @@ module.exports = function (context) {
     },
     plugins: baseCSSConfig.plugins.concat([
       new ProgressPlugin(true, { identifier: 'vendor:css' }),
-      new ChunkTransformPlugin({
-        chunks: cssChunks,
-        test: /\.css$/,
-        filename: function (filename) {
-          return join(
-            isDev ? vendorDevFolder : vendorFolder,
-            basename(filename)
-          )
-        }
-      })
+      new ChunkAssetPlugin({
+        chunks: fromPairs(
+          map(cssChunks, chunk => {
+            return [chunk, files => files.filter(v => extname(v) !== '.js')]
+          })
+        )
+      }),
+      new TidyStatsPlugin({ identifier: 'vendor:css' })
     ])
   })
 
