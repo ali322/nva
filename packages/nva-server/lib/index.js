@@ -25,7 +25,7 @@ const createServer = options => {
     cors = false,
     log = true,
     proxy,
-    mock = {}
+    mock = false
   } = options
 
   let app = connect()

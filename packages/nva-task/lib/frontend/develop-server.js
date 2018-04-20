@@ -15,7 +15,8 @@ module.exports = (context, options) => {
     startWatcher,
     favicon,
     proxy,
-    strict
+    strict,
+    watch
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
@@ -46,9 +47,7 @@ module.exports = (context, options) => {
     let url = spa ? '/' : '/index/'
     url = `${protocol}://${hostname}:${port}${url}`
     console.log(
-      `${emojis(
-        'rocket'
-      )}  server running at ${protocol}://${hostname}:${port}`
+      `${emojis('rocket')}  server running at ${protocol}://${hostname}:${port}`
     )
     if (browser === 'none') return
     openBrowser(browser, url)
@@ -89,18 +88,7 @@ module.exports = (context, options) => {
     proxy,
     log: false,
     rewrites,
-    mock: {
-      path: mock,
-      onChange(path) {
-        browserSync.reload({ stream: false })
-      },
-      onAdd(path) {
-        browserSync.reload({ stream: false })
-      },
-      onRemove(path) {
-        browserSync.reload({ stream: false })
-      }
-    },
+    mock,
     favicon
   })
 
@@ -108,31 +96,32 @@ module.exports = (context, options) => {
     if (!available) {
       error('port is not avaiilable')
     } else {
-      browserSync.init(
-        {
-          https: protocol === 'https',
-          host: hostname !== 'localhost' ? hostname : null,
-          port,
-          // server: spa ? false : [sourceFolder, distFolder],
-          middleware: middlewares.concat([app]),
-          files: [join(sourceFolder, '**', '*.html')],
-          online: false,
-          notify: true,
-          open: false,
-          reloadOnRestart: true,
-          watchOptions: {
-            debounceDelay: 1000
-          },
-          ghostMode: {
-            clicks: true,
-            forms: true,
-            scroll: true
-          },
-          logFileChanges: true,
-          logConnections: false,
-          logLevel: 'silent'
-        }
-      )
+      browserSync.init({
+        https: protocol === 'https',
+        host: hostname !== 'localhost' ? hostname : null,
+        port,
+        // server: spa ? false : [sourceFolder, distFolder],
+        middleware: middlewares.concat([app]),
+        files: [join(sourceFolder, '**', '*.html')],
+        online: false,
+        notify: true,
+        open: false,
+        reloadOnRestart: true,
+        watchOptions: {
+          debounceDelay: 1000
+        },
+        ghostMode: {
+          clicks: true,
+          forms: true,
+          scroll: true
+        },
+        logFileChanges: true,
+        logConnections: false,
+        logLevel: 'silent'
+      })
+      browserSync.watch([mock, watch], (evt, file) => {
+        browserSync.reload({ stream: false })
+      })
     }
   })
 }

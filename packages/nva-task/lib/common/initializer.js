@@ -45,6 +45,7 @@ module.exports = context => {
     strict: false,
     profile: false,
     isSSR,
+    watch: [],
     sourceFolder: 'src',
     jsExt: '.js',
     cssExt: '.css',

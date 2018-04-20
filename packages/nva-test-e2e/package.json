@@ -1,6 +1,6 @@
 {
   "name": "nva-test-e2e",
-  "version": "0.5.46",
+  "version": "0.5.47",
   "description": "frontend e2e test toolkit",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test-e2e",

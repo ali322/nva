@@ -1,5 +1,4 @@
 const jsf = require('json-schema-faker')
-const { resolve, relative } = require('path')
 const { parse } = require('url')
 const glob = require('glob')
 const chalk = require('chalk')
@@ -12,10 +11,10 @@ const find = require('lodash/find')
 const trim = require('lodash/trim')
 const values = require('lodash/values')
 const reduce = require('lodash/reduce')
-const isFunction = require('lodash/isFunction')
 const indexOf = require('lodash/indexOf')
 const isRegExp = require('lodash/isRegExp')
 const isString = require('lodash/isString')
+const isArray = require('lodash/isArray')
 const isPlainObject = require('lodash/isPlainObject')
 
 module.exports = conf => {
@@ -25,29 +24,31 @@ module.exports = conf => {
     return require('faker/locale/en_US')
   })
   let mocks = {}
+  let allRules = []
   let watcher
-  if (conf.path) {
-    conf.path.split(',').forEach(v => {
+  if (isString(conf) && conf) {
+    conf.split(',').forEach(v => {
       let files = glob.sync(v)
       files.forEach(file => {
+        console.log('file', file)
         let rules = []
         try {
-          rules = require(resolve(file))
+          rules = require(file)
         } catch (e) {
           console.log(prettyError(e))
-          mocks[resolve(file)] = []
+          mocks[file] = []
           return false
         }
-        mocks[resolve(file)] = Array.isArray(rules) ? rules : []
+        mocks[file] = Array.isArray(rules) ? rules : []
       })
     })
 
-    watcher = chokidar.watch(conf.path.split(','), { depth: 5 })
-    watcher.on('change', path => {
-      delete require.cache[resolve(path)]
+    watcher = chokidar.watch(conf.split(','), { depth: 5 })
+    watcher.on('change', file => {
+      delete require.cache[file]
       let rules = []
       try {
-        rules = require(resolve(path))
+        rules = require(file)
       } catch (e) {
         console.log(prettyError(e))
       }
@@ -55,19 +56,16 @@ module.exports = conf => {
         console.log(chalk.red('mock config must return array'))
         return
       }
-      mocks[path] = rules.map(v => {
-        v.filename = path
+      mocks[file] = rules.map(v => {
+        v.filename = file
         return v
       })
-      if (isFunction(conf.onChange)) {
-        conf.onChange(relative(process.cwd(), path))
-      }
     })
-    watcher.on('add', path => {
-      if (mocks[path] === undefined) {
+    watcher.on('add', file => {
+      if (mocks[file] === undefined) {
         let rules = []
         try {
-          rules = require(resolve(path))
+          rules = require(file)
         } catch (e) {
           console.log(prettyError(e))
         }
@@ -75,23 +73,28 @@ module.exports = conf => {
           console.log(chalk.red('mock config must return array'))
           return
         }
-        mocks[path] = rules.map(v => {
-          v.filename = path
+        mocks[file] = rules.map(v => {
+          v.filename = file
           return v
         })
-        isFunction(conf.onAdd) && conf.onAdd(relative(process.cwd(), path))
       }
     })
-    watcher.on('unlink', path => {
-      if (mocks[path]) {
-        delete mocks[path]
-        isFunction(conf.onRemove) &&
-          conf.onRemove(relative(process.cwd(), path))
+    watcher.on('unlink', file => {
+      if (mocks[file]) {
+        delete mocks[file]
       }
     })
   }
+  if (isArray(conf)) {
+    allRules = conf
+  }
   app.use(function(req, res, next) {
-    let rule = find(reduce(values(mocks), (sum, v) => sum.concat(v), []), v => {
+    if (isArray(conf)) {
+      allRules = conf
+    } else {
+      allRules = reduce(values(mocks), (sum, v) => sum.concat(v), [])
+    }
+    let rule = find(allRules, v => {
       let reqPath = parse(req.url).pathname
       if (isRegExp(v.url)) {
         return v.url.test(reqPath)

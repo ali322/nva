@@ -17,7 +17,8 @@ module.exports = function(context, options) {
     afterDev,
     hooks,
     startWatcher,
-    strict
+    strict,
+    watch
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
@@ -87,18 +88,7 @@ module.exports = function(context, options) {
     serverBuildFinished && startNode()
   })
 
-  const app = require('nva-server').mock({
-    path: mock,
-    onChange(path) {
-      browserSync.reload({ stream: false })
-    },
-    onAdd(path) {
-      browserSync.reload({ stream: false })
-    },
-    onRemove(path) {
-      browserSync.reload({ stream: false })
-    }
-  })
+  const app = require('nva-server').mock(mock)
   let middleware = [app]
   let hotUpdateConfig = require('./webpack.hot-update')(
     merge(context, { port: clientPort }),
@@ -132,27 +122,26 @@ module.exports = function(context, options) {
     )
   )
 
-  browserSync.init(
-    {
-      proxy: {
-        target: `${protocol}://${hostname}:${port}`,
-        middleware
-      },
-      port: clientPort,
-      cors: true,
-      // files: join(viewFolder, '*.html'),
-      online: false,
-      logLevel: 'silent',
-      notify: true,
-      open: false,
-      reloadOnRestart: true,
-      // browser: "google chrome",
-      socket: {
-        clientPath: '/bs'
-      }
+  browserSync.init({
+    proxy: {
+      target: `${protocol}://${hostname}:${port}`,
+      middleware
     },
-    function() {
-      // console.log('🚀  develop server is started at %d', proxyPort);
+    port: clientPort,
+    cors: true,
+    // files: join(viewFolder, '*.html'),
+    online: false,
+    logLevel: 'silent',
+    notify: true,
+    open: false,
+    reloadOnRestart: true,
+    // browser: "google chrome",
+    socket: {
+      clientPath: '/bs'
     }
-  )
+  })
+
+  browserSync.watch([mock, watch], (evt, file) => {
+    browserSync.reload({ stream: false })
+  })
 }
