@@ -2,7 +2,7 @@
 layout: default
 title: NVA
 ---
-[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![MIT License][license-image]][license-url] [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![Build Status][circleci-image]][circleci-url] [![MIT License][license-image]][license-url] [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 [中文](./zh_cn/index.md)
 
@@ -79,5 +79,5 @@ koa@2+react or koa@2+vue,server side render
 [npm-version-image]: http://img.shields.io/npm/v/nva.svg?style=flat
 [npm-downloads-image]: http://img.shields.io/npm/dm/nva.svg?style=flat
 
-[travis-url]: http://travis-ci.org/ali322/nva
-[travis-image]: http://img.shields.io/travis/ali322/nva.svg?style=flat
+[circleci-url]: https://circleci.com/gh/ali322/nva
+[circleci-image]: 	https://img.shields.io/circleci/project/github/ali322/nva.svg?style=flat

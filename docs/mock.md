@@ -56,7 +56,7 @@ the `response` field also can defined as function, make mock api more flexible
 ```javascript
 [{
     "url": "/mock/users",
-    "method": "get",
+    "method": "post",
     "type": "jsf",
     "response": (req) => {
         if (req.body.role === 'admin') {

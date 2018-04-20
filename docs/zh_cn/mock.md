@@ -56,7 +56,7 @@ module.exports = [{
 ```javascript
 [{
     "url": "/mock/users",
-    "method": "get",
+    "method": "post",
     "type": "jsf",
     "response": (req) => {
         if (req.body.role === 'admin') {
