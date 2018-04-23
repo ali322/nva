@@ -30,7 +30,6 @@ module.exports = conf => {
     conf.split(',').forEach(v => {
       let files = glob.sync(v)
       files.forEach(file => {
-        console.log('file', file)
         let rules = []
         try {
           rules = require(file)
