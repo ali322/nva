@@ -19,7 +19,6 @@ const build = () => {
   tasks.build({ profile })
 }
 
-console.log('tasks', tasks.context.autocheck)
 if (silent) {
   build()
 } else {
