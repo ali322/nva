@@ -1,7 +1,7 @@
-const { join } = require('path')
+const { join, basename } = require('path')
 const isString = require('lodash/isString')
 const BrowserSync = require('browser-sync')
-const { error, checkPort, emojis } = require('nva-util')
+const { error, checkPort, emojis, merge } = require('nva-util')
 const { mergeConfig, openBrowser } = require('../common')
 
 module.exports = (context, options) => {
@@ -28,7 +28,14 @@ module.exports = (context, options) => {
     browserSync.exit()
     process.exit(0)
   })
-  let hotUpdateConfig = require('./webpack.hot-update')(context, profile)
+  const bufs = {}
+  const afterInject = (filename, html) => {
+    bufs[basename(filename)] = html
+  }
+  let hotUpdateConfig = require('./webpack.hot-update')(
+    merge(context, { afterInject }),
+    profile
+  )
 
   // apply before hooks
   if (typeof hooks.beforeDev === 'function') {
@@ -82,8 +89,12 @@ module.exports = (context, options) => {
   if (isString(spa) || Array.isArray(spa)) {
     rewrites = spa
   }
+
   const app = require('nva-server')({
-    content: sourceFolder,
+    content: (req, res, next) => {
+      res.setHeader('Content-Type', 'text/html')
+      res.end(bufs[basename(req.url)])
+    },
     asset: '.',
     proxy,
     log: false,

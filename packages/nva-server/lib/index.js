@@ -10,6 +10,8 @@ const compression = require('compression')
 const { join, resolve, parse } = require('path')
 const historyAPIFallback = require('connect-history-api-fallback')
 const assign = require('lodash/assign')
+const isString = require('lodash/isString')
+const isFunction = require('lodash/isFunction')
 const mockMiddleware = require('./mock')
 
 function extname(val) {
@@ -98,7 +100,7 @@ const createServer = options => {
     Array.isArray(asset)
       ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1))
       : applyAsset(asset, false)
-  } else if (content) {
+  } else if (isString(content) && content) {
     applyAsset(content, false)
   }
 
@@ -127,11 +129,15 @@ const createServer = options => {
   }
 
   if (content) {
-    app.use(
-      serveStatic(resolve(content), {
-        fallthrough: false
-      })
-    )
+    if (isString(content)) {
+      app.use(
+        serveStatic(resolve(content), {
+          fallthrough: false
+        })
+      )
+    } else if (isFunction(content)) {
+      app.use(content)
+    }
   }
 
   app.use(function(err, req, res, next) {
