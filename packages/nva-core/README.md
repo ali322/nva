@@ -2,7 +2,7 @@ nva-core
 ===
 [![NPM](https://nodei.co/npm/nva-core.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nva-core/)
 
-core task for nva-cli based on webpack
+initialize context for nva-cli
 
 ### Install
 
@@ -15,20 +15,10 @@ npm install nva-core --save
 
 
 ```javascript
-import config from 'nva-core'
+import core from 'nva-core'
 
-const buildConfig = config(context)
+const context = core(options)
 ```
-
-build context should contain followings
-
-- `output.cssPath`      where to output css
-- `output.fontPath`     where to output font
-- `output.imagePath`    where to output image
-- `imagePrefix`         prefix of image public path
-- `fontPrefix`          prefix of font public path 
-- `strict`              is strict mode?
-- `isDev`               is in development mode?
 
 ### License
 

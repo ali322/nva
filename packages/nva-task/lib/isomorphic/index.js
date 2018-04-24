@@ -5,7 +5,7 @@ const webpack = require('webpack')
 const del = require('del')
 const { addMod, removeMod } = require('../common/mod')
 const { vendorManifest, mergeConfig, checkVendor } = require('../common')
-const { merge } = require('../common/helper')
+const { merge } = require('nva-util')
 const bus = require('./event-bus')
 
 module.exports = context => {

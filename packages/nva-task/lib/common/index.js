@@ -9,17 +9,11 @@ const merge = require('webpack-merge')
 const { dirname, basename, resolve } = require('path')
 const {
   existsSync,
-  outputFileSync,
   outputJsonSync,
   readJsonSync
 } = require('fs-extra')
 const chalk = require('chalk')
 const opn = require('opn')
-const { lanIP } = require('./helper')
-
-exports.serverHost = port => {
-  return `http://${lanIP()}:${port}`
-}
 
 exports.mergeConfig = (config, value) => {
   const webpackConfig = Array.isArray(value) ? compact(value) : [value]
@@ -37,15 +31,6 @@ exports.mergeConfig = (config, value) => {
     entry: 'replace',
     'module.rules': 'replace'
   })(config, ...webpackConfig)
-}
-
-exports.writeModConf = (target, config) => {
-  try {
-    outputFileSync(target, JSON.stringify(config, null, 2))
-  } catch (e) {
-    return false
-  }
-  return true
 }
 
 exports.checkVendor = (vendors, target) => {

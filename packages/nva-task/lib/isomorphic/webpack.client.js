@@ -6,8 +6,8 @@ const InjectHtmlPlugin = require('inject-html-webpack-plugin')
 const ProgressPlugin = require('progress-webpack-plugin')
 const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-const { bundleTime, merge } = require('../common/helper')
-const { config: configFactory } = require('nva-core')
+const { bundleTime, merge } = require('nva-util')
+const configFactory = require('../webpack/config')
 
 module.exports = function(context, profile) {
   const {

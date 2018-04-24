@@ -1,9 +1,8 @@
 const forEach = require('lodash/forEach')
 const zipObject = require('lodash/zipObject')
 const fill = require('lodash/fill')
-const isString = require('lodash/isString')
 const {resolve, join} = require('path')
-const { error, relativeURL, merge } = require('./helper')
+const { error } = require('nva-util')
 const { existsSync, copySync, ensureFileSync, removeSync } = require('fs-extra')
 
 exports.addMod = (names, answers, template, context) => {
@@ -49,45 +48,4 @@ exports.removeMod = (names, context) => {
     }
   })
   removeMods(names)
-}
-
-exports.initMod = (mod, name, context) => {
-  const {
-    sourceFolder,
-    jsExt,
-    cssExt,
-    htmlExt,
-    viewFolder,
-    distFolder
-  } = context
-
-  // input
-  let input = merge(mod.input) || {}
-  input.js = isString(input.js)
-    ? input.js
-    : join(sourceFolder, name, name + jsExt)
-  input.css =
-    isString(input.css) || input.css === false
-      ? input.css
-      : join(sourceFolder, name, name + cssExt)
-  input.js = resolve(input.js)
-  input.css = isString(input.css) ? resolve(input.css) : input.css
-  input.html = isString(input.html)
-    ? input.html
-    : viewFolder
-      ? join(viewFolder, name + htmlExt)
-      : join(sourceFolder, name, name + htmlExt)
-  input.html = resolve(input.html)
-
-  // output
-  let output = merge(mod.output) || {}
-  output.js = isString(output.js) ? relativeURL(distFolder, output.js) : false
-  output.css = isString(output.css)
-    ? relativeURL(distFolder, output.css)
-    : false
-  output.html = isString(output.html)
-    ? output.html
-    : join(distFolder, name, `${name}.html`)
-
-  return { input, output }
 }

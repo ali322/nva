@@ -10,8 +10,8 @@ const CopyPlugin = require('copy-webpack-plugin')
 const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 const { existsSync } = require('fs-extra')
-const { config: configFactory } = require('nva-core')
-const { relativeURL, bundleTime, merge } = require('../common/helper')
+const { relativeURL, bundleTime, merge } = require('nva-util')
+const configFactory = require('../webpack/config')
 
 module.exports = (context, profile) => {
   const {
@@ -39,7 +39,7 @@ module.exports = (context, profile) => {
   const sourcemap = require(sourcemapPath).output
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
-      let manifestPath = resolve(output.vendorPath, key + '-manifest.json')
+      let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
       let manifest = require(manifestPath)
       dllRefs.push(
         new DllReferencePlugin({

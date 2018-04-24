@@ -2,8 +2,8 @@ const webpack = require('webpack')
 const { resolve } = require('path')
 const ProgressPlugin = require('progress-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-const { config: configFactory } = require('nva-core')
-const { merge } = require('../common/helper')
+const configFactory = require('../webpack/config')
+const { merge } = require('nva-util')
 
 module.exports = function(context, profile) {
   const { serverFolder, distFolder, sourceFolder, serverCompileEntry } = context

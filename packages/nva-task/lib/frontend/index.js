@@ -5,7 +5,7 @@ const isString = require('lodash/isString')
 const { join } = require('path')
 const { addMod, removeMod } = require('../common/mod')
 const { vendorManifest, mergeConfig, checkVendor } = require('../common')
-const { merge } = require('../common/helper')
+const { merge } = require('nva-util')
 
 module.exports = context => {
   const {

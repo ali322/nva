@@ -9,18 +9,12 @@ packages 目录下的 `nva-core` `nva-task` `nva-server` `nva-test` `nva-test-e2
 
 #### nva-core
 
-基础webpack编译配置,满足一般的构建需求
+根据选项初始化 `nva` 的上下文
 
 ```javascript
-import config from 'nva-core'
-const buildConfig = config(constants)
-webpack({
-...buildConfig,
-entry:'index.js',
-output:{
-    ...
-}
-}).run((err,stats)=>{ ... })
+import core from 'nva-core'
+
+const context = core(options)
 ```
   
 #### nva-task

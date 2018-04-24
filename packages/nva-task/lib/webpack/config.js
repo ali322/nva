@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const loadersFactory = require('./loaders')
-const { happypackPlugin } = require('./lib')
+const { happypackPlugin } = require('./util')
 const assign = require('lodash/assign')
 
 module.exports = (context, profile = false) => {

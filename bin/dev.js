@@ -1,7 +1,8 @@
 const program = require('commander')
-const context = require('../lib/context')()
 const checkVersion = require('../lib/check-version')
 const checkPKG = require('../lib/check-pkg')
+const options = require('../lib/option')
+const tasks = require('nva-task')(options)
 
 program.option('--protocol [protocol]', 'dev server protocol', 'http')
 program.option('--host [host]', 'dev server listen hostname', 'localhost')
@@ -22,7 +23,6 @@ const useYarn = program.yarn
 const silent = program.silent
 
 const dev = () => {
-  let tasks = require('nva-task')(context)
   tasks.dev({ protocol, hostname, port, browser, profile })
 }
 const started = parseInt(process.env.started)
@@ -32,7 +32,7 @@ if (silent) {
 } else {
   if (started === 0) {
     checkVersion(
-      checkPKG.bind(null, dev, context.proj.autocheck, useYarn),
+      checkPKG.bind(null, dev, tasks.context.autocheck, useYarn),
       useYarn
     )
   } else {

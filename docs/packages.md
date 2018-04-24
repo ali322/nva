@@ -9,18 +9,12 @@ title: Packages
 
 #### nva-core
 
-basic webpack config,you can extend like
+initialize context for nva-cli
 
 ```javascript
-import config from 'nva-core'
-const buildConfig = config(constants)
-webpack({
-...buildConfig,
-entry:'index.js',
-output:{
-    ...
-}
-}).run((err,stats)=>{ ... })
+import core from 'nva-core'
+
+const context = core(options)
 ```
 
 #### nva-task 

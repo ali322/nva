@@ -2,7 +2,7 @@ const BrowserSync = require('browser-sync')
 const nodemon = require('./nodemon')
 const { join, dirname } = require('path')
 const { mergeConfig, openBrowser } = require('../common')
-const { merge } = require('../common/helper')
+const { merge } = require('nva-util')
 const bus = require('./event-bus')
 
 module.exports = function(context, options) {

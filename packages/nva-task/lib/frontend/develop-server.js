@@ -1,7 +1,7 @@
 const { join } = require('path')
 const isString = require('lodash/isString')
 const BrowserSync = require('browser-sync')
-const { error, checkPort, emojis } = require('../common/helper')
+const { error, checkPort, emojis } = require('nva-util')
 const { mergeConfig, openBrowser } = require('../common')
 
 module.exports = (context, options) => {

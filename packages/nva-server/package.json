@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.5.48",
+  "version": "0.5.50",
   "description": "frontend static server",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-server",
@@ -40,6 +40,7 @@
     "lodash": "^4.17.4",
     "method-override": "^2.3.9",
     "morgan": "^1.8.1",
+    "nva-util": "^0.5.49",
     "opn": "^5.0.0",
     "pretty-error": "^2.1.1",
     "serve-favicon": "^2.4.2",

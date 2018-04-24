@@ -5,8 +5,8 @@ const nodeExternals = require('webpack-node-externals')
 const { resolve, join } = require('path')
 const forEach = require('lodash/forEach')
 const { existsSync } = require('fs')
-const { relativeURL, merge } = require('../common/helper')
-const { config: configFactory } = require('nva-core')
+const { relativeURL, merge } = require('nva-util')
+const configFactory = require('../webpack/config')
 
 module.exports = function(context, profile) {
   const { mods, serverFolder, distFolder, bundleFolder, sourceFolder } = context

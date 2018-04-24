@@ -1,8 +1,6 @@
 const path = require('path')
 const assign = require('lodash/assign')
-const { cssLoaders, postcssOptions, vueStyleLoaders } = require('./lib')
-
-const nodeModulesDir = path.resolve('node_modules')
+const { cssLoaders, postcssOptions, vueStyleLoaders } = require('./util')
 
 module.exports = context => {
   const { output = {}, imagePrefix, fontPrefix, isDev, strict } = context
@@ -55,12 +53,12 @@ module.exports = context => {
   let loaders = [
     {
       test: /\.(tpl|html)/,
-      exclude: [nodeModulesDir],
+      exclude: /node_modules/,
       loader: require.resolve('html-loader')
     },
     {
       test: /\.vue/,
-      exclude: [nodeModulesDir],
+      exclude: /node_modules/,
       loader: 'vue-loader',
       options: vueLoaderOptions
     },
@@ -72,12 +70,12 @@ module.exports = context => {
     },
     {
       test: /\.less/,
-      exclude: [nodeModulesDir],
+      exclude: /node_modules/,
       use: cssLoaders(context, 'less')
     },
     {
       test: /\.scss/,
-      exclude: [nodeModulesDir],
+      exclude: /node_modules/,
       use: cssLoaders(context, {
         loader: 'sass-loader',
         options: { sourceMap: true }
@@ -85,7 +83,7 @@ module.exports = context => {
     },
     {
       test: /\.styl/,
-      exclude: [nodeModulesDir],
+      exclude: /node_modules/,
       use: cssLoaders(context, 'stylus')
     },
     {
@@ -94,7 +92,6 @@ module.exports = context => {
     },
     {
       test: /\.(png|jpg|jpeg|gif|bmp)$/,
-      exclude: [nodeModulesDir],
       loader: require.resolve('url-loader'),
       options: isDev
         ? urlLoaderOptions

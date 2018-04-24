@@ -5,18 +5,24 @@ const chalk = require('chalk')
 const net = require('net')
 const emoji = require('node-emoji')
 const assign = require('lodash/assign')
+const forEach = require('lodash/forEach')
 
 exports.lanIP = () => {
   const interfaces = os.networkInterfaces()
   let IPv4 = '127.0.0.1'
   for (let key in interfaces) {
-    interfaces[key].forEach(function(details) {
+    interfaces[key].forEach(function (details) {
       if (details.family === 'IPv4' && /^en\d{1}$/.test(key) === true) {
         IPv4 = details.address
       }
     })
   }
   return IPv4
+}
+
+exports.serverHost = port => {
+  let host = exports.lanIP()
+  return `http://${host}:${port}`
 }
 
 exports.current = () => {
@@ -88,4 +94,24 @@ exports.emojis = key => {
   } else {
     return '>'
   }
+}
+
+exports.isEq = (targets, matches, wildcard = ':', cb = () => { }) => {
+  if (matches.length !== targets.length) return false
+  let matched = false
+  forEach(matches, (v, i) => {
+    let target = targets[i]
+    if (target.charAt(0) === wildcard) {
+      matched = true
+      cb(target, v)
+      return true
+    } else if (v === target) {
+      matched = true
+      return true
+    } else {
+      matched = false
+      return false
+    }
+  })
+  return matched
 }
