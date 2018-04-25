@@ -6,13 +6,13 @@ const configFactory = require('../webpack/config')
 const { merge } = require('nva-util')
 
 module.exports = function(context, profile) {
-  const { serverFolder, distFolder, sourceFolder, serverCompileEntry } = context
+  const { serverFolder, distFolder, sourceFolder, serverEntry } = context
   const baseConfig = configFactory(context, profile)
   const externals = Object.keys(require(resolve('package.json')).dependencies)
 
   return merge(baseConfig, {
     name: 'server',
-    entry: [resolve(serverFolder, serverCompileEntry)],
+    entry: [resolve(serverFolder, serverEntry)],
     target: 'node',
     node: {
       __dirname: true,
@@ -21,7 +21,7 @@ module.exports = function(context, profile) {
     devtool: 'sourcemap',
     output: {
       path: resolve(distFolder, serverFolder),
-      filename: serverCompileEntry,
+      filename: serverEntry,
       libraryTarget: 'commonjs2'
     },
     // context: __dirname,

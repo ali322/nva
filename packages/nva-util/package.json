@@ -4,7 +4,7 @@
   "description": "nva utils",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint lib"
   },
   "keywords": [
     "nva"

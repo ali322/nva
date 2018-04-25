@@ -7,10 +7,8 @@ const bus = require('./event-bus')
 
 module.exports = function(context, options) {
   const {
-    runningMessage,
     serverFolder,
     serverCompile,
-    serverEntry,
     beforeDev,
     mock,
     clientPort,
@@ -23,7 +21,7 @@ module.exports = function(context, options) {
 
   const { protocol, hostname, port, browser, profile } = options
 
-  const RUNNING_REGXP = new RegExp(runningMessage || 'server is running at')
+  const RUNNING_REGXP = new RegExp('server running at')
   startWatcher(strict)
 
   const browserSync = BrowserSync.create()
@@ -42,9 +40,12 @@ module.exports = function(context, options) {
 
   const startNode = () => {
     nodemon({
-      restartable: 'rs',
       delay: '200ms',
-      script: serverEntry,
+      script: join(__dirname, 'proxy-server.js'),
+      env: {
+        context: JSON.stringify(context),
+        options: JSON.stringify(options)
+      },
       execMap: serverCompile
         ? {
           js: join(
@@ -58,7 +59,7 @@ module.exports = function(context, options) {
       verbose: true,
       stdout: false,
       legacyWatch: true,
-      watch: [serverFolder, serverEntry],
+      watch: [serverFolder],
       ext: 'js html json es6'
     }).on('readable', function() {
       this.stdout.on('data', chunk => {
@@ -123,10 +124,10 @@ module.exports = function(context, options) {
   )
 
   browserSync.init({
-    proxy: {
-      target: `${protocol}://${hostname}:${port}`,
-      middleware
-    },
+    // proxy: {
+    //   target: `${protocol}://${hostname}:${port}`
+    // },
+    middleware,
     port: clientPort,
     cors: true,
     // files: join(viewFolder, '*.html'),

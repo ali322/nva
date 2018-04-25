@@ -74,9 +74,8 @@ module.exports = context => {
       moduleFolder: 'module',
       bundleFolder: 'bundle',
       serverFolder: 'server',
-      serverEntry: 'app.js',
+      serverEntry: 'bootstrap.js',
       serverCompile: false,
-      serverCompileEntry: 'bootstrap.js',
       viewFolder: join('server', 'view'),
       sourceFolder: 'client',
       clientPort: 7000

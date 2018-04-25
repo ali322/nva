@@ -93,7 +93,7 @@ module.exports = (context, profile) => {
         chunks,
         filename: mod.input.html,
         output: htmlOutput,
-        customInject: [
+        custom: [
           {
             start: '<!-- start:bundle-time -->',
             end: '<!-- end:bundle-time -->',

@@ -70,7 +70,7 @@ module.exports = function(context, profile) {
         chunks,
         filename: mod.input.html,
         more,
-        customInject: [
+        custom: [
           {
             start: '<!-- start:browser-sync -->',
             end: '<!-- end:browser-sync -->',

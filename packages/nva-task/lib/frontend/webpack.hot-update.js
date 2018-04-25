@@ -76,7 +76,6 @@ module.exports = function(context, profile) {
     }
     htmls.push(
       new InjectHtmlPlugin({
-        autoInject: true,
         transducer: hmrPath,
         chunks,
         filename: mod.input.html,
