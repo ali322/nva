@@ -8,7 +8,14 @@
     "lib"
   ],
   "scripts": {
-    "test": "eslint lib"
+    "test": "eslint lib",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "git add"
+    ]
   },
   "author": "alichen",
   "license": "MIT",
