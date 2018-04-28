@@ -92,8 +92,8 @@ module.exports = context => {
           beforeServerBuild(serverConfig)
         )
       }
+      // cleanup dist
       del.sync(join(distFolder, serverFolder))
-      /** clean dist */
       forEach(mods, (mod, name) => {
         Object.keys(mod.output).forEach(v => {
           if (isString(mod.output[v])) {
@@ -138,7 +138,10 @@ module.exports = context => {
       if (typeof beforeVendor === 'function') {
         vendorConfig = mergeConfig(vendorConfig, beforeVendor(vendorConfig))
       }
+
+      // cleanup vendor dist
       del.sync(isDev ? output.vendorDevPath : output.vendorPath)
+
       const compiler = webpack(vendorConfig)
       compiler.run(function(err, stats) {
         if (err) {
