@@ -7,11 +7,8 @@ const startsWith = require('lodash/startsWith')
 const every = require('lodash/every')
 const merge = require('webpack-merge')
 const { dirname, basename, resolve } = require('path')
-const {
-  existsSync,
-  outputJsonSync,
-  readJsonSync
-} = require('fs-extra')
+const execSync = require('child_process').execSync
+const { existsSync, outputJsonSync, readJsonSync } = require('fs-extra')
 const chalk = require('chalk')
 const opn = require('opn')
 
@@ -119,7 +116,19 @@ exports.openBrowser = (target, url) => {
     if (target !== 'default') {
       opts.app = target.split(',')
     }
-    let opener = opn(url, opts)
-    opener.catch(err => console.log(chalk.red('canot open in browser'), err))
+    if (process.platform === 'darwin' && target === 'google chrome') {
+      try {
+        execSync('ps cax | grep "Google Chrome"')
+        execSync(`osascript open-chrome.applescript "${encodeURI(url)}"`, {
+          cwd: __dirname,
+          stdio: 'ignore'
+        })
+      } catch (err) {
+        console.log(chalk.red('canot open in browser'), err)
+      }
+    } else {
+      let opener = opn(url, opts)
+      opener.catch(err => console.log(chalk.red('canot open in browser'), err))
+    }
   }
 }
