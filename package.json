@@ -12,8 +12,7 @@
   "scripts": {
     "test": "ava --verbose",
     "test:before": "node test/fixture/setup.js",
-    "test:after": "node test/fixture/teardown.js",
-    "precommit": "lint-staged"
+    "test:after": "node test/fixture/teardown.js"
   },
   "lint-staged": {
     "*.js": [
