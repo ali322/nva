@@ -53,14 +53,14 @@ exports.cssLoaders = (context, preprocessor = '') => {
     if (typeof preprocessor === 'string') {
       loaders = loaders.concat([
         {
-          loader: `${preprocessor}-loader`,
+          loader: require.resolve(`${preprocessor}-loader`),
           options: { sourceMap: true }
         }
       ])
     } else if (typeof preprocessor === 'object') {
       loaders = loaders.concat([
         assign({}, preprocessor, {
-          loader: preprocessor.loader
+          loader: require.resolve(preprocessor.loader)
         })
       ])
     } else {
