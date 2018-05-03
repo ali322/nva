@@ -53,16 +53,12 @@ exports.cssLoaders = (context, preprocessor = '') => {
     if (typeof preprocessor === 'string') {
       loaders = loaders.concat([
         {
-          loader: require.resolve(`${preprocessor}-loader`),
+          loader: `${preprocessor}-loader`,
           options: { sourceMap: true }
         }
       ])
     } else if (typeof preprocessor === 'object') {
-      loaders = loaders.concat([
-        assign({}, preprocessor, {
-          loader: require.resolve(preprocessor.loader)
-        })
-      ])
+      loaders = loaders.concat([preprocessor])
     } else {
       throw new Error('invalid preprocessor')
     }
