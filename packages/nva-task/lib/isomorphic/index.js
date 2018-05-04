@@ -3,7 +3,6 @@ const forEach = require('lodash/forEach')
 const isString = require('lodash/isString')
 const webpack = require('webpack')
 const del = require('del')
-const { addMod, removeMod } = require('../common/mod')
 const { vendorManifest, mergeConfig, checkVendor } = require('../common')
 const { merge } = require('nva-util')
 const bus = require('./event-bus')
@@ -53,12 +52,6 @@ module.exports = context => {
   }
 
   const tasks = {
-    addMod(names, answers, template) {
-      addMod(names, answers, template, context)
-    },
-    removeMod(names) {
-      removeMod(names, context)
-    },
     build({ profile }) {
       if (
         checkVendor(vendors, join(output.vendorPath, vendorSourceMap)) === false

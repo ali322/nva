@@ -39,7 +39,19 @@ nva dev -p <port>
 ```
 start develop server that [hot-module-replacement](http://webpack.github.io/docs/hot-module-replacement-with-webpack.html)(HMR) enabled,feel free get into your own business
 
-3. build project
+3. add module in project
+
+```bash
+nva mod foo
+// or add mod which copied from existed module
+nva mod foo -t bar
+// delete existed module
+nva mod foo -d
+```
+
+add module directory in source path, if `spa` is `false` it will add build entry in `bundle.json`
+
+4. build project
 
 ```bash
 nva build

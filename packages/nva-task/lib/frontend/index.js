@@ -3,7 +3,6 @@ const del = require('del')
 const forEach = require('lodash/forEach')
 const isString = require('lodash/isString')
 const { join } = require('path')
-const { addMod, removeMod } = require('../common/mod')
 const { vendorManifest, mergeConfig, checkVendor } = require('../common')
 const { merge } = require('nva-util')
 
@@ -23,12 +22,6 @@ module.exports = context => {
   } = context
 
   const tasks = {
-    addMod(names, answers, template) {
-      addMod(names, answers, template, context)
-    },
-    removeMod(names) {
-      removeMod(names, context)
-    },
     build({ profile }) {
       if (
         checkVendor(vendors, join(output.vendorPath, vendorSourceMap)) === false

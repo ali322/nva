@@ -8,6 +8,8 @@ module.exports = options => {
     error('unsupported type')
   }
   const task = require(`./${type}`)(context)
+  task.addMod = (name, answers, template) => core.mod.addMod(name, answers, template, context)
+  task.removeMod = (names) => core.mod.removeMod(names, context)
   task.context = context
   return task
 }

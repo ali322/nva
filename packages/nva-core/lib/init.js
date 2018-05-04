@@ -1,8 +1,8 @@
 const omit = require('lodash/omit')
 const mapValues = require('lodash/mapValues')
-const isString = require('lodash/isString')
-const { merge, relativeURL } = require('nva-util')
+const { merge } = require('nva-util')
 const { join, posix, resolve, sep } = require('path')
+const { initMod } = require('./mod')
 
 function mixin(proj) {
   const {
@@ -95,45 +95,4 @@ module.exports = context => {
     },
     projContext
   )
-}
-
-const initMod = (mod, name, context) => {
-  const {
-    sourceFolder,
-    jsExt,
-    cssExt,
-    htmlExt,
-    viewFolder,
-    distFolder
-  } = context
-
-  // input
-  let input = merge(mod.input) || {}
-  input.js = isString(input.js)
-    ? input.js
-    : join(sourceFolder, name, name + jsExt)
-  input.css =
-    isString(input.css) || input.css === false
-      ? input.css
-      : join(sourceFolder, name, name + cssExt)
-  input.js = resolve(input.js)
-  input.css = isString(input.css) ? resolve(input.css) : input.css
-  input.html = isString(input.html)
-    ? input.html
-    : viewFolder
-      ? join(viewFolder, name + htmlExt)
-      : join(sourceFolder, name, name + htmlExt)
-  input.html = resolve(input.html)
-
-  // output
-  let output = merge(mod.output) || {}
-  output.js = isString(output.js) ? relativeURL(distFolder, output.js) : false
-  output.css = isString(output.css)
-    ? relativeURL(distFolder, output.css)
-    : false
-  output.html = isString(output.html)
-    ? output.html
-    : join(distFolder, name, `${name}.html`)
-
-  return { input, output }
 }

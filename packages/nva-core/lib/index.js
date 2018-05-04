@@ -1,18 +1,16 @@
 const { resolve, join, relative } = require('path')
 const chalk = require('chalk')
-const omit = require('lodash/omit')
 const chokidar = require('chokidar')
 const {
   checkFile,
   checkDir,
   error,
   merge,
-  writeModConf,
   prettyError
 } = require('nva-util')
 const initializer = require('./init')
 
-module.exports = (options = {}) => {
+const core = (options = {}) => {
   const namespace = options.namespace ? options.namespace : 'nva'
   const rootPath = `.${namespace}`
   const {
@@ -40,14 +38,6 @@ module.exports = (options = {}) => {
   })
   const mock = loadMock(mockPath)
 
-  function addMods(more) {
-    writeModConf(modConfPath, merge(mods, more))
-  }
-
-  function removeMods(keys) {
-    writeModConf(modConfPath, omit(mods, keys))
-  }
-
   function startWatcher(strict) {
     let rcs = ['.babelrc']
     if (strict) {
@@ -62,8 +52,7 @@ module.exports = (options = {}) => {
     mods,
     proj: merge({ type: 'frontend', favicon, mock }, proj),
     vendors,
-    addMods,
-    removeMods,
+    modConfPath,
     startWatcher,
     hooks
   }
@@ -104,3 +93,6 @@ function loadMock(path) {
   }
   return join(path, '**', '*.@(json|js)')
 }
+
+core.mod = require('./mod')
+module.exports = core

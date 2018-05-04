@@ -4,7 +4,6 @@ const program = require('commander')
 const chalk = require('chalk')
 const path = require('path')
 const fs = require('fs')
-const reject = require('lodash/reject')
 const inquirer = require('inquirer')
 const rm = require('rimraf').sync
 
@@ -49,13 +48,7 @@ if (projectName === '[object Object]') {
   process.exit(1)
 }
 
-let questions = config.questions('init')
-
-if (repo) {
-  questions = reject(questions, function (v) {
-    return v.name === 'template'
-  })
-}
+const questions = config.questions('init')
 
 function generate (answers) {
   generator(projectName, projectPath, answers, repo, !noInstall, useYarn)
