@@ -38,7 +38,10 @@ module.exports = context => {
       js: require.resolve('happypack/loader') + '?id=js',
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
-      stylus: vueStyleLoaders(context, 'stylus'),
+      stylus: vueStyleLoaders(context, {
+        loader: 'stylus-loader',
+        options: { sourceMap: { comment: false } }
+      }),
       scss: vueStyleLoaders(context, {
         loader: 'sass-loader',
         options: { sourceMap: true }
@@ -74,6 +77,14 @@ module.exports = context => {
       use: cssLoaders(context, 'less')
     },
     {
+      test: /\.sass/,
+      exclude: /node_modules/,
+      use: cssLoaders(context, {
+        loader: 'sass-loader',
+        options: { indentedSyntax: true, sourceMap: true }
+      })
+    },
+    {
       test: /\.scss/,
       exclude: /node_modules/,
       use: cssLoaders(context, {
@@ -84,7 +95,10 @@ module.exports = context => {
     {
       test: /\.styl/,
       exclude: /node_modules/,
-      use: cssLoaders(context, 'stylus')
+      use: cssLoaders(context, {
+        loader: 'stylus-loader',
+        options: { sourceMap: { comment: false } }
+      })
     },
     {
       test: /\.css/,
