@@ -49,19 +49,7 @@ nva dev --silent
 
 使用 `nva dev` 启动开发服务器,启动完毕后会打开用户默认浏览器
 
-3. 添加项目模块
-
-```bash
-nva mod foo
-// 或者基于已存在的模块复制一个新模块
-nva mod foo -t bar
-// 删除已存在的模块
-nva mod foo -d
-```
-
-此操作会在源码路径下新增模块目录, 如果 `spa` 为 `false` 也会在 `bundle.json` 中增加构建入口
-
-4. 测试
+3. 测试
 
 ```bash
 nva test
@@ -76,7 +64,7 @@ nva-test-e2e -r path/ro/server.js -c path/to/config.js
 ```
 基于nightwatch的集成测试,测试浏览器为 chrome
 
-5. 打包发布
+4. 打包发布
 
 ```bash
 nva build
@@ -105,6 +93,28 @@ nva build --silent
   - react + redux + react-router + koa@2 的单页面项目
   - vue + vuex + koa@2 的多页面项目
   - vue + vuex + vue-router + koa@2 的单页面项目
+
+## 更多命令
+
+### nva mod
+
+```bash
+nva mod foo
+// 或者基于已存在的模块复制一个新模块
+nva mod foo -t bar
+// 删除已存在的模块
+nva mod foo -d
+```
+
+此操作会在源码路径下新增模块目录, 如果 `spa` 为 `false` 也会在 `bundle.json` 中增加构建入口
+
+### nva gen
+
+```bash
+nva gen --input tpl/foo --output dist
+```
+
+渲染所有位于 `tpl/foo` 目录下的模板, 然后拷贝至 `dist` 目录, 模板变量定义文件 `tpl/foo/meta.js`, 所有模板位于 `tpl/foo/template` 目录
 
 ## 文档
 

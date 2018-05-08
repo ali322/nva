@@ -39,19 +39,8 @@ nva dev -p <port>
 ```
 start develop server that [hot-module-replacement](http://webpack.github.io/docs/hot-module-replacement-with-webpack.html)(HMR) enabled,feel free get into your own business
 
-3. add module in project
 
-```bash
-nva mod foo
-// or add mod which copied from existed module
-nva mod foo -t bar
-// delete existed module
-nva mod foo -d
-```
-
-add module directory in source path, if `spa` is `false` it will add build entry in `bundle.json`
-
-4. build project
+3. build project
 
 ```bash
 nva build
@@ -77,6 +66,29 @@ koa@2+react or koa@2+vue,server side render
 - single page project with react + redux + react-router + koa@2
 - multiple pages project with vue + vuex + koa@2
 - single page project with vue + vuex + vue-router + koa@2
+
+## More Cli
+
+### nva mod
+
+```bash
+nva mod foo
+// or add mod which copied from existed module
+nva mod foo -t bar
+// delete existed module
+nva mod foo -d
+```
+
+add module directory in source path, if `spa` is `false` it will add build entry in `bundle.json`
+
+### nva gen
+
+```bash
+nva gen --input tpl/foo --output dist
+```
+
+render all templates in `tpl/foo` and output files in `dist`, `tpl/foo` directory should contain `meta.js` which defined some template variables and all templates live in `tpl/foo/template`
+
 
 ## Documentation
 

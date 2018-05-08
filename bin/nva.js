@@ -10,6 +10,7 @@ program
   .command('init [project]', 'generate project by template')
   .command('list', 'list all available templates')
   .command('mod', 'module management')
+  .command('gen', 'generate code by templates')
   .command('dev', 'start dev server')
   .command('build', 'build source')
   .command('vendor', 'build vendor libraries')
@@ -17,7 +18,7 @@ program
   .command('*')
   .action(function (cmd) {
     if (
-      ['init', 'list', 'mod', 'dev', 'build', 'vendor', 'use'].indexOf(cmd) === -1
+      ['init', 'list', 'mod', 'gen', 'dev', 'build', 'vendor', 'use'].indexOf(cmd) === -1
     ) {
       console.log('unsupported nva command')
       process.exit(1)
