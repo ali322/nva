@@ -1,7 +1,8 @@
-const { join, basename } = require('path')
+const { join, resolve, posix } = require('path')
+const { parse } = require('url')
 const isString = require('lodash/isString')
 const BrowserSync = require('browser-sync')
-const { error, checkPort, emojis, merge } = require('nva-util')
+const { error, checkPort, emojis, merge, relativeURL } = require('nva-util')
 const { mergeConfig, openBrowser } = require('../common')
 
 module.exports = (context, options) => {
@@ -30,7 +31,7 @@ module.exports = (context, options) => {
   })
   const bufs = {}
   const afterInject = (filename, html) => {
-    bufs[basename(filename)] = html
+    bufs[posix.join(posix.sep, relativeURL(resolve(sourceFolder), filename))] = html
   }
   let hotUpdateConfig = require('./webpack.hot-update')(
     merge(context, { afterInject }),
@@ -89,11 +90,12 @@ module.exports = (context, options) => {
   if (isString(spa) || Array.isArray(spa)) {
     rewrites = spa
   }
-
   const app = require('nva-server')({
     content: (req, res, next) => {
+      let url = req.url.endsWith(posix.sep) && rewrites === false ? posix.join(req.url, 'index.html') : req.url
+      url = parse(url)
       res.setHeader('Content-Type', 'text/html')
-      res.end(bufs[basename(req.url)])
+      res.end(bufs[url.pathname])
     },
     asset: '.',
     proxy,
