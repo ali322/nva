@@ -4,6 +4,7 @@ const isString = require('lodash/isString')
 const BrowserSync = require('browser-sync')
 const { error, checkPort, emojis, merge, relativeURL } = require('nva-util')
 const { mergeConfig, openBrowser } = require('../common')
+const bus = require('../common/event-bus')
 
 module.exports = (context, options) => {
   const {
@@ -30,8 +31,15 @@ module.exports = (context, options) => {
     process.exit(0)
   })
   const bufs = {}
-  const afterInject = (filename, html) => {
-    bufs[posix.join(posix.sep, relativeURL(resolve(sourceFolder), filename))] = html
+  const afterInject = (filename, injector) => {
+    const injectTo = file => {
+      const key = posix.join(posix.sep, relativeURL(resolve(sourceFolder), file))
+      bufs[key] = injector(file)
+    }
+    bus.on('html-changed', (changed) => {
+      injectTo(changed)
+    })
+    injectTo(filename)
   }
   let hotUpdateConfig = require('./webpack.hot-update')(
     merge(context, { afterInject }),
@@ -92,7 +100,10 @@ module.exports = (context, options) => {
   }
   const app = require('nva-server')({
     content: (req, res, next) => {
-      let url = req.url.endsWith(posix.sep) && rewrites === false ? posix.join(req.url, 'index.html') : req.url
+      let url =
+        req.url.endsWith(posix.sep) && rewrites === false
+          ? posix.join(req.url, 'index.html')
+          : req.url
       url = parse(url)
       res.setHeader('Content-Type', 'text/html')
       res.end(bufs[url.pathname])
@@ -115,7 +126,15 @@ module.exports = (context, options) => {
         port,
         // server: spa ? false : [sourceFolder, distFolder],
         middleware: middlewares.concat([app]),
-        files: [join(sourceFolder, '**', '*.html')],
+        files: [
+          {
+            match: join(sourceFolder, '**', '*.html'),
+            fn(evt, file) {
+              bus.emit('html-changed', file)
+              browserSync.reload({ stream: false })
+            }
+          }
+        ],
         online: false,
         notify: true,
         open: false,

@@ -28,7 +28,6 @@ module.exports = context => {
       name: '[hash:8].[ext]'
     })
   }
-
   const vueLoaderOptions = {
     postcss: {
       plugins: postcssOptions(context).plugins,
