@@ -1,6 +1,4 @@
 const { join } = require('path')
-const forEach = require('lodash/forEach')
-const isString = require('lodash/isString')
 const webpack = require('webpack')
 const del = require('del')
 const { vendorManifest, mergeConfig, checkVendor } = require('../common')
@@ -13,7 +11,7 @@ module.exports = context => {
     serverFolder,
     serverCompile,
     distFolder,
-    chunkFolder,
+    assetFolder,
     sourceFolder,
     bundleFolder,
     beforeBuild,
@@ -23,7 +21,6 @@ module.exports = context => {
     beforeVendor,
     afterVendor,
     hooks,
-    mods,
     vendors,
     vendorSourceMap
   } = context
@@ -86,16 +83,14 @@ module.exports = context => {
         )
       }
       // cleanup dist
-      del.sync(join(distFolder, serverFolder))
-      forEach(mods, (mod, name) => {
-        Object.keys(mod.output).forEach(v => {
-          if (isString(mod.output[v])) {
-            del.sync(mod.output[v])
-          }
-        })
-        del.sync(join(distFolder, sourceFolder, name))
-      })
-      del.sync(join(distFolder, chunkFolder))
+      del.sync([
+        `${distFolder}/**`,
+        `!${distFolder}`,
+        `!${join(distFolder, sourceFolder)}`,
+        `!${join(distFolder, sourceFolder, assetFolder)}/**`,
+        `!${output.vendorDevPath}/**`,
+        `!${output.vendorPath}/**`
+      ])
 
       createBundle(merge(context, { isDev: false }), profile)
       const compiler = webpack(

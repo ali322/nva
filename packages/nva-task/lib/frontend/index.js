@@ -1,7 +1,5 @@
 const webpack = require('webpack')
 const del = require('del')
-const forEach = require('lodash/forEach')
-const isString = require('lodash/isString')
 const { join } = require('path')
 const { vendorManifest, mergeConfig, checkVendor } = require('../common')
 const { merge } = require('nva-util')
@@ -9,14 +7,13 @@ const { merge } = require('nva-util')
 module.exports = context => {
   const {
     distFolder,
-    chunkFolder,
+    assetFolder,
     output,
     beforeBuild,
     afterBuild,
     beforeVendor,
     afterVendor,
     hooks,
-    mods,
     vendors,
     vendorSourceMap
   } = context
@@ -40,15 +37,13 @@ module.exports = context => {
         releaseConfig = mergeConfig(releaseConfig, beforeBuild(releaseConfig))
       }
       // cleanup dist
-      forEach(mods, (mod, name) => {
-        Object.keys(mod.output).forEach(v => {
-          if (isString(mod.output[v])) {
-            del.sync(mod.output[v])
-          }
-        })
-        del.sync(join(distFolder, name))
-      })
-      del.sync(join(distFolder, chunkFolder))
+      del.sync([
+        `${distFolder}/**`,
+        `!${distFolder}`,
+        `!${join(distFolder, assetFolder)}/**`,
+        `!${output.vendorDevPath}/**`,
+        `!${output.vendorPath}/**`
+      ])
 
       const compiler = webpack(releaseConfig)
       compiler.run(function(err, stats) {
