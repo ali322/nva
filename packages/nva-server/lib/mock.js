@@ -1,5 +1,6 @@
 const jsf = require('json-schema-faker')
 const { parse } = require('url')
+const { resolve } = require('path')
 const glob = require('glob')
 const chalk = require('chalk')
 const connect = require('connect')
@@ -32,7 +33,7 @@ module.exports = conf => {
       files.forEach(file => {
         let rules = []
         try {
-          rules = require(file)
+          rules = require(resolve(file))
         } catch (e) {
           console.log(prettyError(e))
           mocks[file] = []
@@ -47,7 +48,7 @@ module.exports = conf => {
       delete require.cache[file]
       let rules = []
       try {
-        rules = require(file)
+        rules = require(resolve(file))
       } catch (e) {
         console.log(prettyError(e))
       }
@@ -64,7 +65,7 @@ module.exports = conf => {
       if (mocks[file] === undefined) {
         let rules = []
         try {
-          rules = require(file)
+          rules = require(resolve(file))
         } catch (e) {
           console.log(prettyError(e))
         }
