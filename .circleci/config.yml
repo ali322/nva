@@ -38,5 +38,5 @@ jobs:
       - run: 
           name: test
           command: yarn test
-          no_output_timeout: 50m
+          no_output_timeout: 100m
       - run: node test/fixture/teardown.js
