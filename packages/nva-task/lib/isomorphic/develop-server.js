@@ -3,7 +3,7 @@ const nodemon = require('./nodemon')
 const { join, dirname } = require('path')
 const { mergeConfig, openBrowser } = require('../common')
 const { merge } = require('nva-util')
-const bus = require('.../common/event-bus')
+const bus = require('../common/event-bus')
 
 module.exports = function(context, options) {
   const {

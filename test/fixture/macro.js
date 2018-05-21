@@ -21,6 +21,9 @@ exports.devMacro = (t, type, branch) => {
         }
         t.end()
     })
+    child.stderr.on('data', data => {
+        console.error(data.toString())
+    })
 }
 
 exports.buildMacro = (t, type, branch) => {
