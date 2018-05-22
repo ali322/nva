@@ -134,7 +134,7 @@ module.exports = (context, profile) => {
                     `\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,
                     'gi'
                   ),
-                  `${staticPrefix}/${staticFolder}$1`
+                  isFunction(staticPrefix) ? `${staticPrefix(staticFolder)}$1` : `${staticPrefix}/${staticFolder}$1`
                 ),
             '**/*.css': content =>
                 content.replace(
@@ -142,7 +142,7 @@ module.exports = (context, profile) => {
                     `(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`,
                     'gi'
                   ),
-                  `$1${staticPrefix}/${staticFolder}$2`
+                  isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
                 ),
             '**/*.html': content =>
                 content.replace(
@@ -150,7 +150,7 @@ module.exports = (context, profile) => {
                     `([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,
                     'gi'
                   ),
-                  `$1${staticPrefix}/${staticFolder}$2`
+                  isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
                 )
           }
         }),
