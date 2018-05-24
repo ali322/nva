@@ -57,7 +57,6 @@ module.exports = [{
 [{
     "url": "/mock/users",
     "method": "post",
-    "type": "jsf",
     "response": (req) => {
         if (req.body.role === 'admin') {
             return {username: 'root'}
@@ -74,7 +73,46 @@ module.exports = [{
 [{
     "url": "/mock/users",
     "method": "get",
-    "type": "jsf",
+    "response": (req) => {
+        return mockJS.mock({...})
+    }
+}]
+```
+
+解析请求中的 `:` 参数
+
+```javascript
+[{
+    "url": "/mock/user/:id",
+    "method": "get",
+    "response": (req) => {
+        let id = req.params.id
+        return mockJS.mock({...})
+    }
+}]
+
+增加自定义响应头
+
+```javascript
+[{
+    "url": "/mock/users",
+    "method": "get",
+    "headers": {
+        "customizeHeader": "foobar"
+    },
+    "response": (req) => {
+        return mockJS.mock({...})
+    }
+}]
+```
+
+延迟 300ms 响应
+
+```javascript
+[{
+    "url": "/mock/users",
+    "method": "get",
+    "delay": 300,
     "response": (req) => {
         return mockJS.mock({...})
     }

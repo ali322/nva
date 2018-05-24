@@ -57,7 +57,6 @@ the `response` field also can defined as function, make mock api more flexible
 [{
     "url": "/mock/users",
     "method": "post",
-    "type": "jsf",
     "response": (req) => {
         if (req.body.role === 'admin') {
             return {username: 'root'}
@@ -74,7 +73,46 @@ then choose your own preferred fake data generator, like `mockJS`
 [{
     "url": "/mock/users",
     "method": "get",
-    "type": "jsf",
+    "response": (req) => {
+        return mockJS.mock({...})
+    }
+}]
+```
+
+parse url params
+
+```javascript
+[{
+    "url": "/mock/user/:id",
+    "method": "get",
+    "response": (req) => {
+        let id = req.params.id
+        return mockJS.mock({...})
+    }
+}]
+
+add customize headers
+
+```javascript
+[{
+    "url": "/mock/users",
+    "method": "get",
+    "headers": {
+        "customizeHeader": "foobar"
+    },
+    "response": (req) => {
+        return mockJS.mock({...})
+    }
+}]
+```
+
+delay 300ms to responed
+
+```javascript
+[{
+    "url": "/mock/users",
+    "method": "get",
+    "delay": 300,
     "response": (req) => {
         return mockJS.mock({...})
     }
