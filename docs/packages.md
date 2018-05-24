@@ -87,7 +87,7 @@ cli options
 |     param      |  default   |     description     |
 | :----------: | :----: | :----------: |
 | -c or —-config |   none    |    test config    |
-| —-browser |   phantom.js    |    test on which browser    |
+| —-browser |  Chrome    |    test on which browser    |
 
 config describle
 

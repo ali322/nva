@@ -88,7 +88,7 @@ nva-test-e2e -c path/to/config.js
 |     参数名      |  默认   |     描述     |
 | :----------: | :----: | :----------: |
 | -c or —-config |   无    |    测试配置    |
-| —-browser |   chrome    |    测试浏览器    |
+| —-browser |   Chrome    |    测试浏览器    |
 
 配置文件描述
 
