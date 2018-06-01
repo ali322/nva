@@ -7,7 +7,6 @@ const { initMod } = require('./mod')
 function mixin(proj) {
   const {
     isSSR,
-    output,
     distFolder,
     sourceFolder,
     vendorFolder,
@@ -19,21 +18,18 @@ function mixin(proj) {
   return {
     imagePrefix: posix.join('..', assetFolder, imageFolder),
     fontPrefix: posix.join('..', assetFolder, fontFolder),
-    output: merge(
-      {
-        path: isSSR ? resolve(distFolder, sourceFolder) : resolve(distFolder),
-        cssPath: join('[name]', '[name]-[hash:8].css'),
-        imagePath: join(assetFolder, imageFolder, sep),
-        fontPath: join(assetFolder, fontFolder, sep),
-        vendorPath: isSSR
-          ? join(distFolder, sourceFolder, vendorFolder)
-          : join(distFolder, vendorFolder),
-        vendorDevPath: isSSR
-          ? join(distFolder, sourceFolder, vendorDevFolder)
-          : join(distFolder, vendorDevFolder)
-      },
-      output
-    )
+    output: {
+      path: isSSR ? resolve(distFolder, sourceFolder) : resolve(distFolder),
+      cssPath: join('[name]', '[name]-[hash:8].css'),
+      imagePath: join(assetFolder, imageFolder, sep),
+      fontPath: join(assetFolder, fontFolder, sep),
+      vendorPath: isSSR
+        ? join(distFolder, sourceFolder, vendorFolder)
+        : join(distFolder, vendorFolder),
+      vendorDevPath: isSSR
+        ? join(distFolder, sourceFolder, vendorDevFolder)
+        : join(distFolder, vendorDevFolder)
+    }
   }
 }
 
@@ -65,8 +61,7 @@ module.exports = context => {
     imageFolder: 'image',
     outputPrefix: '',
 
-    hmrPath: '/hmr/',
-    output: {}
+    hmrPath: '/hmr/'
   }
 
   if (isSSR) {
@@ -82,7 +77,8 @@ module.exports = context => {
     })
   }
 
-  projContext = merge(projContext, mixin(projContext), proj)
+  projContext = merge(projContext, proj)
+  projContext = merge(mixin(projContext), projContext)
 
   let modsContext = mapValues(mods, (mod, name) => {
     return merge(mod, initMod(mod, name, projContext))
