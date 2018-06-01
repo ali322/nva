@@ -7,7 +7,6 @@ let { initMod } = require('./mod')
 function mixin(proj) {
   let {
     isSSR,
-    output,
     distFolder,
     sourceFolder,
     vendorFolder,
@@ -19,7 +18,7 @@ function mixin(proj) {
   return {
     imagePrefix: posix.join('..', assetFolder, imageFolder),
     fontPrefix: posix.join('..', assetFolder, fontFolder),
-    output: merge({
+    output: {
       path: isSSR
         ? resolve(distFolder, sourceFolder)
         : resolve(distFolder),
@@ -32,7 +31,7 @@ function mixin(proj) {
       vendorDevPath: isSSR
         ? join(distFolder, sourceFolder, vendorDevFolder)
         : join(distFolder, vendorDevFolder)
-    }, output)
+    }
   }
 }
 
@@ -63,8 +62,7 @@ module.exports = context => {
     imageFolder: 'image',
     outputPrefix: '',
 
-    hmrPath: '/hmr/',
-    output: {}
+    hmrPath: '/hmr/'
   }
 
   if (isSSR) {
@@ -78,7 +76,8 @@ module.exports = context => {
     })
   }
 
-  projContext = merge(projContext, mixin(projContext), proj)
+  projContext = merge(projContext, proj)
+  projContext = merge(mixin(projContext), projContext)
 
   let modsContext = mapValues(mods, (mod, name) => {
     return merge(mod, initMod(mod, name, projContext))
