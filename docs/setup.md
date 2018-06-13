@@ -65,7 +65,7 @@ nva bundle <bundle name, ...> -t <copy from bundle>
 #### delete bundle in project
 
 ```bash
-nva mod <bundle name, ...> -d
+nva bundle <bundle name, ...> -d
 ```
 
 #### `vendor.json` project vendors settings
