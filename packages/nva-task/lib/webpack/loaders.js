@@ -38,15 +38,15 @@ module.exports = context => {
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
       stylus: vueStyleLoaders(context, {
-        loader: 'stylus-loader',
+        loader: require.resolve('stylus-loader'),
         options: { sourceMap: { comment: false } }
       }),
       scss: vueStyleLoaders(context, {
-        loader: 'sass-loader',
+        loader: require.resolve('sass-loader'),
         options: { sourceMap: true }
       }),
       sass: vueStyleLoaders(context, {
-        loader: 'sass-loader',
+        loader: require.resolve('sass-loader'),
         options: { indentedSyntax: true, sourceMap: true }
       })
     }

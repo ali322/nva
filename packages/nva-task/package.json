@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.5.73",
+  "version": "0.5.75",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",
@@ -34,12 +34,15 @@
     "happypack": "^5.0.0-beta.3",
     "html-loader": "^0.5.5",
     "inject-html-webpack-plugin": "0.0.39",
+    "less": "^3.8.0",
+    "less-loader": "^4.1.0",
     "lodash": "^4.17.4",
     "mini-css-extract-plugin": "^0.4.0",
     "node-emoji": "^1.8.1",
+    "node-sass": "^4.9.2",
     "nodemon": "^1.17.3",
-    "nva-core": "0.5.73",
-    "nva-server": "0.5.73",
+    "nva-core": "0.5.75",
+    "nva-server": "0.5.75",
     "nva-util": "^0.5.49",
     "opn": "^5.0.0",
     "portfinder": "^1.0.13",
@@ -47,6 +50,7 @@
     "pretty-error": "^2.1.1",
     "progress-webpack-plugin": "0.0.20",
     "resolve-url-loader": "^2.3.0",
+    "sass-loader": "^7.1.0",
     "style-loader": "^0.21.0",
     "tidy-stats-webpack-plugin": "0.0.7",
     "url-loader": "^1.0.1",
@@ -63,6 +67,8 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2"
   }
 }
