@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.5.75",
+  "version": "0.5.76",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",
@@ -41,8 +41,8 @@
     "node-emoji": "^1.8.1",
     "node-sass": "^4.9.2",
     "nodemon": "^1.17.3",
-    "nva-core": "0.5.75",
-    "nva-server": "0.5.75",
+    "nva-core": "0.5.76",
+    "nva-server": "0.5.76",
     "nva-util": "^0.5.49",
     "opn": "^5.0.0",
     "portfinder": "^1.0.13",
@@ -59,7 +59,9 @@
     "webpack-dev-middleware": "^3.0.1",
     "webpack-hot-middleware": "^2.21.2",
     "webpack-merge": "^4.1.2",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-node-externals": "^1.6.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
@@ -67,8 +69,6 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2"
+    "eslint-plugin-standard": "^3.0.1"
   }
 }
