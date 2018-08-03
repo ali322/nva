@@ -79,7 +79,7 @@ module.exports = context => {
       test: /\.sass/,
       exclude: /node_modules/,
       use: cssLoaders(context, {
-        loader: 'sass-loader',
+        loader: require.resolve('sass-loader'),
         options: { indentedSyntax: true, sourceMap: true }
       })
     },
@@ -87,7 +87,7 @@ module.exports = context => {
       test: /\.scss/,
       exclude: /node_modules/,
       use: cssLoaders(context, {
-        loader: 'sass-loader',
+        loader: require.resolve('sass-loader'),
         options: { sourceMap: true }
       })
     },
@@ -95,7 +95,7 @@ module.exports = context => {
       test: /\.styl/,
       exclude: /node_modules/,
       use: cssLoaders(context, {
-        loader: 'stylus-loader',
+        loader: require.resolve('stylus-loader'),
         options: { sourceMap: { comment: false } }
       })
     },
