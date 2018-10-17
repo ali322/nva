@@ -23,8 +23,8 @@ nva task collections,customize for your need
 
 ```javascript
 var tasks = require('nva-tasks')
-tasks.frontend.build() //frontend project build
-task.isomorphic.build()  //isomorphic project build
+tasks.frontend.build() // frontend project build
+task.isomorphic.build()  // isomorphic project build
 ```
   
 #### nva-server

@@ -23,8 +23,8 @@ nva构建任务集合,可以根据需求自定义组合
 
 ```javascript
 var tasks = require('nva-tasks')
-tasks.frontend.build() //前端项目构建
-task.isomorphic.build()  //同构JS项目构建
+tasks.frontend.build() // 前端项目构建
+task.isomorphic.build()  // 同构JS项目构建
 ```
   
 #### nva-server
