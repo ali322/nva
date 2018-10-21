@@ -111,7 +111,6 @@ module.exports = (context, profile) => {
       filename: join('[name]', '[name]-[hash:8].js'),
       chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
     },
-    // context: __dirname,
     resolveLoader: {
       modules: [resolve('node_modules'), 'node_modules']
     },
