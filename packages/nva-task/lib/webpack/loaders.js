@@ -71,6 +71,12 @@ module.exports = context => {
       options: { id: 'js' }
     },
     {
+      test: /\.(ts|tsx)$/,
+      exclude: /node_modules/,
+      loader: require.resolve('awesome-typescript-loader'),
+      options: { useCache: true }
+    },
+    {
       test: /\.less/,
       exclude: /node_modules/,
       use: cssLoaders(context, 'less')
