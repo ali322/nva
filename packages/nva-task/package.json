@@ -52,16 +52,16 @@
     "resolve-url-loader": "^2.3.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.21.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
     "tidy-stats-webpack-plugin": "0.0.7",
     "url-loader": "^1.0.1",
     "webpack": "^4.6.0",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-dev-middleware": "^3.0.1",
     "webpack-hot-middleware": "^2.21.2",
-    "webpack-merge": "^4.1.2",
-    "webpack-node-externals": "^1.6.0",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2"
+    "webpack-merge": "^4.1.4",
+    "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
