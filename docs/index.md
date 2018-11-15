@@ -96,12 +96,12 @@ render all templates in `tpl/foo` and output files in `dist`, `tpl/foo` director
 - [Mock API](./mock.md)
 - [Packages](./packages.md)
 
-[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-image]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: http://en.wikipedia.org/wiki/MIT_License
 
 [npm-url]: https://npmjs.org/package/nva
-[npm-version-image]: http://img.shields.io/npm/v/nva.svg?style=flat
-[npm-downloads-image]: http://img.shields.io/npm/dm/nva.svg?style=flat
+[npm-version-image]: https://img.shields.io/npm/v/nva.svg?style=flat
+[npm-downloads-image]: https://img.shields.io/npm/dm/nva.svg?style=flat
 
 [circleci-url]: https://circleci.com/gh/ali322/nva
 [circleci-image]: 	https://img.shields.io/circleci/project/github/ali322/nva.svg?style=flat
