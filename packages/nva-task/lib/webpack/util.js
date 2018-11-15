@@ -4,8 +4,9 @@ const assign = require('lodash/assign')
 const autoPrefixer = require('autoprefixer')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
+const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
+
 exports.happypackPlugin = (id, loaders) => {
-  const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
   return new HappyPack({
     id,
     verbose: false,
