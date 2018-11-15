@@ -16,6 +16,7 @@ install:
   # install modules
   - npm install
 
+# Setup test
 before_test:
   - node test/fixture/setup.js
 # Post-install test scripts.
