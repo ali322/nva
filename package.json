@@ -1,6 +1,6 @@
 {
   "name": "nva",
-  "version": "0.5.79",
+  "version": "0.5.80",
   "description": "scaffold for frontend and isomorphic project",
   "bin": {
     "nva": "bin/nva.js"
@@ -8,7 +8,6 @@
   "engines": {
     "node": ">=6.11.5"
   },
-  "main": "index.js",
   "scripts": {
     "test": "ava --verbose",
     "test:before": "node test/fixture/setup.js",
@@ -43,7 +42,7 @@
     "inquirer": "^3.0.6",
     "js-yaml": "^3.8.3",
     "lodash": "^4.17.4",
-    "nva-task": "0.5.79",
+    "nva-task": "0.5.80",
     "ora": "^1.2.0",
     "pretty-error": "^2.1.1",
     "rimraf": "^2.5.4",
