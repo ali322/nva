@@ -22,13 +22,19 @@ module.exports = function(context, profile) {
   /** build variables */
   let entry = {}
   let htmls = []
+  let dllRefs = []
   const devServerHost = serverHost(port)
   const baseConfig = configFactory(merge(context, { isDev: true }), profile)
 
   /** add vendors reference */
-  let dllRefs = []
   const sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
   const sourcemap = require(sourcemapPath).output
+  const vendorAssets = (modVendor, type) => {
+    return [
+      posix.join(posix.sep, vendorDevFolder, sourcemap[type][modVendor[type]])
+    ]
+  }
+
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
       const manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
@@ -49,27 +55,16 @@ module.exports = function(context, profile) {
         `?reload=true&path=${devServerHost}/__webpack_hmr`,
       mod.input.js
     ].concat(mod.input.css ? [mod.input.css] : [])
-    let chunks = [name]
 
-    let more = { js: [], css: [] }
-    if (mod.vendor) {
-      if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-        more.js = [
-          posix.join(posix.sep, vendorDevFolder, sourcemap.js[mod.vendor.js])
-        ]
-      }
-      if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-        more.css = [
-          posix.join(posix.sep, vendorDevFolder, sourcemap.css[mod.vendor.css])
-        ]
-      }
-    }
     htmls.push(
       new InjectHtmlPlugin({
         transducer: devServerHost + hmrPath,
-        chunks,
+        chunks: [name],
         filename: mod.input.html,
-        more,
+        more: {
+          js: vendorAssets(mod.vendor, 'js'),
+          css: vendorAssets(mod.vendor, 'css')
+        },
         custom: [
           {
             start: '<!-- start:browser-sync -->',

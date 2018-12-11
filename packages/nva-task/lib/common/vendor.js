@@ -6,7 +6,6 @@ const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 const fromPairs = require('lodash/fromPairs')
 const map = require('lodash/map')
 const isEmpty = require('lodash/isEmpty')
-const isPlainObject = require('lodash/isPlainObject')
 const { merge } = require('nva-util')
 const configFactory = require('../webpack/config')
 
@@ -25,16 +24,12 @@ module.exports = function(context) {
   let entryCSS = {}
   let cssChunks = []
   let vendorConfig = []
-  if (isPlainObject(vendors['js'])) {
-    for (let key in vendors['js']) {
-      entryJS[key] = vendors['js'][key]
-    }
+  for (let key in vendors['js']) {
+    entryJS[key] = vendors['js'][key]
   }
-  if (isPlainObject(vendors['css'])) {
-    for (let key in vendors['css']) {
-      cssChunks.push(key)
-      entryCSS[key] = vendors['css'][key]
-    }
+  for (let key in vendors['css']) {
+    cssChunks.push(key)
+    entryCSS[key] = vendors['css'][key]
   }
 
   const jsConfig = merge(baseConfig, {

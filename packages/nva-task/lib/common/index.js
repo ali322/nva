@@ -62,7 +62,7 @@ exports.checkVendor = (vendors, target) => {
       )
     }
     if (isPlainObject(vendors.css) && isPlainObject(output.css)) {
-      cssChecked = every(Object.keys(vendors.js), v => {
+      cssChecked = every(Object.keys(vendors.css), v => {
         return existsSync(resolve(vendorOutput, output.css[v]))
       })
     }
@@ -71,7 +71,7 @@ exports.checkVendor = (vendors, target) => {
   return true
 }
 
-exports.vendorManifest = (stats, meta, target) => {
+exports.sourceMapByVendor = (stats, meta, target) => {
   let output = {}
   stats.toJson().children.forEach(child => {
     output[child.name] = mapValues(child.assetsByChunkName, v => basename(v))

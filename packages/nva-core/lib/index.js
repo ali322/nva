@@ -1,6 +1,7 @@
 const { resolve, join, relative } = require('path')
 const chalk = require('chalk')
 const chokidar = require('chokidar')
+const isPlainObject = require('lodash/isPlainObject')
 const {
   checkFile,
   checkDir,
@@ -32,7 +33,7 @@ const core = (options = {}) => {
     error('module config is invalid')
     console.log(prettyError(e))
   })
-  const vendors = loadConf(vendorConfPath, e => {
+  const vendors = loadVendor(vendorConfPath, e => {
     error('vendor config is invalid')
     console.log(prettyError(e))
   })
@@ -85,6 +86,22 @@ function loadConf(path, onError) {
     onError(e)
   }
   return conf
+}
+
+function loadVendor(path, onError) {
+  let vendors = loadConf(path, e => {
+    error('vendor config is invalid')
+    console.log(prettyError(e))
+  })
+  if (isPlainObject(vendors)) {
+    vendors.js = isPlainObject(vendors.js) ? vendors.js : {}
+    vendors.css = isPlainObject(vendors.css) ? vendors.css : {}
+  } else {
+    vendors = {
+      js: {}, css: {}
+    }
+  }
+  return vendors
 }
 
 function loadMock(path) {

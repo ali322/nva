@@ -29,14 +29,23 @@ module.exports = (context, profile) => {
   /** build variables */
   let entry = {}
   let htmls = []
+  let dllRefs = []
   let transforms = {}
   let contentExternals = []
   const baseConfig = configFactory(context, profile)
-
-  /** build vendors */
-  let dllRefs = []
   const sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
   const sourcemap = require(sourcemapPath).output
+
+  const vendorAssets = (modVendor, htmlOutput, type) => {
+    let originalURL = join(output.vendorPath, sourcemap[type][modVendor[type]])
+    return [
+      isFunction(outputPrefix)
+            ? outputPrefix(originalURL)
+            : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+    ]
+  }
+
+  /** build vendors */
   if (isPlainObject(vendors.js)) {
     for (let key in vendors['js']) {
       let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
@@ -53,33 +62,13 @@ module.exports = (context, profile) => {
   /** build modules */
   forEach(mods, (mod, name) => {
     entry[name] = [mod.input.js].concat(mod.input.css ? [mod.input.css] : [])
-    let chunks = [name]
     transforms[name] = files =>
       files.map(file => {
         let outputFile = mod.output[extname(file).replace('.', '')]
         return outputFile || file
       })
 
-    let more = { js: [], css: [] }
     const htmlOutput = mod.output.html
-    if (mod.vendor) {
-      if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-        let originalURL = join(output.vendorPath, sourcemap.js[mod.vendor.js])
-        more.js = [
-          isFunction(outputPrefix)
-            ? outputPrefix(originalURL)
-            : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
-        ]
-      }
-      if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-        let originalURL = join(output.vendorPath, sourcemap.css[mod.vendor.css])
-        more.css = [
-          isFunction(outputPrefix)
-            ? outputPrefix(originalURL)
-            : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
-        ]
-      }
-    }
     contentExternals.push(mod.output.html)
     htmls.push(
       new InjectHtmlPlugin({
@@ -89,8 +78,11 @@ module.exports = (context, profile) => {
             : outputPrefix +
                 relativeURL(dirname(htmlOutput), join(distFolder, url))
         },
-        more,
-        chunks,
+        chunks: [name],
+        more: {
+          js: vendorAssets(mod.vendor, htmlOutput, 'js'),
+          css: vendorAssets(mod.vendor, htmlOutput, 'css')
+        },
         filename: mod.input.html,
         output: htmlOutput,
         custom: [

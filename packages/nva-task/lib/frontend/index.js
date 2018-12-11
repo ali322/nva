@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const del = require('del')
 const { join } = require('path')
-const { vendorManifest, mergeConfig, checkVendor } = require('../common')
+const { sourceMapByVendor, mergeConfig, checkVendor } = require('../common')
 const { merge } = require('nva-util')
 
 module.exports = context => {
@@ -80,7 +80,7 @@ module.exports = context => {
           console.error(err)
           return
         }
-        vendorManifest(
+        sourceMapByVendor(
           stats,
           vendors,
           join(

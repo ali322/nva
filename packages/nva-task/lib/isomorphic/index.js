@@ -1,7 +1,7 @@
 const { join } = require('path')
 const webpack = require('webpack')
 const del = require('del')
-const { vendorManifest, mergeConfig, checkVendor } = require('../common')
+const { sourceMapByVendor, mergeConfig, checkVendor } = require('../common')
 const { merge } = require('nva-util')
 const bus = require('../common/event-bus')
 
@@ -136,7 +136,7 @@ module.exports = context => {
           console.error(err)
           return
         }
-        vendorManifest(
+        sourceMapByVendor(
           stats,
           vendors,
           join(

@@ -26,6 +26,17 @@ module.exports = function(context, profile) {
   let htmls = []
   const baseConfig = configFactory(merge(context, { isDev: true }), profile)
 
+  const vendorAssets = (modVendor, type) => {
+    return [
+      posix.join(
+        posix.sep,
+        distFolder,
+        vendorDevFolder,
+        sourcemap[type][modVendor[type]]
+      )
+    ]
+  }
+
   /* build vendors */
   let dllRefs = []
   const sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
@@ -50,37 +61,16 @@ module.exports = function(context, profile) {
       mod.input.js
     ].concat(mod.input.css ? [mod.input.css] : [])
 
-    let chunks = [name]
-    let more = { js: [], css: [] }
-    if (mod.vendor) {
-      if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-        more.js = [
-          posix.join(
-            posix.sep,
-            distFolder,
-            vendorDevFolder,
-            sourcemap.js[mod.vendor.js]
-          )
-        ]
-      }
-      if (mod.vendor.css && sourcemap.css && sourcemap.css[mod.vendor.css]) {
-        more.css = [
-          posix.join(
-            posix.sep,
-            distFolder,
-            vendorDevFolder,
-            sourcemap.css[mod.vendor.css]
-          )
-        ]
-      }
-    }
     htmls.push(
       new InjectHtmlPlugin({
         transducer: hmrPath,
-        chunks,
+        chunks: [name],
         filename: mod.input.html,
         output: afterInject,
-        more
+        more: {
+          js: vendorAssets(mod.vendor, 'js'),
+          css: vendorAssets(mod.vendor, 'css')
+        }
       })
     )
   })
