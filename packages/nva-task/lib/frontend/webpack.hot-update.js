@@ -9,7 +9,6 @@ const configFactory = require('../webpack/config')
 
 module.exports = function(context, profile) {
   const {
-    vendors,
     mods,
     sourceFolder,
     distFolder,
@@ -22,8 +21,9 @@ module.exports = function(context, profile) {
   } = context
   /** build variables */
   let entry = {}
-  let htmls = []
+  let confs = []
   const baseConfig = configFactory(merge(context, { isDev: true }), profile)
+  const sourcemap = require(resolve(output.vendorDevPath, vendorSourceMap)).output
 
   const vendorAssets = (modVendor, type) => {
     if (Array.isArray(modVendor[type])) {
@@ -44,62 +44,55 @@ module.exports = function(context, profile) {
     ]
   }
 
-  /* build vendors */
-  let dllRefs = []
-  const sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
-  const sourcemap = require(sourcemapPath).output
-  for (let key in vendors['js']) {
-    let manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
-    let manifest = require(manifestPath)
-    dllRefs.push(
-      new DllReferencePlugin({
-        context: __dirname,
-        manifest
-      })
-    )
-  }
-
   /** build modules */
   forEach(mods, (mod, name) => {
     entry[name] = [
-      require.resolve('webpack-hot-middleware/client') + '?reload=true',
+      require.resolve('webpack-hot-middleware/client') + `?name=${name}`,
       mod.input.js
     ].concat(mod.input.css ? [mod.input.css] : [])
 
-    htmls.push(
-      new InjectHtmlPlugin({
-        transducer: hmrPath,
-        chunks: [name],
-        filename: mod.input.html,
-        output: afterInject,
-        more: {
-          js: vendorAssets(mod.vendor, 'js'),
-          css: vendorAssets(mod.vendor, 'css')
-        }
+    let dllRefs = (Array.isArray(mod.vendor.js) ? mod.vendor.js : [mod.vendor.js]).map(key => {
+      let manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
+      let manifest = require(manifestPath)
+      return new DllReferencePlugin({
+        context: __dirname,
+        manifest
       })
-    )
+    })
+
+    confs.push(merge(baseConfig, {
+      entry,
+      profile,
+      output: {
+        path: output.path,
+        filename: join('[name]', '[name].js'),
+        chunkFilename: join(chunkFolder, '[id].chunk.js'),
+        publicPath: hmrPath
+      },
+      // bail: true,
+      // context: __dirname,
+      resolveLoader: {
+        modules: ['node_modules', resolve('node_modules')]
+      },
+      resolve: {
+        modules: [sourceFolder, resolve('node_modules'), 'node_modules']
+      },
+      plugins: baseConfig.plugins.concat(dllRefs, [
+        new ProgressPlugin(true, { onProgress: context.onDevProgress }),
+        new TidyStatsPlugin({ ignoreAssets: true }),
+        new InjectHtmlPlugin({
+          transducer: hmrPath,
+          chunks: [name],
+          filename: mod.input.html,
+          output: afterInject,
+          more: {
+            js: vendorAssets(mod.vendor, 'js'),
+            css: vendorAssets(mod.vendor, 'css')
+          }
+        })
+      ])
+    }))
   })
 
-  return merge(baseConfig, {
-    entry,
-    profile,
-    output: {
-      path: output.path,
-      filename: join('[name]', '[name].js'),
-      chunkFilename: join(chunkFolder, '[id].chunk.js'),
-      publicPath: hmrPath
-    },
-    // bail: true,
-    // context: __dirname,
-    resolveLoader: {
-      modules: ['node_modules', resolve('node_modules')]
-    },
-    resolve: {
-      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-    },
-    plugins: baseConfig.plugins.concat(dllRefs, htmls, [
-      new ProgressPlugin(true, { onProgress: context.onDevProgress }),
-      new TidyStatsPlugin({ ignoreAssets: true })
-    ])
-  })
+  return confs
 }

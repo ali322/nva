@@ -1,6 +1,7 @@
 const { join, resolve, posix } = require('path')
 const { parse } = require('url')
 const isString = require('lodash/isString')
+const flatMap = require('lodash/flatMap')
 const BrowserSync = require('browser-sync')
 const { error, checkPort, emojis, merge, relativeURL } = require('nva-util')
 const { mergeConfig, openBrowser } = require('../common')
@@ -33,10 +34,13 @@ module.exports = (context, options) => {
   const bufs = {}
   const afterInject = (filename, injector) => {
     const injectTo = file => {
-      const key = posix.join(posix.sep, relativeURL(resolve(sourceFolder), file))
+      const key = posix.join(
+        posix.sep,
+        relativeURL(resolve(sourceFolder), file)
+      )
       bufs[key] = injector(file)
     }
-    bus.on('html-changed', (changed) => {
+    bus.on('html-changed', changed => {
       injectTo(changed)
     })
     injectTo(filename)
@@ -69,21 +73,23 @@ module.exports = (context, options) => {
     openBrowser(browser, url)
   }
 
-  const middlewares = require('../common/middleware')(
-    hotUpdateConfig,
-    (err, stats) => {
-      if (opened === 0) {
-        opened += 1
-        if (typeof hooks.afterDev === 'function') {
-          hooks.afterDev(err, stats)
+  const middlewares = flatMap(hotUpdateConfig, config =>
+    require('../common/middleware')(
+      config,
+      (err, stats) => {
+        if (opened === 0) {
+          opened += 1
+          if (typeof hooks.afterDev === 'function') {
+            hooks.afterDev(err, stats)
+          }
+          if (typeof afterDev === 'function') {
+            afterDev(err, stats)
+          }
+          openBrowserAfterDev()
         }
-        if (typeof afterDev === 'function') {
-          afterDev(err, stats)
-        }
-        openBrowserAfterDev()
-      }
-    },
-    profile
+      },
+      profile
+    )
   )
 
   let rewrites =

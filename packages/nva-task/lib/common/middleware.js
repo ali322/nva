@@ -26,6 +26,9 @@ module.exports = (config, done, profile) => {
         ignored: [/node_modules/]
       }
     }),
-    webpackHotMiddleware(bundler, { log: false })
+    webpackHotMiddleware(bundler, {
+      log: false
+      // path: `/__webpack_hmr_${config.name}`
+    })
   ]
 }
