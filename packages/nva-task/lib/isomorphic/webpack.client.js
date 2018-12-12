@@ -29,6 +29,11 @@ module.exports = function(context, profile) {
   const sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
   const sourcemap = require(sourcemapPath).output
   const vendorAssets = (modVendor, type) => {
+    if (Array.isArray(modVendor[type])) {
+      return modVendor[type].map(k =>
+        posix.join(posix.sep, vendorFolder, sourcemap[type][k])
+      )
+    }
     return [
       posix.join(posix.sep, vendorFolder, sourcemap[type][modVendor[type]])
     ]

@@ -1,7 +1,6 @@
 const { DllReferencePlugin } = require('webpack')
 const { join, resolve, posix } = require('path')
 const forEach = require('lodash/forEach')
-const isPlainObject = require('lodash/isPlainObject')
 const InjectHtmlPlugin = require('inject-html-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 const ProgressPlugin = require('progress-webpack-plugin')
@@ -27,6 +26,14 @@ module.exports = function(context, profile) {
   const baseConfig = configFactory(merge(context, { isDev: true }), profile)
 
   const vendorAssets = (modVendor, type) => {
+    if (Array.isArray(modVendor[type])) {
+      return modVendor[type].map(k => posix.join(
+        posix.sep,
+        distFolder,
+        vendorDevFolder,
+        sourcemap[type][k]
+      ))
+    }
     return [
       posix.join(
         posix.sep,
@@ -41,17 +48,15 @@ module.exports = function(context, profile) {
   let dllRefs = []
   const sourcemapPath = resolve(output.vendorDevPath, vendorSourceMap)
   const sourcemap = require(sourcemapPath).output
-  if (isPlainObject(vendors.js)) {
-    for (let key in vendors['js']) {
-      let manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
-      let manifest = require(manifestPath)
-      dllRefs.push(
-        new DllReferencePlugin({
-          context: __dirname,
-          manifest
-        })
-      )
-    }
+  for (let key in vendors['js']) {
+    let manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
+    let manifest = require(manifestPath)
+    dllRefs.push(
+      new DllReferencePlugin({
+        context: __dirname,
+        manifest
+      })
+    )
   }
 
   /** build modules */

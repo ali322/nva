@@ -1,7 +1,6 @@
 const { DllReferencePlugin } = require('webpack')
 const { join, resolve, dirname, extname } = require('path')
 const forEach = require('lodash/forEach')
-const isPlainObject = require('lodash/isPlainObject')
 const isFunction = require('lodash/isFunction')
 const InjectHtmlPlugin = require('inject-html-webpack-plugin')
 const ProgressPlugin = require('progress-webpack-plugin')
@@ -37,6 +36,14 @@ module.exports = (context, profile) => {
   const sourcemap = require(sourcemapPath).output
 
   const vendorAssets = (modVendor, htmlOutput, type) => {
+    if (Array.isArray(modVendor[type])) {
+      return modVendor[type].map(k => {
+        let originalURL = join(output.vendorPath, sourcemap[type][k])
+        return isFunction(outputPrefix)
+        ? outputPrefix(originalURL)
+        : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+      })
+    }
     let originalURL = join(output.vendorPath, sourcemap[type][modVendor[type]])
     return [
       isFunction(outputPrefix)
@@ -46,17 +53,15 @@ module.exports = (context, profile) => {
   }
 
   /** build vendors */
-  if (isPlainObject(vendors.js)) {
-    for (let key in vendors['js']) {
-      let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
-      let manifest = require(manifestPath)
-      dllRefs.push(
-        new DllReferencePlugin({
-          context: __dirname,
-          manifest
-        })
-      )
-    }
+  for (let key in vendors['js']) {
+    let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
+    let manifest = require(manifestPath)
+    dllRefs.push(
+      new DllReferencePlugin({
+        context: __dirname,
+        manifest
+      })
+    )
   }
 
   /** build modules */
