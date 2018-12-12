@@ -1,5 +1,6 @@
 const BrowserSync = require('browser-sync')
 const nodemon = require('./nodemon')
+const flatMap = require('lodash/flatMap')
 const { join, dirname } = require('path')
 const { mergeConfig, openBrowser } = require('../common')
 const { merge } = require('nva-util')
@@ -105,21 +106,23 @@ module.exports = function(context, options) {
     hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
   }
   middleware = middleware.concat(
-    require('../common/middleware')(
-      hotUpdateConfig,
-      (err, stats) => {
-        if (opened === 0) {
-          opened += 1
-          if (typeof hooks.afterDev === 'function') {
-            hooks.afterDev(err, stats)
+    flatMap(hotUpdateConfig, config =>
+      require('../common/middleware')(
+        config,
+        (err, stats) => {
+          if (opened === 0) {
+            opened += 1
+            if (typeof hooks.afterDev === 'function') {
+              hooks.afterDev(err, stats)
+            }
+            if (typeof afterDev === 'function') {
+              afterDev(err, stats)
+            }
+            bus.emit('client-build-finished')
           }
-          if (typeof afterDev === 'function') {
-            afterDev(err, stats)
-          }
-          bus.emit('client-build-finished')
-        }
-      },
-      profile
+        },
+        profile
+      )
     )
   )
 

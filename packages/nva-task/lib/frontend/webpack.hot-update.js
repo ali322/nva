@@ -20,7 +20,6 @@ module.exports = function(context, profile) {
     afterInject
   } = context
   /** build variables */
-  let entry = {}
   let confs = []
   const baseConfig = configFactory(merge(context, { isDev: true }), profile)
   const sourcemap = require(resolve(output.vendorDevPath, vendorSourceMap)).output
@@ -46,10 +45,12 @@ module.exports = function(context, profile) {
 
   /** build modules */
   forEach(mods, (mod, name) => {
-    entry[name] = [
-      require.resolve('webpack-hot-middleware/client') + `?name=${name}`,
-      mod.input.js
-    ].concat(mod.input.css ? [mod.input.css] : [])
+    let entry = {
+      [name]: [
+        require.resolve('webpack-hot-middleware/client') + `?name=${name}`,
+        mod.input.js
+      ].concat(mod.input.css ? [mod.input.css] : [])
+    }
 
     let dllRefs = (Array.isArray(mod.vendor.js) ? mod.vendor.js : [mod.vendor.js]).map(key => {
       let manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)

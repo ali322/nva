@@ -14,7 +14,6 @@ const configFactory = require('../webpack/config')
 
 module.exports = (context, profile) => {
   const {
-    vendors,
     mods,
     outputPrefix,
     sourceFolder,
@@ -26,14 +25,9 @@ module.exports = (context, profile) => {
     output
   } = context
   /** build variables */
-  let entry = {}
-  let htmls = []
-  let dllRefs = []
-  let transforms = {}
-  let contentExternals = []
+  let confs = []
   const baseConfig = configFactory(context, profile)
-  const sourcemapPath = resolve(output.vendorPath, vendorSourceMap)
-  const sourcemap = require(sourcemapPath).output
+  const sourcemap = require(resolve(output.vendorPath, vendorSourceMap)).output
 
   const vendorAssets = (modVendor, htmlOutput, type) => {
     if (Array.isArray(modVendor[type])) {
@@ -52,119 +46,117 @@ module.exports = (context, profile) => {
     ]
   }
 
-  /** build vendors */
-  for (let key in vendors['js']) {
-    let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
-    let manifest = require(manifestPath)
-    dllRefs.push(
-      new DllReferencePlugin({
+  /** build modules */
+  forEach(mods, (mod, name) => {
+    let entry = {
+      [name]: [mod.input.js].concat(mod.input.css ? [mod.input.css] : [])
+    }
+
+    const htmlOutput = mod.output.html
+
+    let dllRefs = (Array.isArray(mod.vendor.js) ? mod.vendor.js : [mod.vendor.js]).map(key => {
+      let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
+      let manifest = require(manifestPath)
+      return new DllReferencePlugin({
         context: __dirname,
         manifest
       })
-    )
-  }
+    })
 
-  /** build modules */
-  forEach(mods, (mod, name) => {
-    entry[name] = [mod.input.js].concat(mod.input.css ? [mod.input.css] : [])
-    transforms[name] = files =>
-      files.map(file => {
-        let outputFile = mod.output[extname(file).replace('.', '')]
-        return outputFile || file
-      })
-
-    const htmlOutput = mod.output.html
-    contentExternals.push(mod.output.html)
-    htmls.push(
-      new InjectHtmlPlugin({
-        transducer: function(url) {
-          return isFunction(outputPrefix)
-            ? outputPrefix(url)
-            : outputPrefix +
-                relativeURL(dirname(htmlOutput), join(distFolder, url))
-        },
-        chunks: [name],
-        more: {
-          js: vendorAssets(mod.vendor, htmlOutput, 'js'),
-          css: vendorAssets(mod.vendor, htmlOutput, 'css')
-        },
-        filename: mod.input.html,
-        output: htmlOutput,
-        custom: [
-          {
-            start: '<!-- start:bundle-time -->',
-            end: '<!-- end:bundle-time -->',
-            content: `<meta name="bundleTime" content="${bundleTime()}"/>`
-          }
-        ]
-      })
-    )
-  })
-
-  return merge(baseConfig, {
-    entry,
-    output: {
-      path: output.path,
-      filename: join('[name]', '[name]-[hash:8].js'),
-      chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
-    },
-    resolveLoader: {
-      modules: [resolve('node_modules'), 'node_modules']
-    },
-    resolve: {
-      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-    },
-    plugins: baseConfig.plugins
-      .concat(
-      [
-        new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
-        new ChunkAssetPlugin({
-          chunks: transforms
-        }),
-        new ContentReplacePlugin({
-          external: contentExternals,
-          rules: {
-            '**/*.js': content =>
-                content.replace(
-                  RegExp(
-                    `\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,
-                    'gi'
-                  ),
-                  isFunction(staticPrefix) ? `${staticPrefix(staticFolder)}$1` : `${staticPrefix}/${staticFolder}$1`
-                ),
-            '**/*.css': content =>
-                content.replace(
-                  RegExp(
-                    `(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`,
-                    'gi'
-                  ),
-                  isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
-                ),
-            '**/*.html': content =>
-                content.replace(
-                  RegExp(
-                    `([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,
-                    'gi'
-                  ),
-                  isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
-                )
-          }
-        }),
-        new TidyStatsPlugin()
-      ],
-        dllRefs,
-        htmls
-      )
-      .concat(
-        existsSync(resolve(staticFolder))
-          ? new CopyPlugin([
-            {
-              from: resolve(staticFolder),
-              to: join(output.path, staticFolder),
-              ignore: ['.*']
+    confs.push(merge(baseConfig, {
+      entry,
+      output: {
+        path: output.path,
+        filename: join('[name]', '[name]-[hash:8].js'),
+        chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
+      },
+      resolveLoader: {
+        modules: [resolve('node_modules'), 'node_modules']
+      },
+      resolve: {
+        modules: [sourceFolder, resolve('node_modules'), 'node_modules']
+      },
+      plugins: baseConfig.plugins
+        .concat(
+        [
+          new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
+          new ChunkAssetPlugin({
+            chunks: {
+              [name]: files =>
+              files.map(file => {
+                let outputFile = mod.output[extname(file).replace('.', '')]
+                return outputFile || file
+              })
             }
-          ])
-          : []
-      )
+          }),
+          new ContentReplacePlugin({
+            external: [htmlOutput],
+            rules: {
+              '**/*.js': content =>
+                  content.replace(
+                    RegExp(
+                      `\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,
+                      'gi'
+                    ),
+                    isFunction(staticPrefix) ? `${staticPrefix(staticFolder)}$1` : `${staticPrefix}/${staticFolder}$1`
+                  ),
+              '**/*.css': content =>
+                  content.replace(
+                    RegExp(
+                      `(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`,
+                      'gi'
+                    ),
+                    isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
+                  ),
+              '**/*.html': content =>
+                  content.replace(
+                    RegExp(
+                      `([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,
+                      'gi'
+                    ),
+                    isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
+                  )
+            }
+          }),
+          new InjectHtmlPlugin({
+            transducer: function(url) {
+              return isFunction(outputPrefix)
+                ? outputPrefix(url)
+                : outputPrefix +
+                    relativeURL(dirname(htmlOutput), join(distFolder, url))
+            },
+            chunks: [name],
+            more: {
+              js: vendorAssets(mod.vendor, htmlOutput, 'js'),
+              css: vendorAssets(mod.vendor, htmlOutput, 'css')
+            },
+            filename: mod.input.html,
+            output: htmlOutput,
+            custom: [
+              {
+                start: '<!-- start:bundle-time -->',
+                end: '<!-- end:bundle-time -->',
+                content: `<meta name="bundleTime" content="${bundleTime()}"/>`
+              }
+            ]
+          }),
+          new TidyStatsPlugin()
+        ],
+          dllRefs
+        )
+        .concat(
+          existsSync(resolve(staticFolder))
+            ? new CopyPlugin([
+              {
+                from: resolve(staticFolder),
+                to: join(output.path, staticFolder),
+                ignore: ['.*']
+              }
+            ])
+            : []
+        )
+    }))
   })
+
+  return confs
 }
