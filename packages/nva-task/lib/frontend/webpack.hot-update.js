@@ -1,6 +1,7 @@
 const { DllReferencePlugin } = require('webpack')
 const { join, resolve, posix } = require('path')
 const forEach = require('lodash/forEach')
+const isPlainObject = require('lodash/isPlainObject')
 const InjectHtmlPlugin = require('inject-html-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
 const ProgressPlugin = require('progress-webpack-plugin')
@@ -25,22 +26,27 @@ module.exports = function(context, profile) {
   const sourcemap = require(resolve(output.vendorDevPath, vendorSourceMap)).output
 
   const vendorAssets = (modVendor, type) => {
-    if (Array.isArray(modVendor[type])) {
-      return modVendor[type].map(k => posix.join(
-        posix.sep,
-        distFolder,
-        vendorDevFolder,
-        sourcemap[type][k]
-      ))
+    if (isPlainObject(sourcemap[type])) {
+      if (Array.isArray(modVendor[type])) {
+        return modVendor[type]
+        .filter(k => typeof sourcemap[type][k] === 'string')
+        .map(k => posix.join(
+          posix.sep,
+          distFolder,
+          vendorDevFolder,
+          sourcemap[type][k]
+        ))
+      }
+      return typeof sourcemap[type][modVendor[type]] === 'string' ? [] : [
+        posix.join(
+          posix.sep,
+          distFolder,
+          vendorDevFolder,
+          sourcemap[type][modVendor[type]]
+        )
+      ]
     }
-    return [
-      posix.join(
-        posix.sep,
-        distFolder,
-        vendorDevFolder,
-        sourcemap[type][modVendor[type]]
-      )
-    ]
+    return []
   }
 
   /** build modules */

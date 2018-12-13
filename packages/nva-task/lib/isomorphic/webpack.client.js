@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const { join, resolve, extname, posix } = require('path')
 const forEach = require('lodash/forEach')
+const isPlainObject = require('lodash/isPlainObject')
 const InjectHtmlPlugin = require('inject-html-webpack-plugin')
 const ProgressPlugin = require('progress-webpack-plugin')
 const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
@@ -23,14 +24,19 @@ module.exports = function(context, profile) {
   const sourcemap = require(resolve(output.vendorPath, vendorSourceMap)).output
 
   const vendorAssets = (modVendor, type) => {
-    if (Array.isArray(modVendor[type])) {
-      return modVendor[type].map(k =>
-        posix.join(posix.sep, vendorFolder, sourcemap[type][k])
-      )
+    if (isPlainObject(sourcemap[type])) {
+      if (Array.isArray(modVendor[type])) {
+        return modVendor[type]
+        .filter(k => typeof sourcemap[type][k] === 'string')
+        .map(k =>
+          posix.join(posix.sep, vendorFolder, sourcemap[type][k])
+        )
+      }
+      return typeof sourcemap[type][modVendor[type]] === 'string' ? [] : [
+        posix.join(posix.sep, vendorFolder, sourcemap[type][modVendor[type]])
+      ]
     }
-    return [
-      posix.join(posix.sep, vendorFolder, sourcemap[type][modVendor[type]])
-    ]
+    return []
   }
 
   /** build modules */

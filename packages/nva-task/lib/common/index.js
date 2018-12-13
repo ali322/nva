@@ -31,44 +31,38 @@ exports.mergeConfig = (config, value) => {
 }
 
 exports.checkVendor = (vendors, target) => {
-  if (
-    (vendors.js && isPlainObject(vendors.js)) ||
-    (vendors.css && isPlainObject(vendors.css))
-  ) {
-    if (!existsSync(resolve(target))) return false
-    const sourcemap = readJsonSync(resolve(target))
-    /* check meta */
-    if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) === false) {
-      return false
-    }
-
-    /* check version */
-    const version = sourcemap.version
-    const localModChecked = every(version, (ver, mod) =>
-      isEqual(ver, modVersion(mod))
-    )
-
-    /* check output */
-    const output = sourcemap.output || {}
-    let jsChecked = true
-    let cssChecked = true
-    const vendorOutput = dirname(target)
-    if (isPlainObject(vendors.js) && isPlainObject(output.js)) {
-      jsChecked = every(
-        Object.keys(vendors.js),
-        v =>
-          existsSync(resolve(vendorOutput, `${v}-manifest.json`)) &&
-          existsSync(resolve(vendorOutput, output.js[v]))
-      )
-    }
-    if (isPlainObject(vendors.css) && isPlainObject(output.css)) {
-      cssChecked = every(Object.keys(vendors.css), v => {
-        return existsSync(resolve(vendorOutput, output.css[v]))
-      })
-    }
-    return jsChecked && cssChecked && localModChecked
+  if (!existsSync(resolve(target))) return false
+  const sourcemap = readJsonSync(resolve(target))
+  /* check sourcemap meta with vendor config */
+  if (!sourcemap.meta || isEqual(sourcemap.meta, vendors) === false) {
+    return false
   }
-  return true
+
+  /* check sourcemap version with local package version */
+  const version = sourcemap.version
+  const localModChecked = every(version, (ver, mod) =>
+    isEqual(ver, modVersion(mod))
+  )
+
+  /* check output files as expected */
+  const output = sourcemap.output || {}
+  let jsChecked = true
+  let cssChecked = true
+  const vendorOutput = dirname(target)
+  if (isPlainObject(output.js)) {
+    jsChecked = every(
+      Object.keys(vendors.js),
+      v =>
+        existsSync(resolve(vendorOutput, `${v}-manifest.json`)) &&
+        existsSync(resolve(vendorOutput, output.js[v]))
+    )
+  }
+  if (isPlainObject(output.css)) {
+    cssChecked = every(Object.keys(vendors.css), v => {
+      return existsSync(resolve(vendorOutput, output.css[v]))
+    })
+  }
+  return jsChecked && cssChecked && localModChecked
 }
 
 exports.sourceMapByVendor = (stats, meta, target) => {

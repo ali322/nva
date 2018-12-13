@@ -2,6 +2,7 @@ const { DllReferencePlugin } = require('webpack')
 const { join, resolve, dirname, extname } = require('path')
 const forEach = require('lodash/forEach')
 const isFunction = require('lodash/isFunction')
+const isPlainObject = require('lodash/isPlainObject')
 const InjectHtmlPlugin = require('inject-html-webpack-plugin')
 const ProgressPlugin = require('progress-webpack-plugin')
 const ContentReplacePlugin = require('content-replace-webpack-plugin')
@@ -30,20 +31,25 @@ module.exports = (context, profile) => {
   const sourcemap = require(resolve(output.vendorPath, vendorSourceMap)).output
 
   const vendorAssets = (modVendor, htmlOutput, type) => {
-    if (Array.isArray(modVendor[type])) {
-      return modVendor[type].map(k => {
-        let originalURL = join(output.vendorPath, sourcemap[type][k])
-        return isFunction(outputPrefix)
-        ? outputPrefix(originalURL)
-        : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
-      })
+    if (isPlainObject(sourcemap[type])) {
+      if (Array.isArray(modVendor[type])) {
+        return modVendor[type]
+        .filter(k => typeof sourcemap[type][k] === 'string')
+        .map(k => {
+          let originalURL = join(output.vendorPath, sourcemap[type][k])
+          return isFunction(outputPrefix)
+          ? outputPrefix(originalURL)
+          : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+        })
+      }
+      let originalURL = join(output.vendorPath, sourcemap[type][modVendor[type]])
+      return typeof sourcemap[type][modVendor[type]] === 'string' ? [] : [
+        isFunction(outputPrefix)
+              ? outputPrefix(originalURL)
+              : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+      ]
     }
-    let originalURL = join(output.vendorPath, sourcemap[type][modVendor[type]])
-    return [
-      isFunction(outputPrefix)
-            ? outputPrefix(originalURL)
-            : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
-    ]
+    return []
   }
 
   /** build modules */
