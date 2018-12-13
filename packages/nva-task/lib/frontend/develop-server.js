@@ -54,11 +54,18 @@ module.exports = (context, options) => {
   if (typeof hooks.beforeDev === 'function') {
     hotUpdateConfig = mergeConfig(
       hotUpdateConfig,
-      hooks.beforeDev(hotUpdateConfig)
+      hooks.beforeDev(
+        hotUpdateConfig.length === 1 ? hotUpdateConfig[0] : hotUpdateConfig
+      )
     )
   }
   if (typeof beforeDev === 'function') {
-    hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
+    hotUpdateConfig = mergeConfig(
+      hotUpdateConfig,
+      beforeDev(
+        hotUpdateConfig.length === 1 ? hotUpdateConfig[0] : hotUpdateConfig
+      )
+    )
   }
 
   // open browser when first build finished
