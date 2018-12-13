@@ -22,20 +22,25 @@ module.exports = function(context, profile) {
   let confs = []
   const devServerHost = serverHost(port)
   const baseConfig = configFactory(merge(context, { isDev: true }), profile)
-  const sourcemap = require(resolve(output.vendorDevPath, vendorSourceMap)).output
+  const sourcemap = require(resolve(output.vendorDevPath, vendorSourceMap))
+    .output
 
   const vendorAssets = (modVendor, type) => {
     if (isPlainObject(sourcemap[type])) {
       if (Array.isArray(modVendor[type])) {
         return modVendor[type]
-        .filter(k => typeof sourcemap[type][k] === 'string')
-        .map(k =>
-          posix.join(posix.sep, vendorDevFolder, sourcemap[type][k])
-        )
+          .filter(k => typeof sourcemap[type][k] === 'string')
+          .map(k => posix.join(posix.sep, vendorDevFolder, sourcemap[type][k]))
       }
-      return typeof sourcemap[type][modVendor[type]] === 'string' ? [] : [
-        posix.join(posix.sep, vendorDevFolder, sourcemap[type][modVendor[type]])
-      ]
+      return typeof sourcemap[type][modVendor[type]] === 'string'
+        ? [
+          posix.join(
+              posix.sep,
+              vendorDevFolder,
+              sourcemap[type][modVendor[type]]
+            )
+        ]
+        : []
     }
     return []
   }
@@ -50,7 +55,10 @@ module.exports = function(context, profile) {
       ].concat(mod.input.css ? [mod.input.css] : [])
     }
 
-    let dllRefs = (Array.isArray(mod.vendor.js) ? mod.vendor.js : [mod.vendor.js]).map(key => {
+    let dllRefs = (Array.isArray(mod.vendor.js)
+      ? mod.vendor.js
+      : [mod.vendor.js]
+    ).map(key => {
       const manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
       const manifest = require(manifestPath)
       return new webpack.DllReferencePlugin({
@@ -59,44 +67,49 @@ module.exports = function(context, profile) {
       })
     })
 
-    confs.push(merge(baseConfig, {
-      entry,
-      output: {
-        path: output.path,
-        filename: '[name].js',
-        chunkFilename: '[id].chunk.js',
-        publicPath: devServerHost + hmrPath
-      },
-      // context: __dirname,
-      resolveLoader: {
-        modules: [resolve('node_modules'), 'node_modules']
-      },
-      resolve: {
-        modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-      },
-      plugins: baseConfig.plugins
-        .concat([
-          new ProgressPlugin(true, { onProgress: context.onDevProgress }),
-          new TidyStatsPlugin({ ignoreAssets: true }),
-          new InjectHtmlPlugin({
-            transducer: devServerHost + hmrPath,
-            chunks: [name],
-            filename: mod.input.html,
-            more: {
-              js: vendorAssets(mod.vendor, 'js'),
-              css: vendorAssets(mod.vendor, 'css')
-            },
-            custom: [
-              {
-                start: '<!-- start:browser-sync -->',
-                end: '<!-- end:browser-sync -->',
-                content: `<script src="${devServerHost}/bs/browser-sync-client.js"></script>`
-              }
-            ]
-          })
-        ])
-        .concat(dllRefs)
-    }))
+    confs.push(
+      merge(baseConfig, {
+        entry,
+        output: {
+          path: output.path,
+          filename: '[name].js',
+          chunkFilename: '[id].chunk.js',
+          publicPath: devServerHost + hmrPath
+        },
+        // context: __dirname,
+        resolveLoader: {
+          modules: [resolve('node_modules'), 'node_modules']
+        },
+        resolve: {
+          modules: [sourceFolder, resolve('node_modules'), 'node_modules']
+        },
+        plugins: baseConfig.plugins
+          .concat([
+            new ProgressPlugin(true, {
+              identifier: name,
+              onProgress: context.onDevProgress
+            }),
+            new TidyStatsPlugin({ identifier: name, ignoreAssets: true }),
+            new InjectHtmlPlugin({
+              transducer: devServerHost + hmrPath,
+              chunks: [name],
+              filename: mod.input.html,
+              more: {
+                js: vendorAssets(mod.vendor, 'js'),
+                css: vendorAssets(mod.vendor, 'css')
+              },
+              custom: [
+                {
+                  start: '<!-- start:browser-sync -->',
+                  end: '<!-- end:browser-sync -->',
+                  content: `<script src="${devServerHost}/bs/browser-sync-client.js"></script>`
+                }
+              ]
+            })
+          ])
+          .concat(dllRefs)
+      })
+    )
   })
 
   return confs

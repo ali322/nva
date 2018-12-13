@@ -27,14 +27,18 @@ module.exports = function(context, profile) {
     if (isPlainObject(sourcemap[type])) {
       if (Array.isArray(modVendor[type])) {
         return modVendor[type]
-        .filter(k => typeof sourcemap[type][k] === 'string')
-        .map(k =>
-          posix.join(posix.sep, vendorFolder, sourcemap[type][k])
-        )
+          .filter(k => typeof sourcemap[type][k] === 'string')
+          .map(k => posix.join(posix.sep, vendorFolder, sourcemap[type][k]))
       }
-      return typeof sourcemap[type][modVendor[type]] === 'string' ? [] : [
-        posix.join(posix.sep, vendorFolder, sourcemap[type][modVendor[type]])
-      ]
+      return typeof sourcemap[type][modVendor[type]] === 'string'
+        ? [
+          posix.join(
+              posix.sep,
+              vendorFolder,
+              sourcemap[type][modVendor[type]]
+            )
+        ]
+        : []
     }
     return []
   }
@@ -74,7 +78,10 @@ module.exports = function(context, profile) {
         },
         plugins: baseConfig.plugins
           .concat([
-            new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
+            new ProgressPlugin(true, {
+              identifier: name,
+              onProgress: context.onBuildProgress
+            }),
             new ChunkAssetPlugin({
               chunks: {
                 [name]: files =>
@@ -84,7 +91,7 @@ module.exports = function(context, profile) {
                   })
               }
             }),
-            new TidyStatsPlugin(),
+            new TidyStatsPlugin({ identifier: name }),
             new InjectHtmlPlugin({
               transducer: posix.sep,
               chunks: [name],

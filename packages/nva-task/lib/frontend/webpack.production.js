@@ -34,20 +34,25 @@ module.exports = (context, profile) => {
     if (isPlainObject(sourcemap[type])) {
       if (Array.isArray(modVendor[type])) {
         return modVendor[type]
-        .filter(k => typeof sourcemap[type][k] === 'string')
-        .map(k => {
-          let originalURL = join(output.vendorPath, sourcemap[type][k])
-          return isFunction(outputPrefix)
-          ? outputPrefix(originalURL)
-          : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
-        })
-      }
-      let originalURL = join(output.vendorPath, sourcemap[type][modVendor[type]])
-      return typeof sourcemap[type][modVendor[type]] === 'string' ? [] : [
-        isFunction(outputPrefix)
+          .filter(k => typeof sourcemap[type][k] === 'string')
+          .map(k => {
+            let originalURL = join(output.vendorPath, sourcemap[type][k])
+            return isFunction(outputPrefix)
               ? outputPrefix(originalURL)
               : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
-      ]
+          })
+      }
+      let originalURL = join(
+        output.vendorPath,
+        sourcemap[type][modVendor[type]]
+      )
+      return typeof sourcemap[type][modVendor[type]] === 'string'
+        ? [
+          isFunction(outputPrefix)
+              ? outputPrefix(originalURL)
+              : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+        ]
+        : []
     }
     return []
   }
@@ -60,7 +65,10 @@ module.exports = (context, profile) => {
 
     const htmlOutput = mod.output.html
 
-    let dllRefs = (Array.isArray(mod.vendor.js) ? mod.vendor.js : [mod.vendor.js]).map(key => {
+    let dllRefs = (Array.isArray(mod.vendor.js)
+      ? mod.vendor.js
+      : [mod.vendor.js]
+    ).map(key => {
       let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
       let manifest = require(manifestPath)
       return new DllReferencePlugin({
@@ -69,99 +77,113 @@ module.exports = (context, profile) => {
       })
     })
 
-    confs.push(merge(baseConfig, {
-      entry,
-      output: {
-        path: output.path,
-        filename: join('[name]', '[name]-[hash:8].js'),
-        chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
-      },
-      resolveLoader: {
-        modules: [resolve('node_modules'), 'node_modules']
-      },
-      resolve: {
-        modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-      },
-      plugins: baseConfig.plugins
-        .concat(
-        [
-          new ProgressPlugin(true, { onProgress: context.onBuildProgress }),
-          new ChunkAssetPlugin({
-            chunks: {
-              [name]: files =>
-              files.map(file => {
-                let outputFile = mod.output[extname(file).replace('.', '')]
-                return outputFile || file
-              })
-            }
-          }),
-          new ContentReplacePlugin({
-            external: [htmlOutput],
-            rules: {
-              '**/*.js': content =>
-                  content.replace(
-                    RegExp(
-                      `\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,
-                      'gi'
-                    ),
-                    isFunction(staticPrefix) ? `${staticPrefix(staticFolder)}$1` : `${staticPrefix}/${staticFolder}$1`
-                  ),
-              '**/*.css': content =>
-                  content.replace(
-                    RegExp(
-                      `(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`,
-                      'gi'
-                    ),
-                    isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
-                  ),
-              '**/*.html': content =>
-                  content.replace(
-                    RegExp(
-                      `([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,
-                      'gi'
-                    ),
-                    isFunction(staticPrefix) ? `$1${staticPrefix(staticFolder)}$2` : `$1${staticPrefix}/${staticFolder}$2`
-                  )
-            }
-          }),
-          new InjectHtmlPlugin({
-            transducer: function(url) {
-              return isFunction(outputPrefix)
-                ? outputPrefix(url)
-                : outputPrefix +
-                    relativeURL(dirname(htmlOutput), join(distFolder, url))
-            },
-            chunks: [name],
-            more: {
-              js: vendorAssets(mod.vendor, htmlOutput, 'js'),
-              css: vendorAssets(mod.vendor, htmlOutput, 'css')
-            },
-            filename: mod.input.html,
-            output: htmlOutput,
-            custom: [
-              {
-                start: '<!-- start:bundle-time -->',
-                end: '<!-- end:bundle-time -->',
-                content: `<meta name="bundleTime" content="${bundleTime()}"/>`
+    confs.push(
+      merge(baseConfig, {
+        entry,
+        output: {
+          path: output.path,
+          filename: join('[name]', '[name]-[hash:8].js'),
+          chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
+        },
+        resolveLoader: {
+          modules: [resolve('node_modules'), 'node_modules']
+        },
+        resolve: {
+          modules: [sourceFolder, resolve('node_modules'), 'node_modules']
+        },
+        plugins: baseConfig.plugins
+          .concat(
+          [
+            new ProgressPlugin(true, {
+              identifier: name,
+              onProgress: context.onBuildProgress
+            }),
+            new ChunkAssetPlugin({
+              chunks: {
+                [name]: files =>
+                    files.map(file => {
+                      let outputFile =
+                        mod.output[extname(file).replace('.', '')]
+                      return outputFile || file
+                    })
               }
-            ]
-          }),
-          new TidyStatsPlugin()
-        ],
-          dllRefs
-        )
-        .concat(
-          existsSync(resolve(staticFolder))
-            ? new CopyPlugin([
-              {
-                from: resolve(staticFolder),
-                to: join(output.path, staticFolder),
-                ignore: ['.*']
+            }),
+            new ContentReplacePlugin({
+              external: [htmlOutput],
+              rules: {
+                '**/*.js': content =>
+                    content.replace(
+                      RegExp(
+                        `\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,
+                        'gi'
+                      ),
+                      isFunction(staticPrefix)
+                        ? `${staticPrefix(staticFolder)}$1`
+                        : `${staticPrefix}/${staticFolder}$1`
+                    ),
+                '**/*.css': content =>
+                    content.replace(
+                      RegExp(
+                        `(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`,
+                        'gi'
+                      ),
+                      isFunction(staticPrefix)
+                        ? `$1${staticPrefix(staticFolder)}$2`
+                        : `$1${staticPrefix}/${staticFolder}$2`
+                    ),
+                '**/*.html': content =>
+                    content.replace(
+                      RegExp(
+                        `([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,
+                        'gi'
+                      ),
+                      isFunction(staticPrefix)
+                        ? `$1${staticPrefix(staticFolder)}$2`
+                        : `$1${staticPrefix}/${staticFolder}$2`
+                    )
               }
-            ])
-            : []
-        )
-    }))
+            }),
+            new InjectHtmlPlugin({
+              transducer: function(url) {
+                return isFunction(outputPrefix)
+                    ? outputPrefix(url)
+                    : outputPrefix +
+                        relativeURL(dirname(htmlOutput), join(distFolder, url))
+              },
+              chunks: [name],
+              more: {
+                js: vendorAssets(mod.vendor, htmlOutput, 'js'),
+                css: vendorAssets(mod.vendor, htmlOutput, 'css')
+              },
+              filename: mod.input.html,
+              output: htmlOutput,
+              custom: [
+                {
+                  start: '<!-- start:bundle-time -->',
+                  end: '<!-- end:bundle-time -->',
+                  content: `<meta name="bundleTime" content="${bundleTime()}"/>`
+                }
+              ]
+            }),
+            new TidyStatsPlugin({
+              identifier: name
+            })
+          ],
+            dllRefs
+          )
+          .concat(
+            existsSync(resolve(staticFolder))
+              ? new CopyPlugin([
+                {
+                  from: resolve(staticFolder),
+                  to: join(output.path, staticFolder),
+                  ignore: ['.*']
+                }
+              ])
+              : []
+          )
+      })
+    )
   })
 
   return confs
