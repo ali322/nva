@@ -85,13 +85,7 @@ module.exports = function(context, options) {
     serverBuildFinished = true
     clientBuildFinished && startNode()
   })
-  bus.once('client-build-finished', () => {
-    clientBuildFinished = true
-    serverBuildFinished && startNode()
-  })
 
-  const app = require('nva-server').mock(mock)
-  let middleware = [app]
   let hotUpdateConfig = require('./webpack.hot-update')(
     merge(context, { port: clientPort }),
     profile
@@ -99,12 +93,29 @@ module.exports = function(context, options) {
   if (typeof hooks.beforeDev === 'function') {
     hotUpdateConfig = mergeConfig(
       hotUpdateConfig,
-      hooks.beforeDev(hotUpdateConfig)
+      hooks.beforeDev(
+        hotUpdateConfig.length === 1 ? hotUpdateConfig[0] : hotUpdateConfig
+      )
     )
   }
   if (typeof beforeDev === 'function') {
-    hotUpdateConfig = mergeConfig(hotUpdateConfig, beforeDev(hotUpdateConfig))
+    hotUpdateConfig = mergeConfig(
+      hotUpdateConfig,
+      beforeDev(
+        hotUpdateConfig.length === 1 ? hotUpdateConfig[0] : hotUpdateConfig
+      )
+    )
   }
+  let bundlerFinished = 0
+  bus.on('client-build-finished', () => {
+    bundlerFinished += 1
+    if (bundlerFinished === hotUpdateConfig.length) {
+      clientBuildFinished = true
+      serverBuildFinished && startNode()
+    }
+  })
+  const app = require('nva-server').mock(mock)
+  let middleware = [app]
   middleware = middleware.concat(
     flatMap(hotUpdateConfig, config =>
       require('../common/middleware')(

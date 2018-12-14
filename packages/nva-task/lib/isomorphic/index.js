@@ -61,11 +61,18 @@ module.exports = context => {
       if (typeof hooks.beforeBuild === 'function') {
         clientConfig = mergeConfig(
           clientConfig,
-          hooks.beforeBuild(clientConfig)
+          hooks.beforeBuild(
+            clientConfig.length === 1 ? clientConfig[0] : clientConfig
+          )
         )
       }
       if (typeof beforeBuild === 'function') {
-        clientConfig = mergeConfig(clientConfig, beforeBuild(clientConfig))
+        clientConfig = mergeConfig(
+          clientConfig,
+          beforeBuild(
+            clientConfig.length === 1 ? clientConfig[0] : clientConfig
+          )
+        )
       }
       let serverConfig = serverCompile
         ? require('./webpack.server')(context, profile)

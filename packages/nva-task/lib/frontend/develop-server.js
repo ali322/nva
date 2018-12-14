@@ -69,7 +69,6 @@ module.exports = (context, options) => {
   }
 
   // open browser when first build finished
-  let opened = 0
   let openBrowserAfterDev = () => {
     let url = spa ? '/' : '/index/'
     url = `${protocol}://${hostname}:${port}${url}`
@@ -80,24 +79,28 @@ module.exports = (context, options) => {
     openBrowser(browser, url)
   }
 
+  let bundlerFinished = 0
   const middlewares = flatMap(hotUpdateConfig, config =>
     require('../common/middleware')(
       config,
       (err, stats) => {
-        if (opened === 0) {
-          opened += 1
-          if (typeof hooks.afterDev === 'function') {
-            hooks.afterDev(err, stats)
-          }
-          if (typeof afterDev === 'function') {
-            afterDev(err, stats)
-          }
-          openBrowserAfterDev()
+        bus.emit('develop-bundler-finished')
+        if (typeof hooks.afterDev === 'function') {
+          hooks.afterDev(err, stats)
+        }
+        if (typeof afterDev === 'function') {
+          afterDev(err, stats)
         }
       },
       profile
     )
   )
+  bus.on('develop-bundler-finished', () => {
+    bundlerFinished += 1
+    if (bundlerFinished === hotUpdateConfig.length) {
+      openBrowserAfterDev()
+    }
+  })
 
   let rewrites =
     spa === true

@@ -30,11 +30,18 @@ module.exports = context => {
       if (typeof hooks.beforeBuild === 'function') {
         releaseConfig = mergeConfig(
           releaseConfig,
-          hooks.beforeBuild(releaseConfig)
+          hooks.beforeBuild(
+            releaseConfig.length === 1 ? releaseConfig[0] : releaseConfig
+          )
         )
       }
       if (typeof beforeBuild === 'function') {
-        releaseConfig = mergeConfig(releaseConfig, beforeBuild(releaseConfig))
+        releaseConfig = mergeConfig(
+          releaseConfig,
+          beforeBuild(
+            releaseConfig.length === 1 ? releaseConfig[0] : releaseConfig
+          )
+        )
       }
       // cleanup dist
       del.sync([
