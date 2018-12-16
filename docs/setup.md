@@ -55,6 +55,8 @@ all config files alive in `.nva` directory of project
 }
 ```
 
+`vendor.js` also can take array of vendor references
+
 you can add or remove bundles using cli of `nav bundle`, split bundle name with `,`
 
 add bundles
