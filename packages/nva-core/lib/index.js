@@ -17,6 +17,7 @@ const core = (options = {}) => {
   const {
     favicon = '',
     hooks = {},
+    onDevProgress,
     projConfPath = resolve(rootPath, `${namespace}.js`),
     modConfPath = resolve(rootPath, 'bundle.json'),
     mockPath = resolve(rootPath, 'mock'),
@@ -55,7 +56,8 @@ const core = (options = {}) => {
     vendors,
     modConfPath,
     startWatcher,
-    hooks
+    hooks,
+    onDevProgress
   }
 
   context = initializer(context)

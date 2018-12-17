@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.5.91",
+  "version": "0.5.92",
   "description": "frontend test toolkit",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
