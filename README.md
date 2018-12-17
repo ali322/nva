@@ -28,3 +28,6 @@ welcome to pull request and issues,help to improve `nva` better
 
 [circleci-url]: https://circleci.com/gh/ali322/nva
 [circleci-image]: 	https://img.shields.io/circleci/project/github/ali322/nva.svg?style=flat
+
+[appveyor-url]: https://ci.appveyor.com/project/ali322/nva
+[appveyor-image]: https://img.shields.io/appveyor/ci/ali322/nva.svg?style=flat
