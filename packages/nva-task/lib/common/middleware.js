@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 
-module.exports = (config, done, profile) => {
+module.exports = (config, done, silent) => {
   const bundler = webpack(config)
   if (bundler.hooks) {
     bundler.hooks.done.tap('nva-dev', stats => done(null, stats))
@@ -18,7 +18,7 @@ module.exports = (config, done, profile) => {
         colors: true
       },
       hot: true,
-      logLevel: profile ? 'info' : 'silent',
+      logLevel: silent ? 'info' : 'silent',
       lazy: false,
       watchOptions: {
         aggregateTimeout: 300,

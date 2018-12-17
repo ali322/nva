@@ -17,7 +17,8 @@ module.exports = function(context, options) {
     hooks,
     startWatcher,
     strict,
-    watch
+    watch,
+    onDevProgress
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
@@ -132,7 +133,7 @@ module.exports = function(context, options) {
             bus.emit('client-build-finished')
           }
         },
-        profile
+        profile || onDevProgress
       )
     )
   )

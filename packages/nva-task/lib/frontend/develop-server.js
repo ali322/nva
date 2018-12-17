@@ -19,7 +19,8 @@ module.exports = (context, options) => {
     favicon,
     proxy,
     strict,
-    watch
+    watch,
+    onDevProgress
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
@@ -92,7 +93,7 @@ module.exports = (context, options) => {
           afterDev(err, stats)
         }
       },
-      profile
+      profile || onDevProgress
     )
   )
   bus.on('develop-bundler-finished', () => {

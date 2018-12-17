@@ -1,6 +1,6 @@
 {
   "name": "nva-core",
-  "version": "0.5.89",
+  "version": "0.5.90",
   "description": "nva core module",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-core",
   "main": "lib/index.js",
