@@ -118,11 +118,11 @@ exports.openBrowser = (target, url) => {
           stdio: 'ignore'
         })
       } catch (err) {
-        console.log(chalk.red('canot open in browser'), err)
+        console.log(chalk.red('cannot open in browser'), err)
       }
     } else {
       let opener = opn(url, opts)
-      opener.catch(err => console.log(chalk.red('canot open in browser'), err))
+      opener.catch(err => console.log(chalk.red('cannot open in browser'), err))
     }
   }
 }
