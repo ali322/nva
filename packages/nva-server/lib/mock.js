@@ -2,10 +2,10 @@ const jsf = require('json-schema-faker')
 const { parse } = require('url')
 const { resolve } = require('path')
 const glob = require('glob')
-const chalk = require('chalk')
+const colors = require('colors')
 const connect = require('connect')
 const chokidar = require('chokidar')
-const { prettyError, isEq } = require('nva-util')
+const { prettyError, isEq, sprintf, relativeURL } = require('nva-util')
 const forEach = require('lodash/forEach')
 const merge = require('lodash/merge')
 const find = require('lodash/find')
@@ -18,7 +18,11 @@ const isString = require('lodash/isString')
 const isArray = require('lodash/isArray')
 const isPlainObject = require('lodash/isPlainObject')
 
-module.exports = conf => {
+function relativeUrl(path) {
+  return relativeURL(resolve(), path)
+}
+
+module.exports = (conf, logText) => {
   const app = connect()
 
   jsf.extend('faker', function() {
@@ -51,15 +55,29 @@ module.exports = conf => {
         rules = require(resolve(file))
       } catch (e) {
         console.log(prettyError(e))
+        return
       }
       if (Array.isArray(rules) === false) {
-        console.log(chalk.red('mock config must return array'))
+        console.log(
+          colors.red(
+            sprintf(logText.mockInvalid || 'mock config %s is invalid', [
+              relativeUrl(file)
+            ])
+          )
+        )
         return
       }
       mocks[file] = rules.map(v => {
         v.filename = file
         return v
       })
+      console.log(
+        colors.yellow(
+          sprintf(logText.mockChange || 'mock config %s is changed', [
+            relativeUrl(file)
+          ])
+        )
+      )
     })
     watcher.on('add', file => {
       if (mocks[file] === undefined) {
@@ -68,21 +86,43 @@ module.exports = conf => {
           rules = require(resolve(file))
         } catch (e) {
           console.log(prettyError(e))
+          return
         }
         if (Array.isArray(rules) === false) {
-          console.log(chalk.red('mock config must return array'))
+          console.log(
+            colors.red(
+              sprintf(logText.mockInvalid || 'mock config %s is invalid', [
+                relativeUrl(file)
+              ])
+            )
+          )
           return
         }
         mocks[file] = rules.map(v => {
           v.filename = file
           return v
         })
+        console.log('rules', rules)
+        console.log(
+          colors.yellow(
+            sprintf(logText.mockAdd || 'mock config %s is added', [
+              relativeUrl(file)
+            ])
+          )
+        )
       }
     })
     watcher.on('unlink', file => {
       if (mocks[file]) {
         delete mocks[file]
       }
+      console.log(
+        colors.yellow(
+          sprintf(logText.mockDelete || 'mock config %s is deleted', [
+            relativeUrl(file)
+          ])
+        )
+      )
     })
   }
   if (isArray(conf)) {
@@ -118,7 +158,7 @@ module.exports = conf => {
           rule.method
         ) === -1
       ) {
-        console.log(chalk.red('unsupported method'))
+        console.log(colors.red(logText.wrongMethod || 'unsupported method'))
       }
       let headers = {
         'content-type': 'application/json;charset=utf-8'

@@ -9,7 +9,14 @@ const { relativeURL, merge } = require('nva-util')
 const configFactory = require('../webpack/config')
 
 module.exports = function(context, profile) {
-  const { mods, serverFolder, distFolder, bundleFolder, sourceFolder } = context
+  const {
+    mods,
+    serverFolder,
+    distFolder,
+    bundleFolder,
+    sourceFolder,
+    logText
+  } = context
   let entry = {}
   const baseConfig = configFactory(context, profile)
   //   let externals = Object.keys(require(resolve('package.json')).dependencies)
@@ -43,12 +50,19 @@ module.exports = function(context, profile) {
       modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     },
     externals,
-    plugins: baseConfig.plugins
-      .slice(0, -1)
-      .concat([
-        new ProgressPlugin(true, { identifier: 'bundle' }),
-        new TidyStatsPlugin({ identifier: 'bundle' }),
-        new IgnorePlugin(/\.(css|less|scss|styl)$/)
-      ])
+    plugins: baseConfig.plugins.slice(0, -1).concat([
+      new ProgressPlugin(true, {
+        identifier: 'bundle'
+      }),
+      new TidyStatsPlugin({
+        identifier: 'bundle',
+        logText: {
+          success: logText.buildSuccess,
+          warn: logText.buildWarn,
+          error: logText.buildError
+        }
+      }),
+      new IgnorePlugin(/\.(css|less|scss|styl)$/)
+    ])
   })
 }

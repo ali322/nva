@@ -9,7 +9,7 @@ const merge = require('webpack-merge')
 const { dirname, basename, resolve } = require('path')
 const execSync = require('child_process').execSync
 const { existsSync, outputJsonSync, readJsonSync } = require('fs-extra')
-const chalk = require('chalk')
+const colors = require('colors')
 const opn = require('opn')
 
 exports.mergeConfig = (config, value) => {
@@ -104,7 +104,7 @@ function modVersion(mod) {
   return pkg && pkg.version
 }
 
-exports.openBrowser = (target, url) => {
+exports.openBrowser = (target, url, errText) => {
   let opts = { wait: false }
   if (target !== 'none') {
     if (target !== 'default') {
@@ -118,11 +118,11 @@ exports.openBrowser = (target, url) => {
           stdio: 'ignore'
         })
       } catch (err) {
-        console.log(chalk.red('cannot open in browser'), err)
+        console.log(colors.red(errText), err)
       }
     } else {
       let opener = opn(url, opts)
-      opener.catch(err => console.log(chalk.red('cannot open in browser'), err))
+      opener.catch(err => console.log(colors.red(errText), err))
     }
   }
 }

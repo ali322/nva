@@ -18,7 +18,8 @@ module.exports = function(context, profile) {
     vendorSourceMap,
     hmrPath,
     output,
-    afterInject
+    afterInject,
+    logText
   } = context
   /** build variables */
   let confs = []
@@ -58,7 +59,8 @@ module.exports = function(context, profile) {
   forEach(mods, (mod, name) => {
     let entry = {
       [name]: [
-        require.resolve('webpack-hot-middleware/client') + `?name=${name}&reload=true`,
+        require.resolve('webpack-hot-middleware/client') +
+          `?name=${name}&reload=true`,
         mod.input.js
       ].concat(mod.input.css ? [mod.input.css] : [])
     }
@@ -98,7 +100,15 @@ module.exports = function(context, profile) {
             identifier: name,
             onProgress: context.onDevProgress
           }),
-          new TidyStatsPlugin({ identifier: name, ignoreAssets: true }),
+          new TidyStatsPlugin({
+            identifier: name,
+            ignoreAssets: true,
+            logText: {
+              success: logText.buildSuccess,
+              warn: logText.buildWarn,
+              error: logText.buildError
+            }
+          }),
           new InjectHtmlPlugin({
             transducer: hmrPath,
             chunks: [name],

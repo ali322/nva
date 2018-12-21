@@ -18,12 +18,13 @@ module.exports = function(context, options) {
     startWatcher,
     strict,
     watch,
-    onDevProgress
+    onDevProgress,
+    logText
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
 
-  const RUNNING_REGXP = new RegExp('server running at')
+  const RUNNING_REGXP = new RegExp(logText.serverRunning)
   startWatcher(strict)
 
   const browserSync = BrowserSync.create()
@@ -37,7 +38,7 @@ module.exports = function(context, options) {
   let openBrowserAfterDev = () => {
     if (browser === 'none') return
     let url = `${protocol}://${hostname}:${port}`
-    openBrowser(browser, url)
+    openBrowser(browser, url, logText.openBrowserFailed)
   }
 
   const startNode = () => {
@@ -63,7 +64,7 @@ module.exports = function(context, options) {
       legacyWatch: true,
       watch: [serverFolder],
       ext: 'js html json es6'
-    }).on('readable', function() {
+    }, logText).on('readable', function() {
       this.stdout.on('data', chunk => {
         if (RUNNING_REGXP.test(chunk.toString())) {
           if (started === 0) {

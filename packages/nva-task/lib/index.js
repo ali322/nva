@@ -3,9 +3,9 @@ const { error } = require('nva-util')
 
 module.exports = options => {
   const context = core(options)
-  const { type } = context
+  const { type, logText } = context
   if (['frontend', 'isomorphic'].indexOf(type) === -1) {
-    error('unsupported type')
+    error(logText.wrongType)
   }
   const task = require(`./${type}`)(context)
   task.addMod = (name, answers, template) => core.mod.addMod(name, answers, template, context)

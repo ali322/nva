@@ -9,7 +9,7 @@ const {
   outputJsonSync,
   readJsonSync
 } = require('fs-extra')
-const { relativeURL, merge, error } = require('nva-util')
+const { relativeURL, merge, error, sprintf } = require('nva-util')
 const { join, resolve } = require('path')
 
 exports.initMod = (mod, name, context) => {
@@ -54,14 +54,14 @@ exports.initMod = (mod, name, context) => {
 }
 
 exports.addMod = (names, answers, template, context) => {
-  const { modConfPath, sourceFolder } = context
+  const { modConfPath, sourceFolder, logText } = context
   const mods = readJsonSync(modConfPath)
   names = names.split(',')
 
   let inputs = {}
   forEach(names, name => {
     if (Object.keys(mods).indexOf(name) > -1) {
-      error(`module ${name} existed!`)
+      error(sprintf(logText.moduleExisted, [name]))
     }
     const input = {
       html: answers.input.html || join(sourceFolder, name, `${name}.html`),
@@ -83,19 +83,19 @@ exports.addMod = (names, answers, template, context) => {
 }
 
 exports.removeMod = (names, context) => {
-  const { modConfPath, sourceFolder } = context
+  const { modConfPath, sourceFolder, logText } = context
   const mods = readJsonSync(modConfPath)
   names = names.split(',')
   forEach(names, name => {
     let to = mods[name] && mods[name].input
     if (!to) {
-      error(`module ${name} not existed,is it have been removed?`)
+      error(sprintf(logText.moduleNotExisted, [name]))
     }
     forEach(to, v => {
       if (existsSync(v)) {
         removeSync(v)
       } else {
-        error(`file ${v} not existed,is it have been removed?`)
+        error(sprintf(logText.fileNotExisted, [v]))
       }
     })
     const modFolder = join(sourceFolder, name)

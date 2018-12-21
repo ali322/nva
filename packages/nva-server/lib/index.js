@@ -27,7 +27,8 @@ const createServer = options => {
     cors = false,
     log = true,
     proxy,
-    mock = false
+    mock = false,
+    logText = {}
   } = options
 
   let app = connect()
@@ -64,7 +65,7 @@ const createServer = options => {
   }
 
   if (mock) {
-    app.use(mockMiddleware(mock))
+    app.use(mockMiddleware(mock, logText))
   }
 
   if (cors) {

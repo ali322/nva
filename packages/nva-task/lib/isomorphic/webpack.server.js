@@ -6,7 +6,13 @@ const configFactory = require('../webpack/config')
 const { merge } = require('nva-util')
 
 module.exports = function(context, profile) {
-  const { serverFolder, distFolder, sourceFolder, serverEntry } = context
+  const {
+    serverFolder,
+    distFolder,
+    sourceFolder,
+    serverEntry,
+    logText
+  } = context
   const baseConfig = configFactory(context, profile)
   const externals = Object.keys(require(resolve('package.json')).dependencies)
 
@@ -33,8 +39,17 @@ module.exports = function(context, profile) {
     },
     externals,
     plugins: baseConfig.plugins.concat([
-      new ProgressPlugin(true, { identifier: 'server' }),
-      new TidyStatsPlugin({ identifier: 'server' }),
+      new ProgressPlugin(true, {
+        identifier: 'server'
+      }),
+      new TidyStatsPlugin({
+        identifier: 'server',
+        logText: {
+          success: logText.buildSuccess,
+          warn: logText.buildWarn,
+          error: logText.buildError
+        }
+      }),
       new webpack.IgnorePlugin(/\.(css|less|scss|styl)$/),
       new webpack.BannerPlugin({
         banner: 'require("source-map-support").install();',

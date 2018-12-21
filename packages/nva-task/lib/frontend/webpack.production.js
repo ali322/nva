@@ -23,7 +23,8 @@ module.exports = (context, profile) => {
     staticPrefix,
     chunkFolder,
     vendorSourceMap,
-    output
+    output,
+    logText
   } = context
   /** build variables */
   let confs = []
@@ -166,7 +167,12 @@ module.exports = (context, profile) => {
               ]
             }),
             new TidyStatsPlugin({
-              identifier: name
+              identifier: name,
+              logText: {
+                success: logText.buildSuccess,
+                warn: logText.buildWarn,
+                error: logText.buildError
+              }
             })
           ],
             dllRefs

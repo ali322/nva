@@ -1,8 +1,9 @@
 const nodemon = require('nodemon')
-const chalk = require('chalk')
+const colors = require('colors')
 const { relative } = require('path')
+const { sprintf } = require('nva-util')
 
-module.exports = function(options) {
+module.exports = function(options, logText) {
   const script = nodemon(options)
 
   let exitHanlder = function(options) {
@@ -15,17 +16,17 @@ module.exports = function(options) {
 
   script
     .on('crash', function() {
-      console.log(chalk.red('server has crashed'))
+      console.log(colors.red(logText.serverCrashed))
     })
     .on('quit', function() {
       process.exit()
     })
     .on('restart', function(files) {
       files.forEach(function(file) {
-        file = relative(process.cwd(), file)
-        console.log(chalk.yellow(`file ${file} changed`))
+        let path = relative(process.cwd(), file)
+        console.log(colors.yellow(sprintf(logText.fileChanged, [path])))
       })
-      console.log(chalk.yellow(`server restarting...`))
+      console.log(colors.yellow(logText.serverRestart))
     })
 
   return script

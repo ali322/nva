@@ -1,5 +1,5 @@
 const { resolve, join, relative } = require('path')
-const chalk = require('chalk')
+const colors = require('colors')
 const chokidar = require('chokidar')
 const isPlainObject = require('lodash/isPlainObject')
 const {
@@ -7,9 +7,11 @@ const {
   checkDir,
   error,
   merge,
-  prettyError
+  prettyError,
+  sprintf
 } = require('nva-util')
 const initializer = require('./init')
+const defaultLogText = require('./log-text')
 
 const core = (options = {}) => {
   const namespace = options.namespace ? options.namespace : 'nva'
@@ -18,27 +20,27 @@ const core = (options = {}) => {
     favicon = '',
     hooks = {},
     onDevProgress,
+    watch: customWatch,
     projConfPath = resolve(rootPath, `${namespace}.js`),
     modConfPath = resolve(rootPath, 'bundle.json'),
     mockPath = resolve(rootPath, 'mock'),
     vendorConfPath = resolve(rootPath, 'vendor.json')
   } = options
 
-  let proj = loadConf(projConfPath, e => {
-    error('project config is invalid')
+  const logText = options.logText ? merge(defaultLogText, options.logText) : defaultLogText
+
+  let proj = loadConf(projConfPath, logText, e => {
+    error(logText.projectInvalid)
     console.log(prettyError(e))
   })
   proj.default && (proj = proj.default)
 
-  const mods = loadConf(modConfPath, e => {
-    error('module config is invalid')
+  const mods = loadConf(modConfPath, logText, e => {
+    error(logText.moduleInvalid)
     console.log(prettyError(e))
   })
-  const vendors = loadVendor(vendorConfPath, e => {
-    error('vendor config is invalid')
-    console.log(prettyError(e))
-  })
-  const mock = loadMock(mockPath)
+  const vendors = loadVendor(vendorConfPath, logText)
+  const mock = loadMock(mockPath, logText)
 
   function startWatcher(strict) {
     let rcs = ['.babelrc']
@@ -46,13 +48,13 @@ const core = (options = {}) => {
       rcs = rcs.concat(['.eslintrc', '.eslint.*'])
     }
     rcs = rcs.map(rc => resolve(rc))
-    watch([projConfPath, modConfPath, vendorConfPath].concat(rcs))
+    watch([projConfPath, modConfPath, vendorConfPath].concat(rcs), logText, customWatch)
   }
 
   let context = {
     namespace,
     mods,
-    proj: merge({ type: 'frontend', favicon, mock }, proj),
+    proj: merge({ type: 'frontend', favicon, mock, logText }, proj, options.proj || {}),
     vendors,
     modConfPath,
     startWatcher,
@@ -64,23 +66,28 @@ const core = (options = {}) => {
   return context
 }
 
-function watch(files) {
+function watch(files, logText, onChange) {
   const watcher = chokidar.watch(files, {
     persistent: true
   })
   watcher.on('change', path => {
     path = relative(process.cwd(), path)
-    console.log(chalk.yellow(`file ${path} changed`))
-    console.log(chalk.yellow(`server restarting...`))
-    watcher.close()
-    process.send('RESTART')
+    console.log(colors.yellow(sprintf(logText.fileChanged, [path])))
+    if (typeof onChange === 'function') {
+      onChange(path)
+      watcher.close()
+    } else {
+      console.log(colors.yellow(logText.serverRestart))
+      watcher.close()
+      process.send('RESTART')
+    }
   })
 }
 
-function loadConf(path, onError) {
+function loadConf(path, logText, onError) {
   let conf = {}
   if (!checkFile(path)) {
-    error(`${path} not exist`)
+    error(sprintf(logText.pathInvalid, [path]))
   }
   try {
     conf = require(path)
@@ -90,9 +97,9 @@ function loadConf(path, onError) {
   return conf
 }
 
-function loadVendor(path, onError) {
+function loadVendor(path, logText) {
   let vendors = loadConf(path, e => {
-    error('vendor config is invalid')
+    error(logText.vendorInvalid)
     console.log(prettyError(e))
   })
   if (isPlainObject(vendors)) {
@@ -106,9 +113,9 @@ function loadVendor(path, onError) {
   return vendors
 }
 
-function loadMock(path) {
+function loadMock(path, logText) {
   if (!checkDir(path)) {
-    error(`${path} not exist`)
+    error(sprintf(logText.pathInvalid, [path]))
   }
   return join(path, '**', '*.@(json|js)')
 }

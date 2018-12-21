@@ -16,7 +16,8 @@ module.exports = function(context, profile) {
     chunkFolder,
     vendorFolder,
     vendorSourceMap,
-    output
+    output,
+    logText
   } = context
   /** build variables */
   let confs = []
@@ -91,7 +92,14 @@ module.exports = function(context, profile) {
                   })
               }
             }),
-            new TidyStatsPlugin({ identifier: name }),
+            new TidyStatsPlugin({
+              identifier: name,
+              logText: {
+                success: logText.buildSuccess,
+                warn: logText.buildWarn,
+                error: logText.buildError
+              }
+            }),
             new InjectHtmlPlugin({
               transducer: posix.sep,
               chunks: [name],

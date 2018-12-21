@@ -1,11 +1,12 @@
 const os = require('os')
 const path = require('path')
 const fs = require('fs-extra')
-const chalk = require('chalk')
+const colors = require('colors')
 const net = require('net')
 const emoji = require('node-emoji')
 const assign = require('lodash/assign')
 const forEach = require('lodash/forEach')
+const { vsprintf } = require('sprintf-js')
 
 exports.lanIP = () => {
   const interfaces = os.networkInterfaces()
@@ -80,7 +81,7 @@ exports.checkDir = target => {
 }
 
 exports.error = msg => {
-  console.log(chalk.red(msg))
+  console.log(colors.red(msg))
   process.exit(1)
 }
 
@@ -94,6 +95,10 @@ exports.emojis = key => {
   } else {
     return '>'
   }
+}
+
+exports.sprintf = (format, vals) => {
+  return vsprintf(format, vals)
 }
 
 exports.isEq = (targets, matches, wildcard = ':', cb = () => { }) => {

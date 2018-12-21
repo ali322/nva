@@ -16,7 +16,8 @@ module.exports = function(context) {
     vendorFolder,
     vendorDevFolder,
     output,
-    isDev
+    isDev,
+    logText
   } = context
   const baseConfig = configFactory(context)
 
@@ -54,7 +55,14 @@ module.exports = function(context) {
         ),
         context: __dirname
       }),
-      new TidyStatsPlugin({ identifier: 'vendor:js' })
+      new TidyStatsPlugin({
+        identifier: 'vendor:js',
+        logText: {
+          success: logText.buildSuccess,
+          warn: logText.buildWarn,
+          error: logText.buildError
+        }
+      })
     ])
   })
 
@@ -91,7 +99,14 @@ module.exports = function(context) {
           })
         )
       }),
-      new TidyStatsPlugin({ identifier: 'vendor:css' })
+      new TidyStatsPlugin({
+        identifier: 'vendor:css',
+        logText: {
+          success: logText.buildSuccess,
+          warn: logText.buildWarn,
+          error: logText.buildError
+        }
+      })
     ])
   })
 

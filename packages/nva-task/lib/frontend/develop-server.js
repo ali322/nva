@@ -3,6 +3,7 @@ const { parse } = require('url')
 const isString = require('lodash/isString')
 const flatMap = require('lodash/flatMap')
 const BrowserSync = require('browser-sync')
+const colors = require('colors')
 const { error, checkPort, emojis, merge, relativeURL } = require('nva-util')
 const { mergeConfig, openBrowser } = require('../common')
 const bus = require('../common/event-bus')
@@ -20,7 +21,8 @@ module.exports = (context, options) => {
     proxy,
     strict,
     watch,
-    onDevProgress
+    onDevProgress,
+    logText
   } = context
 
   const { protocol, hostname, port, browser, profile } = options
@@ -74,10 +76,10 @@ module.exports = (context, options) => {
     let url = spa ? '/' : '/index/'
     url = `${protocol}://${hostname}:${port}${url}`
     console.log(
-      `${emojis('rocket')}  server running at ${protocol}://${hostname}:${port}`
+      `${emojis('rocket')}  ` + colors.yellow(logText.serverRunning + ` ${protocol}://${hostname}:${port}`)
     )
     if (browser === 'none') return
-    openBrowser(browser, url)
+    openBrowser(browser, url, logText.openBrowserFailed)
   }
 
   let bundlerFinished = 0
@@ -130,12 +132,13 @@ module.exports = (context, options) => {
     log: false,
     rewrites,
     mock,
-    favicon
+    favicon,
+    logText
   })
 
   checkPort(port, hostname, available => {
     if (!available) {
-      error('port is not avaiilable')
+      error(logText.portInvalid)
     } else {
       browserSync.init({
         https: protocol === 'https',
