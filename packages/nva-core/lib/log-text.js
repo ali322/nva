@@ -5,7 +5,7 @@ module.exports = {
   serverRestart: 'server restarting...',
   pathInvalid: '%s not exist',
   vendorInvalid: 'vendor config is invalid',
-  moduleExisted: 'module %s existed!',
+  moduleExisted: 'module %s existed',
   openBrowserFailed: 'cannot open in browser',
   moduleNotExisted: 'module %s not existed,is it have been removed?',
   fileNotExisted: 'file %s not existed,is it have been removed?',
