@@ -102,7 +102,6 @@ module.exports = (conf, logText) => {
           v.filename = file
           return v
         })
-        console.log('rules', rules)
         console.log(
           colors.yellow(
             sprintf(logText.mockAdd || 'mock config %s is added', [
