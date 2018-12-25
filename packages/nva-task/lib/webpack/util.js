@@ -1,10 +1,15 @@
 const HappyPack = require('happypack')
 const os = require('os')
 const assign = require('lodash/assign')
+const isPlainObject = require('lodash/isPlainObject')
 const autoPrefixer = require('autoprefixer')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
 const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
+
+const mergeLoaderOptions = (defaults, options) => {
+  return isPlainObject(options) ? assign({}, defaults, options) : defaults
+}
 
 exports.happypackPlugin = (id, loaders) => {
   return new HappyPack({
@@ -16,14 +21,11 @@ exports.happypackPlugin = (id, loaders) => {
 }
 
 exports.postcssOptions = context => {
-  return assign(
-    {},
-    {
-      plugins: [autoPrefixer()],
-      sourceMap: 'inline'
-    },
-    context.postcss || {}
-  )
+  const { loaderOptions } = context
+  return mergeLoaderOptions({
+    plugins: [autoPrefixer()],
+    sourceMap: 'inline'
+  }, loaderOptions.postcss)
 }
 
 exports.vueStyleLoaders = (context, preprocessor) => {
@@ -38,24 +40,35 @@ exports.vueStyleLoaders = (context, preprocessor) => {
 }
 
 exports.cssLoaders = (context, preprocessor = '') => {
+  const { loaderOptions, isDev } = context
+  const useVueStyleLoader = !(
+    isPlainObject(loaderOptions.vue) && loaderOptions.vue.legacy
+  )
   let loaders = [
-    { loader: require.resolve('style-loader') },
+    {
+      loader: useVueStyleLoader
+        ? 'vue-style-loader'
+        : require.resolve('style-loader')
+    },
     {
       loader: require.resolve('css-loader'),
-      options: { minimize: !context.isDev }
+      options: mergeLoaderOptions(loaderOptions.css)
     },
     {
       loader: require.resolve('postcss-loader'),
       options: exports.postcssOptions(context)
     },
-    { loader: require.resolve('resolve-url-loader'), options: { debug: false } }
+    {
+      loader: require.resolve('resolve-url-loader'),
+      options: mergeLoaderOptions({debug: false}, loaderOptions.resolveURL)
+    }
   ]
   if (preprocessor) {
     if (typeof preprocessor === 'string') {
       loaders = loaders.concat([
         {
           loader: require.resolve(`${preprocessor}-loader`),
-          options: { sourceMap: true }
+          options: mergeLoaderOptions({ sourceMap: true }, loaderOptions[preprocessor])
         }
       ])
     } else if (typeof preprocessor === 'object') {
@@ -64,7 +77,7 @@ exports.cssLoaders = (context, preprocessor = '') => {
       throw new Error('invalid preprocessor')
     }
   }
-  if (!context.isDev) {
+  if (!isDev) {
     return [MiniCSSExtractPlugin.loader].concat(loaders.slice(1))
   }
   return loaders

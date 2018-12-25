@@ -3,7 +3,7 @@ const assign = require('lodash/assign')
 const { cssLoaders, postcssOptions, vueStyleLoaders } = require('./util')
 
 module.exports = context => {
-  const { output = {}, imagePrefix, fontPrefix, isDev, strict } = context
+  const { output = {}, imagePrefix, fontPrefix, isDev, strict, loaderOptions } = context
 
   let urlLoaderOptions = {
     limit: 2500
@@ -62,7 +62,7 @@ module.exports = context => {
       test: /\.vue/,
       exclude: /node_modules/,
       loader: 'vue-loader',
-      options: vueLoaderOptions
+      options: loaderOptions.vue && loaderOptions.vue.legacy ? vueLoaderOptions : {}
     },
     {
       test: /\.(es6|js|jsx)$/,

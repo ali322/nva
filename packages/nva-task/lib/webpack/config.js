@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { CheckerPlugin } = require('awesome-typescript-loader')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const loadersFactory = require('./loaders')
 const { happypackPlugin } = require('./util')
 const assign = require('lodash/assign')
@@ -70,7 +71,8 @@ module.exports = (context, profile = false) => {
       devtool: profile ? '#eval-source-map' : false,
       mode: 'production',
       plugins: plugins.concat([
-        new MiniCSSExtractPlugin({ filename: context.output.cssPath })
+        new MiniCSSExtractPlugin({ filename: context.output.cssPath }),
+        new OptimizeCSSAssetsPlugin()
       ])
     }
   return assign({}, config, restConfig)
