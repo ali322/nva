@@ -19,7 +19,7 @@ exports.postcssOptions = context => {
   return assign(
     {},
     {
-      plugins: [autoPrefixer({ browsers: ['last 2 versions'] })],
+      plugins: [autoPrefixer()],
       sourceMap: 'inline'
     },
     context.postcss || {}
