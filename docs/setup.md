@@ -22,15 +22,22 @@ all config files alive in `.nva` directory of project
 
 ```js
 {
-    "type":"isomorphic",    /* project type of `frontend`,`isomorphic`,`react-native` */
-    "spa":true            /* is an single page application(SPA)? */
+    "type":"isomorphic",    /* project type of `frontend`,`isomorphic` */
+    "strict":false,         /* whether linter is enable */
+    "profile":false,      /* whether profile webpack bundler */
     "jsExt":".jsx",    /* entry js file extension */
     "cssExt":".styl",   /* entry css file extension */
     "distFolder": "dist",   /* dist folder of build */
+    "chunkFolder": "chunk",   /* chunk folder of build */
     "vendorFolder": "vendor",   /* vendor folder of build */
+    "vendorDevFolder": "vendor-dev",   /* vendor folder of dev */
+    "vendorSourceMap": "sourcemap.json" /* vendor assets sourcemap file name */
     "assetFolder": "asset",    /* asset files folder */
     "fontFolder": "font",   /* icon font folder */
     "imageFolder": "image",    /* compressed image folder */
+    "staticFolder": "static",   /* static assets folder */
+    "staticPrefix": "",     /* static asset url prefix */
+    "loaderOptions": {vue: {legacy: true}}, /* webpack loader options identified by name */
     "sourcePath": "src",    /* frontend project only, source code folder */
     "bundleFolder": "bundle",   /* isomorphic project only, client side bundle folder */
     "viewFolder": "view",    /* isomorphic project only,html files folder */

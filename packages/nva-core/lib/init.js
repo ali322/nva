@@ -71,7 +71,7 @@ module.exports = context => {
 
   if (isSSR) {
     projContext = merge(projContext, {
-      moduleFolder: 'module',
+      // moduleFolder: 'module',
       bundleFolder: 'bundle',
       serverFolder: 'server',
       serverEntry: 'bootstrap.js',

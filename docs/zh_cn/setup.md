@@ -24,15 +24,22 @@ nva提供尽量简洁高效的方式进行前端项目开发,所以大部分时�
 
 ```js
 {
-    "type":"isomorphic",    /* 项目类型: `frontend`,`isomorphic`,`react-native` */
-    "spa":true            /* 是否单页面项目(SPA)? */
+    "type":"isomorphic",    /* 项目类型: `frontend`,`isomorphic` */
+    "strict":false,          /* 是否开启 linter */
+    "profile":false,      /* 是否在webpack打包时开启 profile 分析 */
     "jsExt":".jsx",    /* 入口 js 文件扩展名 */
     "cssExt":".styl",   /* 入口 css 文件扩展名 */
     "distFolder": "dist",   /* 源码编译目标目录名称 */
-    "vendorFolder": "vendor",   /* 第三方依赖包编译目标目录名称 */
+    "chunkFolder": "chunk",   /* 动态包目录名称 */
+    "vendorFolder": "vendor",   /* 第三方依赖包编译目标目录名称(生产) */
+    "vendorDevFolder": "vendor-dev",   /* 第三方依赖包编译目标目录名称(开发) */
+    "vendorSourceMap": "sourcemap.json" /* 第三方依赖包编译后的清单 */
     "assetFolder": "asset",    /* 静态资源目录名称 */
     "fontFolder": "font",   /* 字体目录名称 */
     "imageFolder": "image",    /* 图片目录名称 */
+    "staticFolder": "static",   /* 静态资源目录名称 */
+    "staticPrefix": "",     /* 静态资源引用路径前缀 */
+    "loaderOptions": {vue: {legacy: true}}, /* webpack loader 的配置 */
     "sourcePath": "src",    /* 源码目录名称(仅限纯前端项目) */
     "bundleFolder": "bundle",   /* 客户端 bundle 目录(仅限同构JS项目) */
     "viewFolder": "view",    /* html 文件目录名称(仅限同构JS项目) */
