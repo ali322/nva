@@ -10,7 +10,7 @@ module.exports = context => {
   }
   if (!isDev) {
     urlLoaderOptions = assign({}, urlLoaderOptions, {
-      publicPath: function(url) {
+      publicPath: function(url, resource) {
         let prefix = ''
         if (/\.(jpg|jpeg|png|bmp|gif)$/.test(url)) {
           prefix = imagePrefix
@@ -20,7 +20,7 @@ module.exports = context => {
           prefix = fontPrefix
         }
         return typeof prefix === 'function'
-          ? prefix(url)
+          ? prefix(url, resource)
           : path.posix.join(prefix, path.basename(url))
       },
       hash: 'sha512',
