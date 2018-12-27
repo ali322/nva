@@ -47,7 +47,7 @@ module.exports = context => {
     jsExt: '.js',
     cssExt: '.css',
     htmlExt: '.html',
-    buildFolder: 'build',
+    // buildFolder: 'build',
     distFolder: 'dist',
     chunkFolder: 'chunk',
     vendorFolder: 'vendor',
