@@ -47,7 +47,6 @@ module.exports = context => {
     jsExt: '.js',
     cssExt: '.css',
     htmlExt: '.html',
-    // buildFolder: 'build',
     distFolder: 'dist',
     chunkFolder: 'chunk',
     vendorFolder: 'vendor',
@@ -71,7 +70,6 @@ module.exports = context => {
 
   if (isSSR) {
     projContext = merge(projContext, {
-      // moduleFolder: 'module',
       bundleFolder: 'bundle',
       serverFolder: 'server',
       serverEntry: 'bootstrap.js',
