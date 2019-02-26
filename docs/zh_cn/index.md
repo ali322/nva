@@ -12,7 +12,7 @@ nva是一个基于webpack,提供灵活配置的前端项目脚手架工具,既�
 
 ## 安装
 
-安装环境依赖: [Node.js](https://nodejs.org/en/) (>=4.x, LTS preferred), npm 3+ and [Git](https://git-scm.com)
+安装环境依赖: [Node.js](https://nodejs.org/en/) (>=6.x, LTS preferred), npm 3+ and [Git](https://git-scm.com)
 
 ```bash
 npm install nva -g

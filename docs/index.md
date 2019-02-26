@@ -8,7 +8,7 @@ title: NVA
 
 ## Install
 
-Prerequisites: [Node.js](https://nodejs.org/en/) (>=4.x, LTS preferred), npm version 3+ and [Git](https://git-scm.com)
+Prerequisites: [Node.js](https://nodejs.org/en/) (>=6.x, LTS preferred), npm version 3+ and [Git](https://git-scm.com)
 ```javascript
 npm install nva -g
 ```
