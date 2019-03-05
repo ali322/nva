@@ -45,7 +45,7 @@ function mergeOpts(defaults, opts) {
     options.webpack = merge.strategy({
       plugins: 'replace',
       entry: 'replace',
-      'module.rules': 'replace'
+      'module.rules': 'append'
     })(options.webpack, webpack)
   }
 

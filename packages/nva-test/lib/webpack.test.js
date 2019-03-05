@@ -24,25 +24,25 @@ module.exports = ({ autowatch }) => {
     module: {
       rules: [
         {
-          test: /\.(js|es6|jsx)/,
+          test: /\.(js|es6|jsx)$/,
           loader: require.resolve('babel-loader'),
           exclude: /node_modules/
         },
+        // {
+        //   test: /\.(js|es6|jsx)$/,
+        //   loader:
+        //     require.resolve('istanbul-instrumenter-loader') + '?esModules=true',
+        //   enforce: 'post',
+        //   exclude: /node_modules/
+        //   // include: sourcePath
+        // },
         {
-          test: /\.(js|es6|jsx)/,
-          loader:
-            require.resolve('istanbul-instrumenter-loader') + '?esModules=true',
-          enforce: 'post',
-          exclude: /node_modules/
-          // include: sourcePath
-        },
-        {
-          test: /\.html/,
+          test: /\.html$/,
           loader: require.resolve('html-loader'),
           exclude: /node_modules/
         },
         {
-          test: /\.vue/,
+          test: /\.vue$/,
           loader: 'vue-loader',
           exclude: /node_modules/,
           // include: sourcePath,
