@@ -28,14 +28,6 @@ module.exports = ({ autowatch }) => {
           loader: require.resolve('babel-loader'),
           exclude: /node_modules/
         },
-        // {
-        //   test: /\.(js|es6|jsx)$/,
-        //   loader:
-        //     require.resolve('istanbul-instrumenter-loader') + '?esModules=true',
-        //   enforce: 'post',
-        //   exclude: /node_modules/
-        //   // include: sourcePath
-        // },
         {
           test: /\.html$/,
           loader: require.resolve('html-loader'),
@@ -53,11 +45,6 @@ module.exports = ({ autowatch }) => {
               sass: sassLoaders,
               scss: scssLoaders,
               stylus: stylusLoaders
-            },
-            postLoaders: {
-              js:
-                require.resolve('istanbul-instrumenter-loader') +
-                '?esModules=true'
             }
           }
         },

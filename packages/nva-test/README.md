@@ -20,6 +20,18 @@ npm install nva-test --save-dev
 
 Supported browsers: jsom, chrome, ie
 
+`babel-plugin-istanbul` should installed for coverage
+
+```javascript
+{
+    "env": {
+        "test": {
+            "plugins": ["istanbul"]
+        }
+    }
+}
+```
+
 ### License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)

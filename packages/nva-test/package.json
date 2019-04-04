@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "frontend test toolkit",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
@@ -21,7 +21,6 @@
     "css-loader": "^0.28.11",
     "file-loader": "^1.1.11",
     "html-loader": "^0.5.5",
-    "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^11.7.0",
     "karma": "^2.0.0",
     "karma-chai": "^0.1.0",
