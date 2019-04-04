@@ -29,11 +29,6 @@ module.exports = ({ autowatch }) => {
           exclude: /node_modules/
         },
         {
-          test: /\.html$/,
-          loader: require.resolve('html-loader'),
-          exclude: /node_modules/
-        },
-        {
           test: /\.vue$/,
           loader: 'vue-loader',
           exclude: /node_modules/,
@@ -61,6 +56,7 @@ module.exports = ({ autowatch }) => {
         }
       ]
     },
+    mode: 'production',
     devtool: '#eval',
     watch: autowatch
   }
