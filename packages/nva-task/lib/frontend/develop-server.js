@@ -119,8 +119,12 @@ module.exports = (context, options) => {
           ? posix.join(req.url, 'index.html')
           : req.url
       url = parse(url)
-      res.setHeader('Content-Type', 'text/html')
-      res.end(bufs[url.pathname])
+      if (bufs[url.pathname]) {
+        res.setHeader('Content-Type', 'text/html')
+        res.end(bufs[url.pathname])
+      } else {
+        next()
+      }
     },
     asset: '.',
     proxy,
