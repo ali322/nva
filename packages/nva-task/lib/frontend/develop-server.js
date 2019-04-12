@@ -76,7 +76,10 @@ module.exports = (context, options) => {
     let url = spa ? '/' : '/index/'
     url = `${protocol}://${hostname}:${port}${url}`
     console.log(
-      `${emojis('rocket')}  ` + colors.yellow(logText.serverRunning + ` ${protocol}://${hostname}:${port}`)
+      `${emojis('rocket')}  ` +
+        colors.yellow(
+          logText.serverRunning + ` ${protocol}://${hostname}:${port}`
+        )
     )
     if (browser === 'none') return
     openBrowser(browser, url, logText.openBrowserFailed)
@@ -105,15 +108,7 @@ module.exports = (context, options) => {
     }
   })
 
-  let rewrites =
-    spa === true
-      ? [
-        {
-          from: /\/(\S+)?$/,
-          to: '/index.html'
-        }
-      ]
-      : false
+  let rewrites = spa === true ? '/index.html' : false
   if (isString(spa) || Array.isArray(spa)) {
     rewrites = spa
   }

@@ -113,7 +113,8 @@ const createServer = options => {
         historyAPIFallback({
           rewrites: [
             {
-              from: /\/(\S+)?$/,
+              // from: /\/(\S+)?$/,
+              from: /^(?!\/(\S+)?\.\w+)/,
               to: rewrites
             }
           ]
