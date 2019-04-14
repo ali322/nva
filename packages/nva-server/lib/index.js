@@ -97,20 +97,16 @@ const createServer = options => {
     })
   }
 
-  if (asset) {
-    Array.isArray(asset)
-      ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1))
-      : applyAsset(asset, false)
-  } else if (isString(content) && content) {
-    applyAsset(content, false)
-  }
-
   if (rewrites) {
     if (Array.isArray(rewrites)) {
-      app.use(historyAPIFallback({ rewrites }))
+      app.use(
+        historyAPIFallback({ disableDotRule: true, verbose: false, rewrites })
+      )
     } else if (typeof rewrites === 'string') {
       app.use(
         historyAPIFallback({
+          disableDotRule: true,
+          verbose: false,
           rewrites: [
             {
               // from: /\/(\S+)?$/,
@@ -124,7 +120,14 @@ const createServer = options => {
       app.use(
         historyAPIFallback({
           disableDotRule: true,
-          verbose: false
+          verbose: false,
+          rewrites: [
+            {
+              // from: /\/(\S+)?$/,
+              from: /^(?!\/(\S+)?\.\w+)/,
+              to: './index.html'
+            }
+          ]
         })
       )
     }
@@ -140,6 +143,12 @@ const createServer = options => {
     } else if (isFunction(content)) {
       app.use(content)
     }
+  }
+
+  if (asset) {
+    Array.isArray(asset)
+      ? asset.forEach((v, i) => applyAsset(v, i < asset.length - 1))
+      : applyAsset(asset, false)
   }
 
   app.use(function(err, req, res, next) {
