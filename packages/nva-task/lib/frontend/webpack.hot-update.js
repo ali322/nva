@@ -60,7 +60,7 @@ module.exports = function(context, profile) {
     let entry = {
       [name]: [
         require.resolve('webpack-hot-middleware/client') +
-          `?name=${name}&reload=true`,
+          `?path=/__webpack_hmr&timeout=2000&reload=true`,
         mod.input.js
       ].concat(mod.input.css ? [mod.input.css] : [])
     }

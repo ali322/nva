@@ -137,7 +137,7 @@ const createServer = options => {
     if (isString(content)) {
       app.use(
         serveStatic(resolve(content), {
-          fallthrough: false
+          fallthrough: true
         })
       )
     } else if (isFunction(content)) {

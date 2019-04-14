@@ -114,7 +114,6 @@ module.exports = (context, options) => {
   }
   const app = require('nva-server')({
     content: (req, res, next) => {
-      console.log(req.url)
       let url =
         req.url.endsWith(posix.sep) && rewrites === false
           ? posix.join(req.url, 'index.html')

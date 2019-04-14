@@ -108,13 +108,9 @@ module.exports = function(context, options) {
       )
     )
   }
-  let bundlerFinished = 0
   bus.on('client-build-finished', () => {
-    bundlerFinished += 1
-    if (bundlerFinished === hotUpdateConfig.length) {
-      clientBuildFinished = true
-      serverBuildFinished && startNode()
-    }
+    clientBuildFinished = true
+    serverBuildFinished && startNode()
   })
   const app = require('nva-server').mock(mock)
   let middleware = [app]
