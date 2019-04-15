@@ -81,6 +81,7 @@ module.exports = (context, profile) => {
     confs.push(
       merge(baseConfig, {
         entry,
+        name,
         output: {
           path: output.path,
           filename: join('[name]', '[name]-[hash:8].js'),

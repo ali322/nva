@@ -27,6 +27,7 @@ module.exports = (config, done, silent) => {
       }
     }),
     webpackHotMiddleware(bundler, {
+      path: `/__webpack_hmr_${config.name}`,
       log: false
     })
   ]

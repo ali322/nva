@@ -33,7 +33,6 @@ module.exports = function(context, options) {
     process.exit(0)
   })
 
-  let opened = 0
   let started = 0
   let openBrowserAfterDev = () => {
     if (browser === 'none') return
@@ -108,9 +107,13 @@ module.exports = function(context, options) {
       )
     )
   }
+  let bundlerFinished = 0
   bus.on('client-build-finished', () => {
-    clientBuildFinished = true
-    serverBuildFinished && startNode()
+    bundlerFinished += 1
+    if (bundlerFinished === hotUpdateConfig.length) {
+      clientBuildFinished = true
+      serverBuildFinished && startNode()
+    }
   })
   const app = require('nva-server').mock(mock)
   let middleware = [app]
@@ -119,16 +122,13 @@ module.exports = function(context, options) {
       require('../common/middleware')(
         config,
         (err, stats) => {
-          if (opened === 0) {
-            opened += 1
-            if (typeof hooks.afterDev === 'function') {
-              hooks.afterDev(err, stats)
-            }
-            if (typeof afterDev === 'function') {
-              afterDev(err, stats)
-            }
-            bus.emit('client-build-finished')
+          if (typeof hooks.afterDev === 'function') {
+            hooks.afterDev(err, stats)
           }
+          if (typeof afterDev === 'function') {
+            afterDev(err, stats)
+          }
+          bus.emit('client-build-finished')
         },
         profile || onDevProgress
       )

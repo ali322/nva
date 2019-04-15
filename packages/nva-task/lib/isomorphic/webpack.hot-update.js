@@ -51,7 +51,7 @@ module.exports = function(context, profile) {
     let entry = {
       [name]: [
         require.resolve('webpack-hot-middleware/client') +
-          `?reload=false&path=${devServerHost}/__webpack_hmr`,
+          `?name=${name}&reload=true&path=${devServerHost}/__webpack_hmr_${name}`,
         mod.input.js
       ].concat(mod.input.css ? [mod.input.css] : [])
     }
@@ -71,6 +71,7 @@ module.exports = function(context, profile) {
     confs.push(
       merge(baseConfig, {
         entry,
+        name,
         output: {
           path: output.path,
           filename: '[name].js',

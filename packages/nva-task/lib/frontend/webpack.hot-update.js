@@ -60,7 +60,7 @@ module.exports = function(context, profile) {
     let entry = {
       [name]: [
         require.resolve('webpack-hot-middleware/client') +
-          `?path=/__webpack_hmr&timeout=2000&reload=true`,
+          `?name=${name}&path=/__webpack_hmr_${name}&reload=true`,
         mod.input.js
       ].concat(mod.input.css ? [mod.input.css] : [])
     }
@@ -79,6 +79,7 @@ module.exports = function(context, profile) {
 
     confs.push(
       merge(baseConfig, {
+        name,
         entry,
         profile,
         output: {
