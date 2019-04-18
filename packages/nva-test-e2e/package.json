@@ -1,6 +1,6 @@
 {
   "name": "nva-test-e2e",
-  "version": "0.6.13",
+  "version": "0.6.15",
   "description": "frontend e2e test toolkit",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test-e2e",
@@ -20,9 +20,9 @@
     "internal-ip": "^3.0.1",
     "lodash": "^4.17.5",
     "qrcode-terminal": "^0.11.0",
-    "testcafe": "^0.19.1",
-    "testcafe-react-selectors": "^1.1.0",
-    "testcafe-vue-selectors": "^3.0.0",
+    "testcafe": "^1.1.2",
+    "testcafe-react-selectors": "^3.1.0",
+    "testcafe-vue-selectors": "^3.1.0",
     "yargs": "^7.1.0"
   }
 }
