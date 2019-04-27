@@ -51,7 +51,6 @@ module.exports = function (confPath, port, browsers = ['chrome']) {
       console.log(chalk.yellow('scan qrcode below to test on remote device'))
       qrcode.generate(remoteConnection.url, { small: true })
       console.log('')
-      //   console.log(remoteConnection.url)
       remoteConnection.once('ready', () => {
         exec(runner)
       })
