@@ -123,7 +123,6 @@ const createServer = options => {
           verbose: false,
           rewrites: [
             {
-              // from: /\/(\S+)?$/,
               from: /^(?!\/(\S+)?\.\w+)/,
               to: './index.html'
             }
