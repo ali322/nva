@@ -43,6 +43,7 @@ module.exports = context => {
     isDev: false,
     strict: false,
     profile: false,
+    env: {},
     isSSR,
     sourceFolder: 'src',
     jsExt: '.js',

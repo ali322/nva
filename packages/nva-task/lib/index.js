@@ -2,6 +2,8 @@ let { resolve, join, relative } = require('path')
 let chalk = require('chalk')
 let omit = require('lodash/omit')
 let chokidar = require('chokidar')
+const { readFileSync } = require('fs')
+const dotenv = require('dotenv')
 let { checkFile, checkDir, error, merge } = require('./common/helper')
 let initializer = require('./common/initializer')
 let { writeModConf } = require('./common')
@@ -14,6 +16,7 @@ module.exports = (options = {}) => {
     favicon = '',
     hooks = {},
     proj,
+    env,
     projConfPath,
     modConfPath = resolve(rootPath, 'bundle.json'),
     mockPath = resolve(rootPath, 'mock'),
@@ -23,11 +26,11 @@ module.exports = (options = {}) => {
   modConfPath = proj.modConfPath || modConfPath
   vendorConfPath = proj.vendorConfPath || vendorConfPath
   mockPath = proj.mockPath || mockPath
-  const mods = loadConf(modConfPath, (e) => {
+  const mods = loadConf(modConfPath, e => {
     error('module config is invalid')
     console.log(prettyError(e))
   })
-  const vendors = loadConf(vendorConfPath, (e) => {
+  const vendors = loadConf(vendorConfPath, e => {
     error('vendor config is invalid')
     console.log(prettyError(e))
   })
@@ -53,7 +56,10 @@ module.exports = (options = {}) => {
   let context = {
     namespace,
     mods,
-    proj: merge({ type: 'frontend', favicon, mock }, proj),
+    proj: merge(
+      { type: 'frontend', favicon, mock, env: loadEnv(rootPath, env) },
+      proj
+    ),
     vendors,
     addMods,
     removeMods,
@@ -105,4 +111,17 @@ function loadMock(path) {
     error(`${path} not exist`)
   }
   return join(path, '**', '*.@(json|js)')
+}
+
+function loadEnv(path, mode) {
+  let envs = {}
+  const paths = [join(path, '.env'), join(path, `.${mode}.env`)]
+  paths.forEach(path => {
+    if (checkFile(path)) {
+      let env = readFileSync(path)
+      env = dotenv.parse(env)
+      envs = merge(envs, env)
+    }
+  })
+  return envs
 }

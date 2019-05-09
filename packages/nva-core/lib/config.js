@@ -4,6 +4,7 @@ let { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 let loadersFactory = require('./loaders')
 let { happypackPlugin } = require('./lib')
 let assign = require('lodash/assign')
+let mapValues = require('lodash/mapValues')
 
 module.exports = (context, profile = false) => {
   let config = {
@@ -56,7 +57,10 @@ module.exports = (context, profile = false) => {
       watch: true,
       performance: { hints: false },
       plugins: plugins.concat([
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin(assign({}, {
+          'process.env.NODE_ENV': JSON.stringify('development')
+        }, mapValues(context.env, v => JSON.stringify(v))))
       ])
     }
     : {
@@ -64,9 +68,9 @@ module.exports = (context, profile = false) => {
       devtool: profile ? '#eval-source-map' : false,
       plugins: plugins.concat([
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
+        new webpack.DefinePlugin(assign({}, {
           'process.env.NODE_ENV': JSON.stringify('production')
-        }),
+        }, mapValues(context.env, v => JSON.stringify(v)))),
         new webpack.HashedModuleIdsPlugin({
           hashFunction: 'sha256',
           hashDigest: 'hex',
