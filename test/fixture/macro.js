@@ -23,6 +23,7 @@ exports.devMacro = (t, type, branch) => {
     })
     child.stderr.on('data', data => {
         console.error(data.toString())
+        t.end()
     })
 }
 
@@ -41,6 +42,10 @@ exports.buildMacro = (t, type, branch) => {
         if (finished.test(msg)) {
             child.kill()
         }
+        t.end()
+    })
+    child.stderr.on('data', data => {
+        console.error(data.toString())
         t.end()
     })
 }
