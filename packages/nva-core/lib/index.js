@@ -46,6 +46,7 @@ const core = (options = {}) => {
   })
   const vendors = loadVendor(vendorConfPath, logText)
   const mock = loadMock(mockPath, logText)
+  const { envs, paths: envPath } = loadEnv(rootPath, env)
 
   function startWatcher(strict) {
     let rcs = ['.babelrc']
@@ -54,7 +55,7 @@ const core = (options = {}) => {
     }
     rcs = rcs.map(rc => resolve(rc))
     watch(
-      [projConfPath, modConfPath, vendorConfPath].concat(rcs),
+      [projConfPath, modConfPath, vendorConfPath].concat(rcs).concat(envPath),
       logText,
       customWatch
     )
@@ -69,7 +70,7 @@ const core = (options = {}) => {
         favicon,
         mock,
         logText,
-        env: loadEnv(rootPath, env)
+        env: envs
       },
       proj,
       options.proj || {}
@@ -153,8 +154,7 @@ function loadEnv(path, mode) {
       envs = merge(envs, env)
     }
   })
-  console.log('envs', envs)
-  return envs
+  return { envs, paths }
 }
 
 core.mod = require('./mod')
