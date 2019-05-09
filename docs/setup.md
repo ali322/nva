@@ -92,4 +92,9 @@ nva bundle <bundle name, ...> -d
 }
 ```
 
+#### dot env settings
+
+- `.env` for common
+- `.[env].env` for specified env by cli argument `--env [env]`, this will overwrite common field
+
 [Back to Index](./index.md)

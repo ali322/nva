@@ -6,6 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const loadersFactory = require('./loaders')
 const { happypackPlugin } = require('./util')
 const assign = require('lodash/assign')
+const mapValues = require('lodash/mapValues')
 
 module.exports = (context, profile = false) => {
   const config = {
@@ -63,7 +64,10 @@ module.exports = (context, profile = false) => {
       // performance: { hints: false },
       mode: 'development',
       plugins: plugins.concat([
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin(assign({}, {
+          'process.env.NODE_ENV': JSON.stringify('development')
+        }, mapValues(context.env, v => JSON.stringify(v))))
       ])
     }
     : {
@@ -72,7 +76,10 @@ module.exports = (context, profile = false) => {
       mode: 'production',
       plugins: plugins.concat([
         new MiniCSSExtractPlugin({ filename: context.output.cssPath }),
-        new OptimizeCSSAssetsPlugin()
+        new OptimizeCSSAssetsPlugin(),
+        new webpack.DefinePlugin(assign({}, {
+          'process.env.NODE_ENV': JSON.stringify('production')
+        }, mapValues(context.env, v => JSON.stringify(v))))
       ])
     }
   return assign({}, config, restConfig)

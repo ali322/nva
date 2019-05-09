@@ -1,6 +1,8 @@
 const { resolve, join, relative } = require('path')
 const colors = require('colors')
 const chokidar = require('chokidar')
+const dotenv = require('dotenv')
+const { readFileSync } = require('fs')
 const isPlainObject = require('lodash/isPlainObject')
 const {
   checkFile,
@@ -20,6 +22,7 @@ const core = (options = {}) => {
     favicon = '',
     hooks = {},
     onDevProgress,
+    env,
     watch: customWatch,
     projConfPath = resolve(rootPath, `${namespace}.js`),
     modConfPath = resolve(rootPath, 'bundle.json'),
@@ -27,7 +30,9 @@ const core = (options = {}) => {
     vendorConfPath = resolve(rootPath, 'vendor.json')
   } = options
 
-  const logText = options.logText ? merge(defaultLogText, options.logText) : defaultLogText
+  const logText = options.logText
+    ? merge(defaultLogText, options.logText)
+    : defaultLogText
 
   let proj = loadConf(projConfPath, logText, e => {
     error(logText.projectInvalid)
@@ -48,13 +53,27 @@ const core = (options = {}) => {
       rcs = rcs.concat(['.eslintrc', '.eslint.*'])
     }
     rcs = rcs.map(rc => resolve(rc))
-    watch([projConfPath, modConfPath, vendorConfPath].concat(rcs), logText, customWatch)
+    watch(
+      [projConfPath, modConfPath, vendorConfPath].concat(rcs),
+      logText,
+      customWatch
+    )
   }
 
   let context = {
     namespace,
     mods,
-    proj: merge({ type: 'frontend', favicon, mock, logText }, proj, options.proj || {}),
+    proj: merge(
+      {
+        type: 'frontend',
+        favicon,
+        mock,
+        logText,
+        env: loadEnv(rootPath, env)
+      },
+      proj,
+      options.proj || {}
+    ),
     vendors,
     modConfPath,
     startWatcher,
@@ -107,7 +126,8 @@ function loadVendor(path, logText) {
     vendors.css = isPlainObject(vendors.css) ? vendors.css : {}
   } else {
     vendors = {
-      js: {}, css: {}
+      js: {},
+      css: {}
     }
   }
   return vendors
@@ -118,6 +138,23 @@ function loadMock(path, logText) {
     error(sprintf(logText.pathInvalid, [path]))
   }
   return join(path, '**', '*.@(json|js)')
+}
+
+function loadEnv(path, mode) {
+  let envs = {}
+  const paths = [
+    join(path, '.env'),
+    join(path, `.${mode}.env`)
+  ]
+  paths.forEach(path => {
+    if (checkFile(path)) {
+      let env = readFileSync(path)
+      env = dotenv.parse(env)
+      envs = merge(envs, env)
+    }
+  })
+  console.log('envs', envs)
+  return envs
 }
 
 core.mod = require('./mod')

@@ -6,7 +6,7 @@ const inquirer = require('inquirer')
 const omit = require('lodash/omit')
 const lib = require('../lib')
 const config = require('../lib/config')
-const options = require('../lib/option')
+const options = require('../lib/option')()
 const tasks = require('nva-task')(options)
 const questions = config.questions('mod')
 
