@@ -8,7 +8,7 @@ const morgan = require('morgan')
 const url = require('url')
 const compression = require('compression')
 const { join, resolve, parse } = require('path')
-const historyAPIFallback = require('connect-history-api-fallback')
+const historyAPIFallback = require('./history-api-fallback')
 const assign = require('lodash/assign')
 const isString = require('lodash/isString')
 const isFunction = require('lodash/isFunction')
@@ -106,7 +106,7 @@ const createServer = options => {
       app.use(
         historyAPIFallback({
           disableDotRule: true,
-          verbose: false,
+          verbose: true,
           rewrites: [
             {
               // from: /\/(\S+)?$/,
