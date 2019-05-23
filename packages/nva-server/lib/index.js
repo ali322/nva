@@ -106,7 +106,7 @@ const createServer = options => {
       app.use(
         historyAPIFallback({
           disableDotRule: true,
-          verbose: true,
+          verbose: false,
           rewrites: [
             {
               // from: /\/(\S+)?$/,
