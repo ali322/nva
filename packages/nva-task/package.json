@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.6.20",
+  "version": "0.6.21",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",
@@ -42,8 +42,8 @@
     "node-emoji": "^1.8.1",
     "node-sass": "^4.9.2",
     "nodemon": "^1.17.3",
-    "nva-core": "0.6.20",
-    "nva-server": "0.6.20",
+    "nva-core": "0.6.21",
+    "nva-server": "0.6.21",
     "nva-util": "^0.5.51",
     "opn": "^5.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
