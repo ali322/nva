@@ -40,14 +40,14 @@ const createServer = options => {
         app.use(
           proxyMiddleware(
             v.url,
-            assign({}, v.options, { logLevel: 'silent' })
+            assign({}, { logLevel: 'silent' }, v.options)
           )
         )
       )
       : app.use(
         proxyMiddleware(
           proxy.url,
-          assign({}, proxy.options, { logLevel: 'silent' })
+          assign({}, { logLevel: 'silent' }, proxy.options)
         )
       )
   }
