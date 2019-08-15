@@ -143,10 +143,12 @@ function loadMock(path, logText) {
 
 function loadEnv(path, mode) {
   let envs = {}
-  const paths = [
-    join(path, '.env'),
-    join(path, `.${mode}.env`)
+  let paths = [
+    join(path, '.env')
   ]
+  if (mode) {
+    paths.push(join(path, `.${mode}.env`))
+  }
   paths.forEach(path => {
     if (checkFile(path)) {
       let env = readFileSync(path)
