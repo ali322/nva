@@ -18,7 +18,7 @@
   "author": "alichen",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^4.11.0",
+    "eslint": "^4.18.2",
     "eslint-cli": "^1.1.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.8.0",

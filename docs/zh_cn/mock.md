@@ -90,6 +90,7 @@ module.exports = [{
         return mockJS.mock({...})
     }
 }]
+```
 
 增加自定义响应头
 
