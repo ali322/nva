@@ -36,10 +36,10 @@ module.exports = function(context, profile) {
       return typeof sourcemap[type][modVendor[type]] === 'string'
         ? [
           posix.join(
-              posix.sep,
-              vendorDevFolder,
-              sourcemap[type][modVendor[type]]
-            )
+            posix.sep,
+            vendorDevFolder,
+            sourcemap[type][modVendor[type]]
+          )
         ]
         : []
     }

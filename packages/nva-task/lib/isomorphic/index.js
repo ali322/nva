@@ -26,10 +26,16 @@ module.exports = context => {
   } = context
 
   function createBundle(context, profile) {
-    const bundleConfig = require('./webpack.bundle')(context, profile)
+    let bundleConfig = require('./webpack.bundle')(context, profile)
     del.sync(join(serverFolder, bundleFolder))
     if (Object.keys(bundleConfig.entry).length === 0) {
       return
+    }
+    if (typeof context.beforeBundleCreate === 'function') {
+      bundleConfig = mergeConfig(
+        bundleConfig,
+        context.beforeBundleCreate(bundleConfig)
+      )
     }
     const bundleCompiler = webpack(bundleConfig)
 

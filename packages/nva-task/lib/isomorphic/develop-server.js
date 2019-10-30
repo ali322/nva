@@ -51,11 +51,11 @@ module.exports = function(context, options) {
       execMap: serverCompile
         ? {
           js: join(
-              dirname(require.resolve('babel-cli')),
-              '..',
-              '.bin',
-              'babel-node'
-            )
+            dirname(require.resolve('babel-cli')),
+            '..',
+            '.bin',
+            'babel-node'
+          )
         }
         : {},
       verbose: true,
