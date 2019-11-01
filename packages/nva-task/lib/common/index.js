@@ -79,9 +79,9 @@ function vendorVersion(meta) {
   const mapper = mod =>
     startsWith(mod, '@')
       ? mod
-          .split('/')
-          .slice(0, 1)
-          .join('/')
+        .split('/')
+        .slice(0, 1)
+        .join('/')
       : mod.split('/')[0]
   if (meta.js) {
     forEach(meta.js, v => {

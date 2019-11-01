@@ -62,7 +62,7 @@ module.exports = context => {
       test: /\.vue/,
       exclude: /node_modules/,
       loader: 'vue-loader',
-      options: loaderOptions.vue && loaderOptions.vue.legacy ? vueLoaderOptions : {}
+      options: loaderOptions.vue ? (loaderOptions.vue.legacy ? vueLoaderOptions : loaderOptions.vue) : {}
     },
     {
       test: /\.(es6|js|jsx)$/,
