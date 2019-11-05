@@ -36,6 +36,7 @@ The shorthand repo notation is passed to download-git-repo so you can also use t
 nva dev
 nva dev --silent // ignore update checks
 nva dev -p <port>
+nva dev --client-port <client port> // specified client port for ssr project
 ```
 start develop server that [hot-module-replacement](http://webpack.github.io/docs/hot-module-replacement-with-webpack.html)(HMR) enabled,feel free get into your own business
 

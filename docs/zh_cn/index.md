@@ -39,6 +39,7 @@ nva init my-project
 ```bash
 cd my-project
 nva dev -p 3000
+nva dev --client-port 8000 // 指定SSR前端端口
 ```
 
 可使用 `silent` 参数跳过更新检测

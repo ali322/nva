@@ -44,7 +44,6 @@ all config files alive in `.nva` directory of project
     "serverFolder": "server",   /* isomorphic project only, server side source code folder */
     "serverEntry" : "bootstrap.js" /* isomorphic project only,server entry file */
     "serverCompile": false /* isomorphic project only,should compile server source code */
-    "clientPort": 7000 /* isomorphic project only,client dev server listen port */
 }
 ```
 #### `bundle.json` project module settings
