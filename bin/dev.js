@@ -5,6 +5,7 @@ const checkPKG = require('../lib/check-pkg')
 program.option('--protocol [protocol]', 'dev server protocol', 'http')
 program.option('--host [host]', 'dev server listen hostname', 'localhost')
 program.option('-p, --port [value]', 'dev server listen port', 3000)
+program.option('--client-port [value]', 'dev server listen port', 7000)
 program.option('--env [value]', 'development environment name', '')
 program.option('-b, --browser [browser]', 'which browser to open', 'default')
 program.option('-P, --profile', 'enable profile mode', false)
@@ -16,6 +17,7 @@ program.parse(process.argv)
 const protocol = program.protocol
 const hostname = program.host
 const port = program.port
+const clientPort = program.clientPort
 const browser = program.browser
 const profile = program.profile
 const useYarn = program.yarn
@@ -26,7 +28,7 @@ const options = require('../lib/option')({ env })
 const tasks = require('nva-task')(options)
 
 const dev = () => {
-  tasks.dev({ protocol, hostname, port, browser, profile })
+  tasks.dev({ protocol, hostname, port, clientPort, browser, profile })
 }
 const started = parseInt(process.env.started)
 

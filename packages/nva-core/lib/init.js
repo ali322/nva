@@ -75,8 +75,7 @@ module.exports = context => {
       serverEntry: 'bootstrap.js',
       serverCompile: false,
       viewFolder: join('server', 'view'),
-      sourceFolder: 'client',
-      clientPort: 7000
+      sourceFolder: 'client'
     })
   }
 

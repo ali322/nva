@@ -12,7 +12,6 @@ module.exports = function(context, options) {
     serverCompile,
     beforeDev,
     mock,
-    clientPort,
     afterDev,
     hooks,
     startWatcher,
@@ -22,7 +21,7 @@ module.exports = function(context, options) {
     logText
   } = context
 
-  const { protocol, hostname, port, browser, profile } = options
+  const { protocol, hostname, port, clientPort, browser, profile } = options
 
   const RUNNING_REGXP = new RegExp(logText.serverRunning)
   startWatcher(strict)
