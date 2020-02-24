@@ -55,7 +55,7 @@ const core = (options = {}) => {
     }
     rcs = rcs.map(rc => resolve(rc))
     watch(
-      [projConfPath, modConfPath, vendorConfPath].concat(rcs).concat(envPath),
+      [projConfPath, mockPath, modConfPath, vendorConfPath].concat(rcs).concat(envPath),
       logText,
       customWatch
     )

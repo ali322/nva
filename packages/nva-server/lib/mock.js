@@ -4,8 +4,7 @@ const { resolve } = require('path')
 const glob = require('glob')
 const colors = require('colors')
 const connect = require('connect')
-const chokidar = require('chokidar')
-const { prettyError, isEq, sprintf, relativeURL } = require('nva-util')
+const { prettyError, isEq } = require('nva-util')
 const forEach = require('lodash/forEach')
 const merge = require('lodash/merge')
 const find = require('lodash/find')
@@ -18,10 +17,6 @@ const isString = require('lodash/isString')
 const isArray = require('lodash/isArray')
 const isPlainObject = require('lodash/isPlainObject')
 
-function relativeUrl(path) {
-  return relativeURL(resolve(), path)
-}
-
 module.exports = (conf, logText) => {
   const app = connect()
 
@@ -30,7 +25,6 @@ module.exports = (conf, logText) => {
   })
   let mocks = {}
   let allRules = []
-  let watcher
   if (isString(conf) && conf) {
     conf.split(',').forEach(v => {
       let files = glob.sync(v)
@@ -45,83 +39,6 @@ module.exports = (conf, logText) => {
         }
         mocks[file] = Array.isArray(rules) ? rules : []
       })
-    })
-
-    watcher = chokidar.watch(conf.split(','), { depth: 5 })
-    watcher.on('change', file => {
-      delete require.cache[file]
-      let rules = []
-      try {
-        rules = require(resolve(file))
-      } catch (e) {
-        console.log(prettyError(e))
-        return
-      }
-      if (Array.isArray(rules) === false) {
-        console.log(
-          colors.red(
-            sprintf(logText.mockInvalid || 'mock config %s is invalid', [
-              relativeUrl(file)
-            ])
-          )
-        )
-        return
-      }
-      mocks[file] = rules.map(v => {
-        v.filename = file
-        return v
-      })
-      console.log(
-        colors.yellow(
-          sprintf(logText.mockChange || 'mock config %s is changed', [
-            relativeUrl(file)
-          ])
-        )
-      )
-    })
-    watcher.on('add', file => {
-      if (mocks[file] === undefined) {
-        let rules = []
-        try {
-          rules = require(resolve(file))
-        } catch (e) {
-          console.log(prettyError(e))
-          return
-        }
-        if (Array.isArray(rules) === false) {
-          console.log(
-            colors.red(
-              sprintf(logText.mockInvalid || 'mock config %s is invalid', [
-                relativeUrl(file)
-              ])
-            )
-          )
-          return
-        }
-        mocks[file] = rules.map(v => {
-          v.filename = file
-          return v
-        })
-        console.log(
-          colors.yellow(
-            sprintf(logText.mockAdd || 'mock config %s is added', [
-              relativeUrl(file)
-            ])
-          )
-        )
-      }
-    })
-    watcher.on('unlink', file => {
-      if (mocks[file]) {
-        delete mocks[file]
-      }
-      console.log(
-        colors.yellow(
-          sprintf(logText.mockDelete || 'mock config %s is deleted', [
-            relativeUrl(file)
-          ])
-        )
-      )
     })
   }
   if (isArray(conf)) {
