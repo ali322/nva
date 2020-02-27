@@ -113,34 +113,34 @@ module.exports = (context, profile) => {
               new ContentReplacePlugin({
                 external: [htmlOutput],
                 rules: {
-                  '**/*.js': content =>
+                  '**/*.js': (content, file) =>
                     content.replace(
                       RegExp(
                         `\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,
                         'gi'
                       ),
                       isFunction(staticPrefix)
-                        ? `${staticPrefix(staticFolder)}$1`
+                        ? `${staticPrefix(staticFolder, file)}$1`
                         : `${staticPrefix}/${staticFolder}$1`
                     ),
-                  '**/*.css': content =>
+                  '**/*.css': (content, file) =>
                     content.replace(
                       RegExp(
                         `(url\\s*\\(\\s*['"]?)\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]?\\s*\\))`,
                         'gi'
                       ),
                       isFunction(staticPrefix)
-                        ? `$1${staticPrefix(staticFolder)}$2`
+                        ? `$1${staticPrefix(staticFolder, file)}$2`
                         : `$1${staticPrefix}/${staticFolder}$2`
                     ),
-                  '**/*.html': content =>
+                  '**/*.html': (content, file) =>
                     content.replace(
                       RegExp(
                         `([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,
                         'gi'
                       ),
                       isFunction(staticPrefix)
-                        ? `$1${staticPrefix(staticFolder)}$2`
+                        ? `$1${staticPrefix(staticFolder, file)}$2`
                         : `$1${staticPrefix}/${staticFolder}$2`
                     )
                 }
