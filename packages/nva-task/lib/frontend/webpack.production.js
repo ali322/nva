@@ -50,8 +50,8 @@ module.exports = (context, profile) => {
       return typeof sourcemap[type][modVendor[type]] === 'string'
         ? [
           isFunction(outputPrefix)
-              ? outputPrefix(originalURL)
-              : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+            ? outputPrefix(originalURL)
+            : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
         ]
         : []
     }
@@ -95,25 +95,25 @@ module.exports = (context, profile) => {
         },
         plugins: baseConfig.plugins
           .concat(
-          [
-            new ProgressPlugin(true, {
-              identifier: name,
-              onProgress: context.onBuildProgress
-            }),
-            new ChunkAssetPlugin({
-              chunks: {
-                [name]: files =>
+            [
+              new ProgressPlugin(true, {
+                identifier: name,
+                onProgress: context.onBuildProgress
+              }),
+              new ChunkAssetPlugin({
+                chunks: {
+                  [name]: files =>
                     files.map(file => {
                       let outputFile =
                         mod.output[extname(file).replace('.', '')]
                       return outputFile || file
                     })
-              }
-            }),
-            new ContentReplacePlugin({
-              external: [htmlOutput],
-              rules: {
-                '**/*.js': content =>
+                }
+              }),
+              new ContentReplacePlugin({
+                external: [htmlOutput],
+                rules: {
+                  '**/*.js': content =>
                     content.replace(
                       RegExp(
                         `\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/"\\+]+\\.[A-Za-z]+)`,
@@ -123,17 +123,17 @@ module.exports = (context, profile) => {
                         ? `${staticPrefix(staticFolder)}$1`
                         : `${staticPrefix}/${staticFolder}$1`
                     ),
-                '**/*.css': content =>
+                  '**/*.css': content =>
                     content.replace(
                       RegExp(
-                        `(url\\s*\\(\\s*['"])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]\\s*\\))`,
+                        `(url\\s*\\(\\s*['"]?)\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+['"]?\\s*\\))`,
                         'gi'
                       ),
                       isFunction(staticPrefix)
                         ? `$1${staticPrefix(staticFolder)}$2`
                         : `$1${staticPrefix}/${staticFolder}$2`
                     ),
-                '**/*.html': content =>
+                  '**/*.html': content =>
                     content.replace(
                       RegExp(
                         `([href|src]=["'])\\/${staticFolder}(\\/[A-Za-z0-9-_\\.\\/]+\\.[A-Za-z]+["'])`,
@@ -143,39 +143,39 @@ module.exports = (context, profile) => {
                         ? `$1${staticPrefix(staticFolder)}$2`
                         : `$1${staticPrefix}/${staticFolder}$2`
                     )
-              }
-            }),
-            new InjectHtmlPlugin({
-              transducer: function(url) {
-                return isFunction(outputPrefix)
+                }
+              }),
+              new InjectHtmlPlugin({
+                transducer: function(url) {
+                  return isFunction(outputPrefix)
                     ? outputPrefix(url)
                     : outputPrefix +
                         relativeURL(dirname(htmlOutput), join(distFolder, url))
-              },
-              chunks: [name],
-              more: {
-                js: vendorAssets(mod.vendor, htmlOutput, 'js'),
-                css: vendorAssets(mod.vendor, htmlOutput, 'css')
-              },
-              filename: mod.input.html,
-              output: htmlOutput,
-              custom: [
-                {
-                  start: '<!-- start:bundle-time -->',
-                  end: '<!-- end:bundle-time -->',
-                  content: `<meta name="bundleTime" content="${bundleTime()}"/>`
+                },
+                chunks: [name],
+                more: {
+                  js: vendorAssets(mod.vendor, htmlOutput, 'js'),
+                  css: vendorAssets(mod.vendor, htmlOutput, 'css')
+                },
+                filename: mod.input.html,
+                output: htmlOutput,
+                custom: [
+                  {
+                    start: '<!-- start:bundle-time -->',
+                    end: '<!-- end:bundle-time -->',
+                    content: `<meta name="bundleTime" content="${bundleTime()}"/>`
+                  }
+                ]
+              }),
+              new TidyStatsPlugin({
+                identifier: name,
+                logText: {
+                  success: logText.buildSuccess,
+                  warn: logText.buildWarn,
+                  error: logText.buildError
                 }
-              ]
-            }),
-            new TidyStatsPlugin({
-              identifier: name,
-              logText: {
-                success: logText.buildSuccess,
-                warn: logText.buildWarn,
-                error: logText.buildError
-              }
-            })
-          ],
+              })
+            ],
             dllRefs
           )
           .concat(
