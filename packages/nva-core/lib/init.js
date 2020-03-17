@@ -74,6 +74,7 @@ module.exports = context => {
       serverFolder: 'server',
       serverEntry: 'bootstrap.js',
       serverCompile: false,
+      serverCompiler: 'babel-node',
       viewFolder: join('server', 'view'),
       sourceFolder: 'client'
     })

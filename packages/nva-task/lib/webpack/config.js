@@ -35,7 +35,7 @@ module.exports = (context, profile = false) => {
       'js',
       [
         {
-          loader: require.resolve('babel-loader'),
+          loader: 'babel-loader',
           options: { cacheDirectory: true }
         }
       ]

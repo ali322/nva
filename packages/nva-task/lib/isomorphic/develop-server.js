@@ -1,7 +1,7 @@
 const BrowserSync = require('browser-sync')
 const nodemon = require('./nodemon')
 const flatMap = require('lodash/flatMap')
-const { join, dirname } = require('path')
+const { join } = require('path')
 const { mergeConfig, openBrowser } = require('../common')
 const { merge } = require('nva-util')
 const bus = require('../common/event-bus')
@@ -10,6 +10,7 @@ module.exports = function(context, options) {
   const {
     serverFolder,
     serverCompile,
+    serverCompiler,
     beforeDev,
     mock,
     afterDev,
@@ -49,12 +50,7 @@ module.exports = function(context, options) {
       },
       execMap: serverCompile
         ? {
-          js: join(
-            dirname(require.resolve('babel-cli')),
-            '..',
-            '.bin',
-            'babel-node'
-          )
+          js: serverCompiler
         }
         : {},
       verbose: true,

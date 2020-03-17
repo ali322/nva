@@ -1,6 +1,6 @@
 {
   "name": "nva-test",
-  "version": "0.6.21",
+  "version": "0.6.22",
   "description": "frontend test toolkit",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-test",
@@ -14,8 +14,6 @@
   "author": "alichen",
   "license": "MIT",
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
     "chai": "^3.5.0",
     "chalk": "^2.3.0",
     "css-loader": "^2.1.1",

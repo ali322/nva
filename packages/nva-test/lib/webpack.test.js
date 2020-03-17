@@ -25,7 +25,7 @@ module.exports = ({ autowatch }) => {
       rules: [
         {
           test: /\.(js|es6|jsx)$/,
-          loader: require.resolve('babel-loader'),
+          loader: 'babel-loader',
           exclude: /node_modules/
         },
         {
