@@ -25,7 +25,7 @@ module.exports = context => {
       },
       hash: 'sha512',
       digest: 'hex',
-      name: '[hash:8].[ext]'
+      name: '[contenthash:8].[ext]'
     }, loaderOptions.url || {})
   }
   const vueLoaderOptions = {
