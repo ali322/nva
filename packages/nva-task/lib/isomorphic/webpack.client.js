@@ -34,10 +34,10 @@ module.exports = function(context, profile) {
       return typeof sourcemap[type][modVendor[type]] === 'string'
         ? [
           posix.join(
-              posix.sep,
-              vendorFolder,
-              sourcemap[type][modVendor[type]]
-            )
+            posix.sep,
+            vendorFolder,
+            sourcemap[type][modVendor[type]]
+          )
         ]
         : []
     }
@@ -68,8 +68,8 @@ module.exports = function(context, profile) {
         name,
         output: {
           path: output.path,
-          filename: join('[name]', '[name]-[contenthash:8].js'),
-          chunkFilename: join(chunkFolder, '[id]-[contenthash:8].chunk.js')
+          filename: join('[name]', '[name]-[hash:8].js'),
+          chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
         },
         // context: __dirname,
         resolveLoader: {

@@ -39,8 +39,8 @@ module.exports = function(context) {
     entry: entryJS,
     output: {
       path: resolve(isDev ? output.vendorDevPath : output.vendorPath),
-      filename: '[name]-[contenthash:8].js',
-      library: '[name]_[contenthash]'
+      filename: '[name]-[hash:8].js',
+      library: '[name]_[hash]'
     },
     resolve: {
       modules: [sourceFolder, 'node_modules', resolve('node_modules')]
@@ -48,7 +48,7 @@ module.exports = function(context) {
     plugins: baseConfig.plugins.slice(0, -1).concat([
       new ProgressPlugin(true, { identifier: 'vendor:js' }),
       new DllPlugin({
-        name: '[name]_[contenthash]',
+        name: '[name]_[hash]',
         path: resolve(
           isDev ? output.vendorDevPath : output.vendorPath,
           '[name]-manifest.json'
@@ -75,7 +75,7 @@ module.exports = function(context) {
       output: merge(output, {
         cssPath: join(
           isDev ? vendorDevFolder : vendorFolder,
-          '[name]-[contenthash:8].css'
+          '[name]-[hash:8].css'
         )
       }),
       isDev: false
