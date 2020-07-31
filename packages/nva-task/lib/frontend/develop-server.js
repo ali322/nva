@@ -128,6 +128,7 @@ module.exports = (context, options) => {
     },
     asset: '.',
     proxy,
+    cors: true,
     log: false,
     rewrites,
     mock,
