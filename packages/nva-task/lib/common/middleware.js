@@ -20,6 +20,9 @@ module.exports = (config, done, silent) => {
       hot: true,
       logLevel: silent ? 'info' : 'silent',
       lazy: false,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
       watchOptions: {
         aggregateTimeout: 300,
         poll: true,
