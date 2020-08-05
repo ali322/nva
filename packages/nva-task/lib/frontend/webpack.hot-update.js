@@ -60,9 +60,8 @@ module.exports = function(context, profile) {
     let entry = {
       [name]: [
         require.resolve('webpack-hot-middleware/client') +
-          `?name=${name}&path=/__webpack_hmr_${name}&reload=true`,
-        mod.input.js
-      ].concat(mod.input.css ? [mod.input.css] : [])
+          `?name=${name}&path=/__webpack_hmr_${name}&reload=true`
+      ].concat(mod.input.css ? [mod.input.css] : []).concat([mod.input.js])
     }
 
     let dllRefs = (Array.isArray(mod.vendor.js)
