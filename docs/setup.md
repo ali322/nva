@@ -17,6 +17,7 @@ all config files alive in `.nva` directory of project
     |-- nva.json    # global settings
     |-- bundle.json # project module settings
     |-- vendor.json # project third-party libraries settings
+```
 
 #### `nva.js` project global settings
 
