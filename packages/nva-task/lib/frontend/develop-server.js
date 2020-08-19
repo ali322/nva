@@ -73,7 +73,7 @@ module.exports = (context, options) => {
 
   // open browser when first build finished
   let openBrowserAfterDev = () => {
-    let url = spa ? '/' : '/index/'
+    let url = spa === true ? '/' : (typeof spa === 'string' ? spa : '/index/')
     url = `${protocol}://${hostname}:${port}${url}`
     console.log(
       `${emojis('rocket')}  ` +
