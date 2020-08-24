@@ -71,7 +71,7 @@ module.exports = function(context, profile) {
       let manifestPath = resolve(output.vendorDevPath, `${key}-manifest.json`)
       let manifest = require(manifestPath)
       return new DllReferencePlugin({
-        // context: __dirname,
+        context: __dirname,
         manifest
       })
     })

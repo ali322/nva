@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.7.16",
+  "version": "0.7.17",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",
@@ -58,7 +58,7 @@
     "typescript": "^3.2.2",
     "url-loader": "^1.1.2",
     "webpack": "^4.6.0",
-    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-bundle-analyzer": "^3.8.0",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.24.3",
     "webpack-merge": "^4.1.4",
