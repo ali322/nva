@@ -40,7 +40,8 @@ module.exports = function(context) {
     output: {
       path: resolve(isDev ? output.vendorDevPath : output.vendorPath),
       filename: '[name]-[hash:8].js',
-      library: '[name]_[hash]'
+      library: '[name]_[hash]',
+      libraryTarget: 'umd'
     },
     resolve: {
       modules: [sourceFolder, 'node_modules', resolve('node_modules')]
@@ -53,7 +54,7 @@ module.exports = function(context) {
           isDev ? output.vendorDevPath : output.vendorPath,
           '[name]-manifest.json'
         ),
-        context: __dirname
+        context: resolve()
       }),
       new TidyStatsPlugin({
         identifier: 'vendor:js',

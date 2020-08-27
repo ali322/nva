@@ -61,7 +61,7 @@ module.exports = (context, profile) => {
   /** build modules */
   forEach(mods, (mod, name) => {
     let entry = {
-      [name]: [mod.input.js].concat(mod.input.css ? [mod.input.css] : [])
+      [name]: [].concat(mod.input.css ? [mod.input.css] : []).concat([mod.input.js])
     }
 
     const htmlOutput = mod.output.html
@@ -73,7 +73,7 @@ module.exports = (context, profile) => {
       let manifestPath = resolve(output.vendorPath, `${key}-manifest.json`)
       let manifest = require(manifestPath)
       return new DllReferencePlugin({
-        context: __dirname,
+        context: resolve(),
         manifest
       })
     })
