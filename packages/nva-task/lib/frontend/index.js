@@ -54,15 +54,14 @@ module.exports = context => {
 
       const compiler = webpack(releaseConfig)
       compiler.run(function(err, stats) {
-        if (err) {
-          console.error(err)
-          return
-        }
         if (typeof hooks.afterBuild === 'function') {
           hooks.afterBuild(err, stats)
         }
         if (typeof afterBuild === 'function') {
           afterBuild(err, stats)
+        }
+        if (err) {
+          console.error(err)
         }
       })
     },
