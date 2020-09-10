@@ -24,7 +24,7 @@ module.exports = (context, profile) => {
     chunkFolder,
     vendorSourceMap,
     output
-    } = context
+  } = context
   /** build variables */
   let entry = {}
   let htmls = []
@@ -174,6 +174,6 @@ module.exports = (context, profile) => {
           }
         ])
         : []
-      )
+    )
   })
 }
