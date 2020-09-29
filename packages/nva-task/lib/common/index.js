@@ -2,6 +2,7 @@ const compact = require('lodash/compact')
 const mapValues = require('lodash/mapValues')
 const isEqual = require('lodash/isEqual')
 const isPlainObject = require('lodash/isPlainObject')
+const isFunction = require('lodash/isFunction')
 const forEach = require('lodash/forEach')
 const startsWith = require('lodash/startsWith')
 const every = require('lodash/every')
@@ -14,20 +15,17 @@ const opn = require('opn')
 
 exports.mergeConfig = (config, value) => {
   const webpackConfig = Array.isArray(value) ? compact(value) : [value]
-  if (Array.isArray(config)) {
-    return config.map(v => {
-      return merge.strategy({
-        plugins: 'replace',
-        entry: 'replace',
-        'module.rules': 'replace'
-      })(v, ...webpackConfig)
-    })
-  }
-  return merge.strategy({
+  const mergeFn = merge.strategy({
     plugins: 'replace',
     entry: 'replace',
     'module.rules': 'replace'
-  })(config, ...webpackConfig)
+  })
+  if (Array.isArray(config)) {
+    return config.map(v => {
+      return isFunction(value) ? mergeFn(v, value(v)) : mergeFn(v, ...webpackConfig)
+    })
+  }
+  return mergeFn(config, ...webpackConfig)
 }
 
 exports.checkVendor = (vendors, target) => {
