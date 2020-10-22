@@ -96,7 +96,7 @@ module.exports = function(context, profile) {
           modules: [sourceFolder, resolve('node_modules'), 'node_modules']
         },
         plugins: baseConfig.plugins.concat(dllRefs, [
-          new ProgressPlugin(true, {
+          new ProgressPlugin({
             identifier: name,
             onProgress: context.onDevProgress
           }),

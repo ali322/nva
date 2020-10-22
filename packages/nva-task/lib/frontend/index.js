@@ -84,8 +84,8 @@ module.exports = context => {
       compiler.run(function(err, stats) {
         if (err) {
           console.error(err)
-          return
         }
+        // compiler.close()
         sourceMapByVendor(
           stats,
           vendors,

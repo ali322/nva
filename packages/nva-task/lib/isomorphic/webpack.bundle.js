@@ -51,7 +51,7 @@ module.exports = function(context, profile) {
     },
     externals,
     plugins: baseConfig.plugins.slice(0, -1).concat([
-      new ProgressPlugin(true, {
+      new ProgressPlugin({
         identifier: 'bundle'
       }),
       new TidyStatsPlugin({

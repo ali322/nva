@@ -39,17 +39,17 @@ module.exports = function(context) {
     entry: entryJS,
     output: {
       path: resolve(isDev ? output.vendorDevPath : output.vendorPath),
-      filename: '[name]-[hash:8].js',
-      library: '[name]_[hash]',
+      filename: '[name]-[fullhash:8].js',
+      library: '[name]_[fullhash]',
       libraryTarget: 'umd'
     },
     resolve: {
       modules: [sourceFolder, 'node_modules', resolve('node_modules')]
     },
     plugins: baseConfig.plugins.slice(0, -1).concat([
-      new ProgressPlugin(true, { identifier: 'vendor:js' }),
+      new ProgressPlugin({ identifier: 'vendor:js' }),
       new DllPlugin({
-        name: '[name]_[hash]',
+        name: '[name]_[fullhash]',
         path: resolve(
           isDev ? output.vendorDevPath : output.vendorPath,
           '[name]-manifest.json'
@@ -76,7 +76,7 @@ module.exports = function(context) {
       output: merge(output, {
         cssPath: join(
           isDev ? vendorDevFolder : vendorFolder,
-          '[name]-[hash:8].css'
+          '[name]-[fullhash:8].css'
         )
       }),
       isDev: false
@@ -92,7 +92,7 @@ module.exports = function(context) {
       path: output.path
     },
     plugins: baseCSSConfig.plugins.concat([
-      new ProgressPlugin(true, { identifier: 'vendor:css' }),
+      new ProgressPlugin({ identifier: 'vendor:css' }),
       new ChunkAssetPlugin({
         chunks: fromPairs(
           map(cssChunks, chunk => {

@@ -66,7 +66,7 @@ exports.checkVendor = (vendors, target) => {
 exports.sourceMapByVendor = (stats, meta, target) => {
   let output = {}
   stats.toJson().children.forEach(child => {
-    output[child.name] = mapValues(child.assetsByChunkName, v => basename(v))
+    output[child.name] = mapValues(child.assetsByChunkName, v => basename(Array.isArray(v) ? v[0] : v))
   })
   outputJsonSync(target, { output, meta, version: vendorVersion(meta) })
 }

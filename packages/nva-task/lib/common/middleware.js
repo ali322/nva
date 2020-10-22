@@ -26,7 +26,7 @@ module.exports = (config, done, silent) => {
       watchOptions: {
         aggregateTimeout: 300,
         poll: true,
-        ignored: [/node_modules/]
+        ignored: /node_modules/
       }
     }),
     webpackHotMiddleware(bundler, {

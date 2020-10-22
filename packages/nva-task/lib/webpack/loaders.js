@@ -1,32 +1,57 @@
 const path = require('path')
+// const threadLoader = require('thread-loader')
 const assign = require('lodash/assign')
-const { cssLoaders, postcssOptions, vueStyleLoaders } = require('./util')
+const {
+  threadOptions,
+  cssLoaders,
+  postcssOptions,
+  vueStyleLoaders
+} = require('./util')
 
-module.exports = context => {
-  const { output = {}, imagePrefix, fontPrefix, isDev, strict, loaderOptions } = context
+module.exports = (context) => {
+  const {
+    output = {},
+    imagePrefix,
+    fontPrefix,
+    isDev,
+    strict,
+    loaderOptions
+  } = context
+
+  const threadLoaderOptions = threadOptions(context)
+  // threadLoader.warmup(threadLoaderOptions, [
+  //   require.resolve('sass-loader')
+  // ])
 
   let urlLoaderOptions = {
     limit: 2500
   }
   if (!isDev) {
-    urlLoaderOptions = assign({}, urlLoaderOptions, {
-      publicPath: function(url, resource) {
-        let prefix = ''
-        if (/\.(jpg|jpeg|png|bmp|gif)$/.test(url)) {
-          prefix = imagePrefix
-        } else if (
-          /\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)
-        ) {
-          prefix = fontPrefix
-        }
-        return typeof prefix === 'function'
-          ? prefix(url, resource)
-          : path.posix.join(prefix, path.basename(url))
+    urlLoaderOptions = assign(
+      {},
+      urlLoaderOptions,
+      {
+        publicPath: function (url, resource) {
+          let prefix = ''
+          if (/\.(jpg|jpeg|png|bmp|gif)$/.test(url)) {
+            prefix = imagePrefix
+          } else if (
+            /\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(
+              url
+            )
+          ) {
+            prefix = fontPrefix
+          }
+          return typeof prefix === 'function'
+            ? prefix(url, resource)
+            : path.posix.join(prefix, path.basename(url))
+        },
+        hash: 'sha512',
+        digest: 'hex',
+        name: '[fullhash:8].[ext]'
       },
-      hash: 'sha512',
-      digest: 'hex',
-      name: '[hash:8].[ext]'
-    }, loaderOptions.url || {})
+      loaderOptions.url || {}
+    )
   }
   const vueLoaderOptions = {
     postcss: {
@@ -34,7 +59,13 @@ module.exports = context => {
       options: { sourceMap: 'inline' }
     },
     loaders: {
-      js: require.resolve('happypack/loader') + '?id=js',
+      js: [
+        {
+          loader: require.resolve('thread-loader'),
+          options: threadLoaderOptions
+        },
+        { loader: 'babel-loader', options: { cacheDirectory: true } }
+      ],
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
       stylus: vueStyleLoaders(context, {
@@ -62,18 +93,27 @@ module.exports = context => {
       test: /\.vue/,
       exclude: /node_modules/,
       loader: 'vue-loader',
-      options: loaderOptions.vue ? (loaderOptions.vue.legacy ? vueLoaderOptions : loaderOptions.vue) : {}
+      options: loaderOptions.vue
+        ? loaderOptions.vue.legacy
+          ? vueLoaderOptions
+          : loaderOptions.vue
+        : {}
     },
     {
       test: /\.(es6|js|jsx)$/,
       exclude: /node_modules/,
-      loader: require.resolve('happypack/loader'),
-      options: { id: 'js' }
+      use: [
+        {
+          loader: require.resolve('thread-loader'),
+          options: threadLoaderOptions
+        },
+        { loader: 'babel-loader', options: { cacheDirectory: true } }
+      ]
     },
     {
       test: /\.(ts|tsx)$/,
       exclude: /node_modules/,
-      loader: require.resolve('awesome-typescript-loader'),
+      loader: require.resolve('ts-loader'),
       options: { useCache: true }
     },
     {
@@ -84,18 +124,32 @@ module.exports = context => {
     {
       test: /\.sass/,
       exclude: /node_modules/,
-      use: cssLoaders(context, {
-        loader: require.resolve('sass-loader'),
-        options: { indentedSyntax: true, sourceMap: true }
-      })
+      use: [
+        // {
+        //   loader: require.resolve('thread-loader'),
+        //   options: threadLoaderOptions
+        // }
+      ].concat(
+        cssLoaders(context, {
+          loader: require.resolve('sass-loader'),
+          options: { indentedSyntax: true, sourceMap: true }
+        })
+      )
     },
     {
       test: /\.scss/,
       exclude: /node_modules/,
-      use: cssLoaders(context, {
-        loader: require.resolve('sass-loader'),
-        options: { sourceMap: true }
-      })
+      use: [
+        // {
+        //   loader: require.resolve('thread-loader'),
+        //   options: threadLoaderOptions
+        // }
+      ].concat(
+        cssLoaders(context, {
+          loader: require.resolve('sass-loader'),
+          options: { sourceMap: true }
+        })
+      )
     },
     {
       test: /\.styl/,

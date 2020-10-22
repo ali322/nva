@@ -84,8 +84,8 @@ module.exports = (context, profile) => {
         name,
         output: {
           path: output.path,
-          filename: join('[name]', '[name]-[hash:8].js'),
-          chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
+          filename: join('[name]', '[name]-[contenthash].js'),
+          chunkFilename: join(chunkFolder, '[id]-[contenthash].chunk.js')
         },
         resolveLoader: {
           modules: [resolve('node_modules'), 'node_modules']
@@ -96,7 +96,7 @@ module.exports = (context, profile) => {
         plugins: baseConfig.plugins
           .concat(
             [
-              new ProgressPlugin(true, {
+              new ProgressPlugin({
                 identifier: name,
                 onProgress: context.onBuildProgress
               }),

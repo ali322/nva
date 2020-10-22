@@ -80,7 +80,7 @@ module.exports = function(context, profile) {
         },
         plugins: baseConfig.plugins
           .concat([
-            new ProgressPlugin(true, {
+            new ProgressPlugin({
               identifier: name,
               onProgress: context.onBuildProgress
             }),

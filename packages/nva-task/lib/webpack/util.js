@@ -1,30 +1,29 @@
-const HappyPack = require('happypack')
-const os = require('os')
 const assign = require('lodash/assign')
 const isPlainObject = require('lodash/isPlainObject')
 const autoPrefixer = require('autoprefixer')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
-const compilerThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
-
 const mergeLoaderOptions = (defaults, options) => {
   return isPlainObject(options) ? assign({}, defaults, options) : defaults
 }
 
-exports.happypackPlugin = (id, loaders) => {
-  return new HappyPack({
-    id,
-    verbose: false,
-    threadPool: compilerThreadPool,
-    loaders
-  })
+exports.threadOptions = (context) => {
+  const { loaderOptions } = context
+  return mergeLoaderOptions(
+    {
+      workerParallelJobs: 50,
+      poolRespawn: context.isDev,
+      poolTimeout: 2000,
+      poolParallelJobs: 50
+    },
+    loaderOptions.thread
+  )
 }
 
 exports.postcssOptions = context => {
   const { loaderOptions } = context
   return mergeLoaderOptions({
-    plugins: [autoPrefixer()],
-    sourceMap: 'inline'
+    plugins: [autoPrefixer()]
   }, loaderOptions.postcss)
 }
 
@@ -56,11 +55,16 @@ exports.cssLoaders = (context, preprocessor = '') => {
     },
     {
       loader: require.resolve('postcss-loader'),
-      options: exports.postcssOptions(context)
+      options: {
+        postcssOptions: exports.postcssOptions(context)
+      }
     },
     {
       loader: require.resolve('resolve-url-loader'),
-      options: mergeLoaderOptions({debug: false}, loaderOptions.resolveURL)
+      options: mergeLoaderOptions(
+        { debug: false },
+        loaderOptions.resolveURL
+      )
     }
   ]
   if (preprocessor) {

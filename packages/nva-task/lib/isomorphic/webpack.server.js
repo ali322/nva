@@ -39,7 +39,7 @@ module.exports = function(context, profile) {
     },
     externals,
     plugins: baseConfig.plugins.concat([
-      new ProgressPlugin(true, {
+      new ProgressPlugin({
         identifier: 'server'
       }),
       new TidyStatsPlugin({
