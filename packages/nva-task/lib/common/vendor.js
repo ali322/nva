@@ -39,8 +39,8 @@ module.exports = function(context) {
     entry: entryJS,
     output: {
       path: resolve(isDev ? output.vendorDevPath : output.vendorPath),
-      filename: '[name]-[fullhash:8].js',
-      library: '[name]_[fullhash]',
+      filename: '[name]-[contenthash].js',
+      library: '[name]_[contenthash]',
       libraryTarget: 'umd'
     },
     resolve: {
@@ -49,7 +49,7 @@ module.exports = function(context) {
     plugins: baseConfig.plugins.slice(0, -1).concat([
       new ProgressPlugin({ identifier: 'vendor:js' }),
       new DllPlugin({
-        name: '[name]_[fullhash]',
+        name: '[name]_[contenthash]',
         path: resolve(
           isDev ? output.vendorDevPath : output.vendorPath,
           '[name]-manifest.json'
@@ -76,7 +76,7 @@ module.exports = function(context) {
       output: merge(output, {
         cssPath: join(
           isDev ? vendorDevFolder : vendorFolder,
-          '[name]-[fullhash:8].css'
+          '[name]-[contenthash].css'
         )
       }),
       isDev: false
