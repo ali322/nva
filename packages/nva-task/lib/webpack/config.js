@@ -64,7 +64,7 @@ module.exports = (context, profile = false) => {
     }
     : {
       // devtool: "#cheap-module-source-map",
-      devtool: profile ? 'source-map' : false,
+      // devtool: profile ? 'source-map' : false,
       mode: 'production',
       optimization: {
         minimize: true,
