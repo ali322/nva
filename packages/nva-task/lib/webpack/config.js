@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-// const { CheckerPlugin } = require('awesome-typescript-loader')
+const TerserPlugin = require('terser-webpack-plugin')
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const loadersFactory = require('./loaders')
 const assign = require('lodash/assign')
@@ -17,7 +17,6 @@ module.exports = (context, profile = false) => {
       extensions: [
         '.js',
         '.json',
-        '.es6',
         '.jsx',
         '.ts',
         '.tsx',
@@ -44,7 +43,7 @@ module.exports = (context, profile = false) => {
 
   const restConfig = context.isDev
     ? {
-      devtool: 'eval-source-map',
+      devtool: 'source-map',
       // watch: true,
       // performance: { hints: false },
       mode: 'development',
@@ -65,11 +64,13 @@ module.exports = (context, profile = false) => {
     }
     : {
       // devtool: "#cheap-module-source-map",
-      devtool: profile ? 'eval-source-map' : false,
+      devtool: profile ? 'source-map' : false,
       mode: 'production',
+      optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin(), new CSSMinimizerPlugin()]
+      },
       plugins: plugins.concat([
-        new MiniCSSExtractPlugin({ filename: context.output.cssPath }),
-        new CSSMinimizerPlugin(),
         new webpack.DefinePlugin(
           assign(
             {},
@@ -80,7 +81,8 @@ module.exports = (context, profile = false) => {
             },
             mapValues(context.env, (v) => JSON.stringify(v))
           )
-        )
+        ),
+        new MiniCSSExtractPlugin({ filename: context.output.cssPath })
       ])
     }
   return assign({}, config, restConfig)

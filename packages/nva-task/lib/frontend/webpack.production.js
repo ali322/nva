@@ -91,7 +91,11 @@ module.exports = (context, profile) => {
           modules: [resolve('node_modules'), 'node_modules']
         },
         resolve: {
-          modules: [sourceFolder, resolve('node_modules'), 'node_modules']
+          modules: [
+            sourceFolder,
+            resolve('node_modules'),
+            'node_modules'
+          ]
         },
         plugins: baseConfig.plugins
           .concat(
@@ -102,10 +106,9 @@ module.exports = (context, profile) => {
               }),
               new ChunkAssetPlugin({
                 chunks: {
-                  [name]: files =>
-                    files.map(file => {
-                      let outputFile =
-                        mod.output[extname(file).replace('.', '')]
+                  [name]: (files) =>
+                    files.map((file) => {
+                      let outputFile = mod.output[extname(file).replace('.', '')]
                       return outputFile || file
                     })
                 }
@@ -120,7 +123,10 @@ module.exports = (context, profile) => {
                         'gi'
                       ),
                       isFunction(staticPrefix)
-                        ? `${staticPrefix(staticFolder, file)}$1`
+                        ? `${staticPrefix(
+                          staticFolder,
+                          file
+                        )}$1`
                         : `${staticPrefix}/${staticFolder}$1`
                     ),
                   '**/*.css': (content, file) =>
@@ -130,7 +136,10 @@ module.exports = (context, profile) => {
                         'gi'
                       ),
                       isFunction(staticPrefix)
-                        ? `$1${staticPrefix(staticFolder, file)}$2`
+                        ? `$1${staticPrefix(
+                          staticFolder,
+                          file
+                        )}$2`
                         : `$1${staticPrefix}/${staticFolder}$2`
                     ),
                   '**/*.html': (content, file) =>
@@ -140,22 +149,32 @@ module.exports = (context, profile) => {
                         'gi'
                       ),
                       isFunction(staticPrefix)
-                        ? `$1${staticPrefix(staticFolder, file)}$2`
+                        ? `$1${staticPrefix(
+                          staticFolder,
+                          file
+                        )}$2`
                         : `$1${staticPrefix}/${staticFolder}$2`
                     )
                 }
               }),
               new InjectHtmlPlugin({
-                transducer: function(url) {
+                transducer: function (url) {
                   return isFunction(outputPrefix)
                     ? outputPrefix(url)
                     : outputPrefix +
-                        relativeURL(dirname(htmlOutput), join(distFolder, url))
+                                          relativeURL(
+                                            dirname(htmlOutput),
+                                            join(distFolder, url)
+                                          )
                 },
                 chunks: [name],
                 more: {
                   js: vendorAssets(mod.vendor, htmlOutput, 'js'),
-                  css: vendorAssets(mod.vendor, htmlOutput, 'css')
+                  css: vendorAssets(
+                    mod.vendor,
+                    htmlOutput,
+                    'css'
+                  )
                 },
                 filename: mod.input.html,
                 output: htmlOutput,
@@ -180,13 +199,17 @@ module.exports = (context, profile) => {
           )
           .concat(
             existsSync(resolve(staticFolder))
-              ? new CopyPlugin([
-                {
-                  from: resolve(staticFolder),
-                  to: join(output.path, staticFolder),
-                  ignore: ['.*']
-                }
-              ])
+              ? new CopyPlugin({
+                patterns: [
+                  {
+                    from: resolve(staticFolder),
+                    to: join(output.path, staticFolder),
+                    globOptions: {
+                      ignore: ['.*']
+                    }
+                  }
+                ]
+              })
               : []
           )
       })

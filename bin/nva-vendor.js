@@ -2,4 +2,4 @@
 
 const options = require('../lib/option')()
 const tasks = require('nva-task')(options)
-tasks.vendor()
+tasks.vendor(false)

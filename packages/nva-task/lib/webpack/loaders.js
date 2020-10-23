@@ -100,7 +100,7 @@ module.exports = (context) => {
         : {}
     },
     {
-      test: /\.(es6|js|jsx)$/,
+      test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       use: [
         {

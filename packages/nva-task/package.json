@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",
@@ -54,6 +54,7 @@
     "style-loader": "^0.23.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^4.1.1",
+    "terser-webpack-plugin": "^5.0.0",
     "thread-loader": "^3.0.0",
     "tidy-stats-webpack-plugin": "^1.0.0",
     "ts-loader": "^8.0.6",
