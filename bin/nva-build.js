@@ -16,7 +16,7 @@ const silent = program.silent
 const env = program.env
 
 const options = require('../lib/option')({ env })
-const tasks = require('nva-task')(options)
+const tasks = require('../packages/nva-task')(options)
 
 const build = () => {
   tasks.build({ profile, env })

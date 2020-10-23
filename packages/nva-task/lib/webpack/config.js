@@ -68,7 +68,9 @@ module.exports = (context, profile = false) => {
       mode: 'production',
       optimization: {
         minimize: true,
-        minimizer: [new TerserPlugin(), new CSSMinimizerPlugin()]
+        minimizer: [new TerserPlugin({
+          parallel: true
+        }), new CSSMinimizerPlugin()]
       },
       plugins: plugins.concat([
         new webpack.DefinePlugin(
