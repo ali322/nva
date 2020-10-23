@@ -20,7 +20,7 @@ module.exports = function(context, profile) {
   let entry = {}
   const baseConfig = configFactory(context, profile)
   //   let externals = Object.keys(require(resolve('package.json')).dependencies)
-  const externals = nodeExternals({ whitelist: /\.css$/ })
+  const externals = nodeExternals({ allowlist: /\.css$/ })
 
   /** build modules */
   forEach(mods, (mod, name) => {

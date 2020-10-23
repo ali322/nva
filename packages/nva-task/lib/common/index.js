@@ -6,7 +6,7 @@ const isFunction = require('lodash/isFunction')
 const forEach = require('lodash/forEach')
 const startsWith = require('lodash/startsWith')
 const every = require('lodash/every')
-const merge = require('webpack-merge')
+const { mergeWithCustomize, customizeObject, customizeArray } = require('webpack-merge')
 const { dirname, basename, resolve } = require('path')
 const execSync = require('child_process').execSync
 const { existsSync, outputJsonSync, readJsonSync } = require('fs-extra')
@@ -15,10 +15,17 @@ const opn = require('opn')
 
 exports.mergeConfig = (config, value) => {
   const webpackConfig = Array.isArray(value) ? compact(value) : [value]
-  const mergeFn = merge.strategy({
-    plugins: 'replace',
-    entry: 'replace',
-    'module.rules': 'replace'
+  const mergeFn = mergeWithCustomize({
+    customizeObject: customizeObject({
+      entry: 'replace',
+      output: 'replace',
+      resolve: 'replace',
+      devtool: 'repleace'
+    }),
+    customizeArray: customizeArray({
+      plugins: 'replace',
+      'module.rules': 'replace'
+    })
   })
   if (Array.isArray(config)) {
     return config.map(v => {

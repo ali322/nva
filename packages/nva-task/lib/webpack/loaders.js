@@ -156,7 +156,7 @@ module.exports = (context) => {
       exclude: /node_modules/,
       use: cssLoaders(context, {
         loader: require.resolve('stylus-loader'),
-        options: { sourceMap: { comment: false } }
+        options: { sourceMap: true }
       })
     },
     {
