@@ -18,7 +18,7 @@ exports.mergeConfig = (config, value) => {
   const mergeFn = mergeWithCustomize({
     customizeObject: customizeObject({
       entry: 'replace',
-      output: 'replace',
+      output: 'append',
       resolve: 'replace',
       devtool: 'repleace'
     }),

@@ -77,6 +77,7 @@ module.exports = (conf, logText) => {
         console.log(colors.red(logText.wrongMethod || 'unsupported method'))
       }
       let headers = {
+        'Access-Control-Allow-Origin': '*',
         'content-type': 'application/json;charset=utf-8'
       }
       headers = merge(

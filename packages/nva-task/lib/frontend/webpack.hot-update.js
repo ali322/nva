@@ -8,7 +8,7 @@ const ProgressPlugin = require('progress-webpack-plugin')
 const { merge } = require('nva-util')
 const configFactory = require('../webpack/config')
 
-module.exports = function(context, profile) {
+module.exports = function(context, profile, options) {
   const {
     mods,
     sourceFolder,
@@ -21,7 +21,10 @@ module.exports = function(context, profile) {
     afterInject,
     logText
   } = context
+
   /** build variables */
+  const { protocol, hostname, port } = options
+  const devServerHost = `${protocol}://${hostname}:${port}`
   let confs = []
   const baseConfig = configFactory(merge(context, { isDev: true }), profile)
   const sourcemap = require(resolve(output.vendorDevPath, vendorSourceMap))
@@ -60,8 +63,10 @@ module.exports = function(context, profile) {
     let entry = {
       [name]: [
         require.resolve('webpack-hot-middleware/client') +
-          `?name=${name}&path=/__webpack_hmr_${name}&reload=true`
-      ].concat(mod.input.css ? [mod.input.css] : []).concat([mod.input.js])
+                `?name=${name}&path=${devServerHost}/__webpack_hmr_${name}&reload=true`
+      ]
+        .concat(mod.input.css ? [mod.input.css] : [])
+        .concat([mod.input.js])
     }
 
     let dllRefs = (Array.isArray(mod.vendor.js)

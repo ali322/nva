@@ -58,14 +58,14 @@ exports.cssLoaders = (context, preprocessor = '') => {
       options: {
         postcssOptions: exports.postcssOptions(context)
       }
-    },
-    {
-      loader: require.resolve('resolve-url-loader'),
-      options: mergeLoaderOptions(
-        { debug: false },
-        loaderOptions.resolveURL
-      )
     }
+    // {
+    //   loader: require.resolve('resolve-url-loader'),
+    //   options: mergeLoaderOptions(
+    //     { debug: true },
+    //     loaderOptions.resolveURL
+    //   )
+    // }
   ]
   if (preprocessor) {
     if (typeof preprocessor === 'string') {

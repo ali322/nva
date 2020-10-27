@@ -50,7 +50,8 @@ module.exports = (context, options) => {
   }
   let hotUpdateConfig = require('./webpack.hot-update')(
     merge(context, { afterInject }),
-    profile
+    profile,
+    options
   )
 
   // apply before hooks

@@ -144,20 +144,12 @@ module.exports = (context) => {
         //   loader: require.resolve('thread-loader'),
         //   options: threadLoaderOptions
         // }
-      ].concat(
-        cssLoaders(context, {
-          loader: require.resolve('sass-loader'),
-          options: { sourceMap: true }
-        })
-      )
+      ].concat(cssLoaders(context, 'sass'))
     },
     {
       test: /\.styl/,
       exclude: /node_modules/,
-      use: cssLoaders(context, {
-        loader: require.resolve('stylus-loader'),
-        options: { sourceMap: true }
-      })
+      use: cssLoaders(context, 'stylus')
     },
     {
       test: /\.css/,
