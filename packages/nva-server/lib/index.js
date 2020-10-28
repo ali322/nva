@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const serveStatic = require('serve-static')
 const favicon = require('serve-favicon')
-const proxyMiddleware = require('http-proxy-middleware')
+const { createProxyMiddleware } = require('http-proxy-middleware')
 const morgan = require('morgan')
 const url = require('url')
 const compression = require('compression')
@@ -36,16 +36,16 @@ const createServer = options => {
   app.use(methodOverride())
   if (proxy) {
     Array.isArray(proxy)
-      ? proxy.forEach(v =>
+      ? proxy.forEach((v) =>
         app.use(
-          proxyMiddleware(
+          createProxyMiddleware(
             v.url,
             assign({}, { logLevel: 'silent' }, v.options)
           )
         )
       )
       : app.use(
-        proxyMiddleware(
+        createProxyMiddleware(
           proxy.url,
           assign({}, { logLevel: 'silent' }, proxy.options)
         )

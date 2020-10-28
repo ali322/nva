@@ -1,6 +1,6 @@
 {
   "name": "nva-server",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "frontend static server",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-server",
@@ -33,7 +33,7 @@
     "compression": "^1.6.2",
     "connect": "^3.6.0",
     "glob": "^7.1.2",
-    "http-proxy-middleware": "^0.17.4",
+    "http-proxy-middleware": "^1.0.5",
     "json-schema-faker": "^0.4.0",
     "lodash": "^4.17.4",
     "method-override": "^2.3.9",
