@@ -10,7 +10,7 @@ const { resolve } = require('path')
 
 module.exports = (context, profile = false, isWeb = true) => {
   const { sourceFolder, isDev, env, output } = context
-  let extensions = ['.js', '.mjs', '.json', '.ts']
+  let extensions = ['*', '.js', '.mjs', '.json', '.ts']
   if (isWeb) {
     extensions = extensions.concat([
       '.tsx',

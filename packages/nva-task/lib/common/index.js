@@ -19,7 +19,7 @@ exports.mergeConfig = (config, value) => {
     customizeObject: customizeObject({
       entry: 'replace',
       output: 'append',
-      resolve: 'replace',
+      resolve: 'append',
       devtool: 'repleace'
     }),
     customizeArray: customizeArray({
