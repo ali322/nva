@@ -6,8 +6,10 @@ const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const loadersFactory = require('./loaders')
 const merge = require('lodash/merge')
 const mapValues = require('lodash/mapValues')
+const { resolve } = require('path')
 
 module.exports = (context, profile = false, isWeb = true) => {
+  const { sourceFolder, isDev, env, output } = context
   let extensions = ['.js', '.mjs', '.json', '.ts']
   if (isWeb) {
     extensions = extensions.concat([
@@ -25,8 +27,12 @@ module.exports = (context, profile = false, isWeb = true) => {
     module: {
       rules: loadersFactory(context, isWeb)
     },
+    resolveLoader: {
+      modules: [resolve('node_modules'), 'node_modules']
+    },
     resolve: {
-      extensions
+      extensions,
+      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
     }
   }
 
@@ -49,15 +55,15 @@ module.exports = (context, profile = false, isWeb = true) => {
         {},
         {
           'process.env.NODE_ENV': JSON.stringify(
-            context.isDev ? 'development' : 'production'
+            isDev ? 'development' : 'production'
           )
         },
-        mapValues(context.env, (v) => JSON.stringify(v))
+        mapValues(env, (v) => JSON.stringify(v))
       )
     )
   )
 
-  let restConfig = context.isDev
+  let restConfig = isDev
     ? {
       devtool: 'source-map',
       // watch: true,
@@ -81,7 +87,7 @@ module.exports = (context, profile = false, isWeb = true) => {
     }
 
   if (isWeb) {
-    restConfig = context.isDev
+    restConfig = isDev
       ? merge({}, restConfig, {
         plugins: [new webpack.HotModuleReplacementPlugin()].concat(
           restConfig.plugins
@@ -98,7 +104,7 @@ module.exports = (context, profile = false, isWeb = true) => {
           ]
         },
         plugins: restConfig.plugins.concat([
-          new MiniCSSExtractPlugin({ filename: context.output.cssPath })
+          new MiniCSSExtractPlugin({ filename: output.cssPath })
         ])
       })
   }

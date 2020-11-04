@@ -9,7 +9,6 @@ module.exports = function(context, profile) {
   const {
     serverFolder,
     distFolder,
-    sourceFolder,
     serverEntry,
     logText
   } = context
@@ -31,12 +30,6 @@ module.exports = function(context, profile) {
       libraryTarget: 'commonjs2'
     },
     // context: __dirname,
-    resolveLoader: {
-      modules: [resolve('node_modules'), 'node_modules']
-    },
-    resolve: {
-      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-    },
     externals,
     plugins: baseConfig.plugins.concat([
       new ProgressPlugin({

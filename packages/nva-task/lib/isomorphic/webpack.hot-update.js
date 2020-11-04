@@ -79,12 +79,6 @@ module.exports = function(context, profile) {
           publicPath: devServerHost + hmrPath
         },
         // context: __dirname,
-        resolveLoader: {
-          modules: [resolve('node_modules'), 'node_modules']
-        },
-        resolve: {
-          modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-        },
         plugins: baseConfig.plugins
           .concat([
             new ProgressPlugin({

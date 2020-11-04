@@ -1,4 +1,5 @@
 const assign = require('lodash/assign')
+const postcssPresetEnv = require('postcss-preset-env')
 const isPlainObject = require('lodash/isPlainObject')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
@@ -19,9 +20,14 @@ exports.threadOptions = (context) => {
   )
 }
 
-exports.postcssOptions = context => {
+exports.postcssOptions = (context) => {
   const { loaderOptions } = context
-  return mergeLoaderOptions({}, loaderOptions.postcss)
+  return mergeLoaderOptions(
+    {
+      plugins: [postcssPresetEnv({ stage: 4 })]
+    },
+    loaderOptions.postcss
+  )
 }
 
 exports.vueStyleLoaders = (context, preprocessor) => {
@@ -69,7 +75,10 @@ exports.cssLoaders = (context, preprocessor = '') => {
       loaders = loaders.concat([
         {
           loader: require.resolve(`${preprocessor}-loader`),
-          options: mergeLoaderOptions({ sourceMap: true }, loaderOptions[preprocessor])
+          options: mergeLoaderOptions(
+            { sourceMap: true },
+            loaderOptions[preprocessor]
+          )
         }
       ])
     } else if (typeof preprocessor === 'object') {

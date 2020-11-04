@@ -72,12 +72,6 @@ module.exports = function(context, profile) {
           chunkFilename: join(chunkFolder, '[id]-[hash:8].chunk.js')
         },
         // context: __dirname,
-        resolveLoader: {
-          modules: [resolve('node_modules'), 'node_modules']
-        },
-        resolve: {
-          modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-        },
         plugins: baseConfig.plugins
           .concat([
             new ProgressPlugin({

@@ -17,7 +17,6 @@ module.exports = (context, profile) => {
   const {
     mods,
     outputPrefix,
-    sourceFolder,
     distFolder,
     staticFolder,
     staticPrefix,
@@ -86,16 +85,6 @@ module.exports = (context, profile) => {
           path: output.path,
           filename: join('[name]', '[name]-[contenthash].js'),
           chunkFilename: join(chunkFolder, '[id]-[contenthash].chunk.js')
-        },
-        resolveLoader: {
-          modules: [resolve('node_modules'), 'node_modules']
-        },
-        resolve: {
-          modules: [
-            sourceFolder,
-            resolve('node_modules'),
-            'node_modules'
-          ]
         },
         plugins: baseConfig.plugins
           .concat(

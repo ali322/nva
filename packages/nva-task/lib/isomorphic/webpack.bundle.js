@@ -43,12 +43,6 @@ module.exports = function(context, profile) {
       filename: '[name].js'
     },
     // context: __dirname,
-    resolveLoader: {
-      modules: [resolve('node_modules'), 'node_modules']
-    },
-    resolve: {
-      modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-    },
     externals,
     plugins: baseConfig.plugins.slice(0, -1).concat([
       new ProgressPlugin({

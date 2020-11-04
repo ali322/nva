@@ -19,7 +19,7 @@ module.exports = context => {
   } = context
 
   const tasks = {
-    build({ profile = false }) {
+    build({ profile }) {
       if (
         checkVendor(vendors, join(output.vendorPath, vendorSourceMap)) === false
       ) {

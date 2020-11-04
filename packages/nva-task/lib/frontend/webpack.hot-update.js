@@ -11,7 +11,6 @@ const configFactory = require('../webpack/config')
 module.exports = function(context, profile, options) {
   const {
     mods,
-    sourceFolder,
     distFolder,
     chunkFolder,
     vendorDevFolder,
@@ -94,12 +93,6 @@ module.exports = function(context, profile, options) {
         },
         // bail: true,
         // context: __dirname,
-        resolveLoader: {
-          modules: ['node_modules', resolve('node_modules')]
-        },
-        resolve: {
-          modules: [sourceFolder, resolve('node_modules'), 'node_modules']
-        },
         plugins: baseConfig.plugins.concat(dllRefs, [
           new ProgressPlugin({
             identifier: name,
