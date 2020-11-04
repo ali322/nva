@@ -27,7 +27,9 @@ module.exports = (context, options) => {
 
   const { protocol, hostname, port, browser, profile } = options
 
-  startWatcher(strict)
+  if (startWatcher) {
+    startWatcher(strict)
+  }
 
   const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {

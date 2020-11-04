@@ -25,7 +25,9 @@ module.exports = function(context, options) {
   const { protocol, hostname, port, clientPort, browser, profile } = options
 
   const RUNNING_REGXP = new RegExp(logText.serverRunning)
-  startWatcher(strict)
+  if (startWatcher) {
+    startWatcher(strict)
+  }
 
   const browserSync = BrowserSync.create()
   process.once('SIGINT', () => {
