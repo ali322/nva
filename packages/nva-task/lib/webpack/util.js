@@ -1,6 +1,5 @@
 const assign = require('lodash/assign')
 const isPlainObject = require('lodash/isPlainObject')
-const autoPrefixer = require('autoprefixer')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
 const mergeLoaderOptions = (defaults, options) => {
@@ -22,9 +21,7 @@ exports.threadOptions = (context) => {
 
 exports.postcssOptions = context => {
   const { loaderOptions } = context
-  return mergeLoaderOptions({
-    plugins: [autoPrefixer()]
-  }, loaderOptions.postcss)
+  return mergeLoaderOptions({}, loaderOptions.postcss)
 }
 
 exports.vueStyleLoaders = (context, preprocessor) => {
