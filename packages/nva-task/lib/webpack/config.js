@@ -8,7 +8,7 @@ const merge = require('lodash/merge')
 const mapValues = require('lodash/mapValues')
 
 module.exports = (context, profile = false, isWeb = true) => {
-  let extensions = ['.js', '.json', '.ts']
+  let extensions = ['.js', '.mjs', '.json', '.ts']
   if (isWeb) {
     extensions = extensions.concat([
       '.tsx',

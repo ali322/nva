@@ -98,8 +98,13 @@ module.exports = (context, isWeb) => {
     {
       test: /\.(ts|tsx)$/,
       exclude: /node_modules/,
-      loader: require.resolve('ts-loader'),
-      options: { useCache: true }
+      use: [
+        {
+          loader: require.resolve('thread-loader'),
+          options: threadLoaderOptions
+        },
+        { loader: 'ts-loader', options: { useCache: true, transpileOnly: true } }
+      ]
     }
   ]
 
@@ -126,28 +131,13 @@ module.exports = (context, isWeb) => {
         use: cssLoaders(context, 'less')
       },
       {
-        test: /\.sass/,
-        exclude: /node_modules/,
-        use: [
-          // {
-          //   loader: require.resolve('thread-loader'),
-          //   options: threadLoaderOptions
-          // }
-        ].concat(
-          cssLoaders(context, {
-            loader: require.resolve('sass-loader'),
-            options: { indentedSyntax: true, sourceMap: true }
-          })
-        )
-      },
-      {
         test: /\.scss/,
         exclude: /node_modules/,
         use: [
-          // {
-          //   loader: require.resolve('thread-loader'),
-          //   options: threadLoaderOptions
-          // }
+          {
+            loader: require.resolve('thread-loader'),
+            options: threadLoaderOptions
+          }
         ].concat(cssLoaders(context, 'sass'))
       },
       {
