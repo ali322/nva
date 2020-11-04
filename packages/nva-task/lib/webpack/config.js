@@ -4,27 +4,29 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const TerserPlugin = require('terser-webpack-plugin')
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const loadersFactory = require('./loaders')
-const assign = require('lodash/assign')
+const merge = require('lodash/merge')
 const mapValues = require('lodash/mapValues')
 
-module.exports = (context, profile = false) => {
+module.exports = (context, profile = false, isWeb = true) => {
+  let extensions = ['.js', '.json', '.ts']
+  if (isWeb) {
+    extensions = extensions.concat([
+      '.tsx',
+      '.jsx',
+      '.styl',
+      '.css',
+      '.less',
+      '.scss'
+    ])
+  }
+
   const config = {
     profile,
     module: {
-      rules: loadersFactory(context)
+      rules: loadersFactory(context, isWeb)
     },
     resolve: {
-      extensions: [
-        '.js',
-        '.json',
-        '.jsx',
-        '.ts',
-        '.tsx',
-        '.styl',
-        '.css',
-        '.less',
-        '.scss'
-      ]
+      extensions
     }
   }
 
@@ -41,26 +43,27 @@ module.exports = (context, profile = false) => {
     )
   }
 
-  const restConfig = context.isDev
+  plugins.push(
+    new webpack.DefinePlugin(
+      merge(
+        {},
+        {
+          'process.env.NODE_ENV': JSON.stringify(
+            context.isDev ? 'development' : 'production'
+          )
+        },
+        mapValues(context.env, (v) => JSON.stringify(v))
+      )
+    )
+  )
+
+  let restConfig = context.isDev
     ? {
       devtool: 'source-map',
       // watch: true,
       // performance: { hints: false },
       mode: 'development',
-      plugins: plugins.concat([
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.DefinePlugin(
-          assign(
-            {},
-            {
-              'process.env.NODE_ENV': JSON.stringify(
-                'development'
-              )
-            },
-            mapValues(context.env, (v) => JSON.stringify(v))
-          )
-        )
-      ])
+      plugins
     }
     : {
       // devtool: "#cheap-module-source-map",
@@ -68,24 +71,36 @@ module.exports = (context, profile = false) => {
       mode: 'production',
       optimization: {
         minimize: true,
-        minimizer: [new TerserPlugin({
-          parallel: true
-        }), new CSSMinimizerPlugin()]
+        minimizer: [
+          new TerserPlugin({
+            parallel: true
+          })
+        ]
       },
-      plugins: plugins.concat([
-        new webpack.DefinePlugin(
-          assign(
-            {},
-            {
-              'process.env.NODE_ENV': JSON.stringify(
-                'production'
-              )
-            },
-            mapValues(context.env, (v) => JSON.stringify(v))
-          )
-        ),
-        new MiniCSSExtractPlugin({ filename: context.output.cssPath })
-      ])
+      plugins
     }
-  return assign({}, config, restConfig)
+
+  if (isWeb) {
+    restConfig = context.isDev
+      ? merge({}, restConfig, {
+        plugins: [new webpack.HotModuleReplacementPlugin()].concat(
+          restConfig.plugins
+        )
+      })
+      : merge({}, restConfig, {
+        optimization: {
+          minimize: true,
+          minimizer: [
+            new TerserPlugin({
+              parallel: true
+            }),
+            new CSSMinimizerPlugin()
+          ]
+        },
+        plugins: restConfig.plugins.concat([
+          new MiniCSSExtractPlugin({ filename: context.output.cssPath })
+        ])
+      })
+  }
+  return merge({}, config, restConfig)
 }

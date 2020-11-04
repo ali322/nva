@@ -15,13 +15,10 @@ const {
 const initializer = require('./init')
 const defaultLogText = require('./log-text')
 
-const core = (options = {}) => {
+const setup = (options = {}) => {
   const namespace = options.namespace ? options.namespace : 'nva'
   const rootPath = `.${namespace}`
   const {
-    favicon = '',
-    hooks = {},
-    onDevProgress,
     env,
     watch: customWatch,
     projConfPath = resolve(rootPath, `${namespace}.js`),
@@ -30,17 +27,19 @@ const core = (options = {}) => {
     vendorConfPath = resolve(rootPath, 'vendor.json')
   } = options
 
+  let context = bootstrap(options)
+
   const logText = options.logText
     ? merge(defaultLogText, options.logText)
     : defaultLogText
 
-  let proj = loadConf(projConfPath, logText, e => {
+  let proj = loadConf(projConfPath, logText, (e) => {
     error(logText.projectInvalid)
     console.log(prettyError(e))
   })
   proj.default && (proj = proj.default)
 
-  const mods = loadConf(modConfPath, logText, e => {
+  const mods = loadConf(modConfPath, logText, (e) => {
     error(logText.moduleInvalid)
     console.log(prettyError(e))
   })
@@ -53,44 +52,63 @@ const core = (options = {}) => {
     if (strict) {
       rcs = rcs.concat(['.eslintrc', '.eslint.*'])
     }
-    rcs = rcs.map(rc => resolve(rc))
+    rcs = rcs.map((rc) => resolve(rc))
     watch(
-      [projConfPath, mockPath, modConfPath, vendorConfPath].concat(rcs).concat(envPath),
+      [projConfPath, mockPath, modConfPath, vendorConfPath]
+        .concat(rcs)
+        .concat(envPath),
       logText,
       customWatch
     )
   }
 
-  let context = {
+  context = merge(context, {
     namespace,
     mods,
+    proj: merge(context.proj, { mock, env: envs }, proj, options.proj || {}),
+    vendors,
+    modConfPath,
+    startWatcher
+  })
+
+  return context
+}
+
+const bootstrap = (options = {}) => {
+  const logText = options.logText
+    ? merge(defaultLogText, options.logText)
+    : defaultLogText
+  const {
+    favicon = '',
+    hooks = {},
+    onDevProgress,
+    proj = {},
+    mods = {},
+    vendors = {}
+  } = options
+  return {
     proj: merge(
       {
         type: 'frontend',
         favicon,
-        mock,
+        mock: false,
         logText,
-        env: envs
+        env: {}
       },
-      proj,
-      options.proj || {}
+      proj || {}
     ),
+    mods,
     vendors,
-    modConfPath,
-    startWatcher,
     hooks,
     onDevProgress
   }
-
-  context = initializer(context)
-  return context
 }
 
 function watch(files, logText, onChange) {
   const watcher = chokidar.watch(files, {
     persistent: true
   })
-  watcher.on('change', path => {
+  watcher.on('change', (path) => {
     path = relative(process.cwd(), path)
     console.log(colors.yellow(sprintf(logText.fileChanged, [path])))
     if (typeof onChange === 'function') {
@@ -118,7 +136,7 @@ function loadConf(path, logText, onError) {
 }
 
 function loadVendor(path, logText) {
-  let vendors = loadConf(path, e => {
+  let vendors = loadConf(path, (e) => {
     error(logText.vendorInvalid)
     console.log(prettyError(e))
   })
@@ -143,13 +161,11 @@ function loadMock(path, logText) {
 
 function loadEnv(path, mode) {
   let envs = {}
-  let paths = [
-    join(path, '.env')
-  ]
+  let paths = [join(path, '.env')]
   if (mode) {
     paths.push(join(path, `.${mode}.env`))
   }
-  paths.forEach(path => {
+  paths.forEach((path) => {
     if (checkFile(path)) {
       let env = readFileSync(path)
       env = dotenv.parse(env)
@@ -159,5 +175,12 @@ function loadEnv(path, mode) {
   return { envs, paths }
 }
 
+const core = (options = {}) => {
+  const { explicit = false } = options
+  const context = explicit ? bootstrap(options) : setup(options)
+  return initializer(context)
+}
+
 core.mod = require('./mod')
+
 module.exports = core

@@ -8,7 +8,7 @@ const {
   vueStyleLoaders
 } = require('./util')
 
-module.exports = (context) => {
+module.exports = (context, isWeb) => {
   const {
     output = {},
     imagePrefix,
@@ -85,21 +85,6 @@ module.exports = (context) => {
 
   let loaders = [
     {
-      test: /\.(tpl|html)/,
-      exclude: /node_modules/,
-      loader: require.resolve('html-loader')
-    },
-    {
-      test: /\.vue/,
-      exclude: /node_modules/,
-      loader: 'vue-loader',
-      options: loaderOptions.vue
-        ? loaderOptions.vue.legacy
-          ? vueLoaderOptions
-          : loaderOptions.vue
-        : {}
-    },
-    {
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       use: [
@@ -115,75 +100,95 @@ module.exports = (context) => {
       exclude: /node_modules/,
       loader: require.resolve('ts-loader'),
       options: { useCache: true }
-    },
-    {
-      test: /\.less/,
-      exclude: /node_modules/,
-      use: cssLoaders(context, 'less')
-    },
-    {
-      test: /\.sass/,
-      exclude: /node_modules/,
-      use: [
-        // {
-        //   loader: require.resolve('thread-loader'),
-        //   options: threadLoaderOptions
-        // }
-      ].concat(
-        cssLoaders(context, {
-          loader: require.resolve('sass-loader'),
-          options: { indentedSyntax: true, sourceMap: true }
-        })
-      )
-    },
-    {
-      test: /\.scss/,
-      exclude: /node_modules/,
-      use: [
-        // {
-        //   loader: require.resolve('thread-loader'),
-        //   options: threadLoaderOptions
-        // }
-      ].concat(cssLoaders(context, 'sass'))
-    },
-    {
-      test: /\.styl/,
-      exclude: /node_modules/,
-      use: cssLoaders(context, 'stylus')
-    },
-    {
-      test: /\.css/,
-      use: cssLoaders(context)
-    },
-    {
-      test: /\.(png|jpg|jpeg|gif|bmp)$/,
-      loader: require.resolve('url-loader'),
-      options: isDev
-        ? urlLoaderOptions
-        : assign({}, urlLoaderOptions, {
-          outputPath: output.imagePath
-        })
-    },
-    {
-      test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: require.resolve('url-loader'),
-      options: isDev
-        ? urlLoaderOptions
-        : assign({}, urlLoaderOptions, {
-          outputPath: output.fontPath,
-          mimetype: 'application/font-woff'
-        })
-    },
-    {
-      test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: require.resolve('url-loader'),
-      options: isDev
-        ? urlLoaderOptions
-        : assign({}, urlLoaderOptions, {
-          outputPath: output.fontPath
-        })
     }
   ]
+
+  if (isWeb) {
+    loaders = loaders.concat([
+      {
+        test: /\.(tpl|html)/,
+        exclude: /node_modules/,
+        loader: require.resolve('html-loader')
+      },
+      {
+        test: /\.vue/,
+        exclude: /node_modules/,
+        loader: 'vue-loader',
+        options: loaderOptions.vue
+          ? loaderOptions.vue.legacy
+            ? vueLoaderOptions
+            : loaderOptions.vue
+          : {}
+      },
+      {
+        test: /\.less/,
+        exclude: /node_modules/,
+        use: cssLoaders(context, 'less')
+      },
+      {
+        test: /\.sass/,
+        exclude: /node_modules/,
+        use: [
+          // {
+          //   loader: require.resolve('thread-loader'),
+          //   options: threadLoaderOptions
+          // }
+        ].concat(
+          cssLoaders(context, {
+            loader: require.resolve('sass-loader'),
+            options: { indentedSyntax: true, sourceMap: true }
+          })
+        )
+      },
+      {
+        test: /\.scss/,
+        exclude: /node_modules/,
+        use: [
+          // {
+          //   loader: require.resolve('thread-loader'),
+          //   options: threadLoaderOptions
+          // }
+        ].concat(cssLoaders(context, 'sass'))
+      },
+      {
+        test: /\.styl/,
+        exclude: /node_modules/,
+        use: cssLoaders(context, 'stylus')
+      },
+      {
+        test: /\.css/,
+        use: cssLoaders(context)
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|bmp)$/,
+        loader: require.resolve('url-loader'),
+        options: isDev
+          ? urlLoaderOptions
+          : assign({}, urlLoaderOptions, {
+            outputPath: output.imagePath
+          })
+      },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: require.resolve('url-loader'),
+        options: isDev
+          ? urlLoaderOptions
+          : assign({}, urlLoaderOptions, {
+            outputPath: output.fontPath,
+            mimetype: 'application/font-woff'
+          })
+      },
+      {
+        test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: require.resolve('url-loader'),
+        options: isDev
+          ? urlLoaderOptions
+          : assign({}, urlLoaderOptions, {
+            outputPath: output.fontPath
+          })
+      }
+    ])
+  }
 
   if (strict) {
     loaders.unshift({

@@ -1,5 +1,11 @@
 const core = require('nva-core')
 const { error } = require('nva-util')
+const buildLibrary = require('./common/library')
+
+exports.build = (options, profile) => {
+  const context = core(options)
+  return buildLibrary(context, profile)
+}
 
 module.exports = options => {
   const context = core(options)
