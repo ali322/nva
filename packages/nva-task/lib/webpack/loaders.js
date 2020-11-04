@@ -103,7 +103,7 @@ module.exports = (context, isWeb) => {
           loader: require.resolve('thread-loader'),
           options: threadLoaderOptions
         },
-        { loader: 'ts-loader', options: { useCache: true, transpileOnly: true } }
+        { loader: 'ts-loader', options: Object.assign({}, loaderOptions.typescript) }
       ]
     }
   ]
