@@ -1,6 +1,6 @@
 const core = require('nva-core')
 const { error } = require('nva-util')
-const buildLibrary = require('./common/library')
+const { build: buildLibrary, dev: devLibrary } = require('./common/library')
 
 module.exports = options => {
   const context = core(options)
@@ -12,9 +12,13 @@ module.exports = options => {
   task.addMod = (name, answers, template) => core.mod.addMod(name, answers, template, context)
   task.removeMod = (names) => core.mod.removeMod(names, context)
   task.context = context
-  task.buildLibrary = (options) => {
+  task.buildLibrary = (options = {}) => {
     const { profile = false, isWeb = false } = options
     buildLibrary(context, profile, isWeb)
+  }
+  task.devLibrary = (options = {}) => {
+    const { profile = false, isWeb = false } = options
+    return devLibrary(context, profile, isWeb)
   }
   return task
 }
