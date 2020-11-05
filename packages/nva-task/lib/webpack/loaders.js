@@ -15,8 +15,7 @@ module.exports = (context, isWeb) => {
     fontPrefix,
     isDev,
     strict,
-    loaderOptions,
-    useEsbuildLoader
+    loaderOptions
   } = context
 
   const threadLoaderOptions = threadOptions(context)
@@ -64,7 +63,7 @@ module.exports = (context, isWeb) => {
           options: threadLoaderOptions
         },
         {
-          loader: useEsbuildLoader ? 'esbuild-loader' : 'babel-loader',
+          loader: 'babel-loader',
           options: { cacheDirectory: true }
         }
       ],
@@ -95,7 +94,7 @@ module.exports = (context, isWeb) => {
           options: threadLoaderOptions
         },
         {
-          loader: useEsbuildLoader ? 'esbuild-loader' : 'babel-loader',
+          loader: 'babel-loader',
           options: { cacheDirectory: true }
         }
       ]
@@ -109,7 +108,7 @@ module.exports = (context, isWeb) => {
           options: threadLoaderOptions
         },
         {
-          loader: useEsbuildLoader ? 'esbuild-loader' : 'ts-loader',
+          loader: 'ts-loader',
           options: Object.assign({}, loaderOptions.typescript)
         }
       ]
