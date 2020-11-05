@@ -22,7 +22,14 @@ module.exports = function(context, options) {
     logText
   } = context
 
-  const { protocol, hostname, port, clientPort, browser, profile } = options
+  const {
+    protocol = 'http',
+    hostname = 'localhost',
+    port = 3000,
+    clientPort = 7000,
+    browser = 'default',
+    profile = false
+  } = options
 
   const RUNNING_REGXP = new RegExp(logText.serverRunning)
   if (startWatcher) {

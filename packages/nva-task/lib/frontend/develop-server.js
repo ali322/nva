@@ -25,7 +25,13 @@ module.exports = (context, options) => {
     logText
   } = context
 
-  const { protocol, hostname, port, browser, profile } = options
+  const {
+    protocol = 'http',
+    hostname = 'localhost',
+    port = 3000,
+    browser = 'default',
+    profile = false
+  } = options
 
   if (startWatcher) {
     startWatcher(strict)
@@ -38,14 +44,14 @@ module.exports = (context, options) => {
   })
   const bufs = {}
   const afterInject = (filename, injector) => {
-    const injectTo = file => {
+    const injectTo = (file) => {
       const key = posix.join(
         posix.sep,
         relativeURL(resolve(sourceFolder), file)
       )
       bufs[key] = injector(file)
     }
-    bus.on('html-changed', changed => {
+    bus.on('html-changed', (changed) => {
       injectTo(changed)
     })
     injectTo(filename)
@@ -76,7 +82,7 @@ module.exports = (context, options) => {
 
   // open browser when first build finished
   let openBrowserAfterDev = () => {
-    let url = spa === true ? '/' : (typeof spa === 'string' ? spa : '/index/')
+    let url = spa === true ? '/' : typeof spa === 'string' ? spa : '/index/'
     url = `${protocol}://${hostname}:${port}${url}`
     console.log(
       `${emojis('rocket')}  ` +
@@ -89,7 +95,7 @@ module.exports = (context, options) => {
   }
 
   let bundlerFinished = 0
-  const middlewares = flatMap(hotUpdateConfig, config =>
+  const middlewares = flatMap(hotUpdateConfig, (config) =>
     require('../common/middleware')(
       config,
       (err, stats) => {
@@ -139,7 +145,7 @@ module.exports = (context, options) => {
     logText
   })
 
-  checkPort(port, hostname, available => {
+  checkPort(port, hostname, (available) => {
     if (!available) {
       error(logText.portInvalid)
     } else {
