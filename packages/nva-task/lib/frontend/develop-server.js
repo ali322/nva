@@ -25,13 +25,19 @@ module.exports = (context, options) => {
     logText
   } = context
 
-  const {
-    protocol = 'http',
-    hostname = 'localhost',
-    port = 3000,
-    browser = 'default',
-    profile = false
-  } = options
+  options = Object.assign(
+    {},
+    {
+      protocol: 'http',
+      hostname: 'localhost',
+      port: 3000,
+      browser: 'default',
+      profile: false
+    },
+    options
+  )
+
+  const { protocol, hostname, port, browser, profile } = options
 
   if (startWatcher) {
     startWatcher(strict)
