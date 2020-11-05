@@ -20,17 +20,26 @@ module.exports = {
       )
     }
     const compiler = webpack(config)
-    const watching = compiler.watch(function (err, stats) {
-      if (typeof hooks.afterBuild === 'function') {
-        hooks.afterDev(err, stats)
+    const watching = compiler.watch(
+      Object.assign(
+        {},
+        {
+          aggregateTimeout: 300
+        },
+        config.watchOptions
+      ),
+      function (err, stats) {
+        if (typeof hooks.afterBuild === 'function') {
+          hooks.afterDev(err, stats)
+        }
+        if (typeof afterBuild === 'function') {
+          afterDev(err, stats)
+        }
+        if (err) {
+          console.error(err)
+        }
       }
-      if (typeof afterBuild === 'function') {
-        afterDev(err, stats)
-      }
-      if (err) {
-        console.error(err)
-      }
-    })
+    )
     return watching
   },
   build(context, profile, isWeb) {

@@ -95,7 +95,9 @@ module.exports = (context, isWeb) => {
         },
         {
           loader: 'babel-loader',
-          options: { cacheDirectory: true }
+          options: Object.assign({}, {
+            cacheDirectory: true
+          }, loaderOptions.typescript)
         }
       ]
     },
