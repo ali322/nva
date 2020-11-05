@@ -29,10 +29,10 @@ module.exports = {
         config.watchOptions
       ),
       function (err, stats) {
-        if (typeof hooks.afterBuild === 'function') {
+        if (typeof hooks.afterDev === 'function') {
           hooks.afterDev(err, stats)
         }
-        if (typeof afterBuild === 'function') {
+        if (typeof afterDev === 'function') {
           afterDev(err, stats)
         }
         if (err) {
