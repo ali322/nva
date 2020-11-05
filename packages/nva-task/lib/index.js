@@ -12,6 +12,9 @@ module.exports = options => {
   task.addMod = (name, answers, template) => core.mod.addMod(name, answers, template, context)
   task.removeMod = (names) => core.mod.removeMod(names, context)
   task.context = context
-  task.buildLibrary = buildLibrary
+  task.buildLibrary = (options) => {
+    const { profile = false, isWeb = false } = options
+    buildLibrary(context, profile, isWeb)
+  }
   return task
 }
