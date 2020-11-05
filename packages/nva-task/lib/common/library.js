@@ -3,9 +3,9 @@ const webpack = require('webpack')
 const { mergeConfig } = require('./index')
 const configFactory = require('../webpack/config')
 
-module.exports = (context, profile) => {
+module.exports = (context, profile, isWeb) => {
   const { hooks, beforeBuild, afterBuild, distFolder } = context
-  let config = configFactory(context, profile, false)
+  let config = configFactory(context, profile, isWeb)
   if (typeof hooks.beforeBuild === 'function') {
     config = mergeConfig(
       config,
