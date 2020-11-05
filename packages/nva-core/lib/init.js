@@ -59,6 +59,7 @@ module.exports = context => {
     fontFolder: 'font',
     imageFolder: 'image',
     outputPrefix: '',
+    useEsbuildLoader: false,
     useVueStyleLoader: false,
     loaderOptions: {
       vue: {

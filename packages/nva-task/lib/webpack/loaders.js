@@ -15,7 +15,8 @@ module.exports = (context, isWeb) => {
     fontPrefix,
     isDev,
     strict,
-    loaderOptions
+    loaderOptions,
+    useEsbuildLoader
   } = context
 
   const threadLoaderOptions = threadOptions(context)
@@ -36,9 +37,7 @@ module.exports = (context, isWeb) => {
           if (/\.(jpg|jpeg|png|bmp|gif)$/.test(url)) {
             prefix = imagePrefix
           } else if (
-            /\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(
-              url
-            )
+            /\.(ttf|eot|svg|otf|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/.test(url)
           ) {
             prefix = fontPrefix
           }
@@ -64,7 +63,10 @@ module.exports = (context, isWeb) => {
           loader: require.resolve('thread-loader'),
           options: threadLoaderOptions
         },
-        { loader: 'babel-loader', options: { cacheDirectory: true } }
+        {
+          loader: useEsbuildLoader ? 'esbuild-loader' : 'babel-loader',
+          options: { cacheDirectory: true }
+        }
       ],
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
@@ -92,7 +94,10 @@ module.exports = (context, isWeb) => {
           loader: require.resolve('thread-loader'),
           options: threadLoaderOptions
         },
-        { loader: 'babel-loader', options: { cacheDirectory: true } }
+        {
+          loader: useEsbuildLoader ? 'esbuild-loader' : 'babel-loader',
+          options: { cacheDirectory: true }
+        }
       ]
     },
     {
@@ -103,7 +108,10 @@ module.exports = (context, isWeb) => {
           loader: require.resolve('thread-loader'),
           options: threadLoaderOptions
         },
-        { loader: 'ts-loader', options: Object.assign({}, loaderOptions.typescript) }
+        {
+          loader: useEsbuildLoader ? 'esbuild-loader' : 'ts-loader',
+          options: Object.assign({}, loaderOptions.typescript)
+        }
       ]
     }
   ]
