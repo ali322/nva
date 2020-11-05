@@ -118,12 +118,12 @@ module.exports = (context, isWeb) => {
   if (isWeb) {
     loaders = loaders.concat([
       {
-        test: /\.(tpl|html)/,
+        test: /\.(tpl|html)$/,
         exclude: /node_modules/,
         loader: require.resolve('html-loader')
       },
       {
-        test: /\.vue/,
+        test: /\.vue$/,
         exclude: /node_modules/,
         loader: 'vue-loader',
         options: loaderOptions.vue
@@ -133,12 +133,12 @@ module.exports = (context, isWeb) => {
           : {}
       },
       {
-        test: /\.less/,
+        test: /\.less$/,
         exclude: /node_modules/,
         use: cssLoaders(context, 'less')
       },
       {
-        test: /\.scss/,
+        test: /\.scss$/,
         exclude: /node_modules/,
         use: [
           {
@@ -148,7 +148,7 @@ module.exports = (context, isWeb) => {
         ].concat(cssLoaders(context, 'sass'))
       },
       {
-        test: /\.sass/,
+        test: /\.sass$/,
         exclude: /node_modules/,
         use: [
           {
@@ -163,12 +163,12 @@ module.exports = (context, isWeb) => {
         )
       },
       {
-        test: /\.styl/,
+        test: /\.styl$/,
         exclude: /node_modules/,
         use: cssLoaders(context, 'stylus')
       },
       {
-        test: /\.css/,
+        test: /\.css$/,
         use: cssLoaders(context)
       },
       {
@@ -204,7 +204,7 @@ module.exports = (context, isWeb) => {
 
   if (strict) {
     loaders.unshift({
-      test: /\.(js|jsx|vue)$/,
+      test: /\.(js|jsx|ts|tsx|vue)$/,
       exclude: /node_modules/,
       enforce: 'pre',
       loader: 'eslint-loader',
