@@ -59,6 +59,7 @@ module.exports = context => {
     fontFolder: 'font',
     imageFolder: 'image',
     outputPrefix: '',
+    useVueStyleLoader: false,
     loaderOptions: {
       vue: {
         legacy: true

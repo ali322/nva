@@ -42,10 +42,7 @@ exports.vueStyleLoaders = (context, preprocessor) => {
 }
 
 exports.cssLoaders = (context, preprocessor = '') => {
-  const { loaderOptions, isDev } = context
-  const useVueStyleLoader = !(
-    isPlainObject(loaderOptions.vue) && loaderOptions.vue.legacy
-  )
+  const { loaderOptions, useVueStyleLoader, isDev } = context
   let loaders = [
     {
       loader: useVueStyleLoader

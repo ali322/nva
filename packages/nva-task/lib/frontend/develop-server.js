@@ -174,7 +174,7 @@ module.exports = (context, options) => {
         logConnections: false,
         logLevel: 'silent'
       })
-      browserSync.watch([mock, watch], (evt, file) => {
+      browserSync.watch([mock || [], watch], (evt, file) => {
         browserSync.reload({ stream: false })
       })
     }

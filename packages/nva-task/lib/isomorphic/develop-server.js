@@ -151,7 +151,7 @@ module.exports = function(context, options) {
     }
   })
 
-  browserSync.watch([mock, watch], (evt, file) => {
+  browserSync.watch([mock || [], watch], (evt, file) => {
     browserSync.reload({ stream: false })
   })
 }
