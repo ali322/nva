@@ -142,27 +142,17 @@ module.exports = (context, isWeb) => {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: require.resolve('thread-loader'),
-            options: threadLoaderOptions
-          }
-        ].concat(cssLoaders(context, 'sass'))
+        use: cssLoaders(context, 'sass')
       },
       {
         test: /\.sass$/,
         exclude: /node_modules/,
         use: [
-          {
-            loader: require.resolve('thread-loader'),
-            options: threadLoaderOptions
-          }
-        ].concat(
           cssLoaders(context, {
             loader: require.resolve('sass-loader'),
             options: { indentedSyntax: true, sourceMap: true }
           })
-        )
+        ]
       },
       {
         test: /\.styl$/,

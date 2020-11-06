@@ -67,9 +67,14 @@ exports.cssLoaders = (context, preprocessor = '') => {
     //   )
     // }
   ]
+  const threadLoader = {
+    loader: require.resolve('thread-loader'),
+    options: exports.threadLoaderOptions(context)
+  }
   if (preprocessor) {
     if (typeof preprocessor === 'string') {
       loaders = loaders.concat([
+        threadLoader,
         {
           loader: require.resolve(`${preprocessor}-loader`),
           options: mergeLoaderOptions(
@@ -79,7 +84,7 @@ exports.cssLoaders = (context, preprocessor = '') => {
         }
       ])
     } else if (typeof preprocessor === 'object') {
-      loaders = loaders.concat([preprocessor])
+      loaders = loaders.concat([threadLoader, preprocessor])
     } else {
       throw new Error('invalid preprocessor')
     }
