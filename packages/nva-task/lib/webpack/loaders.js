@@ -147,12 +147,10 @@ module.exports = (context, isWeb) => {
       {
         test: /\.sass$/,
         exclude: /node_modules/,
-        use: [
-          cssLoaders(context, {
-            loader: require.resolve('sass-loader'),
-            options: { indentedSyntax: true, sourceMap: true }
-          })
-        ]
+        use: cssLoaders(context, {
+          loader: require.resolve('sass-loader'),
+          options: { indentedSyntax: true, sourceMap: true }
+        })
       },
       {
         test: /\.styl$/,
