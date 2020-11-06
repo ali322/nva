@@ -69,7 +69,7 @@ exports.cssLoaders = (context, preprocessor = '') => {
   ]
   const threadLoader = {
     loader: require.resolve('thread-loader'),
-    options: exports.threadLoaderOptions(context)
+    options: exports.threadOptions(context)
   }
   if (preprocessor) {
     if (typeof preprocessor === 'string') {
