@@ -21,7 +21,6 @@ module.exports = (context, options) => {
     proxy,
     strict,
     watch,
-    onDevProgress,
     logText
   } = context
 
@@ -113,7 +112,7 @@ module.exports = (context, options) => {
           afterDev(err, stats)
         }
       },
-      profile || onDevProgress
+      profile
     )
   )
   bus.on('develop-bundler-finished', () => {

@@ -47,7 +47,10 @@ module.exports = function(context) {
       modules: [sourceFolder, 'node_modules', resolve('node_modules')]
     },
     plugins: baseConfig.plugins.slice(0, -1).concat([
-      new ProgressPlugin({ identifier: 'vendor:js' }),
+      new ProgressPlugin({
+        identifier: 'vendor:js',
+        onProgress: context.onVendorProgress
+      }),
       new DllPlugin({
         name: '[name]_[fullhash]',
         path: resolve(
@@ -92,11 +95,14 @@ module.exports = function(context) {
       path: output.path
     },
     plugins: baseCSSConfig.plugins.concat([
-      new ProgressPlugin({ identifier: 'vendor:css' }),
+      new ProgressPlugin({
+        identifier: 'vendor:css',
+        onProgress: context.onVendorProgress
+      }),
       new ChunkAssetPlugin({
         chunks: fromPairs(
-          map(cssChunks, chunk => {
-            return [chunk, files => files.filter(v => extname(v) !== '.js')]
+          map(cssChunks, (chunk) => {
+            return [chunk, (files) => files.filter((v) => extname(v) !== '.js')]
           })
         )
       }),
