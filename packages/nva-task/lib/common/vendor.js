@@ -1,10 +1,10 @@
-const { resolve, join } = require('path')
+const { resolve, join, extname } = require('path')
 const { DllPlugin } = require('webpack')
 const ProgressPlugin = require('progress-webpack-plugin')
 const TidyStatsPlugin = require('tidy-stats-webpack-plugin')
-// const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
-// const fromPairs = require('lodash/fromPairs')
-// const map = require('lodash/map')
+const ChunkAssetPlugin = require('chunk-asset-webpack-plugin')
+const fromPairs = require('lodash/fromPairs')
+const map = require('lodash/map')
 const isEmpty = require('lodash/isEmpty')
 const { merge } = require('nva-util')
 const configFactory = require('../webpack/config')
@@ -93,13 +93,13 @@ module.exports = function(context) {
     },
     plugins: baseCSSConfig.plugins.concat([
       new ProgressPlugin({ identifier: 'vendor:css' }),
-      // new ChunkAssetPlugin({
-      //   chunks: fromPairs(
-      //     map(cssChunks, chunk => {
-      //       return [chunk, files => files.filter(v => extname(v) !== '.js')]
-      //     })
-      //   )
-      // }),
+      new ChunkAssetPlugin({
+        chunks: fromPairs(
+          map(cssChunks, chunk => {
+            return [chunk, files => files.filter(v => extname(v) !== '.js')]
+          })
+        )
+      }),
       new TidyStatsPlugin({
         identifier: 'vendor:css',
         logText: {
