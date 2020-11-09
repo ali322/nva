@@ -82,6 +82,8 @@ const bootstrap = (options = {}) => {
     favicon = '',
     hooks = {},
     onDevProgress,
+    onBuildProgress,
+    onVendorProgress,
     proj = {},
     mods = {},
     vendors = {}
@@ -100,7 +102,9 @@ const bootstrap = (options = {}) => {
     mods,
     vendors,
     hooks,
-    onDevProgress
+    onDevProgress,
+    onBuildProgress,
+    onVendorProgress
   }
 }
 
