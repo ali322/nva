@@ -28,8 +28,8 @@ exports.mergeConfig = (config, value) => {
     })
   })
   if (Array.isArray(config)) {
-    return config.map(v => {
-      return isFunction(value) ? mergeFn(v, value(v)) : mergeFn(v, ...webpackConfig)
+    return config.map((v, i) => {
+      return isFunction(value) ? mergeFn(v, value(v)) : mergeFn(v, webpackConfig[i])
     })
   }
   return mergeFn(config, ...webpackConfig)
