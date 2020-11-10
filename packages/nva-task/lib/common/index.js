@@ -14,7 +14,7 @@ const colors = require('colors')
 const opn = require('opn')
 
 exports.mergeConfig = (config, value) => {
-  const webpackConfig = Array.isArray(value) ? compact(value) : [value]
+  const next = Array.isArray(value) ? compact(value) : [value]
   const mergeFn = mergeWithCustomize({
     customizeObject: customizeObject({
       entry: 'replace',
@@ -29,10 +29,10 @@ exports.mergeConfig = (config, value) => {
   })
   if (Array.isArray(config)) {
     return config.map((v, i) => {
-      return isFunction(value) ? mergeFn(v, value(v)) : mergeFn(v, webpackConfig[i])
+      return isFunction(value) ? mergeFn(v, value(v)) : mergeFn(v, next[i] || next[0])
     })
   }
-  return mergeFn(config, ...webpackConfig)
+  return mergeFn(config, ...next)
 }
 
 exports.checkVendor = (vendors, target) => {
