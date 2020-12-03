@@ -1,6 +1,6 @@
 const webpack = require('webpack')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { CheckerPlugin } = require('awesome-typescript-loader')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const loadersFactory = require('./loaders')
@@ -47,14 +47,14 @@ module.exports = (context, profile = false) => {
   ].concat(happypackPlugins)
 
   if (profile) {
-    plugins.push(
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        reportFilename: 'bundle-analyzer-report.html',
-        openAnalyzer: false,
-        logLevel: 'info'
-      })
-    )
+    // plugins.push(
+    //   new BundleAnalyzerPlugin({
+    //     analyzerMode: 'static',
+    //     reportFilename: 'bundle-analyzer-report.html',
+    //     openAnalyzer: false,
+    //     logLevel: 'info'
+    //   })
+    // )
   }
 
   const restConfig = context.isDev
