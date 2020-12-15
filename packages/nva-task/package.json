@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",
@@ -42,7 +42,7 @@
     "nva-util": "^0.5.51",
     "opn": "^5.0.0",
     "portfinder": "^1.0.13",
-    "postcss": "^8.1.4",
+    "postcss": "^7.0.35",
     "postcss-loader": "^4.0.4",
     "postcss-preset-env": "^6.7.0",
     "pretty-error": "^2.1.1",
