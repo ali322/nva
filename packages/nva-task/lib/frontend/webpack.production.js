@@ -3,6 +3,7 @@ let { join, resolve, dirname, extname } = require('path')
 let forEach = require('lodash/forEach')
 let isPlainObject = require('lodash/isPlainObject')
 let isFunction = require('lodash/isFunction')
+let isArray = require('lodash/isArray')
 let InjectHtmlPlugin = require('inject-html-webpack-plugin')
 let ChunkTransformPlugin = require('chunk-transform-webpack-plugin')
 let ProgressPlugin = require('progress-webpack-plugin')
@@ -72,33 +73,57 @@ module.exports = (context, profile) => {
     let more = { js: [], css: [] }
     const htmlOutput = mod.output.html
     if (mod.vendor) {
-      if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-        let originalURL = join(
-          output.vendorPath,
-          sourcemap.js[mod.vendor.js]
-        )
-        more.js = [
-          isFunction(outputPrefix)
-            ? outputPrefix(originalURL)
-            : outputPrefix +
-            relativeURL(dirname(htmlOutput), originalURL)
-        ]
+      if (mod.vendor.js && sourcemap.js) {
+        if (isArray(mod.vendor.js)) {
+          more.js = mod.vendor.js
+            .filter((k) => typeof sourcemap.js[k] === 'string')
+            .map((k) => {
+              let originalURL = join(
+                output.vendorPath,
+                sourcemap.js[k]
+              )
+              return isFunction(outputPrefix)
+                ? outputPrefix(originalURL)
+                : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+            })
+        } else {
+          let originalURL = join(output.vendorPath, sourcemap.js[mod.vendor.js])
+          more.js = [
+            isFunction(outputPrefix)
+              ? outputPrefix(originalURL)
+              : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+          ]
+        }
       }
       if (
         mod.vendor.css &&
         sourcemap.css &&
         sourcemap.css[mod.vendor.css]
       ) {
-        let originalURL = join(
-          output.vendorPath,
-          sourcemap.css[mod.vendor.css]
-        )
-        more.css = [
-          isFunction(outputPrefix)
-            ? outputPrefix(originalURL)
-            : outputPrefix +
-            relativeURL(dirname(htmlOutput), originalURL)
-        ]
+        if (isArray(mod.vendor.js)) {
+          more.js = mod.vendor.js
+            .filter((k) => typeof sourcemap.js[k] === 'string')
+            .map((k) => {
+              let originalURL = join(
+                output.vendorPath,
+                sourcemap.css[k]
+              )
+              return isFunction(outputPrefix)
+                ? outputPrefix(originalURL)
+                : outputPrefix + relativeURL(dirname(htmlOutput), originalURL)
+            })
+        } else {
+          let originalURL = join(
+            output.vendorPath,
+            sourcemap.css[mod.vendor.css]
+          )
+          more.css = [
+            isFunction(outputPrefix)
+              ? outputPrefix(originalURL)
+              : outputPrefix +
+              relativeURL(dirname(htmlOutput), originalURL)
+          ]
+        }
       }
     }
     contentExternals.push(mod.output.html)

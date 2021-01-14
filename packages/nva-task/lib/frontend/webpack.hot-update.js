@@ -1,6 +1,7 @@
 let { DllReferencePlugin } = require('webpack')
 let { join, resolve, posix } = require('path')
 let forEach = require('lodash/forEach')
+let isArray = require('lodash/isArray')
 let isPlainObject = require('lodash/isPlainObject')
 let InjectHtmlPlugin = require('inject-html-webpack-plugin')
 let TidyErrorsPlugin = require('tidy-errors-webpack-plugin')
@@ -19,7 +20,7 @@ module.exports = function (context, profile) {
     vendorSourceMap,
     hmrPath,
     output
-    } = context
+  } = context
   /** build variables */
   let entry = {}
   let htmls = []
@@ -54,30 +55,55 @@ module.exports = function (context, profile) {
 
     let chunks = [name]
     let more = { js: [], css: [] }
+    console.log('sourcemap', sourcemap)
     if (mod.vendor) {
-      if (mod.vendor.js && sourcemap.js && sourcemap.js[mod.vendor.js]) {
-        more.js = [
-          posix.join(
-            posix.sep,
-            distFolder,
-            vendorDevFolder,
-            sourcemap.js[mod.vendor.js]
-          )
-        ]
+      if (mod.vendor.js && sourcemap.js) {
+        if (isArray(mod.vendor.js)) {
+          more.js = mod.vendor.js.filter(k => typeof sourcemap.js[k] === 'string')
+            .map(k => {
+              return posix.join(
+                posix.sep,
+                distFolder,
+                vendorDevFolder,
+                sourcemap.js[k]
+              )
+            })
+        } else {
+          more.js = [
+            posix.join(
+              posix.sep,
+              distFolder,
+              vendorDevFolder,
+              sourcemap.js[mod.vendor.js]
+            )
+          ]
+        }
       }
       if (
         mod.vendor.css &&
-        sourcemap.css &&
-        sourcemap.css[mod.vendor.css]
+        sourcemap.css
       ) {
-        more.css = [
-          posix.join(
-            posix.sep,
-            distFolder,
-            vendorDevFolder,
-            sourcemap.css[mod.vendor.css]
-          )
-        ]
+        if (isArray(mod.vendor.css)) {
+          more.css = mod.vendor.css
+            .filter((k) => typeof sourcemap.css[k] === 'string')
+            .map((k) => {
+              return posix.join(
+                posix.sep,
+                distFolder,
+                vendorDevFolder,
+                sourcemap.css[k]
+              )
+            })
+        } else {
+          more.css = [
+            posix.join(
+              posix.sep,
+              distFolder,
+              vendorDevFolder,
+              sourcemap.css[mod.vendor.css]
+            )
+          ]
+        }
       }
     }
     htmls.push(
