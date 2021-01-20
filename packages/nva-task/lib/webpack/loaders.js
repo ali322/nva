@@ -24,7 +24,8 @@ module.exports = (context, isWeb) => {
   // ])
 
   let urlLoaderOptions = {
-    limit: 2500
+    limit: 2500,
+    esModule: false
   }
   if (!isDev) {
     urlLoaderOptions = assign(
