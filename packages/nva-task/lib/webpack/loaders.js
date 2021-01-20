@@ -47,10 +47,10 @@ module.exports = (context, isWeb) => {
         hash: 'sha512',
         digest: 'hex',
         name: '[hash:8].[ext]'
-      },
-      loaderOptions.url || {}
+      }
     )
   }
+  urlLoaderOptions = assign({}, urlLoaderOptions, loaderOptions.url || {})
   const vueLoaderOptions = {
     postcss: {
       plugins: postcssOptions(context).plugins,
