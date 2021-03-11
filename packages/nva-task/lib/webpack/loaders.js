@@ -73,8 +73,8 @@ module.exports = context => {
     {
       test: /\.(ts|tsx)$/,
       exclude: /node_modules/,
-      loader: require.resolve('awesome-typescript-loader'),
-      options: { useCache: true }
+      loader: 'ts-loader',
+      options: Object.assign({}, loaderOptions.typescript)
     },
     {
       test: /\.less/,
