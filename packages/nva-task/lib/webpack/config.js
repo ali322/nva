@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const { CheckerPlugin } = require('awesome-typescript-loader')
+// const { CheckerPlugin } = require('awesome-typescript-loader')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const loadersFactory = require('./loaders')
 const { happypackPlugin } = require('./util')
@@ -43,7 +43,7 @@ module.exports = (context, profile = false) => {
   ]
 
   let plugins = [
-    new CheckerPlugin()
+    // new CheckerPlugin()
   ].concat(happypackPlugins)
 
   if (profile) {
