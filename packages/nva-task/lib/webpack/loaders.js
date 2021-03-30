@@ -106,10 +106,10 @@ module.exports = (context, isWeb) => {
       test: /\.(ts|tsx)$/,
       exclude: /node_modules/,
       use: [
-        {
-          loader: require.resolve('thread-loader'),
-          options: threadLoaderOptions
-        },
+        // {
+        //   loader: require.resolve('thread-loader'),
+        //   options: threadLoaderOptions
+        // },
         {
           loader: 'ts-loader',
           options: Object.assign({}, loaderOptions.typescript)
