@@ -44,7 +44,6 @@ exports.vueStyleLoaders = (context, preprocessor) => {
 exports.cssLoaders = (context, preprocessor = '') => {
   const { loaderOptions, isDev } = context
   const useVueStyleLoader = loaderOptions.vue && !loaderOptions.vue.legacy
-  console.log('useVueStyleLoader', useVueStyleLoader, loaderOptions)
   let loaders = [
     {
       loader: useVueStyleLoader
