@@ -35,6 +35,10 @@ module.exports = context => {
     },
     loaders: {
       js: require.resolve('happypack/loader') + '?id=js',
+      ts: {
+        loader: 'ts-loader',
+        options: Object.assign({}, loaderOptions.typescript)
+      },
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
       stylus: vueStyleLoaders(context, {
