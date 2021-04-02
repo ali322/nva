@@ -1,6 +1,7 @@
 const path = require('path')
 // const threadLoader = require('thread-loader')
 const assign = require('lodash/assign')
+const omit = require('lodash/omit')
 const {
   threadOptions,
   cssLoaders,
@@ -58,16 +59,17 @@ module.exports = (context, isWeb) => {
       options: { sourceMap: 'inline' }
     },
     loaders: {
-      js: [
+      js: (loaderOptions.thread ? [
         {
           loader: require.resolve('thread-loader'),
           options: threadLoaderOptions
-        },
+        }
+      ] : []).concat([
         {
           loader: 'babel-loader',
           options: { cacheDirectory: true }
         }
-      ],
+      ]),
       css: vueStyleLoaders(context),
       less: vueStyleLoaders(context, 'less'),
       stylus: vueStyleLoaders(context, {
@@ -89,18 +91,19 @@ module.exports = (context, isWeb) => {
     {
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
-      use: [
+      use: (loaderOptions.thread ? [
         {
           loader: require.resolve('thread-loader'),
           options: threadLoaderOptions
-        },
+        }
+      ] : []).concat([
         {
           loader: 'babel-loader',
           options: Object.assign({}, {
             cacheDirectory: true
           }, loaderOptions.babel)
         }
-      ]
+      ])
     },
     {
       test: /\.(ts|tsx)$/,
@@ -120,19 +123,19 @@ module.exports = (context, isWeb) => {
 
   if (isWeb) {
     loaders = loaders.concat([
-      {
-        test: /\.(tpl|html)$/,
-        exclude: /node_modules/,
-        loader: require.resolve('html-loader')
-      },
+      // {
+      //   test: /\.(tpl|html)$/,
+      //   exclude: /node_modules/,
+      //   loader: require.resolve('html-loader')
+      // },
       {
         test: /\.vue$/,
         exclude: /node_modules/,
-        loader: 'vue-loader',
+        loader: require.resolve('vue-loader'),
         options: loaderOptions.vue
           ? loaderOptions.vue.legacy
             ? vueLoaderOptions
-            : loaderOptions.vue
+            : omit(loaderOptions.vue, ['legacy'])
           : {}
       },
       {
