@@ -34,14 +34,14 @@ const setup = (options = {}) => {
     : defaultLogText
 
   let proj = loadConf(projConfPath, logText, (e) => {
-    error(logText.projectInvalid)
     console.log(prettyError(e))
+    error(logText.projectInvalid)
   })
   proj.default && (proj = proj.default)
 
   const mods = loadConf(modConfPath, logText, (e) => {
-    error(logText.moduleInvalid)
     console.log(prettyError(e))
+    error(logText.moduleInvalid)
   })
   const vendors = loadVendor(vendorConfPath, logText)
   const mock = loadMock(mockPath, logText)
@@ -141,8 +141,8 @@ function loadConf(path, logText, onError) {
 
 function loadVendor(path, logText) {
   let vendors = loadConf(path, (e) => {
-    error(logText.vendorInvalid)
     console.log(prettyError(e))
+    error(logText.vendorInvalid)
   })
   if (isPlainObject(vendors)) {
     vendors.js = isPlainObject(vendors.js) ? vendors.js : {}
