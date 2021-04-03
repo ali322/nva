@@ -47,7 +47,6 @@ module.exports = (context, profile = false) => {
   ].concat(happypackPlugins)
 
   const isLegacyVueLoader = useLegacyVueLoader(context)
-  console.log('useLegacyVueLoader', isLegacyVueLoader)
   if (!isLegacyVueLoader) {
     const { VueLoaderPlugin } = require('vue-loader')
     plugins.push(new VueLoaderPlugin())
