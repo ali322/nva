@@ -1,7 +1,7 @@
 const path = require('path')
 const assign = require('lodash/assign')
 const omit = require('lodash/omit')
-const { cssLoaders, postcssOptions, vueStyleLoaders } = require('./util')
+const { cssLoaders, postcssOptions, vueStyleLoaders, useLegacyVueLoader } = require('./util')
 
 module.exports = context => {
   const { output = {}, imagePrefix, fontPrefix, isDev, strict, loaderOptions } = context
@@ -57,7 +57,7 @@ module.exports = context => {
     }
   }
 
-  const useLegacyVueLoader = !!(loaderOptions.vue && loaderOptions.vue.legacy)
+  const isLegacyVueLoader = useLegacyVueLoader(context)
 
   let loaders = [
     {
@@ -68,8 +68,8 @@ module.exports = context => {
     {
       test: /\.vue/,
       exclude: /node_modules/,
-      loader: useLegacyVueLoader ? 'vue-loader' : require.resolve('vue-loader'),
-      options: Object.assign({}, useLegacyVueLoader ? vueLoaderOptions : {}, omit(loaderOptions.vue, ['legacy']))
+      loader: isLegacyVueLoader ? 'vue-loader' : require.resolve('vue-loader'),
+      options: Object.assign({}, isLegacyVueLoader ? vueLoaderOptions : {}, omit(loaderOptions.vue, ['legacy']))
     },
     {
       test: /\.(es6|js|jsx)$/,

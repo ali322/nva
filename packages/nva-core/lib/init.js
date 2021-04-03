@@ -59,12 +59,7 @@ module.exports = context => {
     fontFolder: 'font',
     imageFolder: 'image',
     outputPrefix: '',
-    loaderOptions: {
-      vue: {
-        legacy: true
-      }
-    },
-
+    loaderOptions: {},
     hmrPath: '/hmr/'
   }
 

@@ -4,12 +4,11 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 // const { CheckerPlugin } = require('awesome-typescript-loader')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const loadersFactory = require('./loaders')
-const { happypackPlugin } = require('./util')
+const { happypackPlugin, useLegacyVueLoader } = require('./util')
 const assign = require('lodash/assign')
 const mapValues = require('lodash/mapValues')
 
 module.exports = (context, profile = false) => {
-  const { loaderOptions } = context
   const config = {
     profile,
     module: {
@@ -47,8 +46,9 @@ module.exports = (context, profile = false) => {
     // new CheckerPlugin()
   ].concat(happypackPlugins)
 
-  const useLegacyVueLoader = !!(loaderOptions.vue && loaderOptions.vue.legacy)
-  if (!useLegacyVueLoader) {
+  const isLegacyVueLoader = useLegacyVueLoader(context)
+  console.log('useLegacyVueLoader', isLegacyVueLoader)
+  if (!isLegacyVueLoader) {
     const { VueLoaderPlugin } = require('vue-loader')
     plugins.push(new VueLoaderPlugin())
   }

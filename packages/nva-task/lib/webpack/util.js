@@ -11,6 +11,15 @@ const mergeLoaderOptions = (defaults, options) => {
   return isPlainObject(options) ? assign({}, defaults, options) : defaults
 }
 
+exports.useLegacyVueLoader = (context) => {
+  const { loaderOptions } = context
+  let isLegacy = true
+  if (isPlainObject(loaderOptions.vue) && loaderOptions.vue.legacy === false) {
+    isLegacy = false
+  }
+  return isLegacy
+}
+
 exports.happypackPlugin = (id, loaders) => {
   return new HappyPack({
     id,
@@ -41,10 +50,10 @@ exports.vueStyleLoaders = (context, preprocessor) => {
 
 exports.cssLoaders = (context, preprocessor = '') => {
   const { loaderOptions, isDev } = context
-  const useLegacyVueLoader = !!(loaderOptions.vue && loaderOptions.vue.legacy)
+  const isLegacyVueLoader = exports.useLegacyVueLoader(context)
   let loaders = [
     {
-      loader: !useLegacyVueLoader
+      loader: !isLegacyVueLoader
         ? 'vue-style-loader'
         : require.resolve('style-loader')
     },
