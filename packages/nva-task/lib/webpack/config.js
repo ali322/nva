@@ -4,12 +4,13 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const TerserPlugin = require('terser-webpack-plugin')
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const loadersFactory = require('./loaders')
+const { useLegacyVueLoader } = require('./util')
 const merge = require('lodash/merge')
 const mapValues = require('lodash/mapValues')
 const { resolve } = require('path')
 
 module.exports = (context, profile = false, isWeb = true) => {
-  const { sourceFolder, isDev, env, output, loaderOptions } = context
+  const { sourceFolder, isDev, env, output } = context
   let extensions = ['*', '.js', '.mjs', '.json', '.ts']
   if (isWeb) {
     extensions = extensions.concat([
@@ -38,8 +39,8 @@ module.exports = (context, profile = false, isWeb = true) => {
 
   let plugins = []
 
-  const useLegacyVueLoader = !!(loaderOptions.vue && loaderOptions.vue.legacy)
-  if (!useLegacyVueLoader) {
+  const isLegacyVueLoader = useLegacyVueLoader(context)
+  if (!isLegacyVueLoader) {
     const { VueLoaderPlugin } = require('vue-loader')
     plugins.push(new VueLoaderPlugin())
   }

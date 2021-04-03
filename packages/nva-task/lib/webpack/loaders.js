@@ -6,7 +6,8 @@ const {
   threadOptions,
   cssLoaders,
   postcssOptions,
-  vueStyleLoaders
+  vueStyleLoaders,
+  useLegacyVueLoader
 } = require('./util')
 
 module.exports = (context, isWeb) => {
@@ -87,7 +88,7 @@ module.exports = (context, isWeb) => {
     }
   }
 
-  const useLegacyVueLoader = !!(loaderOptions.vue && loaderOptions.vue.legacy)
+  const isLegacyVueLoader = useLegacyVueLoader(context)
   let loaders = [
     {
       test: /\.(js|jsx)$/,
@@ -132,8 +133,8 @@ module.exports = (context, isWeb) => {
       {
         test: /\.vue$/,
         exclude: /node_modules/,
-        loader: useLegacyVueLoader ? 'vue-loader' : require.resolve('vue-loader'),
-        options: Object.assign({}, useLegacyVueLoader ? vueLoaderOptions : {}, omit(loaderOptions.vue, ['legacy']))
+        loader: isLegacyVueLoader ? 'vue-loader' : require.resolve('vue-loader'),
+        options: Object.assign({}, isLegacyVueLoader ? vueLoaderOptions : {}, omit(loaderOptions.vue, ['legacy']))
       },
       {
         test: /\.less$/,
