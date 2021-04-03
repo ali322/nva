@@ -38,7 +38,8 @@ module.exports = (context, profile = false, isWeb = true) => {
 
   let plugins = []
 
-  if (loaderOptions.vue && !loaderOptions.vue.legacy) {
+  const useLegacyVueLoader = !!(loaderOptions.vue && loaderOptions.vue.legacy)
+  if (!useLegacyVueLoader) {
     const { VueLoaderPlugin } = require('vue-loader')
     plugins.push(new VueLoaderPlugin())
   }
