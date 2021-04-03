@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "0.7.29",
+  "version": "0.7.30",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",
@@ -38,7 +38,7 @@
     "mini-css-extract-plugin": "^0.4.4",
     "node-emoji": "^1.8.1",
     "nodemon": "^1.17.3",
-    "nva-core": "^0.7.18",
+    "nva-core": "^0.7.19",
     "nva-server": "^0.7.0",
     "nva-util": "^0.5.51",
     "opn": "^5.0.0",
