@@ -93,7 +93,7 @@ module.exports = context => {
       exclude: /node_modules/,
       use: cssLoaders(context, {
         loader: require.resolve('sass-loader'),
-        options: { indentedSyntax: true, sourceMap: true }
+        options: { sassOptions: {indentedSyntax: true}, sourceMap: true }
       })
     },
     {
