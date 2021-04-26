@@ -41,8 +41,7 @@ module.exports = (context, profile = false, isWeb = true) => {
 
   const isLegacyVueLoader = useLegacyVueLoader(context)
   if (!isLegacyVueLoader) {
-    const { VueLoaderPlugin } = require('vue-loader')
-    plugins.push(new VueLoaderPlugin())
+    plugins.push(context.vue.plugin)
   }
 
   if (profile) {

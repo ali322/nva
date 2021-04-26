@@ -89,6 +89,7 @@ module.exports = (context, isWeb) => {
   }
 
   const isLegacyVueLoader = useLegacyVueLoader(context)
+  console.log('isLegacyVueLoader', isLegacyVueLoader)
   let loaders = [
     {
       test: /\.(js|jsx)$/,
@@ -110,30 +111,28 @@ module.exports = (context, isWeb) => {
     {
       test: /\.(ts|tsx)$/,
       exclude: /node_modules/,
-      use: [
-        // {
-        //   loader: require.resolve('thread-loader'),
-        //   options: threadLoaderOptions
-        // },
+      use: (loaderOptions.thread ? [
+        {
+          loader: require.resolve('thread-loader'),
+          options: threadLoaderOptions
+        }
+      ] : []).concat([
         {
           loader: 'ts-loader',
-          options: Object.assign({}, loaderOptions.typescript)
+          options: Object.assign({}, {
+            happyPackMode: loaderOptions.thread
+          }, loaderOptions.typescript)
         }
-      ]
+      ])
     }
   ]
 
   if (isWeb) {
     loaders = loaders.concat([
-      // {
-      //   test: /\.(tpl|html)$/,
-      //   exclude: /node_modules/,
-      //   loader: require.resolve('html-loader')
-      // },
       {
         test: /\.vue$/,
         exclude: /node_modules/,
-        loader: isLegacyVueLoader ? 'vue-loader' : require.resolve('vue-loader'),
+        loader: 'vue-loader',
         options: Object.assign({}, isLegacyVueLoader ? vueLoaderOptions : {}, omit(loaderOptions.vue, ['legacy']))
       },
       {
