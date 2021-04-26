@@ -131,7 +131,7 @@ module.exports = (context, isWeb) => {
       {
         test: /\.vue$/,
         exclude: /node_modules/,
-        loader: 'vue-loader',
+        loader: isLegacyVueLoader ? 'vue-loader' : require.resolve('vue-loader'),
         options: Object.assign({}, isLegacyVueLoader ? vueLoaderOptions : {}, omit(loaderOptions.vue, ['legacy']))
       },
       {
