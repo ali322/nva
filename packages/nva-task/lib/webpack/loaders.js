@@ -89,7 +89,6 @@ module.exports = (context, isWeb) => {
   }
 
   const isLegacyVueLoader = useLegacyVueLoader(context)
-  console.log('isLegacyVueLoader', isLegacyVueLoader)
   let loaders = [
     {
       test: /\.(js|jsx)$/,
