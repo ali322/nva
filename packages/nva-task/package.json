@@ -1,6 +1,6 @@
 {
   "name": "nva-task",
-  "version": "1.0.49",
+  "version": "1.0.50",
   "description": "tasks for nva",
   "main": "lib/index.js",
   "repository": "https://github.com/ali322/nva/tree/master/packages/nva-task",

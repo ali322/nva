@@ -41,7 +41,7 @@ module.exports = (context, profile = false, isWeb = true) => {
 
   const isLegacyVueLoader = useLegacyVueLoader(context)
   if (!isLegacyVueLoader) {
-    plugins.push(context.vue.plugin)
+    plugins.push(context.loaderOptions.vue.plugin)
   }
 
   if (profile) {
