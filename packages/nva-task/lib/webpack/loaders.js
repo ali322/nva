@@ -91,24 +91,7 @@ module.exports = (context, isWeb) => {
   const isLegacyVueLoader = useLegacyVueLoader(context)
   let loaders = [
     {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: (loaderOptions.thread ? [
-        {
-          loader: require.resolve('thread-loader'),
-          options: threadLoaderOptions
-        }
-      ] : []).concat([
-        {
-          loader: 'babel-loader',
-          options: Object.assign({}, {
-            cacheDirectory: true
-          }, loaderOptions.babel)
-        }
-      ])
-    },
-    {
-      test: /\.jsx$/,
+      test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       use: (loaderOptions.thread ? [
         {
