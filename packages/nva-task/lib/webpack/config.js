@@ -25,6 +25,7 @@ module.exports = (context, profile = false, isWeb = true) => {
 
   const config = {
     profile,
+    cache: true,
     module: {
       rules: loadersFactory(context, isWeb)
     },
