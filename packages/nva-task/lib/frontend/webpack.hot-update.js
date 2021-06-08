@@ -18,7 +18,8 @@ module.exports = function(context, profile, options) {
     hmrPath,
     output,
     afterInject,
-    logText
+    logText,
+    pluginOptions
   } = context
 
   /** build variables */
@@ -79,6 +80,7 @@ module.exports = function(context, profile, options) {
         manifest
       })
     })
+    let injectHtmlOptions = isPlainObject(pluginOptions.injectHtml) ? pluginOptions.injectHtml : {}
 
     confs.push(
       merge(baseConfig, {
@@ -107,7 +109,7 @@ module.exports = function(context, profile, options) {
               error: logText.buildError
             }
           }),
-          new InjectHtmlPlugin({
+          new InjectHtmlPlugin(merge({
             transducer: hmrPath,
             chunks: [name],
             filename: mod.input.html,
@@ -116,7 +118,7 @@ module.exports = function(context, profile, options) {
               js: vendorAssets(mod.vendor, 'js'),
               css: vendorAssets(mod.vendor, 'css')
             }
-          })
+          }, injectHtmlOptions))
         ])
       })
     )

@@ -23,7 +23,8 @@ module.exports = (context, profile) => {
     chunkFolder,
     vendorSourceMap,
     output,
-    logText
+    logText,
+    pluginOptions
   } = context
   /** build variables */
   let confs = []
@@ -76,6 +77,7 @@ module.exports = (context, profile) => {
         manifest
       })
     })
+    let injectHtmlOptions = isPlainObject(pluginOptions.injectHtml) ? pluginOptions.injectHtml : {}
 
     confs.push(
       merge(baseConfig, {
@@ -146,15 +148,14 @@ module.exports = (context, profile) => {
                     )
                 }
               }),
-              new InjectHtmlPlugin({
+              new InjectHtmlPlugin(merge({
                 transducer: function (url) {
                   return isFunction(outputPrefix)
                     ? outputPrefix(url)
-                    : outputPrefix +
-                                          relativeURL(
-                                            dirname(htmlOutput),
-                                            join(distFolder, url)
-                                          )
+                    : outputPrefix + relativeURL(
+                      dirname(htmlOutput),
+                      join(distFolder, url)
+                    )
                 },
                 chunks: [name],
                 more: {
@@ -174,7 +175,7 @@ module.exports = (context, profile) => {
                     content: `<meta name="bundleTime" content="${bundleTime()}"/>`
                   }
                 ]
-              }),
+              }, injectHtmlOptions)),
               new TidyStatsPlugin({
                 identifier: name,
                 logText: {

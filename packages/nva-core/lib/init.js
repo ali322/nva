@@ -65,6 +65,7 @@ module.exports = context => {
       },
       thread: true
     },
+    pluginOptions: {},
 
     hmrPath: '/hmr/'
   }

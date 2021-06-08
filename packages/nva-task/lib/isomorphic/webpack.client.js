@@ -17,7 +17,8 @@ module.exports = function(context, profile) {
     vendorFolder,
     vendorSourceMap,
     output,
-    logText
+    logText,
+    pluginOptions
   } = context
   /** build variables */
   let confs = []
@@ -61,6 +62,7 @@ module.exports = function(context, profile) {
         manifest
       })
     })
+    let injectHtmlOptions = isPlainObject(pluginOptions.injectHtml) ? pluginOptions.injectHtml : {}
 
     confs.push(
       merge(baseConfig, {
@@ -95,7 +97,7 @@ module.exports = function(context, profile) {
                 error: logText.buildError
               }
             }),
-            new InjectHtmlPlugin({
+            new InjectHtmlPlugin(merge({
               transducer: posix.sep,
               chunks: [name],
               filename: mod.input.html,
@@ -115,7 +117,7 @@ module.exports = function(context, profile) {
                   content: ''
                 }
               ]
-            })
+            }, injectHtmlOptions))
           ])
           .concat(dllRefs)
       })
