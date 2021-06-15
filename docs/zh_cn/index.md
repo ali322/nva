@@ -13,7 +13,9 @@ nva是一个基于webpack,提供灵活配置的前端项目脚手架工具,既�
 - 交互性方式初始化基于多种基础模板的项目
 - 使用 js/json 定义满足项目需求的模拟数据
 - 开箱即用的 Babel, Typescript, Sass, Less, Stylus 支持
-- 支持单元测试和端到端测试
+- 单元测试和端到端测试的内置支持
+
+你可以使用桌面客户端 [NVA Client](https://github.com/ali322/nva-client)
 
 ## 安装
 

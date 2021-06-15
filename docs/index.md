@@ -13,7 +13,9 @@ nva is scaffold toolset which offer flexible configuration base on webpack,it su
 - interactive project scaffolding in many kinds of fundamental project template
 - define mock data in js or json to satisfy requirements 
 - out-of-box support Babel, Typescript, Sass, Less, Stylus
-- unit test and end-to-end test support
+- built-in support unit test and end-to-end test
+
+you can also find Desktop Application named [NVA Client](https://github.com/ali322/nva-client)
 
 ## Install
 
