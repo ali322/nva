@@ -6,9 +6,14 @@ title: NVA
 
 [English](../index.md)
 
-## nva是什么?
+## 介绍
 
-nva是一个基于webpack,提供灵活配置的前端项目脚手架工具,既能支持纯前端项目(html+css+js)的开发需求,也能支持同构JS/SSR项目(node+react/node+vue)的开发,提供了多达8种不同的便捷项目模板,满足自动化开发,数据模拟,资源构建,模块管理,打包发布等等日常开发任务需求
+nva是一个基于webpack,提供灵活配置的前端项目脚手架工具,既能支持纯前端项目(html+css+js)的开发需求,也能支持同构JS/SSR项目(node+react/node+vue)的开发
+
+- 交互性方式初始化基于多种基础模板的项目
+- 使用 js/json 定义满足项目需求的模拟数据
+- 开箱即用的 Babel, Typescript, Sass, Less, Stylus 支持
+- 支持单元测试和端到端测试
 
 ## 安装
 

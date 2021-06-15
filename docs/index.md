@@ -6,6 +6,15 @@ title: NVA
 
 [中文](./zh_cn/index.md)
 
+## Introduction
+
+nva is scaffold toolset which offer flexible configuration base on webpack,it support development purely frontend project(html+css+js) and isomorphic project(node+react/vue)
+
+- interactive project scaffolding in many kinds of fundamental project template
+- define mock data in js or json to satisfy requirements 
+- out-of-box support Babel, Typescript, Sass, Less, Stylus
+- unit test and end-to-end test support
+
 ## Install
 
 Prerequisites: [Node.js](https://nodejs.org/en/) (>=6.x, LTS preferred), npm version 3+ and [Git](https://git-scm.com)
