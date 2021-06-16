@@ -20,7 +20,7 @@ function mixin(proj) {
     fontPrefix: posix.join('..', assetFolder, fontFolder),
     output: {
       path: isSSR ? resolve(distFolder, sourceFolder) : resolve(distFolder),
-      cssPath: join('[name]', '[name]-[hash:8].css'),
+      cssPath: join('[name]', '[name]-[contenthash].css'),
       imagePath: join(assetFolder, imageFolder, sep),
       fontPath: join(assetFolder, fontFolder, sep),
       vendorPath: isSSR
@@ -59,7 +59,14 @@ module.exports = context => {
     fontFolder: 'font',
     imageFolder: 'image',
     outputPrefix: '',
-    loaderOptions: {},
+    loaderOptions: {
+      vue: {
+        legacy: true
+      },
+      thread: true
+    },
+    pluginOptions: {},
+
     hmrPath: '/hmr/'
   }
 
