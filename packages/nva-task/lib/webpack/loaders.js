@@ -88,6 +88,25 @@ module.exports = (context, isWeb) => {
     }
   }
 
+  const tsLoaders = (loaderOptions.thread ? [
+    {
+      loader: require.resolve('thread-loader'),
+      options: threadLoaderOptions
+    }
+  ] : []).concat(loaderOptions.appendBabelToTs ? [{
+    loader: 'babel-loader',
+    options: Object.assign({}, {
+      cacheDirectory: true
+    }, loaderOptions.babel)
+  }] : []).concat([
+    {
+      loader: 'ts-loader',
+      options: Object.assign({}, {
+        happyPackMode: loaderOptions.thread
+      }, loaderOptions.typescript)
+    }
+  ])
+
   const isLegacyVueLoader = useLegacyVueLoader(context)
   let loaders = [
     {
@@ -127,36 +146,12 @@ module.exports = (context, isWeb) => {
     {
       test: /\.ts$/,
       exclude: /node_modules/,
-      use: (loaderOptions.thread ? [
-        {
-          loader: require.resolve('thread-loader'),
-          options: threadLoaderOptions
-        }
-      ] : []).concat([
-        {
-          loader: 'ts-loader',
-          options: Object.assign({}, {
-            happyPackMode: loaderOptions.thread
-          }, loaderOptions.typescript)
-        }
-      ])
+      use: tsLoaders
     },
     {
       test: /\.tsx$/,
       exclude: /node_modules/,
-      use: (loaderOptions.thread ? [
-        {
-          loader: require.resolve('thread-loader'),
-          options: threadLoaderOptions
-        }
-      ] : []).concat([
-        {
-          loader: 'ts-loader',
-          options: Object.assign({}, {
-            happyPackMode: loaderOptions.thread
-          }, loaderOptions.typescript)
-        }
-      ])
+      use: tsLoaders
     }
   ]
 
