@@ -106,7 +106,6 @@ module.exports = (context, isWeb) => {
       }, loaderOptions.typescript)
     }
   ])
-
   const isLegacyVueLoader = useLegacyVueLoader(context)
   let loaders = [
     {
@@ -160,7 +159,7 @@ module.exports = (context, isWeb) => {
       {
         test: /\.vue$/,
         exclude: /node_modules/,
-        loader: isLegacyVueLoader ? 'vue-loader' : require.resolve('vue-loader'),
+        loader: isLegacyVueLoader ? require.resolve('vue-loader') : 'vue-loader',
         options: Object.assign({}, isLegacyVueLoader ? vueLoaderOptions : {}, omit(loaderOptions.vue, ['legacy']))
       },
       {
