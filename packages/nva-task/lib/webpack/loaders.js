@@ -107,7 +107,6 @@ module.exports = (context, isWeb) => {
     }
   ])
   const isLegacyVueLoader = useLegacyVueLoader(context)
-  console.log('isLegacy', isLegacyVueLoader)
   let loaders = [
     {
       test: /\.js$/,
